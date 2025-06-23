@@ -26,7 +26,7 @@ export const useSimulation = (
   }, [customInvestment]);
 
   // Main simulation runner
-  const runSimulation = useCallback(() => {
+  const runSimulation = useCallback(async () => {
     console.log('Running Monte Carlo simulation...', { selectedSummer, selectedWinter, selectedPortfolio });
     setSimulating(true);
     
@@ -45,7 +45,7 @@ export const useSimulation = (
         portfolioMultiplier
       };
 
-      const results = runCompleteSimulation(config, 1000);
+      const results = await runCompleteSimulation(config, 1000);
       
       console.log('Monte Carlo results:', results);
       setSimulationResults(results);
@@ -68,7 +68,7 @@ export const useSimulation = (
   // Auto-run simulation when key selections change (immediate)
   useEffect(() => {
     if (selectedSummer && selectedWinter && selectedPortfolio && locationConfig) {
-      runSimulation();
+      runSimulation().catch(console.error);
     }
   }, [selectedSummer, selectedWinter, selectedPortfolio, runSimulation]);
 
@@ -80,7 +80,7 @@ export const useSimulation = (
     
     const timer = setTimeout(() => {
       if (selectedSummer && selectedWinter && selectedPortfolio && locationConfig) {
-        runSimulation();
+        runSimulation().catch(console.error);
       }
     }, 100);
     
@@ -93,7 +93,7 @@ export const useSimulation = (
 
   // Manual trigger for simulation
   const triggerSimulation = useCallback(() => {
-    runSimulation();
+    runSimulation().catch(console.error);
   }, [runSimulation]);
 
   return {

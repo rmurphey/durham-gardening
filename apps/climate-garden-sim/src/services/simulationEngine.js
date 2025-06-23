@@ -35,25 +35,13 @@ export const runCompleteSimulation = async (config, iterations = 1000) => {
   } = config;
 
   try {
-    // Enhance simulation with weather data if available
+    // Enhance simulation with weather data if available (temporarily disabled)
     let enhancedConfig = { ...config };
-    if (locationConfig?.lat && locationConfig?.lon && !weatherData) {
-      try {
-        const currentWeather = await weatherDataService.getCurrentWeather(locationConfig.lat, locationConfig.lon);
-        const forecast = await weatherDataService.getWeatherForecast(locationConfig.lat, locationConfig.lon, 14);
-        const gddData = await weatherDataService.getGrowingDegreeDays(locationConfig.lat, locationConfig.lon);
-        
-        enhancedConfig.weatherData = {
-          current: currentWeather,
-          forecast,
-          gddData,
-          timestamp: new Date()
-        };
-      } catch (weatherError) {
-        console.warn('Weather data unavailable, using static scenarios:', weatherError.message);
-      }
-    } else if (weatherData) {
+    if (weatherData) {
       enhancedConfig.weatherData = weatherData;
+    } else {
+      // Skip weather API calls for now to restore basic functionality
+      console.log('Skipping weather data integration for performance');
     }
 
     // Run Monte Carlo simulation with enhanced weather data

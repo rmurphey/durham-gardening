@@ -46,8 +46,27 @@ const RecommendationsPanel = ({
     }
   ];
 
+
   // Filter out recommendations with empty content
-  const validRecommendations = recommendations.filter(rec => rec.content && rec.content.trim());
+  const validRecommendations = recommendations.filter(rec => {
+    if (!rec.content) return false;
+    
+    // Handle string content
+    if (typeof rec.content === 'string') {
+      return rec.content.trim().length > 0;
+    }
+    
+    // Handle object/array content (like siteSpecificRecommendations)
+    if (typeof rec.content === 'object') {
+      if (Array.isArray(rec.content)) {
+        return rec.content.length > 0;
+      }
+      // For objects, check if they have meaningful content
+      return Object.keys(rec.content).length > 0;
+    }
+    
+    return false;
+  });
 
   if (validRecommendations.length === 0) {
     return (
@@ -68,7 +87,29 @@ const RecommendationsPanel = ({
               <span className="recommendation-icon">{recommendation.icon}</span>
               {recommendation.title}
             </h3>
-            <p>{recommendation.content}</p>
+            {typeof recommendation.content === 'string' ? (
+              <p>{recommendation.content}</p>
+            ) : Array.isArray(recommendation.content) ? (
+              <div>
+                {recommendation.content.map((item, idx) => (
+                  <div key={idx} className="recommendation-item">
+                    <h4>{item.title}</h4>
+                    <p>{item.description}</p>
+                    {item.items && (
+                      <ul>
+                        {item.items.map((subItem, subIdx) => (
+                          <li key={subIdx}>
+                            <strong>{subItem.name}:</strong> {subItem.reason}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>Complex recommendation data available</p>
+            )}
           </div>
         ))}
       </div>
