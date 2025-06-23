@@ -16,7 +16,8 @@ import {
   MARKET_PRICES,
   BASE_YIELD_MULTIPLIERS,
   PORTFOLIO_NAMES,
-  PORTFOLIO_DESCRIPTORS
+  PORTFOLIO_DESCRIPTORS,
+  formatPercentage
 } from './config.js';
 import './index.css';
 
@@ -190,7 +191,7 @@ function App() {
     const lat = location?.lat || 36;
     const regionalMultiplier = lat < 35 ? 1.3 : lat < 40 ? 1.1 : lat > 45 ? 0.8 : 1.0;
     
-    return Math.min(baselineProb * extremeMultiplier * regionalMultiplier, 80);
+    return Math.round(Math.min(baselineProb * extremeMultiplier * regionalMultiplier, 80));
   };
 
   // Generate location-aware climate scenarios based on climate science
@@ -372,7 +373,7 @@ function App() {
                 </div>
                 {REGION_PRESETS[selectedPreset].marketMultiplier > 1.1 && (
                   <div className="implication-item">
-                    <strong>Premium:</strong> +{Math.round((REGION_PRESETS[selectedPreset].marketMultiplier - 1) * 100)}% market prices
+                    <strong>Premium:</strong> +{formatPercentage(REGION_PRESETS[selectedPreset].marketMultiplier - 1)}% market prices
                   </div>
                 )}
               </div>
@@ -894,8 +895,8 @@ function App() {
     if (currency === 'PCT') {
       // Handle percentages separately
       return new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
       }).format(amount);
     }
     
@@ -1015,7 +1016,7 @@ function App() {
             </div>
             <div className="breakdown-row">
               <span>Size Multiplier:</span>
-              <span>{((locationConfig?.gardenSizeActual || 100) / 100).toFixed(2)}x</span>
+              <span>{Math.round((locationConfig?.gardenSizeActual || 100) / 100)}x</span>
             </div>
           </div>
         </div>
@@ -1191,6 +1192,43 @@ function App() {
 
         <div className="section">
           <h3>🔥 Summer Climate Bet</h3>
+          
+          {/* Timeline visualization */}
+          <div className="climate-timeline">
+            <div className="timeline-header">
+              <span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span>
+            </div>
+            {currentClimateScenarios.summer.map(scenario => {
+              const startMonth = scenario.duration.split('-')[0];
+              const endMonth = scenario.duration.split('-')[1];
+              const monthMap = {Apr: 0, May: 1, Jun: 2, Jul: 3, Aug: 4, Sep: 5, Oct: 6};
+              const start = monthMap[startMonth] || 2; // Default to Jun
+              const end = monthMap[endMonth] || 4;     // Default to Aug
+              const width = ((end - start + 1) / 7) * 100;
+              const left = (start / 7) * 100;
+              
+              return (
+                <div key={scenario.id} className="timeline-scenario">
+                  <div className="scenario-label">
+                    <span className="scenario-name">{scenario.name}</span>
+                    <span className="scenario-probability">{scenario.probability}%</span>
+                  </div>
+                  <div className="timeline-track">
+                    <div 
+                      className={`timeline-bar ${selectedSummer === scenario.id ? 'selected' : ''}`}
+                      style={{
+                        left: `${left}%`,
+                        width: `${width}%`,
+                        opacity: scenario.probability / 50 // Visual weight by probability
+                      }}
+                      onClick={() => setSelectedSummer(scenario.id)}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
           <div className="scenario-grid">
             {currentClimateScenarios.summer.map(scenario => (
               <div 
@@ -1208,6 +1246,45 @@ function App() {
 
         <div className="section">
           <h3>❄️ Winter Climate Bet</h3>
+          
+          {/* Timeline visualization */}
+          <div className="climate-timeline">
+            <div className="timeline-header">
+              <span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span>
+            </div>
+            {currentClimateScenarios.winter.map(scenario => {
+              // Winter scenarios have different duration patterns
+              let start, end, width, left;
+              if (scenario.duration === 'Year-round') {
+                start = 0; end = 6; width = 100; left = 0;
+              } else if (scenario.duration === 'Dec-Jan') {
+                start = 1; end = 2; width = (2/7) * 100; left = (1/7) * 100;
+              } else { // Dec-Feb
+                start = 1; end = 3; width = (3/7) * 100; left = (1/7) * 100;
+              }
+              
+              return (
+                <div key={scenario.id} className="timeline-scenario">
+                  <div className="scenario-label">
+                    <span className="scenario-name">{scenario.name}</span>
+                    <span className="scenario-probability">{scenario.probability}%</span>
+                  </div>
+                  <div className="timeline-track">
+                    <div 
+                      className={`timeline-bar winter ${selectedWinter === scenario.id ? 'selected' : ''}`}
+                      style={{
+                        left: `${left}%`,
+                        width: `${width}%`,
+                        opacity: scenario.probability / 50 // Visual weight by probability
+                      }}
+                      onClick={() => setSelectedWinter(scenario.id)}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
           <div className="scenario-grid">
             {currentClimateScenarios.winter.map(scenario => (
               <div 

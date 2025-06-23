@@ -329,3 +329,8 @@ export const STORAGE_KEYS = {
 
 // Configuration version for migration support
 export const CONFIG_VERSION = '1.0.0';
+
+// Utility function for consistent percentage formatting (zero decimal places)
+export const formatPercentage = (decimal) => {
+  return Math.round(decimal * 100);
+};
