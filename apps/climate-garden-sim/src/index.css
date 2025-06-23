@@ -1401,6 +1401,75 @@ body {
   font-size: 14px;
 }
 
+/* Timing Alerts Styles */
+.timing-alerts {
+  background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+  border: 2px solid #e74c3c;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.timing-alerts h4 {
+  margin: 0 0 10px 0;
+  color: #e74c3c;
+  border-bottom: 2px solid #e74c3c;
+  padding-bottom: 8px;
+}
+
+.timing-alerts p {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timing-alert {
+  background: white;
+  border-radius: 6px;
+  padding: 12px;
+  border-left: 4px solid #e74c3c;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.alert-crop {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.alert-issue {
+  color: #e74c3c;
+  font-size: 13px;
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+.alert-alternatives {
+  color: #27ae60;
+  font-size: 12px;
+  background: #f8fff8;
+  padding: 6px;
+  border-radius: 4px;
+  border-left: 3px solid #27ae60;
+}
+
+.alert-more {
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+  color: #666;
+  font-size: 12px;
+  font-style: italic;
+}
+
 /* Investment Details Styles */
 .investment-details {
   grid-column: 1 / -1;

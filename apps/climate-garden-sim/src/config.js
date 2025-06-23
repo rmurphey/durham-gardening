@@ -715,6 +715,147 @@ export const getEnhancedMicroclimateRecommendations = (solarData, microclimate) 
   return recommendations;
 };
 
+// Timing validation for planting recommendations
+export const isPlantingSeasonValid = (crop, month, locationConfig) => {
+  if (!crop || !crop.plantingMonths) return false;
+  
+  const climateZone = getClimateZoneFromLocation(locationConfig);
+  const plantingMonths = crop.plantingMonths[climateZone] || crop.plantingMonths.temperate;
+  
+  // Account for microclimate season extension
+  const seasonExtension = locationConfig?.seasonExtensionWeeks || 0;
+  const extendedMonths = [...plantingMonths];
+  
+  // Add extended months if season is longer
+  if (seasonExtension > 2) {
+    plantingMonths.forEach(m => {
+      const extendedMonth = m + 1 > 12 ? (m + 1) - 12 : m + 1;
+      if (!extendedMonths.includes(extendedMonth)) {
+        extendedMonths.push(extendedMonth);
+      }
+    });
+  }
+  
+  return extendedMonths.includes(month);
+};
+
+// Calculate latest safe planting date for harvest before frost
+export const getLatestPlantingDate = (crop, locationConfig) => {
+  if (!crop || !locationConfig) return null;
+  
+  // Get approximate first fall frost date for hardiness zone
+  const zoneNumber = getHardinessZoneNumber(locationConfig.hardiness);
+  const frostDates = {
+    3: { month: 9, day: 15 },  // Zone 3: mid-September
+    4: { month: 10, day: 1 },  // Zone 4: early October
+    5: { month: 10, day: 15 }, // Zone 5: mid-October
+    6: { month: 10, day: 30 }, // Zone 6: late October
+    7: { month: 11, day: 15 }, // Zone 7: mid-November
+    8: { month: 12, day: 1 },  // Zone 8: early December
+    9: { month: 12, day: 15 }, // Zone 9: mid-December
+    10: { month: 1, day: 15 }, // Zone 10: rare frost
+    11: { month: 2, day: 1 }   // Zone 11: very rare frost
+  };
+  
+  const baseFrostDate = frostDates[zoneNumber] || frostDates[7];
+  
+  // Adjust for microclimate effects
+  const microclimateAdjustment = locationConfig.microclimateEffects?.frostDateAdjustment || 0;
+  const adjustedFrostDay = baseFrostDate.day + microclimateAdjustment;
+  
+  // Calculate days needed from planting to harvest
+  const daysToMaturity = (crop.harvestStart || 2) * 30; // Convert months to days
+  const transplantDays = (crop.transplantWeeks || 0) * 7;
+  const totalDays = daysToMaturity + transplantDays;
+  
+  // Calculate latest planting date by working backwards from frost
+  const frostDate = new Date();
+  frostDate.setMonth(baseFrostDate.month - 1); // JS months are 0-indexed
+  frostDate.setDate(adjustedFrostDay);
+  
+  const latestPlanting = new Date(frostDate);
+  latestPlanting.setDate(latestPlanting.getDate() - totalDays);
+  
+  return latestPlanting;
+};
+
+// Check if direct sowing is still viable for current date
+export const isDirectSowingViable = (crop, currentDate, locationConfig) => {
+  const latestDate = getLatestPlantingDate(crop, locationConfig);
+  if (!latestDate) return true; // Default to viable if we can't calculate
+  
+  return currentDate <= latestDate;
+};
+
+// Get alternative planting method when direct sowing is no longer viable
+export const getAlternativePlantingMethod = (crop, currentMonth, locationConfig) => {
+  if (!crop) return null;
+  
+  const currentDate = new Date();
+  const isDirectViable = isDirectSowingViable(crop, currentDate, locationConfig);
+  
+  if (isDirectViable) {
+    return null; // Direct sowing is still viable
+  }
+  
+  const alternatives = [];
+  
+  // Check if transplants are still viable
+  if (crop.transplantWeeks > 0) {
+    const transplantDate = new Date();
+    transplantDate.setDate(transplantDate.getDate() + (crop.transplantWeeks * 7));
+    
+    if (isDirectSowingViable(crop, transplantDate, locationConfig)) {
+      alternatives.push({
+        method: 'transplant',
+        description: `Start transplants indoors now for planting in ${crop.transplantWeeks} weeks`,
+        timing: `Start seeds indoors, transplant in ${crop.transplantWeeks} weeks`
+      });
+    }
+  }
+  
+  // Check for next year planting
+  const nextYearMonths = crop.plantingMonths[getClimateZoneFromLocation(locationConfig)] || crop.plantingMonths.temperate;
+  const earliestNextMonth = Math.min(...nextYearMonths);
+  
+  alternatives.push({
+    method: 'next_season',
+    description: `Too late for this season - plan for next ${getMonthName(earliestNextMonth)}`,
+    timing: `Next planting window: ${nextYearMonths.map(m => getMonthName(m)).join(', ')}`
+  });
+  
+  // Check for season extension methods
+  if (currentMonth >= 8) { // Late summer/fall
+    alternatives.push({
+      method: 'season_extension',
+      description: 'Consider cold frames, row covers, or greenhouse for extended season',
+      timing: 'Use protection to extend growing season'
+    });
+  }
+  
+  return alternatives;
+};
+
+// Helper function to get month names
+const getMonthName = (monthNumber) => {
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  return months[monthNumber - 1] || 'Unknown';
+};
+
+// Helper function to determine climate zone from location
+const getClimateZoneFromLocation = (locationConfig) => {
+  if (!locationConfig) return 'temperate';
+  
+  const zoneNumber = getHardinessZoneNumber(locationConfig.hardiness);
+  
+  if (zoneNumber >= 10) return 'tropical';
+  if (zoneNumber >= 8) return 'subtropical';
+  return 'temperate';
+};
+
 // Calculate microclimate adjustments
 export const calculateMicroclimateEffects = (microclimate) => {
   const effects = {

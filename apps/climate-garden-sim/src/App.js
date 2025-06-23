@@ -27,7 +27,10 @@ import {
   DEFAULT_LOCATION_CONFIG,
   SHADEMAP_CONFIG,
   convertSolarDataToCanopyShade,
-  getEnhancedMicroclimateRecommendations
+  getEnhancedMicroclimateRecommendations,
+  isPlantingSeasonValid,
+  isDirectSowingViable,
+  getAlternativePlantingMethod
 } from './config.js';
 import './index.css';
 
@@ -1195,10 +1198,31 @@ function App() {
           const plantingMonths = crop.plantingMonths[climateZone] || crop.plantingMonths.temperate;
           
           if (plantingMonths.includes(monthNumber)) {
-            if (crop.transplantWeeks > 0) {
-              activities.push(`🌱 Start ${crop.displayName} transplants indoors`);
-            } else {
-              activities.push(`🌱 Direct sow ${crop.displayName}`);
+            // Check if planting is still viable for this month
+            const isPlantingValid = isPlantingSeasonValid(crop, monthNumber, locationConfig);
+            const currentDate = new Date();
+            currentDate.setMonth(monthIndex); // Set to the month we're checking
+            const isDirectViable = isDirectSowingViable(crop, currentDate, locationConfig);
+            
+            if (isPlantingValid) {
+              if (crop.transplantWeeks > 0) {
+                activities.push(`🌱 Start ${crop.displayName} transplants indoors`);
+              } else if (isDirectViable) {
+                activities.push(`🌱 Direct sow ${crop.displayName}`);
+              } else {
+                // Direct sowing is too late, suggest alternatives
+                const alternatives = getAlternativePlantingMethod(crop, monthNumber, locationConfig);
+                if (alternatives && alternatives.length > 0) {
+                  const primaryAlt = alternatives[0];
+                  if (primaryAlt.method === 'transplant') {
+                    activities.push(`🏠 ${primaryAlt.description}`);
+                  } else if (primaryAlt.method === 'next_season') {
+                    activities.push(`📅 Plan ${crop.displayName} for next season`);
+                  } else if (primaryAlt.method === 'season_extension') {
+                    activities.push(`🛡️ Season extension needed for ${crop.displayName}`);
+                  }
+                }
+              }
             }
           }
           
@@ -2171,6 +2195,63 @@ function App() {
           <p>Selected scenario: <strong>{currentClimateScenarios.summer.find(s => s.id === selectedSummer)?.name}</strong> + <strong>{currentClimateScenarios.winter.find(s => s.id === selectedWinter)?.name}</strong></p>
           <p>Portfolio: <strong>{getPortfolioStrategies(locationConfig, customPortfolio)[selectedPortfolio]?.name}</strong></p>
           {simulating && <p>🎲 Updating results...</p>}
+
+          {/* Timing Alerts */}
+          {(() => {
+            if (!locationConfig) return null;
+            
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1;
+            const portfolio = getPortfolioStrategies(locationConfig, customPortfolio)[selectedPortfolio];
+            const adaptedCrops = getClimateAdaptedCrops(locationConfig, selectedSummer);
+            const timingAlerts = [];
+            
+            // Check each crop type in the portfolio for timing issues
+            Object.entries(portfolio).forEach(([cropType, percentage]) => {
+              if (percentage < 10) return;
+              
+              const categoryName = cropType === 'heatSpecialists' ? 'heatTolerant' : cropType;
+              if (!adaptedCrops[categoryName]) return;
+              
+              Object.entries(adaptedCrops[categoryName]).forEach(([cropKey, crop]) => {
+                if (!isDirectSowingViable(crop, currentDate, locationConfig)) {
+                  const alternatives = getAlternativePlantingMethod(crop, currentMonth, locationConfig);
+                  timingAlerts.push({
+                    crop: crop.displayName,
+                    issue: 'Too late for direct sowing',
+                    alternatives: alternatives || []
+                  });
+                }
+              });
+            });
+            
+            if (timingAlerts.length === 0) return null;
+            
+            return (
+              <div className="timing-alerts">
+                <h4>⏰ Timing Alerts</h4>
+                <p>Some crops in your portfolio are no longer viable for direct sowing:</p>
+                <div className="alerts-list">
+                  {timingAlerts.slice(0, 3).map((alert, index) => (
+                    <div key={index} className="timing-alert">
+                      <div className="alert-crop">{alert.crop}</div>
+                      <div className="alert-issue">{alert.issue}</div>
+                      {alert.alternatives.length > 0 && (
+                        <div className="alert-alternatives">
+                          <strong>Alternative:</strong> {alert.alternatives[0].description}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {timingAlerts.length > 3 && (
+                    <div className="alert-more">
+                      +{timingAlerts.length - 3} more crops need alternative planting methods
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
 
           {simulationResults && (
             <div className="results-section">
