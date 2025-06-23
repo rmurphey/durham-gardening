@@ -450,6 +450,12 @@ body {
   color: white;
 }
 
+.calendar-month.current {
+  border: 3px solid #f39c12;
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+  transform: scale(1.02);
+}
+
 .month-activities {
   list-style: none;
   padding: 0;

@@ -17,7 +17,12 @@ import {
   BASE_YIELD_MULTIPLIERS,
   PORTFOLIO_NAMES,
   PORTFOLIO_DESCRIPTORS,
-  formatPercentage
+  formatPercentage,
+  formatProbability,
+  GLOBAL_CROP_DATABASE,
+  CLIMATE_ADJUSTMENTS,
+  CLIMATE_ZONES,
+  SUPPORTED_REGIONS
 } from './config.js';
 import './index.css';
 
@@ -191,7 +196,7 @@ function App() {
     const lat = location?.lat || 36;
     const regionalMultiplier = lat < 35 ? 1.3 : lat < 40 ? 1.1 : lat > 45 ? 0.8 : 1.0;
     
-    return Math.round(Math.min(baselineProb * extremeMultiplier * regionalMultiplier, 80));
+    return Math.min(baselineProb * extremeMultiplier * regionalMultiplier, 80);
   };
 
   // Generate location-aware climate scenarios based on climate science
@@ -287,6 +292,7 @@ function App() {
     const [selectedPreset, setSelectedPreset] = useState(null);
     const [customConfig, setCustomConfig] = useState({
       name: '',
+      region: 'us', // Default to US
       hardiness: '7b',
       lat: '',
       lon: '',
@@ -383,6 +389,18 @@ function App() {
           <div className="setup-section">
             <h3>Custom Configuration</h3>
             <div className="config-grid">
+              <div className="config-item">
+                <label>Region:</label>
+                <select
+                  value={customConfig.region}
+                  onChange={(e) => setCustomConfig({...customConfig, region: e.target.value})}
+                >
+                  {Object.entries(SUPPORTED_REGIONS).map(([code, region]) => (
+                    <option key={code} value={code}>{region.name}</option>
+                  ))}
+                </select>
+              </div>
+              
               <div className="config-item">
                 <label>Location Name:</label>
                 <input
@@ -667,8 +685,73 @@ function App() {
     return { summer: summerRec, winter: winterRec };
   };
 
+  // Determine climate zone from location data
+  const getClimateZoneFromLocation = (locationConfig) => {
+    if (!locationConfig) return 'temperate';
+    
+    const avgTemp = (getHardinessZoneNumber(locationConfig.hardiness) * 5) - 25; // Rough conversion
+    
+    if (avgTemp > 25) return 'tropical';
+    if (avgTemp > 15) return 'subtropical';
+    return 'temperate';
+  };
+
+  // Filter crops suitable for current climate and conditions
+  const getClimateAdaptedCrops = (locationConfig, scenario) => {
+    if (!locationConfig) return GLOBAL_CROP_DATABASE;
+    
+    const climateZone = getClimateZoneFromLocation(locationConfig);
+    const regionConfig = SUPPORTED_REGIONS[locationConfig.region] || SUPPORTED_REGIONS.us;
+    const language = regionConfig.language;
+    
+    const adaptedCrops = {};
+    
+    Object.entries(GLOBAL_CROP_DATABASE).forEach(([category, crops]) => {
+      adaptedCrops[category] = {};
+      
+      Object.entries(crops).forEach(([cropKey, crop]) => {
+        // Check if crop is suitable for current hardiness zone
+        const [minZone, maxZone] = crop.zones.split('-').map(z => parseInt(z));
+        const currentZone = getHardinessZoneNumber(locationConfig.hardiness);
+        
+        if (currentZone >= minZone && currentZone <= maxZone) {
+          // Check climate tolerance for future scenarios
+          const futureTemp = getHistoricalTemp(locationConfig.hardiness) + 2.5; // Climate change projection
+          const isHeatTolerant = crop.heat === 'excellent' || crop.heat === 'good';
+          const isDroughtTolerant = crop.drought === 'excellent' || crop.drought === 'good';
+          
+          // Include crop if it can handle projected conditions
+          if (scenario === 'extreme' || scenario === 'catastrophic') {
+            if (isHeatTolerant && isDroughtTolerant) {
+              adaptedCrops[category][cropKey] = {
+                ...crop,
+                displayName: crop.name[language] || crop.name.en,
+                suitability: 'excellent'
+              };
+            } else if (isHeatTolerant || isDroughtTolerant) {
+              adaptedCrops[category][cropKey] = {
+                ...crop,
+                displayName: crop.name[language] || crop.name.en,
+                suitability: 'marginal'
+              };
+            }
+          } else {
+            adaptedCrops[category][cropKey] = {
+              ...crop,
+              displayName: crop.name[language] || crop.name.en,
+              suitability: 'good'
+            };
+          }
+        }
+      });
+    });
+    
+    return adaptedCrops;
+  };
+
   const generateGardenCalendar = (summerScenario, winterScenario, portfolioKey) => {
     const portfolio = getPortfolioStrategies(locationConfig)[portfolioKey];
+    const currentMonth = new Date().getMonth() + 1; // 1-12
     const calendar = [];
     
     const months = [
@@ -676,65 +759,97 @@ function App() {
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
     
-    // Define activities based on climate scenarios and portfolio
-    const activities = {
-      extreme_heat: {
-        // Extreme heat strategy - focus on Oct-Apr growing season
-        'January': ['🌱 Sow cool-season crops indoors', '🥬 Harvest winter greens', '🛠️ Maintain drip irrigation'],
-        'February': ['🌱 Direct sow cold-hardy crops', '🔄 Start spring succession plantings'],
-        'March': ['🌱 Transplant cool-season starts', '🛒 Order heat-tolerant seeds for fall'],
-        'April': ['🌱 Last plantings before heat', '🛠️ Install shade structures'],
-        'May': ['🥬 Final cool-season harvest', '🛠️ Prep containers for mobility'],
-        'June': ['🛠️ Survival mode - deep watering only', '🔄 Plan fall garden'],
-        'July': ['🛠️ Maintain existing plants only', '🛒 Order fall/winter seeds'],
-        'August': ['🛠️ Prepare beds for fall planting', '🌱 Start heat-tolerant transplants indoors'],
-        'September': ['🌱 Begin fall plantings', '🔄 Succession plant cool crops'],
-        'October': ['🌱 Peak planting season begins', '🔄 Weekly succession sowings'],
-        'November': ['🌱 Continue cool-season plantings', '🛠️ Cold protection prep'],
-        'December': ['🥬 Harvest season peak', '🛠️ Plan next year\'s strategy']
-      },
-      normal_heat: {
-        // Normal heat strategy - modified traditional season
-        'January': ['🌱 Plan garden layout', '🛒 Order seeds for spring'],
-        'February': ['🌱 Start transplants indoors', '🛠️ Prepare soil'],
-        'March': ['🌱 Direct sow cool crops', '🔄 Begin succession plantings'],
-        'April': ['🌱 Transplant warm-season crops', '🛠️ Install irrigation'],
-        'May': ['🌱 Continue warm-season plantings', '🔄 Succession plant'],
-        'June': ['🥬 First harvests', '🛠️ Summer maintenance begins'],
-        'July': ['🥬 Peak harvest', '🔄 Plant fall crops'],
-        'August': ['🌱 Fall garden preparation', '🛒 Order winter seeds'],
-        'September': ['🌱 Fall plantings', '🔄 Succession cool crops'],
-        'October': ['🌱 Winter crop plantings', '🛠️ Cold protection prep'],
-        'November': ['🥬 Late harvest', '🛠️ Garden cleanup'],
-        'December': ['🛠️ Plan improvements', '🥬 Harvest storage crops']
-      }
+    // Get climate-adapted crops for this location and scenario
+    const adaptedCrops = getClimateAdaptedCrops(locationConfig, summerScenario);
+    const climateZone = getClimateZoneFromLocation(locationConfig);
+    
+    // Track existing plants (simulate some plants already growing)
+    const existingPlants = {
+      perennials: Object.keys(adaptedCrops.perennials || {}).slice(0, 3), // First 3 available perennials
+      activeHarvests: currentMonth >= 10 || currentMonth <= 4 ? 
+        Object.keys(adaptedCrops.coolSeason || {}).slice(0, 3) : 
+        Object.keys(adaptedCrops.heatTolerant || {}).slice(0, 2)
     };
     
-    // Select activity set based on summer scenario
-    const activitySet = summerScenario === 'extreme' || summerScenario === 'catastrophic' ? 
-      activities.extreme_heat : activities.normal_heat;
-    
-    // Generate calendar
-    months.forEach((month, index) => {
-      const monthActivities = activitySet[month] || ['🛠️ Garden maintenance'];
+    // Generate dynamic calendar for next 12 months
+    for (let i = 0; i < 12; i++) {
+      const monthIndex = (currentMonth - 1 + i) % 12;
+      const monthNumber = monthIndex + 1;
+      const month = months[monthIndex];
+      const activities = [];
       
-      // Add portfolio-specific activities
-      if (portfolio.heatSpecialists > 40) {
-        monthActivities.push('🌶️ Focus on heat-tolerant varieties');
+      // Generate planting activities based on adapted crops and portfolio
+      Object.entries(portfolio).forEach(([cropType, percentage]) => {
+        if (percentage < 10 || !adaptedCrops[cropType === 'heatSpecialists' ? 'heatTolerant' : cropType]) return;
+        
+        const categoryName = cropType === 'heatSpecialists' ? 'heatTolerant' : cropType;
+        Object.entries(adaptedCrops[categoryName]).forEach(([cropKey, crop]) => {
+          const plantingMonths = crop.plantingMonths[climateZone] || crop.plantingMonths.temperate;
+          
+          if (plantingMonths.includes(monthNumber)) {
+            if (crop.transplantWeeks > 0) {
+              activities.push(`🌱 Start ${crop.displayName} transplants indoors`);
+            } else {
+              activities.push(`🌱 Direct sow ${crop.displayName}`);
+            }
+          }
+          
+          // Calculate transplant timing
+          if (crop.transplantWeeks > 0) {
+            const transplantMonths = plantingMonths.map(m => {
+              const tm = m + Math.round(crop.transplantWeeks / 4);
+              return tm > 12 ? tm - 12 : tm;
+            });
+            if (transplantMonths.includes(monthNumber)) {
+              activities.push(`🔄 Transplant ${crop.displayName} seedlings`);
+            }
+          }
+          
+          // Calculate harvest timing
+          const harvestMonths = plantingMonths.map(m => {
+            const hm = m + Math.round(crop.harvestStart);
+            return hm > 12 ? hm - 12 : hm;
+          });
+          if (harvestMonths.includes(monthNumber)) {
+            activities.push(`🥬 Begin harvesting ${crop.displayName}`);
+          }
+        });
+      });
+      
+      // Add existing plant harvests
+      existingPlants.perennials.forEach(herbKey => {
+        const herb = adaptedCrops.perennials?.[herbKey];
+        if (herb) {
+          activities.push(`🌿 Harvest ${herb.displayName} (ongoing)`);
+        }
+      });
+      
+      // Add climate-specific maintenance
+      if (monthNumber === 3 || monthNumber === 9) {
+        activities.push('🛠️ Check and repair irrigation systems');
       }
-      if (portfolio.coolSeason > 40) {
-        monthActivities.push('🥬 Emphasize cool-season succession');
+      if (monthNumber === 2 || monthNumber === 8) {
+        activities.push('🛒 Order seeds for upcoming season');
       }
-      if (portfolio.perennials > 15) {
-        monthActivities.push('🌿 Maintain perennial herbs');
+      if ((summerScenario === 'extreme' || summerScenario === 'catastrophic') && monthNumber === 5) {
+        activities.push('🛠️ Install shade cloth for heat protection');
+      }
+      if (climateZone === 'temperate' && monthNumber === 11) {
+        activities.push('🛠️ Prepare cold protection materials');
+      }
+      
+      // Ensure minimum activities
+      if (activities.length === 0) {
+        activities.push('🛠️ Garden maintenance and observation');
       }
       
       calendar.push({
         month,
-        activities: monthActivities,
-        emphasis: getMonthEmphasis(index, summerScenario, winterScenario)
+        activities: activities.slice(0, 4), // Limit to 4 activities per month
+        emphasis: getMonthEmphasis(monthIndex, summerScenario, winterScenario),
+        isCurrentMonth: monthIndex === (currentMonth - 1)
       });
-    });
+    }
     
     return calendar;
   };
@@ -893,11 +1008,8 @@ function App() {
   // Format currency using browser's native Intl.NumberFormat API
   const formatCurrency = (amount, currency = 'USD') => {
     if (currency === 'PCT') {
-      // Handle percentages separately
-      return new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-      }).format(amount);
+      // Handle percentages with intelligent formatting
+      return formatProbability(amount);
     }
     
     return new Intl.NumberFormat('en-US', {
@@ -1211,7 +1323,7 @@ function App() {
                 <div key={scenario.id} className="timeline-scenario">
                   <div className="scenario-label">
                     <span className="scenario-name">{scenario.name}</span>
-                    <span className="scenario-probability">{scenario.probability}%</span>
+                    <span className="scenario-probability">{formatProbability(scenario.probability)}%</span>
                   </div>
                   <div className="timeline-track">
                     <div 
@@ -1237,7 +1349,7 @@ function App() {
                 onClick={() => setSelectedSummer(scenario.id)}
               >
                 <h4>{scenario.name}</h4>
-                <p>{scenario.probability}% chance</p>
+                <p>{formatProbability(scenario.probability)}% chance</p>
                 <p><em>{scenario.impact}</em></p>
               </div>
             ))}
@@ -1267,7 +1379,7 @@ function App() {
                 <div key={scenario.id} className="timeline-scenario">
                   <div className="scenario-label">
                     <span className="scenario-name">{scenario.name}</span>
-                    <span className="scenario-probability">{scenario.probability}%</span>
+                    <span className="scenario-probability">{formatProbability(scenario.probability)}%</span>
                   </div>
                   <div className="timeline-track">
                     <div 
@@ -1293,7 +1405,7 @@ function App() {
                 onClick={() => setSelectedWinter(scenario.id)}
               >
                 <h4>{scenario.name}</h4>
-                <p>{scenario.probability}% chance</p>
+                <p>{formatProbability(scenario.probability)}% chance</p>
                 <p><em>{scenario.impact}</em></p>
               </div>
             ))}
@@ -1522,7 +1634,7 @@ function App() {
                   <p className="calendar-subtitle">Optimized for {currentClimateScenarios.summer.find(s => s.id === selectedSummer)?.name} + {currentClimateScenarios.winter.find(s => s.id === selectedWinter)?.name}</p>
                   <div className="calendar-grid">
                     {simulationResults.gardenCalendar.map((monthData, index) => (
-                      <div key={index} className={`calendar-month ${monthData.emphasis}`}>
+                      <div key={index} className={`calendar-month ${monthData.emphasis} ${monthData.isCurrentMonth ? 'current' : ''}`}>
                         <div className="month-header">
                           <h5>{monthData.month}</h5>
                           <span className="month-emphasis">{monthData.emphasis}</span>

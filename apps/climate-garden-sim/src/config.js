@@ -330,7 +330,196 @@ export const STORAGE_KEYS = {
 // Configuration version for migration support
 export const CONFIG_VERSION = '1.0.0';
 
-// Utility function for consistent percentage formatting (zero decimal places)
+// Global crop database with climate adaptations
+export const GLOBAL_CROP_DATABASE = {
+  heatTolerant: {
+    okra: {
+      name: { en: 'Okra', es: 'Quimbombó', fr: 'Gombo' },
+      zones: '6-11', minTemp: -10, maxTemp: 45, optimalTemp: [25, 35],
+      plantingMonths: { temperate: [4, 5, 6], tropical: [1, 2, 3, 10, 11, 12], subtropical: [3, 4, 5, 9] },
+      harvestStart: 2, harvestDuration: 4, transplantWeeks: 0,
+      drought: 'excellent', heat: 'excellent', humidity: 'excellent'
+    },
+    peppers: {
+      name: { en: 'Hot Peppers', es: 'Chiles', fr: 'Piments' },
+      zones: '5-11', minTemp: -5, maxTemp: 40, optimalTemp: [20, 30],
+      plantingMonths: { temperate: [3, 4, 5], tropical: [1, 2, 11, 12], subtropical: [2, 3, 4, 10, 11] },
+      harvestStart: 3, harvestDuration: 5, transplantWeeks: 6,
+      drought: 'good', heat: 'excellent', humidity: 'good'
+    },
+    amaranth: {
+      name: { en: 'Amaranth Greens', es: 'Amaranto', fr: 'Amarante' },
+      zones: '4-11', minTemp: -15, maxTemp: 42, optimalTemp: [22, 32],
+      plantingMonths: { temperate: [4, 5, 6, 7], tropical: [1, 2, 3, 10, 11, 12], subtropical: [3, 4, 5, 8, 9] },
+      harvestStart: 1.5, harvestDuration: 3, transplantWeeks: 0,
+      drought: 'excellent', heat: 'excellent', humidity: 'excellent'
+    },
+    sweetPotato: {
+      name: { en: 'Sweet Potato', es: 'Batata', fr: 'Patate douce' },
+      zones: '6-11', minTemp: -8, maxTemp: 38, optimalTemp: [24, 30],
+      plantingMonths: { temperate: [5, 6], tropical: [1, 2, 3, 10, 11, 12], subtropical: [3, 4, 5, 9, 10] },
+      harvestStart: 4, harvestDuration: 1, transplantWeeks: 0,
+      drought: 'excellent', heat: 'excellent', humidity: 'good'
+    },
+    malabarSpinach: {
+      name: { en: 'Malabar Spinach', es: 'Espinaca de Malabar', fr: 'Épinard de Malabar' },
+      zones: '7-11', minTemp: -5, maxTemp: 40, optimalTemp: [25, 35],
+      plantingMonths: { temperate: [5, 6, 7], tropical: [1, 2, 3, 10, 11, 12], subtropical: [4, 5, 6, 8, 9] },
+      harvestStart: 2, harvestDuration: 4, transplantWeeks: 4,
+      drought: 'good', heat: 'excellent', humidity: 'excellent'
+    }
+  },
+  coolSeason: {
+    kale: {
+      name: { en: 'Kale', es: 'Col rizada', fr: 'Chou frisé' },
+      zones: '2-9', minTemp: -25, maxTemp: 25, optimalTemp: [10, 20],
+      plantingMonths: { temperate: [8, 9, 1, 2, 3], tropical: [11, 12, 1, 2], subtropical: [9, 10, 11, 1, 2] },
+      harvestStart: 2, harvestDuration: 4, transplantWeeks: 4,
+      drought: 'fair', heat: 'poor', humidity: 'good'
+    },
+    cabbage: {
+      name: { en: 'Cabbage', es: 'Repollo', fr: 'Chou' },
+      zones: '1-9', minTemp: -30, maxTemp: 22, optimalTemp: [8, 18],
+      plantingMonths: { temperate: [8, 9, 1, 2], tropical: [11, 12, 1], subtropical: [9, 10, 11, 1] },
+      harvestStart: 3, harvestDuration: 2, transplantWeeks: 6,
+      drought: 'fair', heat: 'poor', humidity: 'fair'
+    },
+    lettuce: {
+      name: { en: 'Lettuce', es: 'Lechuga', fr: 'Laitue' },
+      zones: '2-9', minTemp: -20, maxTemp: 24, optimalTemp: [12, 18],
+      plantingMonths: { temperate: [9, 10, 1, 2, 3], tropical: [11, 12, 1, 2], subtropical: [9, 10, 11, 1, 2, 3] },
+      harvestStart: 1.5, harvestDuration: 2, transplantWeeks: 3,
+      drought: 'poor', heat: 'poor', humidity: 'good'
+    },
+    spinach: {
+      name: { en: 'Spinach', es: 'Espinaca', fr: 'Épinard' },
+      zones: '2-9', minTemp: -25, maxTemp: 20, optimalTemp: [10, 16],
+      plantingMonths: { temperate: [8, 9, 10, 1, 2, 3], tropical: [11, 12, 1], subtropical: [9, 10, 11, 1, 2] },
+      harvestStart: 1.5, harvestDuration: 2, transplantWeeks: 0,
+      drought: 'poor', heat: 'poor', humidity: 'good'
+    },
+    carrots: {
+      name: { en: 'Carrots', es: 'Zanahorias', fr: 'Carottes' },
+      zones: '3-10', minTemp: -20, maxTemp: 28, optimalTemp: [12, 22],
+      plantingMonths: { temperate: [9, 10, 1, 2, 3, 4], tropical: [11, 12, 1, 2], subtropical: [9, 10, 11, 1, 2, 3] },
+      harvestStart: 2.5, harvestDuration: 1, transplantWeeks: 0,
+      drought: 'fair', heat: 'fair', humidity: 'good'
+    }
+  },
+  perennials: {
+    rosemary: {
+      name: { en: 'Rosemary', es: 'Romero', fr: 'Romarin' },
+      zones: '6-10', minTemp: -10, maxTemp: 40, optimalTemp: [15, 30],
+      plantingMonths: { temperate: [3, 4, 9, 10], tropical: [1, 2, 11, 12], subtropical: [3, 4, 5, 9, 10, 11] },
+      harvestStart: 0.5, harvestDuration: 12, transplantWeeks: 0,
+      drought: 'excellent', heat: 'excellent', humidity: 'fair'
+    },
+    thyme: {
+      name: { en: 'Thyme', es: 'Tomillo', fr: 'Thym' },
+      zones: '4-9', minTemp: -15, maxTemp: 35, optimalTemp: [15, 25],
+      plantingMonths: { temperate: [3, 4, 9, 10], tropical: [11, 12, 1, 2], subtropical: [3, 4, 5, 9, 10, 11] },
+      harvestStart: 0.5, harvestDuration: 12, transplantWeeks: 0,
+      drought: 'excellent', heat: 'good', humidity: 'fair'
+    },
+    oregano: {
+      name: { en: 'Oregano', es: 'Orégano', fr: 'Origan' },
+      zones: '4-10', minTemp: -15, maxTemp: 38, optimalTemp: [18, 28],
+      plantingMonths: { temperate: [3, 4, 9, 10], tropical: [1, 2, 11, 12], subtropical: [3, 4, 5, 9, 10, 11] },
+      harvestStart: 0.5, harvestDuration: 12, transplantWeeks: 0,
+      drought: 'good', heat: 'good', humidity: 'good'
+    },
+    mint: {
+      name: { en: 'Mint', es: 'Menta', fr: 'Menthe' },
+      zones: '3-9', minTemp: -20, maxTemp: 30, optimalTemp: [15, 25],
+      plantingMonths: { temperate: [3, 4, 5, 9, 10], tropical: [11, 12, 1, 2], subtropical: [3, 4, 5, 9, 10, 11] },
+      harvestStart: 0.5, harvestDuration: 12, transplantWeeks: 0,
+      drought: 'poor', heat: 'fair', humidity: 'excellent'
+    }
+  }
+};
+
+// Climate zone classification for plant selection
+export const CLIMATE_ZONES = {
+  temperate: { minTemp: -30, maxTemp: 30, regions: ['northern-us', 'central-us', 'northern-europe', 'southern-canada'] },
+  subtropical: { minTemp: -5, maxTemp: 35, regions: ['southern-us', 'mediterranean', 'southern-europe', 'parts-australia'] },
+  tropical: { minTemp: 10, maxTemp: 40, regions: ['florida', 'hawaii', 'central-america', 'southeast-asia', 'caribbean'] }
+};
+
+// Region selection for localized recommendations
+export const SUPPORTED_REGIONS = {
+  'us': { name: 'United States', language: 'en', currency: 'USD' },
+  'ca': { name: 'Canada', language: 'en', currency: 'CAD' },
+  'mx': { name: 'Mexico', language: 'es', currency: 'MXN' },
+  'gb': { name: 'United Kingdom', language: 'en', currency: 'GBP' },
+  'fr': { name: 'France', language: 'fr', currency: 'EUR' },
+  'es': { name: 'Spain', language: 'es', currency: 'EUR' },
+  'au': { name: 'Australia', language: 'en', currency: 'AUD' }
+};
+
+// Climate-adaptive planting adjustments
+export const CLIMATE_ADJUSTMENTS = {
+  extreme: {
+    heatSpecialists: { delayWeeks: 0, extendSeason: 2 }, // Plant on time, longer season
+    coolSeason: { delayWeeks: 2, shortenSeason: -1 }, // Delay planting, shorter season
+    perennials: { delayWeeks: 1, protection: 'shade_cloth' }
+  },
+  mild: {
+    heatSpecialists: { delayWeeks: -2, extendSeason: -1 }, // Earlier planting
+    coolSeason: { delayWeeks: -1, extendSeason: 1 }, // Earlier, longer season
+    perennials: { delayWeeks: 0, protection: 'none' }
+  }
+};
+
+// Utility function for intelligent percentage formatting (up to 3 decimals, only when useful)
 export const formatPercentage = (decimal) => {
-  return Math.round(decimal * 100);
+  const percentage = decimal * 100;
+  
+  // If it's a whole number, show no decimals
+  if (percentage === Math.round(percentage)) {
+    return Math.round(percentage);
+  }
+  
+  // If it's close to a whole number (within 0.01), round to whole
+  if (Math.abs(percentage - Math.round(percentage)) < 0.01) {
+    return Math.round(percentage);
+  }
+  
+  // If one decimal place is sufficient (e.g., 12.3 not 12.30)
+  if (Math.abs(percentage - Math.round(percentage * 10) / 10) < 0.001) {
+    return Math.round(percentage * 10) / 10;
+  }
+  
+  // If two decimal places are sufficient (e.g., 12.34 not 12.340)
+  if (Math.abs(percentage - Math.round(percentage * 100) / 100) < 0.0001) {
+    return Math.round(percentage * 100) / 100;
+  }
+  
+  // Otherwise use up to 3 decimal places
+  return Math.round(percentage * 1000) / 1000;
+};
+
+// Alternative function for probabilities that are already percentages (not decimals)
+export const formatProbability = (percentage) => {
+  // If it's a whole number, show no decimals
+  if (percentage === Math.round(percentage)) {
+    return Math.round(percentage);
+  }
+  
+  // If it's close to a whole number (within 0.01), round to whole
+  if (Math.abs(percentage - Math.round(percentage)) < 0.01) {
+    return Math.round(percentage);
+  }
+  
+  // If one decimal place is sufficient
+  if (Math.abs(percentage - Math.round(percentage * 10) / 10) < 0.001) {
+    return Math.round(percentage * 10) / 10;
+  }
+  
+  // If two decimal places are sufficient
+  if (Math.abs(percentage - Math.round(percentage * 100) / 100) < 0.0001) {
+    return Math.round(percentage * 100) / 100;
+  }
+  
+  // Otherwise use up to 3 decimal places
+  return Math.round(percentage * 1000) / 1000;
 };
