@@ -879,18 +879,22 @@ function App() {
     // Generate simulation parameters using proper statistical distributions
     const params = generateSimulationParameters(portfolio, baseInvestment, portfolioMultiplier);
     
-    // Generate samples using professional statistical functions
-    const harvestValues = jStat.normal.sample(params.harvest.mean, params.harvest.std, iterations);
-    const investments = jStat.normal.sample(params.investment.mean, params.investment.std, iterations);
+    // Generate normal distribution samples using correct jStat API
+    const generateNormalSamples = (mean, std, count) => {
+      return Array.from({length: count}, () => jStat.normal.sample(mean, std));
+    };
+
+    const harvestValues = generateNormalSamples(params.harvest.mean, params.harvest.std, iterations);
+    const investments = generateNormalSamples(params.investment.mean, params.investment.std, iterations);
     
     // Calculate derived metrics
     const netReturns = harvestValues.map((harvest, i) => harvest - investments[i]);
     const rois = netReturns.map((netReturn, i) => (netReturn / investments[i]) * 100);
     
     // Generate breakdown data (simplified for performance)
-    const heatYields = jStat.normal.sample(params.heatYield.mean, params.heatYield.std, iterations);
-    const coolYields = jStat.normal.sample(params.coolYield.mean, params.coolYield.std, iterations);
-    const perennialYields = jStat.normal.sample(params.perennialYield.mean, params.perennialYield.std, iterations);
+    const heatYields = generateNormalSamples(params.heatYield.mean, params.heatYield.std, iterations);
+    const coolYields = generateNormalSamples(params.coolYield.mean, params.coolYield.std, iterations);
+    const perennialYields = generateNormalSamples(params.perennialYield.mean, params.perennialYield.std, iterations);
     
     // Generate weather data for visualization
     const weatherData = generateWeatherSamples(iterations);
@@ -954,9 +958,10 @@ function App() {
     const freezeParams = getFreezeParams();
     const rainfallParams = getRainfallParams();
     
-    const stressDays = jStat.poisson.sample(stressDaysParams.lambda, iterations);
-    const freezeEvents = jStat.poisson.sample(freezeParams.lambda, iterations);
-    const rainfall = jStat.normal.sample(rainfallParams.mean, rainfallParams.std, iterations);
+    // Generate samples using individual calls (same pattern as normal distribution)
+    const stressDays = Array.from({length: iterations}, () => jStat.poisson.sample(stressDaysParams.lambda));
+    const freezeEvents = Array.from({length: iterations}, () => jStat.poisson.sample(freezeParams.lambda));
+    const rainfall = Array.from({length: iterations}, () => jStat.normal.sample(rainfallParams.mean, rainfallParams.std));
     
     return stressDays.map((stress, i) => ({
       stressDays: Math.max(0, stress),
