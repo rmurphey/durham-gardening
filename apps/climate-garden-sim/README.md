@@ -139,6 +139,7 @@ A comprehensive React application for climate-aware garden planning with Monte C
 ## Available Scripts
 
 - `npm start` - Start development server with fast refresh
+- `npm run dev` - Start development server with nodemon auto-restart (recommended)
 - `npm run build` - Create production build  
 - `npm test` - Run test suite
 - `./restart.sh` - Kill existing server and start fresh (development utility)
@@ -155,8 +156,26 @@ This application represents a fully functional climate-aware garden planning sys
 ✅ **Persistent Storage**: Configuration saved between sessions  
 ✅ **Responsive Design**: Works across all device sizes  
 
+### Recent Development Notes
+
+**Data Architecture Discovery (2025-06-23)**:
+- The application currently uses static crop data from `src/config.js` rather than the SQLite database
+- Database stores planting months as JSON strings (`"[4, 5, 6]"`) while the app expects JavaScript arrays (`[4, 5, 6]`)
+- Fixed `isPlantingSeasonValid` function to handle both static array data and JSON string data with proper error handling
+- Development server stability improved using `nodemon` instead of custom solutions
+
+**Server Stability**:
+- Replaced custom development server with industry-standard `nodemon` for auto-restart functionality
+- Use `npm run dev` for best development experience with automatic file watching and server restart
+
+**Database vs Static Data**:
+- SQLite database in `/database/plant_varieties.db` contains comprehensive crop data with regional planting schedules
+- React app uses hardcoded `GLOBAL_CROP_DATABASE` for performance and simplicity
+- Future integration would require JSON parsing of database strings and client-side database querying
+
 ### Future Enhancements
 - Integration with weather APIs for live data
+- Database-driven crop data instead of static configuration
 - Additional crop varieties and regional adaptations
 - Export functionality for garden calendars
 - Social sharing of simulation results

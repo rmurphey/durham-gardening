@@ -12,6 +12,7 @@
   },
   "scripts": {
     "start": "FAST_REFRESH=true react-scripts start",
+    "dev": "nodemon --exec 'FAST_REFRESH=true react-scripts start' --watch src --watch public --ext js,jsx,ts,tsx,css,html",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:db": "jest scripts/__tests__/database-manager.test.js",
@@ -46,6 +47,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "msw": "^2.10.2",
+    "nodemon": "^3.1.10",
     "sqlite3": "^5.1.7"
   }
 }

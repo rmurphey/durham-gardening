@@ -720,7 +720,21 @@ export const isPlantingSeasonValid = (crop, month, locationConfig) => {
   if (!crop || !crop.plantingMonths) return false;
   
   const climateZone = getClimateZoneFromLocation(locationConfig);
-  const plantingMonths = crop.plantingMonths[climateZone] || crop.plantingMonths.temperate;
+  let plantingMonths = crop.plantingMonths[climateZone] || crop.plantingMonths.temperate;
+  
+  // Handle case where plantingMonths is undefined or not an array
+  if (!Array.isArray(plantingMonths)) {
+    // Try to parse as JSON string if it came from database
+    if (typeof plantingMonths === 'string') {
+      try {
+        plantingMonths = JSON.parse(plantingMonths);
+      } catch (e) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
   
   // Account for microclimate season extension
   const seasonExtension = locationConfig?.seasonExtensionWeeks || 0;
