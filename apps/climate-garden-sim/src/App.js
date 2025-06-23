@@ -44,7 +44,7 @@ const climateScenarios = {
   ]
 };
 
-const getPortfolioStrategies = (locationConfig) => {
+const getPortfolioStrategies = (locationConfig, customPortfolio = null) => {
   // Default strategies when no location config
   const defaultStrategies = {
     conservative: { name: 'Conservative Portfolio', description: '60% success rate', heatSpecialists: 40, coolSeason: 35, perennials: 15, experimental: 10 },
@@ -52,7 +52,12 @@ const getPortfolioStrategies = (locationConfig) => {
     hedge: { name: 'Hedge Portfolio', description: '70% success rate', heatSpecialists: 30, coolSeason: 40, perennials: 20, experimental: 10 }
   };
 
-  if (!locationConfig) return defaultStrategies;
+  if (!locationConfig) {
+    if (customPortfolio) {
+      defaultStrategies.custom = customPortfolio;
+    }
+    return defaultStrategies;
+  }
 
   const climateType = getClimateType(locationConfig.heatDays, locationConfig.hardiness);
   const isShortSeason = getHardinessZoneNumber(locationConfig.hardiness) < 5;
@@ -76,7 +81,7 @@ const getPortfolioStrategies = (locationConfig) => {
     }
   };
 
-  return Object.entries(allocations).reduce((strategies, [portfolioType, climateAllocations]) => {
+  const strategies = Object.entries(allocations).reduce((strategies, [portfolioType, climateAllocations]) => {
     const allocation = climateAllocations[climateType];
     const description = typeof PORTFOLIO_DESCRIPTORS[portfolioType] === 'object' 
       ? PORTFOLIO_DESCRIPTORS[portfolioType][climateType] || PORTFOLIO_DESCRIPTORS[portfolioType].normal
@@ -89,8 +94,30 @@ const getPortfolioStrategies = (locationConfig) => {
     };
     return strategies;
   }, {});
+
+  // Add custom portfolio if it exists
+  if (customPortfolio) {
+    strategies.custom = customPortfolio;
+  }
+
+  return strategies;
 };
 
+const createCustomPortfolio = (basePortfolio, allocations) => {
+  return {
+    name: 'Custom Portfolio',
+    description: 'User-defined allocation',
+    heatSpecialists: allocations.heatSpecialists,
+    coolSeason: allocations.coolSeason,
+    perennials: allocations.perennials,
+    experimental: allocations.experimental
+  };
+};
+
+const validatePortfolioAllocations = (allocations) => {
+  const total = allocations.heatSpecialists + allocations.coolSeason + allocations.perennials + allocations.experimental;
+  return Math.abs(total - 100) < 1; // Allow small rounding errors
+};
 
 function App() {
   // Initialize state from localStorage directly
@@ -111,6 +138,12 @@ function App() {
       const stored = localStorage.getItem('gardenSim_climateSelection');
       return stored ? JSON.parse(stored).selectedPortfolio : 'hedge';
     } catch { return 'hedge'; }
+  });
+  const [customPortfolio, setCustomPortfolio] = useState(() => {
+    try {
+      const stored = localStorage.getItem('gardenSim_customPortfolio');
+      return stored ? JSON.parse(stored) : null;
+    } catch { return null; }
   });
   const [simulationResults, setSimulationResults] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
@@ -574,6 +607,14 @@ function App() {
 
   useEffect(() => {
     try {
+      if (customPortfolio) {
+        localStorage.setItem('gardenSim_customPortfolio', JSON.stringify(customPortfolio));
+      }
+    } catch {}
+  }, [customPortfolio]);
+
+  useEffect(() => {
+    try {
       localStorage.setItem('gardenSim_uiPreferences', JSON.stringify({ showInvestmentDetails, recommendationDismissed, showSetup }));
     } catch {}
   }, [showInvestmentDetails, recommendationDismissed, showSetup]);
@@ -750,7 +791,7 @@ function App() {
   };
 
   const generateGardenCalendar = (summerScenario, winterScenario, portfolioKey) => {
-    const portfolio = getPortfolioStrategies(locationConfig)[portfolioKey];
+    const portfolio = getPortfolioStrategies(locationConfig, customPortfolio)[portfolioKey];
     const currentMonth = new Date().getMonth() + 1; // 1-12
     const calendar = [];
     
@@ -871,7 +912,7 @@ function App() {
 
   // Professional Monte Carlo simulation using jStat and simple-statistics
   const runMonteCarloSimulation = (iterations = 1000) => {
-    const portfolio = getPortfolioStrategies(locationConfig)[selectedPortfolio];
+    const portfolio = getPortfolioStrategies(locationConfig, customPortfolio)[selectedPortfolio];
     const baseInvestment = calculateTotalInvestment();
     const portfolioMultiplier = selectedPortfolio === 'conservative' ? 0.85 : 
                                selectedPortfolio === 'aggressive' ? 1.15 : 1.0;
@@ -1422,7 +1463,7 @@ function App() {
         <div className="section">
           <h3>🌱 Portfolio Strategy</h3>
           <div className="scenario-grid">
-            {Object.entries(getPortfolioStrategies(locationConfig)).map(([key, portfolio]) => (
+            {Object.entries(getPortfolioStrategies(locationConfig, customPortfolio)).map(([key, portfolio]) => (
               <div 
                 key={key}
                 className={`scenario-card ${selectedPortfolio === key ? 'selected' : ''}`}
@@ -1447,12 +1488,193 @@ function App() {
               </div>
             ))}
           </div>
+          
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <button 
+              className="button"
+              onClick={() => {
+                const basePortfolio = getPortfolioStrategies(locationConfig, customPortfolio)[selectedPortfolio];
+                if (basePortfolio && selectedPortfolio !== 'custom') {
+                  const newCustomPortfolio = createCustomPortfolio(basePortfolio, {
+                    heatSpecialists: basePortfolio.heatSpecialists,
+                    coolSeason: basePortfolio.coolSeason,
+                    perennials: basePortfolio.perennials,
+                    experimental: basePortfolio.experimental
+                  });
+                  setCustomPortfolio(newCustomPortfolio);
+                  setSelectedPortfolio('custom');
+                }
+              }}
+            >
+              ⚙️ Customize Portfolio
+            </button>
+          </div>
         </div>
+
+        {customPortfolio && selectedPortfolio === 'custom' && (
+          <div className="section">
+            <h3>🔧 Custom Portfolio Allocations</h3>
+            <p style={{ color: '#666', fontStyle: 'italic', marginBottom: '20px' }}>
+              Adjust allocations as percentages. Total must equal 100%.
+            </p>
+            
+            <div className="investment-grid">
+              <div className="investment-item">
+                <div className="investment-item-header">
+                  <span className="investment-category">Heat-Tolerant Crops</span>
+                  <span className="investment-item-amount">{customPortfolio.heatSpecialists}%</span>
+                </div>
+                <div className="investment-slider-container">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={customPortfolio.heatSpecialists}
+                    onChange={(e) => {
+                      const newValue = parseInt(e.target.value);
+                      setCustomPortfolio({
+                        ...customPortfolio,
+                        heatSpecialists: newValue
+                      });
+                    }}
+                    className="investment-slider"
+                  />
+                </div>
+                <div className="investment-description">
+                  Okra, hot peppers, amaranth, sweet potatoes, and other heat-loving crops
+                </div>
+              </div>
+
+              <div className="investment-item">
+                <div className="investment-item-header">
+                  <span className="investment-category">Cool-Season Crops</span>
+                  <span className="investment-item-amount">{customPortfolio.coolSeason}%</span>
+                </div>
+                <div className="investment-slider-container">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={customPortfolio.coolSeason}
+                    onChange={(e) => {
+                      const newValue = parseInt(e.target.value);
+                      setCustomPortfolio({
+                        ...customPortfolio,
+                        coolSeason: newValue
+                      });
+                    }}
+                    className="investment-slider"
+                  />
+                </div>
+                <div className="investment-description">
+                  Kale, cabbage, lettuce, spinach, carrots, and other cool-weather crops
+                </div>
+              </div>
+
+              <div className="investment-item">
+                <div className="investment-item-header">
+                  <span className="investment-category">Perennial Herbs</span>
+                  <span className="investment-item-amount">{customPortfolio.perennials}%</span>
+                </div>
+                <div className="investment-slider-container">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={customPortfolio.perennials}
+                    onChange={(e) => {
+                      const newValue = parseInt(e.target.value);
+                      setCustomPortfolio({
+                        ...customPortfolio,
+                        perennials: newValue
+                      });
+                    }}
+                    className="investment-slider"
+                  />
+                </div>
+                <div className="investment-description">
+                  Rosemary, thyme, oregano, mint, and other perennial herbs
+                </div>
+              </div>
+
+              <div className="investment-item">
+                <div className="investment-item-header">
+                  <span className="investment-category">Experimental</span>
+                  <span className="investment-item-amount">{customPortfolio.experimental}%</span>
+                </div>
+                <div className="investment-slider-container">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={customPortfolio.experimental}
+                    onChange={(e) => {
+                      const newValue = parseInt(e.target.value);
+                      setCustomPortfolio({
+                        ...customPortfolio,
+                        experimental: newValue
+                      });
+                    }}
+                    className="investment-slider"
+                  />
+                </div>
+                <div className="investment-description">
+                  New varieties and climate adaptation trials
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '20px', padding: '15px', background: validatePortfolioAllocations(customPortfolio) ? '#e8f5e8' : '#fdf2f2', borderRadius: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontWeight: 'bold' }}>
+                  Total Allocation: {customPortfolio.heatSpecialists + customPortfolio.coolSeason + customPortfolio.perennials + customPortfolio.experimental}%
+                </span>
+                {validatePortfolioAllocations(customPortfolio) ? (
+                  <span style={{ color: '#27ae60', fontWeight: 'bold' }}>✓ Valid</span>
+                ) : (
+                  <span style={{ color: '#e74c3c', fontWeight: 'bold' }}>⚠ Must total 100%</span>
+                )}
+              </div>
+            </div>
+
+            <div style={{ marginTop: '20px', textAlign: 'center' }}>
+              <button 
+                className="button"
+                style={{ marginRight: '10px' }}
+                onClick={() => {
+                  setCustomPortfolio(null);
+                  setSelectedPortfolio('hedge');
+                  try {
+                    localStorage.removeItem('gardenSim_customPortfolio');
+                  } catch {}
+                }}
+              >
+                🗑️ Remove Custom
+              </button>
+              <button 
+                className="button"
+                onClick={() => {
+                  const basePortfolio = getPortfolioStrategies(locationConfig, null)[selectedPortfolio === 'custom' ? 'hedge' : selectedPortfolio];
+                  if (basePortfolio) {
+                    setCustomPortfolio(createCustomPortfolio(basePortfolio, {
+                      heatSpecialists: basePortfolio.heatSpecialists,
+                      coolSeason: basePortfolio.coolSeason,
+                      perennials: basePortfolio.perennials,
+                      experimental: basePortfolio.experimental
+                    }));
+                  }
+                }}
+              >
+                🔄 Reset to Preset
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="section">
           <h3>📊 Current Selection</h3>
           <p>Selected scenario: <strong>{currentClimateScenarios.summer.find(s => s.id === selectedSummer)?.name}</strong> + <strong>{currentClimateScenarios.winter.find(s => s.id === selectedWinter)?.name}</strong></p>
-          <p>Portfolio: <strong>{getPortfolioStrategies(locationConfig)[selectedPortfolio]?.name}</strong></p>
+          <p>Portfolio: <strong>{getPortfolioStrategies(locationConfig, customPortfolio)[selectedPortfolio]?.name}</strong></p>
           {simulating && <p>🎲 Updating results...</p>}
 
           {simulationResults && (
