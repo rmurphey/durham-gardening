@@ -20,9 +20,11 @@ import {
   formatPercentage,
   formatProbability,
   GLOBAL_CROP_DATABASE,
-  CLIMATE_ADJUSTMENTS,
-  CLIMATE_ZONES,
-  SUPPORTED_REGIONS
+  SUPPORTED_REGIONS,
+  MICROCLIMATE_OPTIONS,
+  calculateMicroclimateEffects,
+  getMicroclimateAdjustedRecommendations,
+  DEFAULT_LOCATION_CONFIG
 } from './config.js';
 import './index.css';
 
@@ -323,6 +325,7 @@ function App() {
   // Location setup component
   const LocationSetup = () => {
     const [selectedPreset, setSelectedPreset] = useState(null);
+    const [showMicroclimate, setShowMicroclimate] = useState(false);
     const [customConfig, setCustomConfig] = useState({
       name: '',
       region: 'us', // Default to US
@@ -334,7 +337,8 @@ function App() {
       winterSeverity: 3, // 1-5 scale  
       marketMultiplier: 1.0,
       gardenSize: 2, // 1-5 scale (small to large)
-      investmentLevel: 3 // 1-5 scale (minimal to premium)
+      investmentLevel: 3, // 1-5 scale (minimal to premium)
+      microclimate: { ...DEFAULT_LOCATION_CONFIG.microclimate }
     });
 
     const getHeatDaysFromIntensity = (intensity) => 
@@ -376,11 +380,17 @@ function App() {
     };
 
     const handleSubmit = () => {
+      // Calculate microclimate effects
+      const microclimateEffects = calculateMicroclimateEffects(customConfig.microclimate);
+      const adjustedConfig = getMicroclimateAdjustedRecommendations(customConfig, microclimateEffects);
+      
       const finalConfig = {
         ...customConfig,
+        ...adjustedConfig,
         heatDays: getHeatDaysFromIntensity(customConfig.heatIntensity),
         gardenSizeActual: getGardenSizeFromScale(customConfig.gardenSize),
-        budget: getBudgetFromLevel(customConfig.investmentLevel)
+        budget: getBudgetFromLevel(customConfig.investmentLevel),
+        microclimateEffects // Store the calculated effects
       };
       setLocationConfig(finalConfig);
       setShowSetup(false);
@@ -531,6 +541,220 @@ function App() {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="setup-section">
+            <div className="microclimate-header">
+              <h3>🏡 Microclimate Mapping</h3>
+              <p>Your specific site conditions can create temperature differences of 10-20°F and extend seasons by 2-4 weeks</p>
+              <button 
+                className="button small"
+                onClick={() => setShowMicroclimate(!showMicroclimate)}
+              >
+                {showMicroclimate ? 'Hide Advanced Settings' : 'Customize Site Conditions'}
+              </button>
+            </div>
+            
+            {showMicroclimate && (
+              <div className="microclimate-wizard">
+                <div className="microclimate-grid">
+                  <div className="microclimate-item">
+                    <label>Slope/Terrain:</label>
+                    <select
+                      value={customConfig.microclimate.slope}
+                      onChange={(e) => setCustomConfig({
+                        ...customConfig,
+                        microclimate: { ...customConfig.microclimate, slope: e.target.value }
+                      })}
+                    >
+                      {Object.entries(MICROCLIMATE_OPTIONS.slope).map(([key, option]) => (
+                        <option key={key} value={key}>{option.name}</option>
+                      ))}
+                    </select>
+                    <div className="microclimate-description">
+                      {MICROCLIMATE_OPTIONS.slope[customConfig.microclimate.slope]?.description}
+                    </div>
+                  </div>
+
+                  <div className="microclimate-item">
+                    <label>Garden Faces:</label>
+                    <select
+                      value={customConfig.microclimate.aspect}
+                      onChange={(e) => setCustomConfig({
+                        ...customConfig,
+                        microclimate: { ...customConfig.microclimate, aspect: e.target.value }
+                      })}
+                    >
+                      {Object.entries(MICROCLIMATE_OPTIONS.aspect).map(([key, option]) => (
+                        <option key={key} value={key}>{option.name}</option>
+                      ))}
+                    </select>
+                    <div className="microclimate-description">
+                      {MICROCLIMATE_OPTIONS.aspect[customConfig.microclimate.aspect]?.description}
+                    </div>
+                  </div>
+
+                  <div className="microclimate-item">
+                    <label>Wind Exposure:</label>
+                    <select
+                      value={customConfig.microclimate.windExposure}
+                      onChange={(e) => setCustomConfig({
+                        ...customConfig,
+                        microclimate: { ...customConfig.microclimate, windExposure: e.target.value }
+                      })}
+                    >
+                      {Object.entries(MICROCLIMATE_OPTIONS.windExposure).map(([key, option]) => (
+                        <option key={key} value={key}>{option.name}</option>
+                      ))}
+                    </select>
+                    <div className="microclimate-description">
+                      {MICROCLIMATE_OPTIONS.windExposure[customConfig.microclimate.windExposure]?.description}
+                    </div>
+                  </div>
+
+                  <div className="microclimate-item">
+                    <label>Soil Drainage:</label>
+                    <select
+                      value={customConfig.microclimate.soilDrainage}
+                      onChange={(e) => setCustomConfig({
+                        ...customConfig,
+                        microclimate: { ...customConfig.microclimate, soilDrainage: e.target.value }
+                      })}
+                    >
+                      {Object.entries(MICROCLIMATE_OPTIONS.soilDrainage).map(([key, option]) => (
+                        <option key={key} value={key}>{option.name}</option>
+                      ))}
+                    </select>
+                    <div className="microclimate-description">
+                      {MICROCLIMATE_OPTIONS.soilDrainage[customConfig.microclimate.soilDrainage]?.description}
+                    </div>
+                  </div>
+
+                  <div className="microclimate-item">
+                    <label>Building/Pavement Heat:</label>
+                    <select
+                      value={customConfig.microclimate.buildingHeat}
+                      onChange={(e) => setCustomConfig({
+                        ...customConfig,
+                        microclimate: { ...customConfig.microclimate, buildingHeat: e.target.value }
+                      })}
+                    >
+                      {Object.entries(MICROCLIMATE_OPTIONS.buildingHeat).map(([key, option]) => (
+                        <option key={key} value={key}>{option.name}</option>
+                      ))}
+                    </select>
+                    <div className="microclimate-description">
+                      {MICROCLIMATE_OPTIONS.buildingHeat[customConfig.microclimate.buildingHeat]?.description}
+                    </div>
+                  </div>
+
+                  <div className="microclimate-item">
+                    <label>Sun/Shade:</label>
+                    <select
+                      value={customConfig.microclimate.canopyShade}
+                      onChange={(e) => setCustomConfig({
+                        ...customConfig,
+                        microclimate: { ...customConfig.microclimate, canopyShade: e.target.value }
+                      })}
+                    >
+                      {Object.entries(MICROCLIMATE_OPTIONS.canopyShade).map(([key, option]) => (
+                        <option key={key} value={key}>{option.name}</option>
+                      ))}
+                    </select>
+                    <div className="microclimate-description">
+                      {MICROCLIMATE_OPTIONS.canopyShade[customConfig.microclimate.canopyShade]?.description}
+                    </div>
+                  </div>
+
+                  <div className="microclimate-item">
+                    <label>Elevation:</label>
+                    <select
+                      value={customConfig.microclimate.elevation}
+                      onChange={(e) => setCustomConfig({
+                        ...customConfig,
+                        microclimate: { ...customConfig.microclimate, elevation: e.target.value }
+                      })}
+                    >
+                      {Object.entries(MICROCLIMATE_OPTIONS.elevation).map(([key, option]) => (
+                        <option key={key} value={key}>{option.name}</option>
+                      ))}
+                    </select>
+                    <div className="microclimate-description">
+                      {MICROCLIMATE_OPTIONS.elevation[customConfig.microclimate.elevation]?.description}
+                    </div>
+                  </div>
+
+                  <div className="microclimate-item">
+                    <label>Reflective Heat:</label>
+                    <select
+                      value={customConfig.microclimate.reflectiveHeat}
+                      onChange={(e) => setCustomConfig({
+                        ...customConfig,
+                        microclimate: { ...customConfig.microclimate, reflectiveHeat: e.target.value }
+                      })}
+                    >
+                      {Object.entries(MICROCLIMATE_OPTIONS.reflectiveHeat).map(([key, option]) => (
+                        <option key={key} value={key}>{option.name}</option>
+                      ))}
+                    </select>
+                    <div className="microclimate-description">
+                      {MICROCLIMATE_OPTIONS.reflectiveHeat[customConfig.microclimate.reflectiveHeat]?.description}
+                    </div>
+                  </div>
+
+                  <div className="microclimate-item frost-pocket">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={customConfig.microclimate.frostPocket}
+                        onChange={(e) => setCustomConfig({
+                          ...customConfig,
+                          microclimate: { ...customConfig.microclimate, frostPocket: e.target.checked }
+                        })}
+                      />
+                      Frost Pocket
+                    </label>
+                    <div className="microclimate-description">
+                      Low area where cold air settles, creating frost 2+ weeks later in spring
+                    </div>
+                  </div>
+                </div>
+
+                <div className="microclimate-preview">
+                  <h4>🔍 Your Microclimate Effects</h4>
+                  {(() => {
+                    const effects = calculateMicroclimateEffects(customConfig.microclimate);
+                    return (
+                      <div className="effects-summary">
+                        <div className="effect-item">
+                          <span className="effect-label">Temperature Adjustment:</span>
+                          <span className="effect-value">
+                            {effects.temperatureAdjustment > 0 ? '+' : ''}{effects.temperatureAdjustment}°F
+                          </span>
+                        </div>
+                        <div className="effect-item">
+                          <span className="effect-label">Season Extension:</span>
+                          <span className="effect-value">
+                            {effects.seasonExtension > 0 ? '+' : ''}{effects.seasonExtension} weeks
+                          </span>
+                        </div>
+                        <div className="effect-item">
+                          <span className="effect-label">Available Sunlight:</span>
+                          <span className="effect-value">{effects.sunlightHours} hours/day</span>
+                        </div>
+                        <div className="effect-item">
+                          <span className="effect-label">Water Requirements:</span>
+                          <span className="effect-value">
+                            {effects.waterRequirementMultiplier > 1 ? 'Higher' : 
+                             effects.waterRequirementMultiplier < 1 ? 'Lower' : 'Normal'}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="setup-actions">
@@ -1288,6 +1512,101 @@ function App() {
           </button>
         </div>
       </div>
+
+      {locationConfig?.microclimateEffects && (
+        <div className="section microclimate-summary">
+          <h3>🏡 Your Site Conditions</h3>
+          <div className="microclimate-effects-grid">
+            <div className="effect-card temperature">
+              <div className="effect-icon">🌡️</div>
+              <div className="effect-content">
+                <div className="effect-title">Temperature</div>
+                <div className="effect-detail">
+                  {locationConfig.microclimateEffects.temperatureAdjustment > 0 ? '+' : ''}
+                  {locationConfig.microclimateEffects.temperatureAdjustment}°F vs zone average
+                </div>
+                <div className="effect-implication">
+                  {locationConfig.microclimateEffects.temperatureAdjustment > 5 ? 
+                    'Significantly warmer - heat-tolerant varieties recommended' :
+                   locationConfig.microclimateEffects.temperatureAdjustment > 0 ? 
+                    'Warmer than typical - extends growing season' :
+                   locationConfig.microclimateEffects.temperatureAdjustment < -5 ? 
+                    'Significantly cooler - cold-hardy varieties needed' :
+                   locationConfig.microclimateEffects.temperatureAdjustment < 0 ?
+                    'Cooler than typical - shorter growing season' : 
+                    'Typical temperatures for your zone'}
+                </div>
+              </div>
+            </div>
+
+            <div className="effect-card season">
+              <div className="effect-icon">📅</div>
+              <div className="effect-content">
+                <div className="effect-title">Growing Season</div>
+                <div className="effect-detail">
+                  {locationConfig.microclimateEffects.seasonExtension > 0 ? '+' : ''}
+                  {locationConfig.microclimateEffects.seasonExtension} weeks vs typical
+                </div>
+                <div className="effect-implication">
+                  {locationConfig.microclimateEffects.seasonExtension > 2 ? 
+                    'Extended season - opportunity for succession planting' :
+                   locationConfig.microclimateEffects.seasonExtension > 0 ?
+                    'Slightly longer season' :
+                   locationConfig.microclimateEffects.seasonExtension < -1 ?
+                    'Shorter season - focus on quick-maturing varieties' :
+                    'Standard season length'}
+                </div>
+              </div>
+            </div>
+
+            <div className="effect-card sunlight">
+              <div className="effect-icon">☀️</div>
+              <div className="effect-content">
+                <div className="effect-title">Daily Sunlight</div>
+                <div className="effect-detail">
+                  {locationConfig.microclimateEffects.sunlightHours} hours per day
+                </div>
+                <div className="effect-implication">
+                  {locationConfig.microclimateEffects.sunlightHours >= 8 ? 
+                    'Full sun - suitable for most vegetables' :
+                   locationConfig.microclimateEffects.sunlightHours >= 6 ?
+                    'Good sun - most vegetables will thrive' :
+                   locationConfig.microclimateEffects.sunlightHours >= 4 ?
+                    'Partial sun - focus on leafy greens and herbs' :
+                    'Limited sun - shade-tolerant crops only'}
+                </div>
+              </div>
+            </div>
+
+            <div className="effect-card water">
+              <div className="effect-icon">💧</div>
+              <div className="effect-content">
+                <div className="effect-title">Water Needs</div>
+                <div className="effect-detail">
+                  {locationConfig.microclimateEffects.waterRequirementMultiplier > 1.1 ? 'Higher' :
+                   locationConfig.microclimateEffects.waterRequirementMultiplier < 0.9 ? 'Lower' : 'Standard'}
+                </div>
+                <div className="effect-implication">
+                  {locationConfig.microclimateEffects.waterRequirementMultiplier > 1.2 ? 
+                    'High water needs - consider drip irrigation' :
+                   locationConfig.microclimateEffects.waterRequirementMultiplier > 1.0 ?
+                    'Moderate extra watering needed' :
+                   locationConfig.microclimateEffects.waterRequirementMultiplier < 0.8 ?
+                    'Excellent water retention' :
+                    'Normal watering requirements'}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {(locationConfig.microAdjustedZone && locationConfig.microAdjustedZone !== locationConfig.hardiness) && (
+            <div className="zone-adjustment">
+              <strong>Effective Hardiness Zone:</strong> {locationConfig.microAdjustedZone} 
+              (adjusted from {locationConfig.hardiness} based on your site conditions)
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="simulation-container">
         {weatherData && (

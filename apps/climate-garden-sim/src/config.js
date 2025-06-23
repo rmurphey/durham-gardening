@@ -15,7 +15,20 @@ export const DEFAULT_LOCATION_CONFIG = {
   investmentLevel: 3,
   marketMultiplier: 1.0,
   gardenSizeActual: 100,
-  budget: 400
+  budget: 400,
+  // Microclimate factors
+  microclimate: {
+    slope: 'flat',           // flat, gentle, moderate, steep
+    aspect: 'south',         // north, northeast, east, southeast, south, southwest, west, northwest
+    windExposure: 'moderate', // protected, moderate, exposed, very-exposed
+    soilDrainage: 'moderate', // poor, moderate, good, excellent
+    buildingHeat: 'minimal',  // minimal, moderate, significant, urban-heat-island
+    canopyShade: 'partial',   // full-sun, partial, filtered, heavy-shade
+    elevation: 'average',     // low-lying, average, elevated, hilltop
+    waterAccess: 'municipal', // rain-dependent, municipal, well, pond
+    frostPocket: false,       // boolean - low area that collects cold air
+    reflectiveHeat: 'minimal' // minimal, moderate, significant (from pavement, walls)
+  }
 };
 
 export const DEFAULT_CLIMATE_SELECTION = {
@@ -522,4 +535,151 @@ export const formatProbability = (percentage) => {
   
   // Otherwise use up to 3 decimal places
   return Math.round(percentage * 1000) / 1000;
+};
+
+// Microclimate configuration options
+export const MICROCLIMATE_OPTIONS = {
+  slope: {
+    flat: { name: 'Flat/Level', tempEffect: 0, drainageEffect: 0, description: 'Even ground, no slope effects' },
+    gentle: { name: 'Gentle Slope (1-5°)', tempEffect: 1, drainageEffect: 1, description: 'Slight slope improves drainage' },
+    moderate: { name: 'Moderate Slope (5-15°)', tempEffect: 2, drainageEffect: 2, description: 'Noticeable slope, good drainage' },
+    steep: { name: 'Steep Slope (15°+)', tempEffect: 3, drainageEffect: 3, description: 'Steep terrain, excellent drainage' }
+  },
+  aspect: {
+    south: { name: 'South-Facing', tempEffect: 3, seasonExtension: 3, description: 'Maximum sun exposure, warmest' },
+    southeast: { name: 'Southeast-Facing', tempEffect: 2, seasonExtension: 2, description: 'Morning sun, good warmth' },
+    southwest: { name: 'Southwest-Facing', tempEffect: 2, seasonExtension: 2, description: 'Afternoon sun, good warmth' },
+    east: { name: 'East-Facing', tempEffect: 0, seasonExtension: 1, description: 'Morning sun only' },
+    west: { name: 'West-Facing', tempEffect: 0, seasonExtension: 1, description: 'Afternoon sun only' },
+    northeast: { name: 'Northeast-Facing', tempEffect: -1, seasonExtension: 0, description: 'Limited morning sun' },
+    northwest: { name: 'Northwest-Facing', tempEffect: -1, seasonExtension: 0, description: 'Limited afternoon sun' },
+    north: { name: 'North-Facing', tempEffect: -2, seasonExtension: -1, description: 'Minimal direct sun, coolest' }
+  },
+  windExposure: {
+    protected: { name: 'Protected', tempEffect: 2, waterEffect: 1, description: 'Sheltered by buildings/trees' },
+    moderate: { name: 'Moderate', tempEffect: 0, waterEffect: 0, description: 'Some wind protection' },
+    exposed: { name: 'Exposed', tempEffect: -1, waterEffect: -1, description: 'Open to prevailing winds' },
+    'very-exposed': { name: 'Very Exposed', tempEffect: -2, waterEffect: -2, description: 'Hilltop or open field' }
+  },
+  soilDrainage: {
+    poor: { name: 'Poor Drainage', waterEffect: 2, rootCropEffect: -2, description: 'Clay soil, standing water' },
+    moderate: { name: 'Moderate Drainage', waterEffect: 0, rootCropEffect: 0, description: 'Loamy soil, adequate drainage' },
+    good: { name: 'Good Drainage', waterEffect: -1, rootCropEffect: 1, description: 'Sandy loam, drains well' },
+    excellent: { name: 'Excellent Drainage', waterEffect: -2, rootCropEffect: 2, description: 'Sandy soil, fast drainage' }
+  },
+  buildingHeat: {
+    minimal: { name: 'Minimal', tempEffect: 0, description: 'Away from buildings/pavement' },
+    moderate: { name: 'Moderate', tempEffect: 2, description: 'Near some buildings/driveways' },
+    significant: { name: 'Significant', tempEffect: 4, description: 'Adjacent to buildings/pavement' },
+    'urban-heat-island': { name: 'Urban Heat Island', tempEffect: 6, description: 'Surrounded by concrete/asphalt' }
+  },
+  canopyShade: {
+    'full-sun': { name: 'Full Sun (8+ hours)', sunHours: 9, tempEffect: 1, description: 'Direct sun most of day' },
+    partial: { name: 'Partial Sun (4-6 hours)', sunHours: 5, tempEffect: 0, description: 'Morning or afternoon shade' },
+    filtered: { name: 'Filtered Light', sunHours: 3, tempEffect: -1, description: 'Dappled shade through trees' },
+    'heavy-shade': { name: 'Heavy Shade (<4 hours)', sunHours: 2, tempEffect: -2, description: 'Dense tree canopy' }
+  },
+  elevation: {
+    'low-lying': { name: 'Low-lying Area', tempEffect: -1, frostRisk: 2, description: 'Valley or depression' },
+    average: { name: 'Average Elevation', tempEffect: 0, frostRisk: 0, description: 'Neither high nor low' },
+    elevated: { name: 'Elevated', tempEffect: 1, frostRisk: -1, description: 'Hill or raised area' },
+    hilltop: { name: 'Hilltop', tempEffect: 2, frostRisk: -2, description: 'Highest point in area' }
+  },
+  waterAccess: {
+    'rain-dependent': { name: 'Rain-dependent', irrigationCost: -50, reliability: -2, description: 'No irrigation system' },
+    municipal: { name: 'Municipal Water', irrigationCost: 0, reliability: 0, description: 'City water supply' },
+    well: { name: 'Well Water', irrigationCost: -25, reliability: 1, description: 'Private well' },
+    pond: { name: 'Pond/Stream', irrigationCost: -75, reliability: -1, description: 'Natural water source' }
+  },
+  reflectiveHeat: {
+    minimal: { name: 'Minimal', tempEffect: 0, description: 'Natural surroundings' },
+    moderate: { name: 'Moderate', tempEffect: 2, description: 'Some pavement/walls nearby' },
+    significant: { name: 'Significant', tempEffect: 4, description: 'Surrounded by reflective surfaces' }
+  }
+};
+
+// Calculate microclimate adjustments
+export const calculateMicroclimateEffects = (microclimate) => {
+  const effects = {
+    temperatureAdjustment: 0,  // degrees F adjustment from base zone
+    seasonExtension: 0,        // weeks of extended growing season
+    frostDateAdjustment: 0,    // days earlier/later for frost dates
+    waterRequirementMultiplier: 1, // multiplier for water needs
+    sunlightHours: 6,          // available sun hours per day
+    costAdjustments: {}        // cost adjustments for different categories
+  };
+
+  // Process each microclimate factor
+  Object.entries(microclimate).forEach(([factor, value]) => {
+    const config = MICROCLIMATE_OPTIONS[factor];
+    if (!config || !config[value]) return;
+
+    const factorConfig = config[value];
+
+    // Temperature effects
+    if (factorConfig.tempEffect) {
+      effects.temperatureAdjustment += factorConfig.tempEffect;
+    }
+
+    // Season extension effects
+    if (factorConfig.seasonExtension) {
+      effects.seasonExtension += factorConfig.seasonExtension;
+    }
+
+    // Frost risk effects (convert to date adjustment)
+    if (factorConfig.frostRisk) {
+      effects.frostDateAdjustment += factorConfig.frostRisk * 7; // 1 week per risk level
+    }
+
+    // Water requirement effects
+    if (factorConfig.waterEffect) {
+      effects.waterRequirementMultiplier *= (1 + factorConfig.waterEffect * 0.1);
+    }
+
+    // Sunlight hours
+    if (factorConfig.sunHours) {
+      effects.sunlightHours = factorConfig.sunHours;
+    }
+
+    // Cost adjustments
+    if (factorConfig.irrigationCost) {
+      effects.costAdjustments.irrigation = (effects.costAdjustments.irrigation || 0) + factorConfig.irrigationCost;
+    }
+  });
+
+  // Frost pocket special handling
+  if (microclimate.frostPocket) {
+    effects.frostDateAdjustment += 14; // 2 weeks later spring, 2 weeks earlier fall
+    effects.temperatureAdjustment -= 3; // 3°F colder on average
+  }
+
+  return effects;
+};
+
+// Get microclimate-adjusted crop recommendations
+export const getMicroclimateAdjustedRecommendations = (baseConfig, microclimateEffects) => {
+  const adjustedConfig = { ...baseConfig };
+  
+  // Adjust hardiness zone based on temperature effects
+  const currentZoneNumber = getHardinessZoneNumber(baseConfig.hardiness);
+  const tempAdjustment = microclimateEffects.temperatureAdjustment;
+  
+  // Each 5°F = roughly 0.5 hardiness zones
+  const zoneAdjustment = Math.round(tempAdjustment / 10);
+  const newZoneNumber = Math.max(1, Math.min(11, currentZoneNumber + zoneAdjustment));
+  
+  // Convert back to zone string (simplified)
+  const zoneLetter = baseConfig.hardiness.includes('a') ? 'a' : 'b';
+  adjustedConfig.microAdjustedZone = `${newZoneNumber}${zoneLetter}`;
+  
+  // Adjust season length
+  adjustedConfig.seasonExtensionWeeks = microclimateEffects.seasonExtension;
+  
+  // Adjust water requirements
+  adjustedConfig.waterMultiplier = microclimateEffects.waterRequirementMultiplier;
+  
+  // Sun requirements
+  adjustedConfig.availableSunHours = microclimateEffects.sunlightHours;
+  
+  return adjustedConfig;
 };
