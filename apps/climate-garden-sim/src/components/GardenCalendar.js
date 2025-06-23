@@ -19,8 +19,17 @@ const GardenCalendar = ({ gardenCalendar }) => {
             <h3>{month.month}</h3>
             <div className="month-activities">
               {month.activities.map((activity, i) => (
-                <div key={i} className={`activity activity-${activity.type}`}>
-                  <strong>{activity.crop}</strong>: {activity.action}
+                <div key={i} className={`activity activity-${activity.type} priority-${activity.priority || 'medium'}`}>
+                  <div className="activity-header">
+                    <strong className="activity-crop">{activity.crop}</strong>
+                    {activity.priority === 'high' && (
+                      <span className="activity-priority">urgent</span>
+                    )}
+                  </div>
+                  <div className="activity-action">{activity.action}</div>
+                  {activity.timing && (
+                    <div className="activity-timing">{activity.timing}</div>
+                  )}
                 </div>
               ))}
               {month.activities.length === 0 && (

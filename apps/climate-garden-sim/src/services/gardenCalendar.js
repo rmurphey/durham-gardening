@@ -69,103 +69,388 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
     const month = months[monthIndex];
     const activities = [];
     
-    // Generate planting activities based on adapted crops and portfolio
+    // Generate SPECIFIC per-plant activities based on Durham, NC conditions
     Object.entries(portfolio).forEach(([cropType, percentage]) => {
-      if (percentage < 10 || !adaptedCrops[cropType === 'heatSpecialists' ? 'heatTolerant' : cropType]) return;
+      if (percentage < 5) return;
       
       const categoryName = cropType === 'heatSpecialists' ? 'heatTolerant' : cropType;
       const crops = adaptedCrops[categoryName] || {};
       
       Object.entries(crops).forEach(([cropKey, crop]) => {
-        if (!crop || !crop.plantingMonths) return;
+        if (!crop) return;
         
-        const plantingMonths = crop.plantingMonths[climateZone] || crop.plantingMonths.temperate || [];
+        const displayName = crop.displayName || crop.name?.en || cropKey;
+        const plantingMonths = crop.plantingMonths?.[climateZone] || crop.plantingMonths?.temperate || [];
         
-        if (plantingMonths.includes(monthNumber)) {
-          // Check if planting is still viable for this month
-          const isPlantingValid = isPlantingSeasonValid(crop, monthNumber, locationConfig);
-          const currentDate = new Date();
-          currentDate.setMonth(monthIndex); // Set to the month we're checking
-          const isDirectViable = isDirectSowingViable(crop, currentDate, locationConfig);
-          
-          if (isPlantingValid) {
-            if (crop.transplantWeeks > 0) {
+        // SPECIFIC PLANTING SCHEDULES for Durham, NC (Zone 7b)
+        switch (cropKey) {
+          case 'okra':
+            if (monthNumber === 5) {
               activities.push({
-                type: 'planting',
-                crop: crop.displayName || cropKey,
-                action: `Start ${crop.displayName || cropKey} transplants indoors`
+                type: 'direct-sow',
+                crop: 'Okra',
+                action: 'Direct sow okra seeds in warm soil (65°F+)',
+                timing: 'After last frost, soil is warm',
+                priority: 'high'
               });
-            } else if (isDirectViable) {
-              activities.push({
-                type: 'planting',
-                crop: crop.displayName || cropKey,
-                action: `Direct sow ${crop.displayName || cropKey}`
-              });
-            } else {
-              const alternative = getAlternativePlantingMethod(crop, currentDate, locationConfig);
-              if (alternative) {
-                activities.push({
-                  type: 'planting',
-                  crop: crop.displayName || cropKey,
-                  action: alternative
-                });
-              }
             }
+            if (monthNumber === 8) {
+              activities.push({
+                type: 'harvest',
+                crop: 'Okra',
+                action: 'Daily okra harvest - cut pods when 3-4 inches long',
+                timing: 'Peak production season',
+                priority: 'high'
+              });
+            }
+            break;
+            
+          case 'peppers':
+            if (monthNumber === 3) {
+              activities.push({
+                type: 'start-transplants',
+                crop: 'Hot Peppers',
+                action: 'Start pepper seeds indoors with heat mat',
+                timing: '8-10 weeks before last frost',
+                priority: 'high'
+              });
+            }
+            if (monthNumber === 5) {
+              activities.push({
+                type: 'transplant',
+                crop: 'Hot Peppers',
+                action: 'Transplant peppers after soil warms to 65°F',
+                timing: '2-3 weeks after last frost',
+                priority: 'high'
+              });
+            }
+            if (monthNumber === 8) {
+              activities.push({
+                type: 'harvest',
+                crop: 'Hot Peppers',
+                action: 'Harvest peppers regularly to encourage production',
+                timing: 'Peak harvest season',
+                priority: 'medium'
+              });
+            }
+            break;
+            
+          case 'kale':
+            if (monthNumber === 8) {
+              activities.push({
+                type: 'direct-sow',
+                crop: 'Kale',
+                action: 'Direct sow kale for fall harvest',
+                timing: '12-14 weeks before first frost',
+                priority: 'high'
+              });
+            }
+            if (monthNumber === 2) {
+              activities.push({
+                type: 'direct-sow',
+                crop: 'Kale',
+                action: 'Direct sow kale for spring harvest',
+                timing: '4-6 weeks before last frost',
+                priority: 'high'
+              });
+            }
+            if (monthNumber === 10) {
+              activities.push({
+                type: 'harvest',
+                crop: 'Kale',
+                action: 'Harvest outer kale leaves, leave center growing',
+                timing: 'Sweet after light frost',
+                priority: 'medium'
+              });
+            }
+            break;
+            
+          case 'sweetPotato':
+            if (monthNumber === 5) {
+              activities.push({
+                type: 'transplant',
+                crop: 'Sweet Potato',
+                action: 'Plant sweet potato slips in raised beds',
+                timing: 'After soil warms to 65°F',
+                priority: 'high'
+              });
+            }
+            if (monthNumber === 9) {
+              activities.push({
+                type: 'harvest',
+                crop: 'Sweet Potato',
+                action: 'Harvest sweet potatoes before first frost',
+                timing: 'Before soil gets too cold',
+                priority: 'high'
+              });
+            }
+            break;
+            
+          case 'amaranth':
+            if (monthNumber === 4) {
+              activities.push({
+                type: 'direct-sow',
+                crop: 'Amaranth',
+                action: 'Direct sow amaranth greens every 3 weeks',
+                timing: 'After last frost through summer',
+                priority: 'medium'
+              });
+            }
+            if (monthNumber === 6) {
+              activities.push({
+                type: 'succession',
+                crop: 'Amaranth',
+                action: 'Second succession planting of amaranth',
+                timing: 'For continuous greens harvest',
+                priority: 'medium'
+              });
+            }
+            break;
+            
+          case 'malabarSpinach':
+            if (monthNumber === 5) {
+              activities.push({
+                type: 'transplant',
+                crop: 'Malabar Spinach',
+                action: 'Transplant Malabar spinach with trellis support',
+                timing: 'After soil is consistently warm',
+                priority: 'medium'
+              });
+            }
+            if (monthNumber === 7) {
+              activities.push({
+                type: 'harvest',
+                crop: 'Malabar Spinach',
+                action: 'Harvest young Malabar spinach leaves',
+                timing: 'Cut-and-come-again harvest',
+                priority: 'medium'
+              });
+            }
+            break;
+            
+          case 'cabbage':
+            if (monthNumber === 8) {
+              activities.push({
+                type: 'start-transplants',
+                crop: 'Cabbage',
+                action: 'Start cabbage transplants for fall crop',
+                timing: '12-14 weeks before first frost',
+                priority: 'high'
+              });
+            }
+            if (monthNumber === 2) {
+              activities.push({
+                type: 'start-transplants',
+                crop: 'Cabbage',
+                action: 'Start cabbage transplants for spring crop',
+                timing: '6-8 weeks before last frost',
+                priority: 'high'
+              });
+            }
+            break;
+        }
+        
+        // Add general harvest activities based on crop timing
+        if (plantingMonths.includes(monthNumber) && !['okra', 'peppers', 'kale', 'sweetPotato', 'cabbage'].includes(cropKey)) {
+          if (crop.transplantWeeks > 0) {
+            activities.push({
+              type: 'start-transplants',
+              crop: displayName,
+              action: `Start ${displayName} transplants indoors`,
+              timing: `${crop.transplantWeeks} weeks before transplanting`,
+              priority: 'medium'
+            });
+          } else {
+            activities.push({
+              type: 'direct-sow',
+              crop: displayName,
+              action: `Direct sow ${displayName}`,
+              timing: 'Check soil temperature requirements',
+              priority: 'medium'
+            });
           }
         }
-        
-        // Generate harvest activities
-        const harvestStart = crop.harvestStart || [];
-        const harvestDuration = crop.harvestDuration || 2;
-        
-        if (Array.isArray(harvestStart) && harvestStart.includes(monthNumber)) {
-          activities.push({
-            type: 'harvest',
-            crop: crop.displayName || cropKey,
-            action: `Begin harvesting ${crop.displayName || cropKey}`
-          });
-        }
       });
     });
     
-    // Add care activities for existing plants
-    existingPlants.perennials.forEach(perennial => {
-      if (monthNumber === 3) {
+    // Add DURHAM, NC SPECIFIC seasonal activities
+    switch (monthNumber) {
+      case 1: // January - Durham specific
+        activities.push({
+          type: 'planning',
+          crop: 'Garden Planning',
+          action: 'Order heat-tolerant seeds for Durham summer',
+          timing: 'Best selection available early',
+          priority: 'medium'
+        });
+        break;
+      case 2: // February - Durham specific
+        activities.push({
+          type: 'infrastructure',
+          crop: 'Soil Preparation',
+          action: 'Spread compost on beds, avoid working wet clay soil',
+          timing: 'Durham clay needs dry conditions',
+          priority: 'high'
+        });
         activities.push({
           type: 'care',
-          crop: perennial,
-          action: `Prune and fertilize ${perennial}`
+          crop: 'Overwintered Kale',
+          action: 'Harvest sweet kale leaves after cold snaps',
+          timing: 'Cold makes kale sweeter',
+          priority: 'medium'
         });
-      }
-      if (monthNumber === 11) {
+        break;
+      case 3: // March - Durham specific
+        activities.push({
+          type: 'infrastructure',
+          crop: 'Bed Preparation',
+          action: 'Work beds when clay soil crumbles, not sticky',
+          timing: 'Wait for proper moisture level',
+          priority: 'high'
+        });
         activities.push({
           type: 'care',
-          crop: perennial,
-          action: `Prepare ${perennial} for winter`
+          crop: 'Perennial Herbs',
+          action: 'Cut back rosemary, thyme; mulch around plants',
+          timing: 'After last hard freeze risk',
+          priority: 'medium'
         });
-      }
-    });
-    
-    // Add seasonal care activities
-    if (monthNumber === 4) {
-      activities.push({
-        type: 'care',
-        crop: 'Garden',
-        action: 'Prepare beds and add compost'
-      });
+        break;
+      case 4: // April - Durham specific
+        activities.push({
+          type: 'infrastructure',
+          crop: 'Irrigation Setup',
+          action: 'Install drip irrigation, Durham summers are brutal',
+          timing: 'Before heat stress begins',
+          priority: 'high'
+        });
+        activities.push({
+          type: 'care',
+          crop: 'Spring Transplants',
+          action: 'Harden off pepper, tomato transplants gradually',
+          timing: '7-10 days before transplanting',
+          priority: 'high'
+        });
+        break;
+      case 5: // May - Durham heat prep
+        activities.push({
+          type: 'infrastructure',
+          crop: 'Summer Heat Prep',
+          action: 'Install 30% shade cloth over sensitive crops',
+          timing: 'Before 90°F+ days arrive',
+          priority: 'high'
+        });
+        activities.push({
+          type: 'care',
+          crop: 'Newly Transplanted Plants',
+          action: 'Deep water morning, mulch 3-4 inches thick',
+          timing: 'Establish before heat stress',
+          priority: 'high'
+        });
+        break;
+      case 6: // June - Durham heat begins
+        activities.push({
+          type: 'care',
+          crop: 'Heat-Sensitive Crops',
+          action: 'Mist kale, lettuce in afternoon heat (85°F+)',
+          timing: 'Cool-season crops struggle now',
+          priority: 'high'
+        });
+        activities.push({
+          type: 'harvest',
+          crop: 'Cool-Season Crops',
+          action: 'Harvest remaining spring crops before they bolt',
+          timing: 'Before summer heat ruins quality',
+          priority: 'high'
+        });
+        break;
+      case 7: // July - Durham heat peak
+        activities.push({
+          type: 'care',
+          crop: 'Heat-Tolerant Crops',
+          action: 'Water okra, peppers deeply every 2-3 days',
+          timing: 'During 95°F+ Durham heat waves',
+          priority: 'high'
+        });
+        activities.push({
+          type: 'harvest',
+          crop: 'Heat Crops',
+          action: 'Harvest okra daily, peppers twice weekly',
+          timing: 'Early morning before heat',
+          priority: 'high'
+        });
+        break;
+      case 8: // August
+        activities.push({
+          type: 'infrastructure',
+          crop: 'Fall Prep',
+          action: 'Plan and prepare fall garden beds',
+          timing: 'Late summer transition',
+          priority: 'medium'
+        });
+        activities.push({
+          type: 'care',
+          crop: 'Cool-Season Prep',
+          action: 'Start cool-season transplants indoors',
+          timing: 'Prepare for fall planting',
+          priority: 'high'
+        });
+        break;
+      case 10: // October
+        activities.push({
+          type: 'care',
+          crop: 'Garden Maintenance',
+          action: 'Harvest and preserve, clean up spent plants',
+          timing: 'Fall harvest season',
+          priority: 'high'
+        });
+        break;
+      case 11: // November
+        activities.push({
+          type: 'infrastructure',
+          crop: 'Winter Prep',
+          action: 'Install cold frames, protect tender plants',
+          timing: 'Winter preparation',
+          priority: 'medium'
+        });
+        activities.push({
+          type: 'care',
+          crop: 'Perennial Herbs',
+          action: 'Cut back and mulch around perennials',
+          timing: 'Winter protection',
+          priority: 'medium'
+        });
+        break;
+      case 12: // December
+        activities.push({
+          type: 'planning',
+          crop: 'Garden Planning',
+          action: 'Review this year, plan next year\'s garden',
+          timing: 'Year-end reflection',
+          priority: 'low'
+        });
+        break;
     }
-    if (monthNumber === 10) {
-      activities.push({
-        type: 'care',
-        crop: 'Garden',
-        action: 'Clean up and prepare for winter'
-      });
-    }
     
-    // Sort activities by type (planting, care, harvest)
+    // Sort activities by priority and type
     activities.sort((a, b) => {
-      const order = { planting: 1, care: 2, harvest: 3 };
-      return order[a.type] - order[b.type];
+      const priorityOrder = { high: 1, medium: 2, low: 3 };
+      const typeOrder = { 
+        'start-transplants': 1, 
+        'transplant': 2,
+        'direct-sow': 3, 
+        'harvest': 4, 
+        'succession': 5,
+        'care': 6, 
+        'infrastructure': 7,
+        'planning': 8
+      };
+      
+      // First sort by priority, then by type
+      if (a.priority !== b.priority) {
+        return priorityOrder[a.priority] - priorityOrder[b.priority];
+      }
+      return typeOrder[a.type] - typeOrder[b.type];
     });
     
     calendar.push({

@@ -351,14 +351,54 @@ export const GLOBAL_CROP_DATABASE = {
       zones: '6-11', minTemp: -10, maxTemp: 45, optimalTemp: [25, 35],
       plantingMonths: { temperate: [4, 5, 6], tropical: [1, 2, 3, 10, 11, 12], subtropical: [3, 4, 5, 9] },
       harvestStart: 2, harvestDuration: 4, transplantWeeks: 0,
-      drought: 'excellent', heat: 'excellent', humidity: 'excellent'
+      drought: 'excellent', heat: 'excellent', humidity: 'excellent',
+      // Durham-specific details
+      varieties: {
+        'Clemson Spineless': 'Classic variety, very reliable in Durham heat',
+        'Red Burgundy': 'Beautiful red pods, excellent for Durham gardens',
+        'Hill Country Heirloom Red': 'Heat-loving Texas variety, perfect for NC summers'
+      },
+      durhamPlanting: {
+        soilTemp: '65°F minimum, 70°F+ ideal',
+        spacing: '12-18 inches apart, rows 3 feet apart',
+        seedDepth: '1/2 to 1 inch deep',
+        seedsPerFoot: '4-6 seeds per foot of row',
+        daysToGermination: '7-14 days in warm soil',
+        daysToHarvest: '50-65 days from planting'
+      },
+      shoppingList: {
+        seeds: '1 packet plants 25-30 feet of row',
+        quantityPer100sqft: '2-3 packets',
+        cost: '$3-4 per packet'
+      }
     },
     peppers: {
       name: { en: 'Hot Peppers', es: 'Chiles', fr: 'Piments' },
       zones: '5-11', minTemp: -5, maxTemp: 40, optimalTemp: [20, 30],
       plantingMonths: { temperate: [3, 4, 5], tropical: [1, 2, 11, 12], subtropical: [2, 3, 4, 10, 11] },
       harvestStart: 3, harvestDuration: 5, transplantWeeks: 6,
-      drought: 'good', heat: 'excellent', humidity: 'good'
+      drought: 'good', heat: 'excellent', humidity: 'good',
+      // Durham-specific details
+      varieties: {
+        'Carolina Reaper': 'NC original, extremely hot, thrives in Durham',
+        'Fish Pepper': 'Heirloom variety, excellent for Durham heat and humidity',
+        'Tabasco': 'Commercial variety, very productive in NC summers',
+        'Hungarian Hot Wax': 'Mild heat, excellent fresh eating, Durham favorite'
+      },
+      durhamPlanting: {
+        soilTemp: '65°F minimum for transplants',
+        spacing: '18-24 inches apart, rows 2-3 feet apart',
+        seedDepth: '1/4 inch for seeds, transplant at soil level',
+        seedsPerPacket: '25-50 seeds typical',
+        daysToGermination: '7-14 days at 75-80°F',
+        daysToHarvest: '70-90 days from transplant'
+      },
+      shoppingList: {
+        seeds: '1 packet for 20-30 plants',
+        transplants: '4-6 plants per 100 sq ft',
+        quantityPer100sqft: '1 packet seeds OR 6 transplants',
+        cost: '$3-4 per packet, $3-5 per transplant'
+      }
     },
     amaranth: {
       name: { en: 'Amaranth Greens', es: 'Amaranto', fr: 'Amarante' },
@@ -388,7 +428,32 @@ export const GLOBAL_CROP_DATABASE = {
       zones: '2-9', minTemp: -25, maxTemp: 25, optimalTemp: [10, 20],
       plantingMonths: { temperate: [8, 9, 1, 2, 3], tropical: [11, 12, 1, 2], subtropical: [9, 10, 11, 1, 2] },
       harvestStart: 2, harvestDuration: 4, transplantWeeks: 4,
-      drought: 'fair', heat: 'poor', humidity: 'good'
+      drought: 'fair', heat: 'poor', humidity: 'good',
+      // Durham-specific details
+      varieties: {
+        'Winterbor': 'Very cold hardy, excellent for Durham winters',
+        'Red Russian': 'Beautiful purple stems, mild flavor, heat tolerant',
+        'Lacinato (Dinosaur)': 'Heat tolerant, good for spring and fall',
+        'White Russian': 'Mild flavor, good for Durham spring/fall'
+      },
+      durhamPlanting: {
+        soilTemp: '45-75°F optimal',
+        spacing: '8-12 inches apart, rows 18 inches apart',
+        seedDepth: '1/4 to 1/2 inch deep',
+        seedsPerFoot: '6-8 seeds per foot of row',
+        daysToGermination: '7-10 days',
+        daysToHarvest: '55-75 days, baby leaves at 30 days'
+      },
+      shoppingList: {
+        seeds: '1 packet plants 50-75 feet of row',
+        quantityPer100sqft: '1-2 packets',
+        cost: '$3-4 per packet'
+      },
+      durhamSchedule: {
+        spring: 'Plant Feb 15 - Mar 15 for Apr-Jun harvest',
+        fall: 'Plant Aug 1 - Sep 1 for Oct-Dec harvest',
+        winter: 'Fall-planted kale overwinters, harvest through winter'
+      }
     },
     cabbage: {
       name: { en: 'Cabbage', es: 'Repollo', fr: 'Chou' },
@@ -979,9 +1044,12 @@ export const calculateMicroclimateEffects = (microclimate) => {
 export const getMicroclimateAdjustedRecommendations = (baseConfig, microclimateEffects) => {
   const adjustedConfig = { ...baseConfig };
   
+  // Return base config if no microclimate effects provided
+  if (!microclimateEffects) return adjustedConfig;
+  
   // Adjust hardiness zone based on temperature effects
   const currentZoneNumber = getHardinessZoneNumber(baseConfig.hardiness);
-  const tempAdjustment = microclimateEffects.temperatureAdjustment;
+  const tempAdjustment = microclimateEffects.temperatureAdjustment || 0;
   
   // Each 5°F = roughly 0.5 hardiness zones
   const zoneAdjustment = Math.round(tempAdjustment / 10);
@@ -992,19 +1060,19 @@ export const getMicroclimateAdjustedRecommendations = (baseConfig, microclimateE
   adjustedConfig.microAdjustedZone = `${newZoneNumber}${zoneLetter}`;
   
   // Adjust season length
-  adjustedConfig.seasonExtensionWeeks = microclimateEffects.seasonExtension;
+  adjustedConfig.seasonExtensionWeeks = microclimateEffects.seasonExtension || 0;
   
   // Adjust water requirements
-  adjustedConfig.waterMultiplier = microclimateEffects.waterRequirementMultiplier;
+  adjustedConfig.waterMultiplier = microclimateEffects.waterRequirementMultiplier || 1;
   
   // Sun requirements
-  adjustedConfig.availableSunHours = microclimateEffects.sunlightHours;
+  adjustedConfig.availableSunHours = microclimateEffects.sunlightHours || 6;
   
   return adjustedConfig;
 };
 
 // Generate comprehensive site-specific recommendations
-export const generateSiteSpecificRecommendations = (locationConfig, microclimateEffects, solarData = null) => {
+export const generateSiteSpecificRecommendations = (locationConfig, microclimateEffects = null, solarData = null) => {
   const recommendations = [];
   
   // Priority crop recommendations based on microclimate
@@ -1073,9 +1141,13 @@ export const generateSiteSpecificRecommendations = (locationConfig, microclimate
 // Get priority crops based on site conditions
 const getPriorityCropsForSite = (locationConfig, microclimateEffects) => {
   const crops = [];
-  const tempAdjustment = microclimateEffects.temperatureAdjustment;
-  const sunHours = microclimateEffects.sunlightHours;
-  const waterMultiplier = microclimateEffects.waterRequirementMultiplier;
+  
+  // Return empty if no microclimate effects provided
+  if (!microclimateEffects) return crops;
+  
+  const tempAdjustment = microclimateEffects.temperatureAdjustment || 0;
+  const sunHours = microclimateEffects.sunlightHours || 6;
+  const waterMultiplier = microclimateEffects.waterRequirementMultiplier || 1;
   
   // Hot microclimate - prioritize heat-tolerant crops
   if (tempAdjustment > 3) {
@@ -1175,9 +1247,13 @@ const getPriorityCropsForSite = (locationConfig, microclimateEffects) => {
 // Get timing adjustment recommendations
 const getTimingRecommendations = (locationConfig, microclimateEffects) => {
   const recommendations = [];
-  const seasonExtension = microclimateEffects.seasonExtension;
-  const tempAdjustment = microclimateEffects.temperatureAdjustment;
-  const frostAdjustment = microclimateEffects.frostDateAdjustment;
+  
+  // Return empty if no microclimate effects provided
+  if (!microclimateEffects) return recommendations;
+  
+  const seasonExtension = microclimateEffects.seasonExtension || 0;
+  const tempAdjustment = microclimateEffects.temperatureAdjustment || 0;
+  const frostAdjustment = microclimateEffects.frostDateAdjustment || 0;
   
   if (seasonExtension > 2) {
     recommendations.push({
@@ -1217,9 +1293,13 @@ const getTimingRecommendations = (locationConfig, microclimateEffects) => {
 // Get infrastructure recommendations
 const getInfrastructureRecommendations = (locationConfig, microclimateEffects, solarData) => {
   const recommendations = [];
-  const tempAdjustment = microclimateEffects.temperatureAdjustment;
-  const sunHours = microclimateEffects.sunlightHours;
-  const waterMultiplier = microclimateEffects.waterRequirementMultiplier;
+  
+  // Return empty if no microclimate effects provided
+  if (!microclimateEffects) return recommendations;
+  
+  const tempAdjustment = microclimateEffects.temperatureAdjustment || 0;
+  const sunHours = microclimateEffects.sunlightHours || 6;
+  const waterMultiplier = microclimateEffects.waterRequirementMultiplier || 1;
   
   // Heat management
   if (tempAdjustment > 5) {
@@ -1284,9 +1364,13 @@ const getInfrastructureRecommendations = (locationConfig, microclimateEffects, s
 // Get risk mitigation recommendations
 const getRiskMitigationRecommendations = (locationConfig, microclimateEffects) => {
   const recommendations = [];
-  const frostRisk = microclimateEffects.frostDateAdjustment > 7;
-  const heatStress = microclimateEffects.temperatureAdjustment > 8;
-  const droughtStress = microclimateEffects.waterRequirementMultiplier > 1.5;
+  
+  // Return empty if no microclimate effects provided
+  if (!microclimateEffects) return recommendations;
+  
+  const frostRisk = (microclimateEffects.frostDateAdjustment || 0) > 7;
+  const heatStress = (microclimateEffects.temperatureAdjustment || 0) > 8;
+  const droughtStress = (microclimateEffects.waterRequirementMultiplier || 1) > 1.5;
   
   if (frostRisk) {
     recommendations.push({
@@ -1330,8 +1414,12 @@ const getRiskMitigationRecommendations = (locationConfig, microclimateEffects) =
 // Get cost optimization recommendations
 const getCostOptimizationRecommendations = (locationConfig, microclimateEffects) => {
   const recommendations = [];
-  const tempAdjustment = microclimateEffects.temperatureAdjustment;
-  const seasonExtension = microclimateEffects.seasonExtension;
+  
+  // Return empty if no microclimate effects provided
+  if (!microclimateEffects) return recommendations;
+  
+  const tempAdjustment = microclimateEffects.temperatureAdjustment || 0;
+  const seasonExtension = microclimateEffects.seasonExtension || 0;
   
   if (tempAdjustment > 3) {
     recommendations.push({
@@ -1351,7 +1439,7 @@ const getCostOptimizationRecommendations = (locationConfig, microclimateEffects)
     });
   }
   
-  if (microclimateEffects.sunlightHours >= 8) {
+  if ((microclimateEffects.sunlightHours || 6) >= 8) {
     recommendations.push({
       title: 'High-Sun Premium Crops',
       description: 'Excellent sun exposure supports high-value crops',
@@ -1539,11 +1627,11 @@ export const generateInvestmentPriority = (locationConfig, microclimateEffects) 
 
 // Generate success outlook summary
 export const generateSuccessOutlook = (simulationResults, locationConfig) => {
-  if (!simulationResults) return null;
+  if (!simulationResults || !simulationResults.harvestValue) return null;
   
   const outlook = {
-    expectedValue: simulationResults.harvestValue.mean,
-    confidence: simulationResults.successRate,
+    expectedValue: simulationResults.harvestValue?.mean || 0,
+    confidence: simulationResults.successRate || 0,
     confidenceLevel: 'moderate'
   };
   

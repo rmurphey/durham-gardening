@@ -13,6 +13,7 @@ const ClimateScenarioSelector = ({
   onSummerChange,
   onWinterChange
 }) => {
+
   if (!climateScenarios) {
     return (
       <section className="scenario-section">
