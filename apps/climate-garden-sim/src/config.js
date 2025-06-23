@@ -941,3 +941,363 @@ export const getMicroclimateAdjustedRecommendations = (baseConfig, microclimateE
   
   return adjustedConfig;
 };
+
+// Generate comprehensive site-specific recommendations
+export const generateSiteSpecificRecommendations = (locationConfig, microclimateEffects, solarData = null) => {
+  const recommendations = [];
+  
+  // Priority crop recommendations based on microclimate
+  const priorityCrops = getPriorityCropsForSite(locationConfig, microclimateEffects);
+  if (priorityCrops.length > 0) {
+    recommendations.push({
+      type: 'priority_crops',
+      title: 'Recommended Crops for Your Site',
+      description: 'These crops are particularly well-suited to your specific microclimate conditions',
+      items: priorityCrops.map(crop => ({
+        name: crop.name,
+        reason: crop.reason,
+        confidence: crop.confidence,
+        expectedYield: crop.expectedYield
+      }))
+    });
+  }
+  
+  // Timing recommendations
+  const timingRecs = getTimingRecommendations(locationConfig, microclimateEffects);
+  if (timingRecs.length > 0) {
+    recommendations.push({
+      type: 'timing_adjustments',
+      title: 'Planting Time Adjustments',
+      description: 'How your microclimate affects planting and harvest timing',
+      items: timingRecs
+    });
+  }
+  
+  // Infrastructure recommendations
+  const infraRecs = getInfrastructureRecommendations(locationConfig, microclimateEffects, solarData);
+  if (infraRecs.length > 0) {
+    recommendations.push({
+      type: 'infrastructure',
+      title: 'Site Infrastructure Recommendations',
+      description: 'Specific improvements for your garden conditions',
+      items: infraRecs
+    });
+  }
+  
+  // Risk mitigation recommendations
+  const riskRecs = getRiskMitigationRecommendations(locationConfig, microclimateEffects);
+  if (riskRecs.length > 0) {
+    recommendations.push({
+      type: 'risk_mitigation',
+      title: 'Risk Management Strategies',
+      description: 'Protect your garden from site-specific challenges',
+      items: riskRecs
+    });
+  }
+  
+  // Cost optimization recommendations
+  const costRecs = getCostOptimizationRecommendations(locationConfig, microclimateEffects);
+  if (costRecs.length > 0) {
+    recommendations.push({
+      type: 'cost_optimization',
+      title: 'Cost Optimization Strategies',
+      description: 'Maximize value from your specific site conditions',
+      items: costRecs
+    });
+  }
+  
+  return recommendations;
+};
+
+// Get priority crops based on site conditions
+const getPriorityCropsForSite = (locationConfig, microclimateEffects) => {
+  const crops = [];
+  const tempAdjustment = microclimateEffects.temperatureAdjustment;
+  const sunHours = microclimateEffects.sunlightHours;
+  const waterMultiplier = microclimateEffects.waterRequirementMultiplier;
+  
+  // Hot microclimate - prioritize heat-tolerant crops
+  if (tempAdjustment > 3) {
+    crops.push({
+      name: 'Okra',
+      reason: `Your site runs ${tempAdjustment}°F warmer - perfect for heat-loving okra`,
+      confidence: 'high',
+      expectedYield: 'excellent'
+    });
+    crops.push({
+      name: 'Hot Peppers',
+      reason: 'Warm microclimate will boost pepper production significantly',
+      confidence: 'high',
+      expectedYield: 'excellent'
+    });
+    crops.push({
+      name: 'Amaranth Greens',
+      reason: 'Thrives in hot conditions where other greens struggle',
+      confidence: 'high',
+      expectedYield: 'very good'
+    });
+  }
+  
+  // Cool microclimate - extend cool season growing
+  if (tempAdjustment < -2) {
+    crops.push({
+      name: 'Kale',
+      reason: `Cooler site (${Math.abs(tempAdjustment)}°F below average) extends kale season`,
+      confidence: 'high',
+      expectedYield: 'excellent'
+    });
+    crops.push({
+      name: 'Spinach',
+      reason: 'Cool conditions prevent early bolting',
+      confidence: 'high',
+      expectedYield: 'excellent'
+    });
+    crops.push({
+      name: 'Lettuce',
+      reason: 'Can grow lettuce through warmer months',
+      confidence: 'high',
+      expectedYield: 'very good'
+    });
+  }
+  
+  // High sun exposure
+  if (sunHours >= 8) {
+    crops.push({
+      name: 'Tomatoes',
+      reason: `${sunHours} hours of daily sun ideal for maximum tomato production`,
+      confidence: 'high',
+      expectedYield: 'excellent'
+    });
+    crops.push({
+      name: 'Peppers',
+      reason: 'Full sun exposure maximizes pepper yields',
+      confidence: 'high',
+      expectedYield: 'excellent'
+    });
+  }
+  
+  // Partial shade adaptation
+  if (sunHours < 6) {
+    crops.push({
+      name: 'Leafy Greens',
+      reason: `${sunHours} hours sun perfect for cool-season greens`,
+      confidence: 'high',
+      expectedYield: 'very good'
+    });
+    crops.push({
+      name: 'Herbs (Parsley, Cilantro)',
+      reason: 'Many herbs prefer partial shade conditions',
+      confidence: 'medium',
+      expectedYield: 'good'
+    });
+  }
+  
+  // Water-efficient crops for dry sites
+  if (waterMultiplier < 0.8) {
+    crops.push({
+      name: 'Rosemary',
+      reason: 'Drought-tolerant herb perfect for dry microclimate',
+      confidence: 'high',
+      expectedYield: 'excellent'
+    });
+    crops.push({
+      name: 'Thyme',
+      reason: 'Thrives in well-draining, drier conditions',
+      confidence: 'high',
+      expectedYield: 'very good'
+    });
+  }
+  
+  return crops;
+};
+
+// Get timing adjustment recommendations
+const getTimingRecommendations = (locationConfig, microclimateEffects) => {
+  const recommendations = [];
+  const seasonExtension = microclimateEffects.seasonExtension;
+  const tempAdjustment = microclimateEffects.temperatureAdjustment;
+  const frostAdjustment = microclimateEffects.frostDateAdjustment;
+  
+  if (seasonExtension > 2) {
+    recommendations.push({
+      title: 'Extended Growing Season',
+      description: `Your microclimate extends the growing season by ${seasonExtension} weeks`,
+      action: 'Plant heat-sensitive crops 2-3 weeks earlier than typical for your zone'
+    });
+  }
+  
+  if (tempAdjustment > 5) {
+    recommendations.push({
+      title: 'Early Season Start',
+      description: `Site runs ${tempAdjustment}°F warmer than average`,
+      action: 'Start warm-season crops 2-3 weeks earlier than zone recommendations'
+    });
+  }
+  
+  if (frostAdjustment > 7) {
+    recommendations.push({
+      title: 'Frost Protection Needed',
+      description: `Frost pocket conditions create ${Math.round(frostAdjustment/7)} weeks higher frost risk`,
+      action: 'Plan for frost protection and avoid planting in lowest areas'
+    });
+  }
+  
+  if (tempAdjustment < -3) {
+    recommendations.push({
+      title: 'Cool Season Extension',
+      description: `Cooler microclimate allows ${Math.abs(tempAdjustment)}°F temperature buffer`,
+      action: 'Extend cool-season crops 3-4 weeks longer into summer'
+    });
+  }
+  
+  return recommendations;
+};
+
+// Get infrastructure recommendations
+const getInfrastructureRecommendations = (locationConfig, microclimateEffects, solarData) => {
+  const recommendations = [];
+  const tempAdjustment = microclimateEffects.temperatureAdjustment;
+  const sunHours = microclimateEffects.sunlightHours;
+  const waterMultiplier = microclimateEffects.waterRequirementMultiplier;
+  
+  // Heat management
+  if (tempAdjustment > 5) {
+    recommendations.push({
+      title: 'Shade Infrastructure',
+      description: 'Hot microclimate requires heat management',
+      action: 'Install 30-50% shade cloth for summer protection',
+      costEstimate: '$40-80',
+      priority: 'high'
+    });
+  }
+  
+  // Water management
+  if (waterMultiplier > 1.3) {
+    recommendations.push({
+      title: 'Enhanced Irrigation',
+      description: 'Site conditions increase water needs significantly',
+      action: 'Install drip irrigation with timers for consistent moisture',
+      costEstimate: '$80-150',
+      priority: 'high'
+    });
+  }
+  
+  // Light optimization
+  if (sunHours < 5) {
+    recommendations.push({
+      title: 'Light Maximization',
+      description: 'Limited sun exposure needs optimization',
+      action: 'Use reflective mulch and prune overhanging branches',
+      costEstimate: '$20-40',
+      priority: 'medium'
+    });
+  }
+  
+  // Solar data specific recommendations
+  if (solarData && solarData.seasonalVariation) {
+    if (solarData.seasonalVariation.winter_sun_hours < 4) {
+      recommendations.push({
+        title: 'Winter Growing Enhancement',
+        description: 'Low winter sun limits cold-season production',
+        action: 'Install cold frames or mini-hoop tunnels for winter crops',
+        costEstimate: '$60-120',
+        priority: 'medium'
+      });
+    }
+  }
+  
+  // Wind protection
+  if (locationConfig.microclimate.windExposure === 'very-exposed') {
+    recommendations.push({
+      title: 'Wind Protection',
+      description: 'High wind exposure requires barriers',
+      action: 'Install windbreak fencing or plant protective hedging',
+      costEstimate: '$50-150',
+      priority: 'high'
+    });
+  }
+  
+  return recommendations;
+};
+
+// Get risk mitigation recommendations
+const getRiskMitigationRecommendations = (locationConfig, microclimateEffects) => {
+  const recommendations = [];
+  const frostRisk = microclimateEffects.frostDateAdjustment > 7;
+  const heatStress = microclimateEffects.temperatureAdjustment > 8;
+  const droughtStress = microclimateEffects.waterRequirementMultiplier > 1.5;
+  
+  if (frostRisk) {
+    recommendations.push({
+      title: 'Frost Protection Strategy',
+      description: 'High frost risk requires active protection',
+      actions: [
+        'Keep row covers ready for unexpected cold snaps',
+        'Plant tender crops in containers for mobility',
+        'Install frost protection fabric on permanent structures'
+      ]
+    });
+  }
+  
+  if (heatStress) {
+    recommendations.push({
+      title: 'Heat Stress Management',
+      description: 'Extreme heat conditions need multiple protections',
+      actions: [
+        'Mulch heavily to keep soil cool',
+        'Plant heat-sensitive crops in partial shade',
+        'Schedule watering for early morning to reduce stress'
+      ]
+    });
+  }
+  
+  if (droughtStress) {
+    recommendations.push({
+      title: 'Drought Resilience',
+      description: 'High water needs require conservation strategies',
+      actions: [
+        'Use moisture-retaining mulch around all plants',
+        'Group plants by water needs for efficient irrigation',
+        'Select drought-tolerant varieties when possible'
+      ]
+    });
+  }
+  
+  return recommendations;
+};
+
+// Get cost optimization recommendations
+const getCostOptimizationRecommendations = (locationConfig, microclimateEffects) => {
+  const recommendations = [];
+  const tempAdjustment = microclimateEffects.temperatureAdjustment;
+  const seasonExtension = microclimateEffects.seasonExtension;
+  
+  if (tempAdjustment > 3) {
+    recommendations.push({
+      title: 'Heat-Adapted Value Crops',
+      description: 'Warm microclimate enables high-value heat crops',
+      suggestion: 'Focus budget on heat-tolerant crops that command premium prices',
+      examples: ['Hot peppers ($3-5/lb)', 'Okra ($2-3/lb)', 'Heat-tolerant herbs ($8-12/oz)']
+    });
+  }
+  
+  if (seasonExtension > 3) {
+    recommendations.push({
+      title: 'Season Extension ROI',
+      description: 'Extended season enables succession planting',
+      suggestion: 'Invest in quick-growing crops for multiple harvests',
+      examples: ['Radishes (4 crops/season)', 'Lettuce (3-4 crops)', 'Spinach (3 crops)']
+    });
+  }
+  
+  if (microclimateEffects.sunlightHours >= 8) {
+    recommendations.push({
+      title: 'High-Sun Premium Crops',
+      description: 'Excellent sun exposure supports high-value crops',
+      suggestion: 'Maximize return with sun-dependent premium crops',
+      examples: ['Heirloom tomatoes ($4-6/lb)', 'Specialty peppers ($3-8/lb)', 'Basil ($8-15/oz)']
+    });
+  }
+  
+  return recommendations;
+};

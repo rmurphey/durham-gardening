@@ -28,6 +28,7 @@ import {
   SHADEMAP_CONFIG,
   convertSolarDataToCanopyShade,
   getEnhancedMicroclimateRecommendations,
+  generateSiteSpecificRecommendations,
   isPlantingSeasonValid,
   isDirectSowingViable,
   getAlternativePlantingMethod
@@ -2453,6 +2454,95 @@ function App() {
                   </div>
                 </div>
               </div>
+
+              {/* Site-Specific Recommendations */}
+              {(() => {
+                if (!locationConfig?.microclimateEffects) return null;
+                
+                const recommendations = generateSiteSpecificRecommendations(
+                  locationConfig, 
+                  locationConfig.microclimateEffects,
+                  locationConfig.solarData
+                );
+                
+                if (recommendations.length === 0) return null;
+                
+                return (
+                  <div className="site-recommendations">
+                    <h4>🎯 Site-Specific Recommendations</h4>
+                    <p className="recommendations-subtitle">Customized for your exact garden conditions</p>
+                    <div className="recommendations-grid">
+                      {recommendations.map((recGroup, index) => (
+                        <div key={index} className="recommendation-group">
+                          <div className="recommendation-header">
+                            <h5>{recGroup.title}</h5>
+                            <p className="recommendation-description">{recGroup.description}</p>
+                          </div>
+                          <div className="recommendation-items">
+                            {recGroup.items && recGroup.items.map((item, itemIndex) => (
+                              <div key={itemIndex} className="recommendation-item">
+                                {recGroup.type === 'priority_crops' && (
+                                  <>
+                                    <div className="crop-recommendation">
+                                      <span className="crop-name">{item.name}</span>
+                                      <span className="crop-confidence confidence-{item.confidence}">{item.confidence} confidence</span>
+                                    </div>
+                                    <div className="crop-reason">{item.reason}</div>
+                                    <div className="crop-yield">Expected yield: {item.expectedYield}</div>
+                                  </>
+                                )}
+                                {recGroup.type === 'timing_adjustments' && (
+                                  <>
+                                    <div className="timing-title">{item.title}</div>
+                                    <div className="timing-description">{item.description}</div>
+                                    <div className="timing-action">{item.action}</div>
+                                  </>
+                                )}
+                                {recGroup.type === 'infrastructure' && (
+                                  <>
+                                    <div className="infra-header">
+                                      <span className="infra-title">{item.title}</span>
+                                      {item.priority && <span className="infra-priority priority-{item.priority}">{item.priority} priority</span>}
+                                    </div>
+                                    <div className="infra-description">{item.description}</div>
+                                    <div className="infra-action">{item.action}</div>
+                                    {item.costEstimate && <div className="infra-cost">Est. cost: {item.costEstimate}</div>}
+                                  </>
+                                )}
+                                {recGroup.type === 'risk_mitigation' && (
+                                  <>
+                                    <div className="risk-title">{item.title}</div>
+                                    <div className="risk-description">{item.description}</div>
+                                    <ul className="risk-actions">
+                                      {item.actions.map((action, actionIndex) => (
+                                        <li key={actionIndex}>{action}</li>
+                                      ))}
+                                    </ul>
+                                  </>
+                                )}
+                                {recGroup.type === 'cost_optimization' && (
+                                  <>
+                                    <div className="cost-title">{item.title}</div>
+                                    <div className="cost-description">{item.description}</div>
+                                    <div className="cost-suggestion">{item.suggestion}</div>
+                                    {item.examples && (
+                                      <ul className="cost-examples">
+                                        {item.examples.map((example, exampleIndex) => (
+                                          <li key={exampleIndex}>{example}</li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
               
               {simulationResults.gardenCalendar && (
                 <div className="garden-calendar">

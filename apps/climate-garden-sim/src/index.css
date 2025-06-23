@@ -1768,3 +1768,279 @@ body {
     flex: none;
   }
 }
+
+/* Site-Specific Recommendations Styles */
+.site-recommendations {
+  background: white;
+  border-radius: 8px;
+  padding: 25px;
+  margin: 30px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #27ae60;
+}
+
+.site-recommendations h4 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.recommendations-subtitle {
+  color: #7f8c8d;
+  font-style: italic;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
+}
+
+.recommendation-group {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.recommendation-group:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.recommendation-header h5 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.recommendation-description {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.recommendation-items {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.recommendation-item {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 15px;
+  transition: all 0.2s ease;
+}
+
+.recommendation-item:hover {
+  border-color: #27ae60;
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.1);
+}
+
+/* Priority Crops Styles */
+.crop-recommendation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.crop-name {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 15px;
+}
+
+.crop-confidence {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.crop-confidence.confidence-high {
+  background: #d4edda;
+  color: #155724;
+}
+
+.crop-confidence.confidence-medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.crop-confidence.confidence-low {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.crop-reason {
+  color: #495057;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.crop-yield {
+  color: #28a745;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+/* Timing Adjustment Styles */
+.timing-title {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.timing-description {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.timing-action {
+  color: #495057;
+  font-weight: 500;
+  padding: 8px 12px;
+  background: #e9ecef;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Infrastructure Styles */
+.infra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.infra-title {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.infra-priority {
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.infra-priority.priority-high {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.infra-priority.priority-medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.infra-priority.priority-low {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.infra-description {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.infra-action {
+  color: #495057;
+  margin-bottom: 5px;
+}
+
+.infra-cost {
+  color: #28a745;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+/* Risk Mitigation Styles */
+.risk-title {
+  font-weight: bold;
+  color: #dc3545;
+  margin-bottom: 5px;
+}
+
+.risk-description {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.risk-actions {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.risk-actions li {
+  color: #495057;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+/* Cost Optimization Styles */
+.cost-title {
+  font-weight: bold;
+  color: #28a745;
+  margin-bottom: 5px;
+}
+
+.cost-description {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.cost-suggestion {
+  color: #495057;
+  margin-bottom: 10px;
+}
+
+.cost-examples {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.cost-examples li {
+  color: #28a745;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Responsive adjustments for recommendations */
+@media (max-width: 768px) {
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .recommendation-group {
+    padding: 15px;
+  }
+  
+  .crop-recommendation {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .infra-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
