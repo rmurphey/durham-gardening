@@ -10,8 +10,18 @@ export const WEATHER_CONFIG = {
   NOAA_CDO_TOKEN: process.env.REACT_APP_NOAA_CDO_TOKEN || '',
   NOAA_BASE_URL: 'https://www.ncei.noaa.gov/cdo-web/api/v2',
   
+  // Weather.gov API (FREE, no signup required, US only)
+  // No API key needed, just enable with flag
+  USE_WEATHER_GOV: process.env.REACT_APP_USE_WEATHER_GOV === 'true',
+  WEATHER_GOV_BASE_URL: 'https://api.weather.gov',
+  
+  // WeatherAPI (Free tier: 1M calls/month, no billing info required)
+  // Register at: https://www.weatherapi.com/signup.aspx
+  WEATHER_API_KEY: process.env.REACT_APP_WEATHER_API_KEY || '',
+  WEATHER_API_BASE_URL: 'https://api.weatherapi.com/v1',
+  
   // OpenWeatherMap API  
-  // Free tier: 1,000 calls/day, 60 calls/minute
+  // Free tier: 1,000 calls/day, 60 calls/minute (requires billing info)
   // Register at: https://openweathermap.org/api
   OPENWEATHER_API_KEY: process.env.REACT_APP_OPENWEATHER_API_KEY || '',
   OPENWEATHER_BASE_URL: 'https://api.openweathermap.org/data/2.5',
@@ -25,6 +35,8 @@ export const WEATHER_CONFIG = {
   // Rate limiting and caching settings
   RATE_LIMITS: {
     NOAA: { dailyLimit: 10000, requestsPerSecond: 5 },
+    WEATHER_GOV: { requestsPerSecond: 10 }, // No hard limit, but be reasonable
+    WEATHER_API: { monthlyLimit: 1000000, requestsPerSecond: 10 },
     OPENWEATHER: { dailyLimit: 1000, requestsPerMinute: 60 },
     AGRO: { dailyLimit: 1000, requestsPerMinute: 60 }
   },
@@ -77,8 +89,15 @@ export const validateWeatherConfig = () => {
     warnings.push('NOAA CDO API token not configured - historical climate data will be limited');
   }
   
-  if (!WEATHER_CONFIG.OPENWEATHER_API_KEY) {
-    warnings.push('OpenWeatherMap API key not configured - current weather and forecasts unavailable');
+  // Check for any current weather API
+  const hasCurrentWeather = !!(
+    WEATHER_CONFIG.USE_WEATHER_GOV ||
+    WEATHER_CONFIG.WEATHER_API_KEY ||
+    WEATHER_CONFIG.OPENWEATHER_API_KEY
+  );
+  
+  if (!hasCurrentWeather) {
+    warnings.push('No current weather API configured - real-time conditions unavailable');
   }
   
   if (!WEATHER_CONFIG.OPENWEATHER_AGRO_API_KEY) {
@@ -92,9 +111,12 @@ export const validateWeatherConfig = () => {
   return {
     isValid: warnings.length === 0,
     warnings,
-    hasBasicWeather: !!WEATHER_CONFIG.OPENWEATHER_API_KEY,
+    hasBasicWeather: hasCurrentWeather,
     hasHistoricalData: !!WEATHER_CONFIG.NOAA_CDO_TOKEN,
-    hasAgriculturalData: !!WEATHER_CONFIG.OPENWEATHER_AGRO_API_KEY
+    hasAgriculturalData: !!WEATHER_CONFIG.OPENWEATHER_AGRO_API_KEY,
+    hasWeatherGov: !!WEATHER_CONFIG.USE_WEATHER_GOV,
+    hasWeatherAPI: !!WEATHER_CONFIG.WEATHER_API_KEY,
+    hasOpenWeather: !!WEATHER_CONFIG.OPENWEATHER_API_KEY
   };
 };
 

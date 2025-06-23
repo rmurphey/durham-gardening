@@ -96,10 +96,132 @@ class WeatherDataService {
   }
 
   /**
-   * OpenWeatherMap API Integration  
-   * Provides current conditions and forecasts
+   * Get current weather from available APIs
+   * Priority: WeatherAPI > Weather.gov > OpenWeatherMap
    */
   async getCurrentWeather(lat, lon) {
+    // Try WeatherAPI first (best free option)
+    if (WEATHER_CONFIG.WEATHER_API_KEY) {
+      try {
+        return await this.getCurrentWeatherFromWeatherAPI(lat, lon);
+      } catch (error) {
+        console.warn('WeatherAPI failed, trying backup:', error.message);
+      }
+    }
+
+    // Try Weather.gov (US only, completely free)
+    if (WEATHER_CONFIG.USE_WEATHER_GOV) {
+      try {
+        return await this.getCurrentWeatherFromWeatherGov(lat, lon);
+      } catch (error) {
+        console.warn('Weather.gov failed, trying backup:', error.message);
+      }
+    }
+
+    // Fallback to OpenWeatherMap
+    if (WEATHER_CONFIG.OPENWEATHER_API_KEY) {
+      try {
+        return await this.getCurrentWeatherFromOpenWeather(lat, lon);
+      } catch (error) {
+        console.warn('OpenWeatherMap failed:', error.message);
+      }
+    }
+
+    // All APIs failed, return fallback
+    console.warn('All weather APIs failed, using fallback data');
+    return this.getFallbackCurrentWeather();
+  }
+
+  /**
+   * WeatherAPI Implementation (Free: 1M calls/month)
+   */
+  async getCurrentWeatherFromWeatherAPI(lat, lon) {
+    const cacheKey = `weatherapi_current_${lat}_${lon}`;
+    const cacheTime = 10 * 60 * 1000; // 10 minutes
+
+    if (this.cache.has(cacheKey)) {
+      const cached = this.cache.get(cacheKey);
+      if (Date.now() - cached.timestamp < cacheTime) {
+        return cached.data;
+      }
+    }
+
+    if (!this.checkRateLimit('weatherapi')) {
+      throw new Error('WeatherAPI rate limit exceeded');
+    }
+
+    const response = await fetch(
+      `${WEATHER_CONFIG.WEATHER_API_BASE_URL}/current.json?key=${WEATHER_CONFIG.WEATHER_API_KEY}&q=${lat},${lon}&aqi=no`
+    );
+
+    if (!response.ok) {
+      throw new Error(`WeatherAPI error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const processedData = this.processWeatherAPIData(data);
+    
+    this.cache.set(cacheKey, { data: processedData, timestamp: Date.now() });
+    return processedData;
+  }
+
+  /**
+   * Weather.gov Implementation (Free, US only)
+   */
+  async getCurrentWeatherFromWeatherGov(lat, lon) {
+    const cacheKey = `weathergov_current_${lat}_${lon}`;
+    const cacheTime = 10 * 60 * 1000; // 10 minutes
+
+    if (this.cache.has(cacheKey)) {
+      const cached = this.cache.get(cacheKey);
+      if (Date.now() - cached.timestamp < cacheTime) {
+        return cached.data;
+      }
+    }
+
+    if (!this.checkRateLimit('weathergov')) {
+      throw new Error('Weather.gov rate limit exceeded');
+    }
+
+    // Weather.gov requires two API calls: points -> station -> observation
+    const pointsResponse = await fetch(
+      `${WEATHER_CONFIG.WEATHER_GOV_BASE_URL}/points/${lat},${lon}`
+    );
+
+    if (!pointsResponse.ok) {
+      throw new Error(`Weather.gov points API error: ${pointsResponse.status}`);
+    }
+
+    const pointsData = await pointsResponse.json();
+    const stationUrl = pointsData.properties.observationStations;
+
+    const stationsResponse = await fetch(stationUrl);
+    const stationsData = await stationsResponse.json();
+    const stationId = stationsData.features[0]?.properties?.stationIdentifier;
+
+    if (!stationId) {
+      throw new Error('No weather station found for location');
+    }
+
+    const observationResponse = await fetch(
+      `${WEATHER_CONFIG.WEATHER_GOV_BASE_URL}/stations/${stationId}/observations/latest`
+    );
+
+    if (!observationResponse.ok) {
+      throw new Error(`Weather.gov observation API error: ${observationResponse.status}`);
+    }
+
+    const observationData = await observationResponse.json();
+    const processedData = this.processWeatherGovData(observationData);
+    
+    this.cache.set(cacheKey, { data: processedData, timestamp: Date.now() });
+    return processedData;
+  }
+
+  /**
+   * OpenWeatherMap Implementation
+   */
+  async getCurrentWeatherFromOpenWeather(lat, lon) {
     const cacheKey = `current_${lat}_${lon}`;
     const cacheTime = 10 * 60 * 1000; // 10 minutes
 
@@ -264,6 +386,12 @@ class WeatherDataService {
    */
   checkRateLimit(api) {
     const limit = this.rateLimits[api];
+    if (!limit) {
+      // Initialize rate limit tracking for new API
+      this.rateLimits[api] = { requests: 0, resetTime: Date.now() + 24 * 60 * 60 * 1000 };
+      return true;
+    }
+    
     const now = Date.now();
     
     if (now > limit.resetTime) {
@@ -271,7 +399,13 @@ class WeatherDataService {
       limit.resetTime = now + 24 * 60 * 60 * 1000;
     }
     
-    const maxRequests = api === 'noaa' ? 10000 : 1000;
+    const maxRequests = {
+      noaa: 10000,
+      weatherapi: 30000, // Conservative limit for 1M/month
+      weathergov: 1000,  // Be conservative with government API
+      openweather: 1000
+    }[api] || 1000;
+    
     if (limit.requests >= maxRequests) {
       return false;
     }
@@ -311,6 +445,83 @@ class WeatherDataService {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   }
 
+  /**
+   * Process WeatherAPI response data
+   */
+  processWeatherAPIData(data) {
+    const current = data.current;
+    return {
+      temperature: {
+        current: Math.round(current.temp_f),
+        feelsLike: Math.round(current.feelslike_f),
+        min: Math.round(current.temp_f), // WeatherAPI doesn't provide daily min/max in current endpoint
+        max: Math.round(current.temp_f)
+      },
+      humidity: current.humidity,
+      pressure: current.pressure_in,
+      windSpeed: Math.round(current.wind_mph),
+      windDirection: current.wind_degree,
+      cloudCover: current.cloud,
+      visibility: current.vis_miles,
+      uvIndex: current.uv,
+      condition: {
+        main: current.condition.text,
+        description: current.condition.text.toLowerCase(),
+        icon: current.condition.icon
+      },
+      timestamp: new Date(current.last_updated),
+      location: {
+        name: data.location.name,
+        lat: data.location.lat,
+        lon: data.location.lon
+      },
+      dataSource: 'weatherapi'
+    };
+  }
+
+  /**
+   * Process Weather.gov response data
+   */
+  processWeatherGovData(data) {
+    const props = data.properties;
+    const tempF = props.temperature?.value ? 
+      Math.round(props.temperature.value * 9/5 + 32) : 70; // Convert C to F
+    
+    return {
+      temperature: {
+        current: tempF,
+        feelsLike: tempF, // Weather.gov doesn't always provide feels-like
+        min: tempF,
+        max: tempF
+      },
+      humidity: props.relativeHumidity?.value || 50,
+      pressure: props.barometricPressure?.value ? 
+        Math.round(props.barometricPressure.value * 0.0295301) : 30, // Convert Pa to inHg
+      windSpeed: props.windSpeed?.value ? 
+        Math.round(props.windSpeed.value * 0.621371) : 5, // Convert km/h to mph
+      windDirection: props.windDirection?.value || 0,
+      cloudCover: 50, // Weather.gov doesn't always provide cloud cover
+      visibility: props.visibility?.value ? 
+        Math.round(props.visibility.value * 0.621371) : 10, // Convert km to miles
+      uvIndex: null,
+      condition: {
+        main: props.textDescription || 'Clear',
+        description: (props.textDescription || 'clear sky').toLowerCase(),
+        icon: null
+      },
+      timestamp: new Date(props.timestamp),
+      location: {
+        name: 'Weather Station',
+        lat: null,
+        lon: null
+      },
+      dataSource: 'weather.gov'
+    };
+  }
+
+  /**
+   * Process OpenWeatherMap response data (existing method)
+   */
   processCurrentWeather(data) {
     return {
       temperature: {
@@ -336,7 +547,8 @@ class WeatherDataService {
         name: data.name,
         lat: data.coord.lat,
         lon: data.coord.lon
-      }
+      },
+      dataSource: 'openweathermap'
     };
   }
 
