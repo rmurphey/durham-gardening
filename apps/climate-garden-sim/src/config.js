@@ -856,6 +856,53 @@ const getClimateZoneFromLocation = (locationConfig) => {
   return 'temperate';
 };
 
+// Get climate-adapted crops organized by category
+export const getClimateAdaptedCrops = (locationConfig, selectedScenario = 'normal') => {
+  if (!locationConfig) {
+    return {
+      heatTolerant: GLOBAL_CROP_DATABASE.heatTolerant || {},
+      coolSeason: GLOBAL_CROP_DATABASE.coolSeason || {},
+      perennials: GLOBAL_CROP_DATABASE.perennials || {}
+    };
+  }
+  
+  const climateZone = getClimateZoneFromLocation(locationConfig);
+  const zoneNumber = getHardinessZoneNumber(locationConfig.hardiness);
+  
+  // Filter crops based on hardiness zone compatibility
+  const filterCropsByZone = (crops) => {
+    const filtered = {};
+    
+    Object.entries(crops).forEach(([key, crop]) => {
+      if (!crop.zones) {
+        filtered[key] = { ...crop, displayName: crop.name.en };
+        return;
+      }
+      
+      // Parse zone range (e.g., "6-10" or "2-9")
+      const zoneParts = crop.zones.split('-');
+      const minZone = parseInt(zoneParts[0]);
+      const maxZone = parseInt(zoneParts[1]);
+      
+      if (zoneNumber >= minZone && zoneNumber <= maxZone) {
+        filtered[key] = { 
+          ...crop, 
+          displayName: crop.name.en,
+          plantingMonths: crop.plantingMonths[climateZone] || crop.plantingMonths.temperate
+        };
+      }
+    });
+    
+    return filtered;
+  };
+  
+  return {
+    heatTolerant: filterCropsByZone(GLOBAL_CROP_DATABASE.heatTolerant || {}),
+    coolSeason: filterCropsByZone(GLOBAL_CROP_DATABASE.coolSeason || {}),
+    perennials: filterCropsByZone(GLOBAL_CROP_DATABASE.perennials || {})
+  };
+};
+
 // Calculate microclimate adjustments
 export const calculateMicroclimateEffects = (microclimate) => {
   const effects = {
@@ -1300,4 +1347,264 @@ const getCostOptimizationRecommendations = (locationConfig, microclimateEffects)
   }
   
   return recommendations;
+};
+
+// Generate immediate action items for the current week
+export const generateWeeklyActions = (locationConfig, portfolio, currentDate = new Date()) => {
+  const actions = [];
+  const currentMonth = currentDate.getMonth() + 1;
+  const adaptedCrops = getClimateAdaptedCrops(locationConfig, 'extreme'); // Use current scenario
+  
+  // Check portfolio for actionable items
+  Object.entries(portfolio || {}).forEach(([cropType, percentage]) => {
+    if (percentage < 10) return; // Skip crops with minimal allocation
+    
+    const categoryName = cropType === 'heatSpecialists' ? 'heatTolerant' : cropType;
+    if (!adaptedCrops[categoryName]) return;
+    
+    Object.entries(adaptedCrops[categoryName]).forEach(([cropKey, crop]) => {
+      const isInSeason = isPlantingSeasonValid(crop, currentMonth, locationConfig);
+      const isDirectViable = isDirectSowingViable(crop, currentDate, locationConfig);
+      
+      if (isInSeason) {
+        if (crop.transplantWeeks > 0 && !isDirectViable) {
+          // Check if transplants should be started soon
+          const latestStart = getLatestPlantingDate(crop, locationConfig);
+          if (latestStart) {
+            const transplantStart = new Date(latestStart);
+            transplantStart.setDate(transplantStart.getDate() - (crop.transplantWeeks * 7));
+            const daysUntilStart = Math.ceil((transplantStart - currentDate) / (1000 * 60 * 60 * 24));
+            
+            if (daysUntilStart <= 7 && daysUntilStart >= 0) {
+              actions.push({
+                type: 'urgent',
+                icon: '🌱',
+                task: `Start ${crop.displayName} transplants indoors`,
+                timeframe: daysUntilStart === 0 ? 'today' : `${daysUntilStart} days left`,
+                priority: 'high'
+              });
+            }
+          }
+        } else if (isDirectViable) {
+          actions.push({
+            type: 'planting',
+            icon: '🌿',
+            task: `Direct sow ${crop.displayName}`,
+            timeframe: 'this week',
+            priority: 'medium'
+          });
+        }
+      }
+    });
+  });
+  
+  // Add infrastructure actions based on microclimate
+  if (locationConfig?.microclimateEffects) {
+    const effects = locationConfig.microclimateEffects;
+    
+    if (effects.temperatureAdjustment > 5 && currentMonth >= 4 && currentMonth <= 6) {
+      actions.push({
+        type: 'infrastructure',
+        icon: '☂️',
+        task: 'Install shade cloth for heat protection',
+        timeframe: 'before summer heat',
+        priority: 'high'
+      });
+    }
+    
+    if (effects.waterRequirementMultiplier > 1.3 && currentMonth >= 3 && currentMonth <= 5) {
+      actions.push({
+        type: 'infrastructure',
+        icon: '💧',
+        task: 'Upgrade irrigation system',
+        timeframe: 'spring preparation',
+        priority: 'medium'
+      });
+    }
+  }
+  
+  return actions.slice(0, 4); // Limit to top 4 actions
+};
+
+// Generate monthly focus areas
+export const generateMonthlyFocus = (locationConfig, portfolio, simulationResults) => {
+  const currentMonth = new Date().getMonth() + 1;
+  const focus = {
+    planting: [],
+    preparation: [],
+    harvest: []
+  };
+  
+  // Determine what to plant this month
+  if (portfolio) {
+    const topCategories = Object.entries(portfolio)
+      .filter(([_, percentage]) => percentage >= 15)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 2);
+    
+    topCategories.forEach(([category, _]) => {
+      const categoryName = category === 'heatSpecialists' ? 'heat-tolerant' : 
+                          category === 'coolSeason' ? 'cool-season' : category;
+      focus.planting.push(`${categoryName} crops`);
+    });
+  }
+  
+  // Add preparation tasks based on investment priorities
+  if (simulationResults) {
+    const investmentBreakdown = [
+      { category: 'Infrastructure', amount: 110, season: [3, 4, 5] },
+      { category: 'Irrigation', amount: 85, season: [4, 5, 6] },
+      { category: 'Protection', amount: 25, season: [3, 4, 9, 10] }
+    ];
+    
+    investmentBreakdown.forEach(item => {
+      if (item.season.includes(currentMonth)) {
+        focus.preparation.push(`${item.category}: $${item.amount}`);
+      }
+    });
+  }
+  
+  // Add harvest reminders for current season
+  if (currentMonth >= 6 && currentMonth <= 9) {
+    focus.harvest.push('Summer crops at peak');
+  } else if (currentMonth >= 10 || currentMonth <= 2) {
+    focus.harvest.push('Cool-season crops');
+  }
+  
+  return focus;
+};
+
+// Generate prioritized investment recommendations
+export const generateInvestmentPriority = (locationConfig, microclimateEffects) => {
+  const priorities = [];
+  const currentMonth = new Date().getMonth() + 1;
+  
+  // Always include seeds as first priority
+  priorities.push({
+    category: 'Seeds & Starts',
+    amount: 75,
+    timing: 'buy now',
+    urgency: 'immediate',
+    description: 'Foundation of your garden'
+  });
+  
+  // Add microclimate-specific priorities
+  if (microclimateEffects?.temperatureAdjustment > 5) {
+    priorities.push({
+      category: 'Shade Infrastructure',
+      amount: 60,
+      timing: currentMonth >= 4 ? 'urgent' : 'before June',
+      urgency: currentMonth >= 4 ? 'high' : 'medium',
+      description: 'Essential for hot microclimate'
+    });
+  }
+  
+  if (microclimateEffects?.waterRequirementMultiplier > 1.2) {
+    priorities.push({
+      category: 'Irrigation Upgrade',
+      amount: 85,
+      timing: 'summer prep',
+      urgency: 'medium',
+      description: 'Efficient water management'
+    });
+  }
+  
+  // Add general infrastructure if needed
+  if (priorities.length < 3) {
+    priorities.push({
+      category: 'Basic Infrastructure',
+      amount: 45,
+      timing: 'spring setup',
+      urgency: 'low',
+      description: 'Supports and containers'
+    });
+  }
+  
+  return priorities.slice(0, 3);
+};
+
+// Generate success outlook summary
+export const generateSuccessOutlook = (simulationResults, locationConfig) => {
+  if (!simulationResults) return null;
+  
+  const outlook = {
+    expectedValue: simulationResults.harvestValue.mean,
+    confidence: simulationResults.successRate,
+    confidenceLevel: 'moderate'
+  };
+  
+  // Determine confidence level
+  if (outlook.confidence >= 80) {
+    outlook.confidenceLevel = 'high';
+    outlook.message = 'Excellent success potential';
+  } else if (outlook.confidence >= 65) {
+    outlook.confidenceLevel = 'good';
+    outlook.message = 'Good success potential';
+  } else if (outlook.confidence >= 50) {
+    outlook.confidenceLevel = 'moderate';
+    outlook.message = 'Moderate success expected';
+  } else {
+    outlook.confidenceLevel = 'challenging';
+    outlook.message = 'Challenging conditions';
+  }
+  
+  // Add microclimate boost message
+  if (locationConfig?.microclimateEffects) {
+    const effects = locationConfig.microclimateEffects;
+    if (effects.temperatureAdjustment > 3 || effects.seasonExtension > 2) {
+      outlook.boost = 'Microclimate advantages detected';
+    }
+  }
+  
+  return outlook;
+};
+
+// Generate top crop recommendations with visual confidence
+export const generateTopCropRecommendations = (locationConfig, portfolio) => {
+  if (!locationConfig || !portfolio) return [];
+  
+  const recommendations = [];
+  const microEffects = locationConfig.microclimateEffects || {};
+  const adaptedCrops = getClimateAdaptedCrops(locationConfig, 'extreme');
+  
+  // Get top portfolio categories
+  const topCategories = Object.entries(portfolio)
+    .filter(([_, percentage]) => percentage >= 10)
+    .sort((a, b) => b[1] - a[1]);
+  
+  topCategories.forEach(([category, percentage]) => {
+    const categoryName = category === 'heatSpecialists' ? 'heatTolerant' : category;
+    if (!adaptedCrops[categoryName]) return;
+    
+    // Get top crops from this category
+    const categoryRecommendations = Object.entries(adaptedCrops[categoryName])
+      .slice(0, 2)
+      .map(([cropKey, crop]) => {
+        let confidence = 'medium';
+        let reason = `${Math.round(percentage)}% of portfolio`;
+        
+        // Boost confidence based on microclimate
+        if (category === 'heatSpecialists' && microEffects.temperatureAdjustment > 3) {
+          confidence = 'high';
+          reason = `Perfect for your warm microclimate`;
+        } else if (category === 'coolSeason' && microEffects.temperatureAdjustment < -2) {
+          confidence = 'high';
+          reason = `Thrives in your cool conditions`;
+        } else if (category === 'perennials') {
+          confidence = 'high';
+          reason = `Long-term investment`;
+        }
+        
+        return {
+          name: crop.displayName,
+          confidence,
+          reason,
+          allocation: Math.round(percentage)
+        };
+      });
+    
+    recommendations.push(...categoryRecommendations);
+  });
+  
+  return recommendations.slice(0, 6);
 };

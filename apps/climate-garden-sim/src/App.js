@@ -29,6 +29,12 @@ import {
   convertSolarDataToCanopyShade,
   getEnhancedMicroclimateRecommendations,
   generateSiteSpecificRecommendations,
+  generateWeeklyActions,
+  generateMonthlyFocus,
+  generateInvestmentPriority,
+  generateSuccessOutlook,
+  generateTopCropRecommendations,
+  getClimateAdaptedCrops,
   isPlantingSeasonValid,
   isDirectSowingViable,
   getAlternativePlantingMethod
@@ -193,6 +199,7 @@ function App() {
     } catch { return false; }
   });
   const [simulationDebounceTimer, setSimulationDebounceTimer] = useState(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
 
   // Get seasonal context for better winter predictions  
@@ -2277,294 +2284,501 @@ function App() {
             );
           })()}
 
-          {simulationResults && (
-            <div className="results-section">
-              <h3>📊 Simulation Results</h3>
-              <div className="results-grid">
-                <div className="result-card">
-                  <div className="result-value">{formatCurrency(simulationResults.investment)}</div>
-                  <div className="result-label">Total Investment</div>
-                  <div className="result-confidence">(Fixed cost)</div>
-                </div>
-                <div className="result-card">
-                  <div className="result-value">{formatCurrency(simulationResults.harvestValue.mean)}</div>
-                  <div className="result-label">Expected Harvest</div>
-                  <div className="result-confidence">
-                    80% likely: {formatCurrency(simulationResults.harvestValue.p10)} - {formatCurrency(simulationResults.harvestValue.p90)}
-                  </div>
-                </div>
-                <div className="result-card">
-                  <div className="result-value">{formatCurrency(simulationResults.netReturn.mean)}</div>
-                  <div className="result-label">Expected Return</div>
-                  <div className="result-confidence">
-                    80% likely: {formatCurrency(simulationResults.netReturn.p10)} - {formatCurrency(simulationResults.netReturn.p90)}
-                  </div>
-                </div>
-                <div className="result-card">
-                  <div className="result-value">{formatCurrency(simulationResults.roi.mean, 'PCT')}%</div>
-                  <div className="result-label">Expected ROI</div>
-                  <div className="result-confidence">
-                    80% likely: {formatCurrency(simulationResults.roi.p10, 'PCT')}% - {formatCurrency(simulationResults.roi.p90, 'PCT')}%
-                  </div>
-                </div>
-              </div>
-              
-              <div className="risk-metrics">
-                <h4>📊 Risk Analysis (from 5,000 simulations)</h4>
-                <div className="risk-grid">
-                  <div className="risk-item">
-                    <span className="risk-label">Success Rate:</span>
-                    <span className="risk-value success">{formatCurrency(simulationResults.successRate, 'PCT')}%</span>
-                    <span className="risk-desc">Probability of positive return</span>
-                  </div>
-                  <div className="risk-item">
-                    <span className="risk-label">Worst Case (10th percentile):</span>
-                    <span className="risk-value worst">{formatCurrency(simulationResults.netReturn.p10)}</span>
-                    <span className="risk-desc">1 in 10 chance of worse outcome</span>
-                  </div>
-                  <div className="risk-item">
-                    <span className="risk-label">Best Case (90th percentile):</span>
-                    <span className="risk-value best">{formatCurrency(simulationResults.netReturn.p90)}</span>
-                    <span className="risk-desc">1 in 10 chance of better outcome</span>
-                  </div>
-                  <div className="risk-item">
-                    <span className="risk-label">Most Likely (median):</span>
-                    <span className="risk-value median">{formatCurrency(simulationResults.netReturn.p50)}</span>
-                    <span className="risk-desc">50/50 chance above/below this</span>
-                  </div>
-                </div>
-              </div>
-              <div className="portfolio-breakdown">
-                <h4>Crop Performance Breakdown:</h4>
-                <div className="crop-results">
-                  <div className="crop-result-item">
-                    <span className="crop-result-label">Heat Specialists:</span>
-                    <span className="crop-result-value">{formatCurrency(simulationResults.heatYield)}</span>
-                  </div>
-                  <div className="crop-result-item">
-                    <span className="crop-result-label">Cool Season:</span>
-                    <span className="crop-result-value">{formatCurrency(simulationResults.coolYield)}</span>
-                  </div>
-                  <div className="crop-result-item">
-                    <span className="crop-result-label">Perennials:</span>
-                    <span className="crop-result-value">{formatCurrency(simulationResults.perennialYield)}</span>
-                  </div>
-                </div>
-              </div>
+          {simulationResults && (() => {
+            const currentPortfolio = getPortfolioStrategies(locationConfig, customPortfolio)[selectedPortfolio];
+            const weeklyActions = generateWeeklyActions(locationConfig, currentPortfolio);
+            const monthlyFocus = generateMonthlyFocus(locationConfig, currentPortfolio, simulationResults);
+            const investmentPriority = generateInvestmentPriority(locationConfig, locationConfig?.microclimateEffects);
+            const successOutlook = generateSuccessOutlook(simulationResults, locationConfig);
+            const topCrops = generateTopCropRecommendations(locationConfig, currentPortfolio);
 
-              <div className="visual-analysis">
-                <h4>📊 Visual Risk Analysis</h4>
-                
-                <div className="chart-container">
-                  <h5>Net Return Distribution</h5>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <BarChart data={simulationResults.returnHistogram}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis 
-                        dataKey="x" 
-                        tickFormatter={(value) => `$${Math.round(value)}`}
-                        angle={-45}
-                        textAnchor="end"
-                        height={80}
-                      />
-                      <YAxis />
-                      <Tooltip 
-                        formatter={(value) => [value, 'Simulations']}
-                        labelFormatter={(value) => `Return: $${Math.round(value)} - $${Math.round(value + (simulationResults.returnHistogram[1]?.x - simulationResults.returnHistogram[0]?.x || 0))}`}
-                      />
-                      <Bar dataKey="count" fill="#4CAF50" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                  <p className="chart-description">Distribution of potential net returns from 5,000 simulations</p>
-                </div>
-
-                <div className="chart-container">
-                  <h5>ROI Distribution</h5>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <BarChart data={simulationResults.roiHistogram}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis 
-                        dataKey="x" 
-                        tickFormatter={(value) => `${Math.round(value)}%`}
-                        angle={-45}
-                        textAnchor="end"
-                        height={80}
-                      />
-                      <YAxis />
-                      <Tooltip 
-                        formatter={(value) => [value, 'Simulations']}
-                        labelFormatter={(value) => `ROI: ${Math.round(value)}% - ${Math.round(value + (simulationResults.roiHistogram[1]?.x - simulationResults.roiHistogram[0]?.x || 0))}%`}
-                      />
-                      <Bar dataKey="count" fill="#2196F3" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                  <p className="chart-description">Return on investment percentage distribution</p>
-                </div>
-
-                <div className="weather-risk-charts">
-                  <h5>Weather Risk Factors</h5>
-                  <div className="weather-charts-grid">
-                    <div className="weather-chart">
-                      <h6>Heat Stress Days</h6>
-                      <ResponsiveContainer width="100%" height={200}>
-                        <BarChart data={simulationResults.weatherRiskData.stressDays}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="x" tickFormatter={(value) => Math.round(value)} />
-                          <YAxis />
-                          <Tooltip 
-                            formatter={(value) => [value, 'Simulations']}
-                            labelFormatter={(value) => `${Math.round(value)} - ${Math.round(value + 4)} days`}
-                          />
-                          <Bar dataKey="count" fill="#FF5722" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-
-                    <div className="weather-chart">
-                      <h6>Freeze Events</h6>
-                      <ResponsiveContainer width="100%" height={200}>
-                        <BarChart data={simulationResults.weatherRiskData.freezeEvents}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="x" tickFormatter={(value) => Math.round(value)} />
-                          <YAxis />
-                          <Tooltip 
-                            formatter={(value) => [value, 'Simulations']}
-                            labelFormatter={(value) => `${Math.round(value)} events`}
-                          />
-                          <Bar dataKey="count" fill="#03A9F4" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-
-                    <div className="weather-chart">
-                      <h6>Annual Rainfall (inches)</h6>
-                      <ResponsiveContainer width="100%" height={200}>
-                        <BarChart data={simulationResults.weatherRiskData.rainfall}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="x" tickFormatter={(value) => Math.round(value)} />
-                          <YAxis />
-                          <Tooltip 
-                            formatter={(value) => [value, 'Simulations']}
-                            labelFormatter={(value) => `${Math.round(value)} - ${Math.round(value + 2)} inches`}
-                          />
-                          <Bar dataKey="count" fill="#009688" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Site-Specific Recommendations */}
-              {(() => {
-                if (!locationConfig?.microclimateEffects) return null;
-                
-                const recommendations = generateSiteSpecificRecommendations(
-                  locationConfig, 
-                  locationConfig.microclimateEffects,
-                  locationConfig.solarData
-                );
-                
-                if (recommendations.length === 0) return null;
-                
-                return (
-                  <div className="site-recommendations">
-                    <h4>🎯 Site-Specific Recommendations</h4>
-                    <p className="recommendations-subtitle">Customized for your exact garden conditions</p>
-                    <div className="recommendations-grid">
-                      {recommendations.map((recGroup, index) => (
-                        <div key={index} className="recommendation-group">
-                          <div className="recommendation-header">
-                            <h5>{recGroup.title}</h5>
-                            <p className="recommendation-description">{recGroup.description}</p>
+            return (
+              <div className="action-dashboard">
+                {/* Action Dashboard */}
+                <div className="dashboard-section action-priority">
+                  <h3>🚀 This Week's Actions</h3>
+                  {weeklyActions.length > 0 ? (
+                    <div className="action-list">
+                      {weeklyActions.map((action, index) => (
+                        <div key={index} className={`action-item priority-${action.priority}`}>
+                          <div className="action-content">
+                            <span className="action-icon">{action.icon}</span>
+                            <span className="action-task">{action.task}</span>
+                            <span className="action-timeframe">{action.timeframe}</span>
                           </div>
-                          <div className="recommendation-items">
-                            {recGroup.items && recGroup.items.map((item, itemIndex) => (
-                              <div key={itemIndex} className="recommendation-item">
-                                {recGroup.type === 'priority_crops' && (
-                                  <>
-                                    <div className="crop-recommendation">
-                                      <span className="crop-name">{item.name}</span>
-                                      <span className="crop-confidence confidence-{item.confidence}">{item.confidence} confidence</span>
-                                    </div>
-                                    <div className="crop-reason">{item.reason}</div>
-                                    <div className="crop-yield">Expected yield: {item.expectedYield}</div>
-                                  </>
-                                )}
-                                {recGroup.type === 'timing_adjustments' && (
-                                  <>
-                                    <div className="timing-title">{item.title}</div>
-                                    <div className="timing-description">{item.description}</div>
-                                    <div className="timing-action">{item.action}</div>
-                                  </>
-                                )}
-                                {recGroup.type === 'infrastructure' && (
-                                  <>
-                                    <div className="infra-header">
-                                      <span className="infra-title">{item.title}</span>
-                                      {item.priority && <span className="infra-priority priority-{item.priority}">{item.priority} priority</span>}
-                                    </div>
-                                    <div className="infra-description">{item.description}</div>
-                                    <div className="infra-action">{item.action}</div>
-                                    {item.costEstimate && <div className="infra-cost">Est. cost: {item.costEstimate}</div>}
-                                  </>
-                                )}
-                                {recGroup.type === 'risk_mitigation' && (
-                                  <>
-                                    <div className="risk-title">{item.title}</div>
-                                    <div className="risk-description">{item.description}</div>
-                                    <ul className="risk-actions">
-                                      {item.actions.map((action, actionIndex) => (
-                                        <li key={actionIndex}>{action}</li>
-                                      ))}
-                                    </ul>
-                                  </>
-                                )}
-                                {recGroup.type === 'cost_optimization' && (
-                                  <>
-                                    <div className="cost-title">{item.title}</div>
-                                    <div className="cost-description">{item.description}</div>
-                                    <div className="cost-suggestion">{item.suggestion}</div>
-                                    {item.examples && (
-                                      <ul className="cost-examples">
-                                        {item.examples.map((example, exampleIndex) => (
-                                          <li key={exampleIndex}>{example}</li>
-                                        ))}
-                                      </ul>
-                                    )}
-                                  </>
-                                )}
-                              </div>
-                            ))}
+                          <div className="action-checkbox">
+                            <input type="checkbox" id={`action-${index}`} />
+                            <label htmlFor={`action-${index}`}></label>
                           </div>
                         </div>
                       ))}
                     </div>
-                  </div>
-                );
-              })()}
-              
-              {simulationResults.gardenCalendar && (
-                <div className="garden-calendar">
-                  <h4>📅 12-Month Garden Calendar</h4>
-                  <p className="calendar-subtitle">Optimized for {currentClimateScenarios.summer.find(s => s.id === selectedSummer)?.name} + {currentClimateScenarios.winter.find(s => s.id === selectedWinter)?.name}</p>
-                  <div className="calendar-grid">
-                    {simulationResults.gardenCalendar.map((monthData, index) => (
-                      <div key={index} className={`calendar-month ${monthData.emphasis} ${monthData.isCurrentMonth ? 'current' : ''}`}>
-                        <div className="month-header">
-                          <h5>{monthData.month}</h5>
-                          <span className="month-emphasis">{monthData.emphasis}</span>
+                  ) : (
+                    <div className="no-actions">
+                      <p>✅ You're up to date! Check back next week for new actions.</p>
+                    </div>
+                  )}
+                  
+                  <div className="monthly-focus">
+                    <h4>📅 This Month's Focus</h4>
+                    <div className="focus-grid">
+                      {monthlyFocus.planting.length > 0 && (
+                        <div className="focus-item">
+                          <span className="focus-label">Plant:</span>
+                          <span className="focus-content">{monthlyFocus.planting.join(', ')}</span>
                         </div>
-                        <ul className="month-activities">
-                          {monthData.activities.map((activity, actIndex) => (
-                            <li key={actIndex}>{activity}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+                      )}
+                      {monthlyFocus.preparation.length > 0 && (
+                        <div className="focus-item">
+                          <span className="focus-label">Prepare:</span>
+                          <span className="focus-content">{monthlyFocus.preparation.join(', ')}</span>
+                        </div>
+                      )}
+                      {monthlyFocus.harvest.length > 0 && (
+                        <div className="focus-item">
+                          <span className="focus-label">Harvest:</span>
+                          <span className="focus-content">{monthlyFocus.harvest.join(', ')}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              )}
+
+                {/* Garden Strategy */}
+                <div className="dashboard-section garden-strategy">
+                  <h3>🎯 Your Garden Strategy</h3>
+                  
+                  <div className="strategy-content">
+                    <div className="recommended-crops">
+                      <h4>Recommended for Your Site</h4>
+                      <div className="crops-grid">
+                        {topCrops.map((crop, index) => (
+                          <div key={index} className="crop-card">
+                            <div className="crop-header">
+                              <span className="crop-name">{crop.name}</span>
+                              <span className={`crop-confidence confidence-${crop.confidence}`}>
+                                {crop.confidence}
+                              </span>
+                            </div>
+                            <div className="crop-reason">{crop.reason}</div>
+                            <div className="crop-allocation">{crop.allocation}% of portfolio</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="investment-strategy">
+                      <h4>💰 Investment Priority</h4>
+                      <div className="investment-priorities">
+                        {investmentPriority.map((item, index) => (
+                          <div key={index} className={`priority-item urgency-${item.urgency}`}>
+                            <div className="priority-rank">{index + 1}</div>
+                            <div className="priority-details">
+                              <div className="priority-header">
+                                <span className="priority-category">{item.category}</span>
+                                <span className="priority-amount">${item.amount}</span>
+                              </div>
+                              <div className="priority-timing">({item.timing})</div>
+                              <div className="priority-description">{item.description}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="success-outlook">
+                      <h4>📊 Success Outlook</h4>
+                      <div className="outlook-summary">
+                        <div className="outlook-main">
+                          <div className="outlook-value">
+                            Expected harvest: {formatCurrency(successOutlook.expectedValue)}
+                          </div>
+                          <div className={`outlook-confidence confidence-${successOutlook.confidenceLevel}`}>
+                            {successOutlook.confidence}% likely to succeed
+                          </div>
+                          <div className="outlook-message">{successOutlook.message}</div>
+                        </div>
+                        {successOutlook.boost && (
+                          <div className="outlook-boost">
+                            ⚡ {successOutlook.boost}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Risk Management */}
+                <div className="dashboard-section risk-management">
+                  <h3>⚠️ Top Risks & Solutions</h3>
+                  <div className="risk-solutions">
+                    {(() => {
+                      const risks = [];
+                      
+                      if (locationConfig?.microclimateEffects?.temperatureAdjustment > 5) {
+                        risks.push({
+                          risk: 'Heat stress',
+                          solution: 'Install shade cloth ($40-60)',
+                          priority: 'high'
+                        });
+                      }
+                      
+                      if (locationConfig?.microclimateEffects?.waterRequirementMultiplier > 1.3) {
+                        risks.push({
+                          risk: 'Drought stress',
+                          solution: 'Upgrade irrigation ($85)',
+                          priority: 'medium'
+                        });
+                      }
+                      
+                      // Add timing-based risks
+                      const currentDate = new Date();
+                      const currentMonth = currentDate.getMonth() + 1;
+                      const adaptedCrops = getClimateAdaptedCrops(locationConfig, selectedSummer);
+                      let hasLateRisks = false;
+                      
+                      Object.values(adaptedCrops.heatTolerant || {}).forEach(crop => {
+                        if (isPlantingSeasonValid(crop, currentMonth, locationConfig) && 
+                            !isDirectSowingViable(crop, currentDate, locationConfig)) {
+                          hasLateRisks = true;
+                        }
+                      });
+                      
+                      if (hasLateRisks) {
+                        risks.push({
+                          risk: 'Late planting',
+                          solution: 'Switch to transplants',
+                          priority: 'medium'
+                        });
+                      }
+                      
+                      if (risks.length === 0) {
+                        risks.push({
+                          risk: 'No major risks detected',
+                          solution: 'Continue with current plan',
+                          priority: 'low'
+                        });
+                      }
+                      
+                      return risks.slice(0, 3).map((item, index) => (
+                        <div key={index} className={`risk-solution priority-${item.priority}`}>
+                          <div className="risk-indicator">
+                            {item.priority === 'high' ? '🔴' : item.priority === 'medium' ? '🟡' : '🟢'}
+                          </div>
+                          <div className="risk-content">
+                            <span className="risk-problem">{item.risk}</span>
+                            <span className="risk-arrow">→</span>
+                            <span className="risk-action">{item.solution}</span>
+                          </div>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                </div>
+
+                {/* Advanced Analysis - Collapsed by Default */}
+                <div className="dashboard-section advanced-analysis">
+                  <div className="advanced-header">
+                    <h3>📊 Advanced Analysis</h3>
+                    <button 
+                      className="button small"
+                      onClick={() => setShowAdvanced(!showAdvanced)}
+                    >
+                      {showAdvanced ? 'Hide Details' : 'Show Statistics'}
+                    </button>
+                  </div>
+                  
+                  {showAdvanced && (
+                    <div className="advanced-content">
+                      {/* Original detailed results */}
+                      <div className="results-grid">
+                        <div className="result-card">
+                          <div className="result-value">{formatCurrency(simulationResults.investment)}</div>
+                          <div className="result-label">Total Investment</div>
+                          <div className="result-confidence">(Fixed cost)</div>
+                        </div>
+                        <div className="result-card">
+                          <div className="result-value">{formatCurrency(simulationResults.harvestValue.mean)}</div>
+                          <div className="result-label">Expected Harvest</div>
+                          <div className="result-confidence">
+                            80% likely: {formatCurrency(simulationResults.harvestValue.p10)} - {formatCurrency(simulationResults.harvestValue.p90)}
+                          </div>
+                        </div>
+                        <div className="result-card">
+                          <div className="result-value">{formatCurrency(simulationResults.netReturn.mean)}</div>
+                          <div className="result-label">Expected Return</div>
+                          <div className="result-confidence">
+                            80% likely: {formatCurrency(simulationResults.netReturn.p10)} - {formatCurrency(simulationResults.netReturn.p90)}
+                          </div>
+                        </div>
+                        <div className="result-card">
+                          <div className="result-value">{formatCurrency(simulationResults.roi.mean, 'PCT')}%</div>
+                          <div className="result-label">Expected ROI</div>
+                          <div className="result-confidence">
+                            80% likely: {formatCurrency(simulationResults.roi.p10, 'PCT')}% - {formatCurrency(simulationResults.roi.p90, 'PCT')}%
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="risk-metrics">
+                        <h4>📊 Risk Analysis (from 5,000 simulations)</h4>
+                        <div className="risk-grid">
+                          <div className="risk-item">
+                            <span className="risk-label">Success Rate:</span>
+                            <span className="risk-value success">{formatCurrency(simulationResults.successRate, 'PCT')}%</span>
+                            <span className="risk-desc">Probability of positive return</span>
+                          </div>
+                          <div className="risk-item">
+                            <span className="risk-label">Worst Case (10th percentile):</span>
+                            <span className="risk-value worst">{formatCurrency(simulationResults.netReturn.p10)}</span>
+                            <span className="risk-desc">1 in 10 chance of worse outcome</span>
+                          </div>
+                          <div className="risk-item">
+                            <span className="risk-label">Best Case (90th percentile):</span>
+                            <span className="risk-value best">{formatCurrency(simulationResults.netReturn.p90)}</span>
+                            <span className="risk-desc">1 in 10 chance of better outcome</span>
+                          </div>
+                          <div className="risk-item">
+                            <span className="risk-label">Most Likely (median):</span>
+                            <span className="risk-value median">{formatCurrency(simulationResults.netReturn.p50)}</span>
+                            <span className="risk-desc">50/50 chance above/below this</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="portfolio-breakdown">
+                        <h4>Crop Performance Breakdown:</h4>
+                        <div className="crop-results">
+                          <div className="crop-result-item">
+                            <span className="crop-result-label">Heat Specialists:</span>
+                            <span className="crop-result-value">{formatCurrency(simulationResults.heatYield)}</span>
+                          </div>
+                          <div className="crop-result-item">
+                            <span className="crop-result-label">Cool Season:</span>
+                            <span className="crop-result-value">{formatCurrency(simulationResults.coolYield)}</span>
+                          </div>
+                          <div className="crop-result-item">
+                            <span className="crop-result-label">Perennials:</span>
+                            <span className="crop-result-value">{formatCurrency(simulationResults.perennialYield)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="visual-analysis">
+                        <h4>📊 Visual Risk Analysis</h4>
+                        
+                        <div className="chart-container">
+                          <h5>Net Return Distribution</h5>
+                          <ResponsiveContainer width="100%" height={250}>
+                            <BarChart data={simulationResults.returnHistogram}>
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis 
+                                dataKey="x" 
+                                tickFormatter={(value) => `$${Math.round(value)}`}
+                                angle={-45}
+                                textAnchor="end"
+                                height={80}
+                              />
+                              <YAxis />
+                              <Tooltip 
+                                formatter={(value) => [value, 'Simulations']}
+                                labelFormatter={(value) => `Return: $${Math.round(value)} - $${Math.round(value + (simulationResults.returnHistogram[1]?.x - simulationResults.returnHistogram[0]?.x || 0))}`}
+                              />
+                              <Bar dataKey="count" fill="#4CAF50" />
+                            </BarChart>
+                          </ResponsiveContainer>
+                          <p className="chart-description">Distribution of potential net returns from 5,000 simulations</p>
+                        </div>
+
+                        <div className="chart-container">
+                          <h5>ROI Distribution</h5>
+                          <ResponsiveContainer width="100%" height={250}>
+                            <BarChart data={simulationResults.roiHistogram}>
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis 
+                                dataKey="x" 
+                                tickFormatter={(value) => `${Math.round(value)}%`}
+                                angle={-45}
+                                textAnchor="end"
+                                height={80}
+                              />
+                              <YAxis />
+                              <Tooltip 
+                                formatter={(value) => [value, 'Simulations']}
+                                labelFormatter={(value) => `ROI: ${Math.round(value)}% - ${Math.round(value + (simulationResults.roiHistogram[1]?.x - simulationResults.roiHistogram[0]?.x || 0))}%`}
+                              />
+                              <Bar dataKey="count" fill="#2196F3" />
+                            </BarChart>
+                          </ResponsiveContainer>
+                          <p className="chart-description">Return on investment percentage distribution</p>
+                        </div>
+
+                        <div className="weather-risk-charts">
+                          <h5>Weather Risk Factors</h5>
+                          <div className="weather-charts-grid">
+                            <div className="weather-chart">
+                              <h6>Heat Stress Days</h6>
+                              <ResponsiveContainer width="100%" height={200}>
+                                <BarChart data={simulationResults.weatherRiskData.stressDays}>
+                                  <CartesianGrid strokeDasharray="3 3" />
+                                  <XAxis dataKey="x" tickFormatter={(value) => Math.round(value)} />
+                                  <YAxis />
+                                  <Tooltip 
+                                    formatter={(value) => [value, 'Simulations']}
+                                    labelFormatter={(value) => `${Math.round(value)} - ${Math.round(value + 5)} days`}
+                                  />
+                                  <Bar dataKey="count" fill="#FF5722" />
+                                </BarChart>
+                              </ResponsiveContainer>
+                            </div>
+                            <div className="weather-chart">
+                              <h6>Freeze Events</h6>
+                              <ResponsiveContainer width="100%" height={200}>
+                                <BarChart data={simulationResults.weatherRiskData.freezeEvents}>
+                                  <CartesianGrid strokeDasharray="3 3" />
+                                  <XAxis dataKey="x" tickFormatter={(value) => Math.round(value)} />
+                                  <YAxis />
+                                  <Tooltip 
+                                    formatter={(value) => [value, 'Simulations']}
+                                    labelFormatter={(value) => `${Math.round(value)} events`}
+                                  />
+                                  <Bar dataKey="count" fill="#2196F3" />
+                                </BarChart>
+                              </ResponsiveContainer>
+                            </div>
+                            <div className="weather-chart">
+                              <h6>Annual Rainfall (inches)</h6>
+                              <ResponsiveContainer width="100%" height={200}>
+                                <BarChart data={simulationResults.weatherRiskData.rainfall}>
+                                  <CartesianGrid strokeDasharray="3 3" />
+                                  <XAxis dataKey="x" tickFormatter={(value) => Math.round(value)} />
+                                  <YAxis />
+                                  <Tooltip 
+                                    formatter={(value) => [value, 'Simulations']}
+                                    labelFormatter={(value) => `${Math.round(value)} - ${Math.round(value + 2)} inches`}
+                                  />
+                                  <Bar dataKey="count" fill="#009688" />
+                                </BarChart>
+                              </ResponsiveContainer>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Site-Specific Recommendations */}
+          {(() => {
+            if (!locationConfig?.microclimateEffects) return null;
+            
+            const recommendations = generateSiteSpecificRecommendations(
+              locationConfig, 
+              locationConfig.microclimateEffects,
+              locationConfig.solarData
+            );
+            
+            if (recommendations.length === 0) return null;
+            
+            return (
+              <div className="site-recommendations">
+                <h4>🎯 Site-Specific Recommendations</h4>
+                <p className="recommendations-subtitle">Customized for your exact garden conditions</p>
+                <div className="recommendations-grid">
+                  {recommendations.map((recGroup, index) => (
+                    <div key={index} className="recommendation-group">
+                      <div className="recommendation-header">
+                        <h5>{recGroup.title}</h5>
+                        <p className="recommendation-description">{recGroup.description}</p>
+                      </div>
+                      <div className="recommendation-items">
+                        {recGroup.items && recGroup.items.map((item, itemIndex) => (
+                          <div key={itemIndex} className="recommendation-item">
+                            {recGroup.type === 'priority_crops' && (
+                              <>
+                                <div className="crop-recommendation">
+                                  <span className="crop-name">{item.name}</span>
+                                  <span className={`crop-confidence confidence-${item.confidence}`}>{item.confidence} confidence</span>
+                                </div>
+                                <div className="crop-reason">{item.reason}</div>
+                                <div className="crop-yield">Expected yield: {item.expectedYield}</div>
+                              </>
+                            )}
+                            {recGroup.type === 'timing_adjustments' && (
+                              <>
+                                <div className="timing-title">{item.title}</div>
+                                <div className="timing-description">{item.description}</div>
+                                <div className="timing-action">{item.action}</div>
+                              </>
+                            )}
+                            {recGroup.type === 'infrastructure' && (
+                              <>
+                                <div className="infra-header">
+                                  <span className="infra-title">{item.title}</span>
+                                  {item.priority && <span className={`infra-priority priority-${item.priority}`}>{item.priority} priority</span>}
+                                </div>
+                                <div className="infra-description">{item.description}</div>
+                                <div className="infra-action">{item.action}</div>
+                                {item.costEstimate && <div className="infra-cost">Est. cost: {item.costEstimate}</div>}
+                              </>
+                            )}
+                            {recGroup.type === 'risk_mitigation' && (
+                              <>
+                                <div className="risk-title">{item.title}</div>
+                                <div className="risk-description">{item.description}</div>
+                                <ul className="risk-actions">
+                                  {item.actions.map((action, actionIndex) => (
+                                    <li key={actionIndex}>{action}</li>
+                                  ))}
+                                </ul>
+                              </>
+                            )}
+                            {recGroup.type === 'cost_optimization' && (
+                              <>
+                                <div className="cost-title">{item.title}</div>
+                                <div className="cost-description">{item.description}</div>
+                                <div className="cost-suggestion">{item.suggestion}</div>
+                                {item.examples && (
+                                  <ul className="cost-examples">
+                                    {item.examples.map((example, exampleIndex) => (
+                                      <li key={exampleIndex}>{example}</li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+          
+          {simulationResults.gardenCalendar && (
+            <div className="garden-calendar">
+              <h4>📅 12-Month Garden Calendar</h4>
+              <p className="calendar-subtitle">Optimized for {climateScenarios.summer.find(s => s.id === selectedSummer)?.name} + {climateScenarios.winter.find(s => s.id === selectedWinter)?.name}</p>
+              <div className="calendar-grid">
+                {simulationResults.gardenCalendar.map((monthData, index) => (
+                  <div key={index} className={`calendar-month ${monthData.emphasis} ${monthData.isCurrentMonth ? 'current' : ''}`}>
+                    <div className="month-header">
+                      <h5>{monthData.month}</h5>
+                      <span className="month-emphasis">{monthData.emphasis}</span>
+                    </div>
+                    <ul className="month-activities">
+                      {monthData.activities.map((activity, actIndex) => (
+                        <li key={actIndex}>{activity}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
