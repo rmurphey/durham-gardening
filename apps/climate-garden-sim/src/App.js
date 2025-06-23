@@ -1,6 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import jStat from 'jstat';
+import * as ss from 'simple-statistics';
+import { 
+  HARDINESS_ZONES, 
+  REGION_PRESETS, 
+  INVESTMENT_PRESETS,
+  getClimateSeverity, 
+  getHardinessZoneNumber,
+  getScaleValue,
+  getClimateType,
+  GARDEN_SIZE_SCALE,
+  INVESTMENT_LEVEL_SCALE,
+  HEAT_INTENSITY_SCALE,
+  MARKET_PRICES,
+  BASE_YIELD_MULTIPLIERS,
+  PORTFOLIO_NAMES,
+  PORTFOLIO_DESCRIPTORS
+} from './config.js';
 import './index.css';
+
+
+// Climate scenarios and portfolio strategies are defined in-component
 
 const climateScenarios = {
   summer: [
@@ -17,70 +38,119 @@ const climateScenarios = {
   ]
 };
 
-const portfolioStrategies = {
-  conservative: {
-    name: 'Conservative Portfolio',
-    description: '60% success rate',
-    heatSpecialists: 40,
-    coolSeason: 35,
-    perennials: 15,
-    experimental: 10
-  },
-  aggressive: {
-    name: 'Aggressive Portfolio', 
-    description: '80% upside, 40% downside',
-    heatSpecialists: 25,
-    coolSeason: 50,
-    perennials: 15,
-    experimental: 10
-  },
-  hedge: {
-    name: 'Hedge Portfolio',
-    description: '70% success rate',
-    heatSpecialists: 30,
-    coolSeason: 40,
-    perennials: 20,
-    experimental: 10
-  }
+const getPortfolioStrategies = (locationConfig) => {
+  // Default strategies when no location config
+  const defaultStrategies = {
+    conservative: { name: 'Conservative Portfolio', description: '60% success rate', heatSpecialists: 40, coolSeason: 35, perennials: 15, experimental: 10 },
+    aggressive: { name: 'Aggressive Portfolio', description: '80% upside, 40% downside', heatSpecialists: 25, coolSeason: 50, perennials: 15, experimental: 10 },
+    hedge: { name: 'Hedge Portfolio', description: '70% success rate', heatSpecialists: 30, coolSeason: 40, perennials: 20, experimental: 10 }
+  };
+
+  if (!locationConfig) return defaultStrategies;
+
+  const climateType = getClimateType(locationConfig.heatDays, locationConfig.hardiness);
+  const isShortSeason = getHardinessZoneNumber(locationConfig.hardiness) < 5;
+
+  // Climate-specific allocations
+  const allocations = {
+    conservative: {
+      hot: { heatSpecialists: 60, coolSeason: 20, perennials: 15, experimental: 5 },
+      cold: { heatSpecialists: 20, coolSeason: isShortSeason ? 60 : 35, perennials: 15, experimental: 5 },
+      normal: { heatSpecialists: 40, coolSeason: 35, perennials: 15, experimental: 10 }
+    },
+    aggressive: {
+      hot: { heatSpecialists: 50, coolSeason: 30, perennials: 10, experimental: 10 },
+      cold: { heatSpecialists: 15, coolSeason: isShortSeason ? 70 : 50, perennials: 10, experimental: 15 },
+      normal: { heatSpecialists: 25, coolSeason: 50, perennials: 15, experimental: 10 }
+    },
+    hedge: {
+      hot: { heatSpecialists: 45, coolSeason: 30, perennials: 20, experimental: 5 },
+      cold: { heatSpecialists: 25, coolSeason: isShortSeason ? 50 : 40, perennials: 20, experimental: 5 },
+      normal: { heatSpecialists: 30, coolSeason: 40, perennials: 20, experimental: 10 }
+    }
+  };
+
+  return Object.entries(allocations).reduce((strategies, [portfolioType, climateAllocations]) => {
+    const allocation = climateAllocations[climateType];
+    const description = typeof PORTFOLIO_DESCRIPTORS[portfolioType] === 'object' 
+      ? PORTFOLIO_DESCRIPTORS[portfolioType][climateType] || PORTFOLIO_DESCRIPTORS[portfolioType].normal
+      : PORTFOLIO_DESCRIPTORS[portfolioType];
+
+    strategies[portfolioType] = {
+      name: PORTFOLIO_NAMES[portfolioType][climateType],
+      description,
+      ...allocation
+    };
+    return strategies;
+  }, {});
 };
 
-const cropMultipliers = {
-  heatSpecialists: {
-    mild: 0.8,
-    normal: 1.0,
-    extreme: 1.2,
-    catastrophic: 1.0
-  },
-  coolSeason: {
-    mild: 1.3,
-    normal: 1.0,
-    extreme: 0.7,
-    catastrophic: 0.5
-  },
-  perennials: {
-    mild: 1.1,
-    normal: 1.0,
-    extreme: 0.9,
-    catastrophic: 0.9
-  }
-};
 
 function App() {
-  const [selectedSummer, setSelectedSummer] = useState('extreme');
-  const [selectedWinter, setSelectedWinter] = useState('warm');
-  const [selectedPortfolio, setSelectedPortfolio] = useState('hedge');
+  // Initialize state from localStorage directly
+  const [selectedSummer, setSelectedSummer] = useState(() => {
+    try {
+      const stored = localStorage.getItem('gardenSim_climateSelection');
+      return stored ? JSON.parse(stored).selectedSummer : 'extreme';
+    } catch { return 'extreme'; }
+  });
+  const [selectedWinter, setSelectedWinter] = useState(() => {
+    try {
+      const stored = localStorage.getItem('gardenSim_climateSelection');
+      return stored ? JSON.parse(stored).selectedWinter : 'warm';
+    } catch { return 'warm'; }
+  });
+  const [selectedPortfolio, setSelectedPortfolio] = useState(() => {
+    try {
+      const stored = localStorage.getItem('gardenSim_climateSelection');
+      return stored ? JSON.parse(stored).selectedPortfolio : 'hedge';
+    } catch { return 'hedge'; }
+  });
   const [simulationResults, setSimulationResults] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [simulating, setSimulating] = useState(false);
-  const [recommendationDismissed, setRecommendationDismissed] = useState(false);
+  const [recommendationDismissed, setRecommendationDismissed] = useState(() => {
+    try {
+      const stored = localStorage.getItem('gardenSim_uiPreferences');
+      return stored ? JSON.parse(stored).recommendationDismissed : false;
+    } catch { return false; }
+  });
+  const [locationConfig, setLocationConfig] = useState(() => {
+    try {
+      const stored = localStorage.getItem('gardenSim_locationConfig');
+      const saved = stored ? JSON.parse(stored) : {};
+      return saved.name ? saved : null;
+    } catch { return null; }
+  });
+  const [showSetup, setShowSetup] = useState(() => {
+    try {
+      const locationStored = localStorage.getItem('gardenSim_locationConfig');
+      const uiStored = localStorage.getItem('gardenSim_uiPreferences');
+      const saved = locationStored ? JSON.parse(locationStored) : {};
+      const uiPrefs = uiStored ? JSON.parse(uiStored) : {};
+      return !saved.name || uiPrefs.showSetup;
+    } catch { return true; }
+  });
+  const [customInvestment, setCustomInvestment] = useState(() => {
+    try {
+      const stored = localStorage.getItem('gardenSim_investmentConfig');
+      return stored ? JSON.parse(stored) : { seeds: 75, infrastructure: 110, tools: 45, soil: 35, containers: 60, irrigation: 85, protection: 25, fertilizer: 30 };
+    } catch { return { seeds: 75, infrastructure: 110, tools: 45, soil: 35, containers: 60, irrigation: 85, protection: 25, fertilizer: 30 }; }
+  });
+  const [showInvestmentDetails, setShowInvestmentDetails] = useState(() => {
+    try {
+      const stored = localStorage.getItem('gardenSim_uiPreferences');
+      return stored ? JSON.parse(stored).showInvestmentDetails : false;
+    } catch { return false; }
+  });
+  const [simulationDebounceTimer, setSimulationDebounceTimer] = useState(null);
 
 
   // Get seasonal context for better winter predictions  
   const getSeasonalContext = () => {
     const now = new Date();
     const month = now.getMonth(); // 0-11
-    const year = now.getFullYear();
     
     // Climate trends for Durham, NC based on recent years
     const climateTrends = {
@@ -98,14 +168,343 @@ function App() {
     };
   };
 
-  // Fetch weather forecast data
-  const fetchWeatherData = async () => {
+  // Get historical average summer temperature by hardiness zone (NOAA data)
+  const getHistoricalTemp = (hardiness) => {
+    const zoneTemps = {
+      '3a': 75, '3b': 77, '4a': 79, '4b': 81, '5a': 83, '5b': 85,
+      '6a': 87, '6b': 89, '7a': 91, '7b': 93, '8a': 95, '8b': 97,
+      '9a': 99, '9b': 101, '10a': 103, '10b': 105, '11': 107
+    };
+    return zoneTemps[hardiness] || 93;
+  };
+
+  // Calculate climate change probability adjustments (based on NOAA/IPCC data)
+  const getClimateChangeProbabilities = (baselineProb, scenario, location) => {
+    // Extreme heat events are becoming 3-5x more likely (IPCC AR6)
+    // "Mild" summers becoming rare, "extreme" becoming normal
+    const extremeMultiplier = scenario === 'extreme' ? 2.5 : 
+                             scenario === 'catastrophic' ? 3.0 : 
+                             scenario === 'mild' ? 0.4 : 1.0;
+    
+    // Regional adjustments: Southwest/Southern regions warming faster
+    const lat = location?.lat || 36;
+    const regionalMultiplier = lat < 35 ? 1.3 : lat < 40 ? 1.1 : lat > 45 ? 0.8 : 1.0;
+    
+    return Math.min(baselineProb * extremeMultiplier * regionalMultiplier, 80);
+  };
+
+  // Generate location-aware climate scenarios based on climate science
+  const generateClimateScenarios = (config) => {
+    if (!config) return climateScenarios;
+    
+    // Real climate data: IPCC AR6 projections show 1.1°C warming already, 1.5-4.5°C by 2100
+    // Heat dome frequency increasing 3-5x in many regions by 2050
+    // USDA hardiness zones shifting 1-2 zones northward by 2100
+    
+    const currentTemp = getHistoricalTemp(config.hardiness);
+    const warmingScenario = 2.5; // Conservative 2.5°C warming by 2050 (RCP4.5 pathway)
+    const heatExtremeMultiplier = 3; // Heat extremes increase 3x faster than average warming
+    
+    // Adjusted temperatures accounting for global warming trends
+    const futureBaseTemp = currentTemp + warmingScenario;
+    const extremeHeatIncrease = warmingScenario * heatExtremeMultiplier;
+    
+    return {
+      summer: [
+        { 
+          id: 'mild', 
+          name: 'Pre-Warming Summer (Rare)', 
+          temp: `${Math.round(futureBaseTemp-8)}-${Math.round(futureBaseTemp-3)}°F`, 
+          duration: 'Jun-Aug', 
+          probability: getClimateChangeProbabilities(15, 'mild', config), 
+          impact: 'Historical crop varieties may work' 
+        },
+        { 
+          id: 'normal', 
+          name: 'New Normal Heat', 
+          temp: `${Math.round(futureBaseTemp-3)}-${Math.round(futureBaseTemp+2)}°F`, 
+          duration: 'May-Sep', 
+          probability: getClimateChangeProbabilities(25, 'normal', config), 
+          impact: 'Heat-adapted strategy essential' 
+        },
+        { 
+          id: 'extreme', 
+          name: 'Heat Dome Events', 
+          temp: `${Math.round(futureBaseTemp+2)}-${Math.round(futureBaseTemp+extremeHeatIncrease)}°F`, 
+          duration: 'Apr-Oct', 
+          probability: getClimateChangeProbabilities(35, 'extreme', config), 
+          impact: 'Survival mode - specialized crops only' 
+        },
+        { 
+          id: 'catastrophic', 
+          name: 'Climate Breakdown', 
+          temp: `${Math.round(futureBaseTemp+extremeHeatIncrease)}°F+`, 
+          duration: 'Mar-Nov', 
+          probability: getClimateChangeProbabilities(12, 'catastrophic', config), 
+          impact: 'Controlled environment required' 
+        }
+      ],
+      winter: [
+        { 
+          id: 'traditional', 
+          name: 'Legacy Winter Pattern', 
+          temp: `${HARDINESS_ZONES[config.hardiness].min}-${HARDINESS_ZONES[config.hardiness].max}°F lows`, 
+          duration: 'Dec-Feb', 
+          probability: Math.max(5, parseInt(config.hardiness[0]) < 8 ? 20 : 10), // Becoming rare
+          impact: 'Traditional cold requirements met' 
+        },
+        { 
+          id: 'mild', 
+          name: 'Climate-Shifted Winter', 
+          temp: `${HARDINESS_ZONES[config.hardiness].max+3}-${HARDINESS_ZONES[config.hardiness].max+13}°F lows`, 
+          duration: 'Dec-Jan', 
+          probability: parseInt(config.hardiness[0]) < 8 ? 40 : 30, 
+          impact: 'Reduced chill hours, season extension' 
+        },
+        { 
+          id: 'warm', 
+          name: 'Disrupted Winter', 
+          temp: `${HARDINESS_ZONES[config.hardiness].max+13}-${HARDINESS_ZONES[config.hardiness].max+23}°F lows`, 
+          duration: 'Dec-Jan', 
+          probability: parseInt(config.hardiness[0]) > 7 ? 45 : 35, 
+          impact: 'Insufficient chill hours, pest survival' 
+        },
+        { 
+          id: 'none', 
+          name: 'No-Chill Winter', 
+          temp: `${HARDINESS_ZONES[config.hardiness].max+23}°F+ minimum`, 
+          duration: 'Year-round', 
+          probability: parseInt(config.hardiness[0]) > 9 ? 35 : parseInt(config.hardiness[0]) > 7 ? 15 : 5, 
+          impact: 'Continuous growing, new pest pressure' 
+        }
+      ]
+    };
+  };
+
+  // Location setup component
+  const LocationSetup = () => {
+    const [selectedPreset, setSelectedPreset] = useState(null);
+    const [customConfig, setCustomConfig] = useState({
+      name: '',
+      hardiness: '7b',
+      lat: '',
+      lon: '',
+      avgRainfall: 40,
+      heatIntensity: 3, // 1-5 scale
+      winterSeverity: 3, // 1-5 scale  
+      marketMultiplier: 1.0,
+      gardenSize: 2, // 1-5 scale (small to large)
+      investmentLevel: 3 // 1-5 scale (minimal to premium)
+    });
+
+    const getHeatDaysFromIntensity = (intensity) => 
+      getScaleValue(HEAT_INTENSITY_SCALE, intensity) || 100;
+
+    const getGardenSizeFromScale = (scale) => 
+      getScaleValue(GARDEN_SIZE_SCALE, scale) || 100;
+
+    const getBudgetFromLevel = (level) => 
+      getScaleValue(INVESTMENT_LEVEL_SCALE, level) || 200;
+
+    const handlePresetSelect = (presetKey) => {
+      console.log('Preset selected:', presetKey);
+      try {
+        const preset = REGION_PRESETS[presetKey];
+        if (!preset) {
+          console.error('Preset not found:', presetKey);
+          return;
+        }
+        
+        const heatThresholds = [50, 100, 150];
+        const heatIntensity = heatThresholds.findIndex(threshold => preset.heatDays < threshold) + 2 || 5;
+        
+        const hardinessZone = getHardinessZoneNumber(preset.hardiness);
+        const winterSeverity = hardinessZone < 6 ? 4 : hardinessZone < 8 ? 3 : 2;
+        
+        setSelectedPreset(presetKey);
+        setCustomConfig({
+          ...preset,
+          heatIntensity,
+          winterSeverity,
+          gardenSize: 2,
+          investmentLevel: 3
+        });
+        console.log('Config updated:', { ...preset, heatIntensity, winterSeverity });
+      } catch (error) {
+        console.error('Error in handlePresetSelect:', error);
+      }
+    };
+
+    const handleSubmit = () => {
+      const finalConfig = {
+        ...customConfig,
+        heatDays: getHeatDaysFromIntensity(customConfig.heatIntensity),
+        gardenSizeActual: getGardenSizeFromScale(customConfig.gardenSize),
+        budget: getBudgetFromLevel(customConfig.investmentLevel)
+      };
+      setLocationConfig(finalConfig);
+      setShowSetup(false);
+    };
+
+    return (
+      <div className="setup-overlay">
+        <div className="setup-container">
+          <h2>🌱 Garden Location Setup</h2>
+          
+          <div className="setup-section">
+            <h3>Quick Start - Choose a Region</h3>
+            <div className="preset-grid">
+              {Object.entries(REGION_PRESETS).map(([key, preset]) => (
+                <button
+                  key={key}
+                  className={`preset-button ${selectedPreset === key ? 'selected' : ''}`}
+                  onClick={() => handlePresetSelect(key)}
+                >
+                  <strong>{preset.name}</strong>
+                  <div>Zone {preset.hardiness}</div>
+                </button>
+              ))}
+            </div>
+            {selectedPreset && (
+              <div className="preset-implications">
+                <div className="implication-item">
+                  <strong>Strategy:</strong> {REGION_PRESETS[selectedPreset].heatDays > 120 ? 'Heat-tolerant crops' : getHardinessZoneNumber(REGION_PRESETS[selectedPreset].hardiness) < 6 ? 'Cold-hardy crops' : 'Balanced portfolio'}
+                </div>
+                {REGION_PRESETS[selectedPreset].marketMultiplier > 1.1 && (
+                  <div className="implication-item">
+                    <strong>Premium:</strong> +{Math.round((REGION_PRESETS[selectedPreset].marketMultiplier - 1) * 100)}% market prices
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="setup-section">
+            <h3>Custom Configuration</h3>
+            <div className="config-grid">
+              <div className="config-item">
+                <label>Location Name:</label>
+                <input
+                  type="text"
+                  value={customConfig.name}
+                  onChange={(e) => setCustomConfig({...customConfig, name: e.target.value})}
+                  placeholder="e.g., My Garden"
+                />
+              </div>
+              
+              <div className="config-item">
+                <label>Hardiness Zone:</label>
+                <select
+                  value={customConfig.hardiness}
+                  onChange={(e) => setCustomConfig({...customConfig, hardiness: e.target.value})}
+                >
+                  {Object.entries(HARDINESS_ZONES).map(([zone, data]) => (
+                    <option key={zone} value={zone}>{data.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="config-item">
+                <label>Annual Rainfall (inches):</label>
+                <input
+                  type="number"
+                  value={customConfig.avgRainfall}
+                  onChange={(e) => setCustomConfig({...customConfig, avgRainfall: parseInt(e.target.value)})}
+                  min="5"
+                  max="100"
+                />
+              </div>
+
+              <div className="config-item slider-item">
+                <label>Summer Heat Intensity: {['', 'Mild', 'Moderate', 'High', 'Extreme', 'Desert'][customConfig.heatIntensity]}</label>
+                <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  value={customConfig.heatIntensity}
+                  onChange={(e) => setCustomConfig({...customConfig, heatIntensity: parseInt(e.target.value)})}
+                  className="slider"
+                />
+                <div className="slider-labels">
+                  <span>Mild</span>
+                  <span>Extreme</span>
+                </div>
+              </div>
+
+              <div className="config-item slider-item">
+                <label>Winter Severity: {['', 'Subtropical', 'Mild', 'Moderate', 'Cold', 'Arctic'][customConfig.winterSeverity]}</label>
+                <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  value={customConfig.winterSeverity}
+                  onChange={(e) => setCustomConfig({...customConfig, winterSeverity: parseInt(e.target.value)})}
+                  className="slider"
+                />
+                <div className="slider-labels">
+                  <span>Subtropical</span>
+                  <span>Arctic</span>
+                </div>
+              </div>
+
+              <div className="config-item slider-item">
+                <label>Garden Size: {['', 'Container', 'Small Yard', 'Medium Yard', 'Large Yard', 'Farm Scale'][customConfig.gardenSize]}</label>
+                <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  value={customConfig.gardenSize}
+                  onChange={(e) => setCustomConfig({...customConfig, gardenSize: parseInt(e.target.value)})}
+                  className="slider"
+                />
+                <div className="slider-labels">
+                  <span>50 sq ft</span>
+                  <span>1000+ sq ft</span>
+                </div>
+              </div>
+
+              <div className="config-item slider-item">
+                <label>Investment Level: {['', 'Minimal', 'Basic', 'Standard', 'Premium', 'Luxury'][customConfig.investmentLevel]}</label>
+                <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  value={customConfig.investmentLevel}
+                  onChange={(e) => setCustomConfig({...customConfig, investmentLevel: parseInt(e.target.value)})}
+                  className="slider"
+                />
+                <div className="slider-labels">
+                  <span>$100/year</span>
+                  <span>$1500/year</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="setup-actions">
+            <button 
+              className="button setup-button"
+              onClick={handleSubmit}
+              disabled={!customConfig.name}
+            >
+              Start Planning Garden
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Fetch weather forecast data - memoized to prevent dependency issues
+  const fetchWeatherData = React.useCallback(async () => {
+    if (!locationConfig) return;
     setLoading(true);
     try {
       // Using NOAA Climate Prediction Center for long-term forecasts
-      // Durham, NC coordinates: 35.994, -78.8986
+      const lat = locationConfig.lat || 35.994;
+      const lon = locationConfig.lon || -78.8986;
       const response = await fetch(
-        'https://api.weather.gov/points/35.994,-78.8986'
+        `https://api.weather.gov/points/${lat},${lon}`
       );
       const locationData = await response.json();
       
@@ -130,18 +529,90 @@ function App() {
       });
     }
     setLoading(false);
-  };
+  }, [locationConfig]);
 
   useEffect(() => {
-    fetchWeatherData();
-  }, []);
+    if (locationConfig) {
+      fetchWeatherData();
+      try {
+        localStorage.setItem('gardenSim_locationConfig', JSON.stringify(locationConfig));
+      } catch {}
+    }
+  }, [locationConfig, fetchWeatherData]);
 
-  // Auto-run simulation when selections change
+  // Save state changes directly to localStorage
   useEffect(() => {
-    if (selectedSummer && selectedWinter && selectedPortfolio) {
+    try {
+      localStorage.setItem('gardenSim_climateSelection', JSON.stringify({ selectedSummer, selectedWinter, selectedPortfolio }));
+    } catch {}
+  }, [selectedSummer, selectedWinter, selectedPortfolio]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('gardenSim_investmentConfig', JSON.stringify(customInvestment));
+    } catch {}
+  }, [customInvestment]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('gardenSim_uiPreferences', JSON.stringify({ showInvestmentDetails, recommendationDismissed, showSetup }));
+    } catch {}
+  }, [showInvestmentDetails, recommendationDismissed, showSetup]);
+
+  // Main simulation function - memoized to prevent unnecessary re-creation
+  const runSimulation = React.useCallback(() => {
+    console.log('Running Monte Carlo simulation...', { selectedSummer, selectedWinter, selectedPortfolio });
+    setSimulating(true);
+    
+    try {
+      const monteCarloResults = runMonteCarloSimulation(1000);
+      const statistics = calculateStatistics(monteCarloResults);
+      const gardenCalendar = generateGardenCalendar(selectedSummer, selectedWinter, selectedPortfolio);
+      const weatherRiskData = generateWeatherRiskData(monteCarloResults);
+      const returnHistogram = generateHistogramData(monteCarloResults.map(r => r.netReturn), 25);
+      const roiHistogram = generateHistogramData(monteCarloResults.map(r => r.roi), 25);
+      
+      console.log('Monte Carlo results:', statistics);
+      setSimulationResults({ 
+        ...statistics, 
+        gardenCalendar, 
+        rawResults: monteCarloResults,
+        weatherRiskData,
+        returnHistogram,
+        roiHistogram
+      });
+    } catch (error) {
+      console.error('Simulation error:', error);
+    } finally {
+      setSimulating(false);
+    }
+  }, [selectedSummer, selectedWinter, selectedPortfolio, locationConfig, customInvestment]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-run simulation when key selections change (immediate)
+  useEffect(() => {
+    if (selectedSummer && selectedWinter && selectedPortfolio && locationConfig) {
       runSimulation();
     }
-  }, [selectedSummer, selectedWinter, selectedPortfolio]);
+  }, [selectedSummer, selectedWinter, selectedPortfolio]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-run simulation when investment changes (debounced for sliders)
+  useEffect(() => {
+    if (simulationDebounceTimer) {
+      clearTimeout(simulationDebounceTimer);
+    }
+    
+    const timer = setTimeout(() => {
+      if (selectedSummer && selectedWinter && selectedPortfolio && locationConfig) {
+        runSimulation();
+      }
+    }, 100);
+    
+    setSimulationDebounceTimer(timer);
+    
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [customInvestment]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getRecommendedScenario = () => {
     if (!weatherData?.forecast) return { summer: null, winter: null };
@@ -196,7 +667,7 @@ function App() {
   };
 
   const generateGardenCalendar = (summerScenario, winterScenario, portfolioKey) => {
-    const portfolio = portfolioStrategies[portfolioKey];
+    const portfolio = getPortfolioStrategies(locationConfig)[portfolioKey];
     const calendar = [];
     
     const months = [
@@ -282,107 +753,140 @@ function App() {
     }
   };
 
-  // Monte Carlo simulation with proper probability distributions
-  const runMonteCarloSimulation = (iterations = 10000) => {
-    const portfolio = portfolioStrategies[selectedPortfolio];
-    const results = [];
+  // Professional Monte Carlo simulation using jStat and simple-statistics
+  const runMonteCarloSimulation = (iterations = 1000) => {
+    const portfolio = getPortfolioStrategies(locationConfig)[selectedPortfolio];
+    const baseInvestment = calculateTotalInvestment();
+    const portfolioMultiplier = selectedPortfolio === 'conservative' ? 0.85 : 
+                               selectedPortfolio === 'aggressive' ? 1.15 : 1.0;
     
-    for (let i = 0; i < iterations; i++) {
-      // Simulate weather conditions with probability distributions
-      const weather = simulateWeatherYear(selectedSummer, selectedWinter);
-      
-      // Simulate crop yields with realistic distributions
-      const yields = simulateCropYields(portfolio, weather);
-      
-      // Simulate market prices with seasonal variation
-      const prices = simulateMarketPrices();
-      
-      // Calculate total harvest value
-      const harvestValue = (
-        yields.heatSpecialists * prices.heatCrops +
-        yields.coolSeason * prices.coolCrops +
-        yields.perennials * prices.herbs
-      );
-      
-      // Investment costs with some variation
-      const seedCost = 75 + Math.random() * 30; // $75-105 range
-      const infrastructureCost = selectedPortfolio === 'conservative' ? 
-        60 + Math.random() * 20 : 110 + Math.random() * 40; // Some price variation
-      const totalInvestment = seedCost + infrastructureCost;
-      
-      const netReturn = harvestValue - totalInvestment;
-      const roi = (netReturn / totalInvestment) * 100;
-      
-      results.push({
-        harvestValue,
-        investment: totalInvestment,
-        netReturn,
-        roi,
-        heatYield: yields.heatSpecialists * prices.heatCrops,
-        coolYield: yields.coolSeason * prices.coolCrops,
-        perennialYield: yields.perennials * prices.herbs,
-        weather
-      });
-    }
+    // Generate simulation parameters using proper statistical distributions
+    const params = generateSimulationParameters(portfolio, baseInvestment, portfolioMultiplier);
     
-    return results;
+    // Generate samples using professional statistical functions
+    const harvestValues = jStat.normal.sample(params.harvest.mean, params.harvest.std, iterations);
+    const investments = jStat.normal.sample(params.investment.mean, params.investment.std, iterations);
+    
+    // Calculate derived metrics
+    const netReturns = harvestValues.map((harvest, i) => harvest - investments[i]);
+    const rois = netReturns.map((netReturn, i) => (netReturn / investments[i]) * 100);
+    
+    // Generate breakdown data (simplified for performance)
+    const heatYields = jStat.normal.sample(params.heatYield.mean, params.heatYield.std, iterations);
+    const coolYields = jStat.normal.sample(params.coolYield.mean, params.coolYield.std, iterations);
+    const perennialYields = jStat.normal.sample(params.perennialYield.mean, params.perennialYield.std, iterations);
+    
+    // Generate weather data for visualization
+    const weatherData = generateWeatherSamples(iterations);
+    
+    // Package results in expected format
+    return harvestValues.map((harvestValue, i) => ({
+      harvestValue,
+      investment: investments[i],
+      netReturn: netReturns[i],
+      roi: rois[i],
+      heatYield: heatYields[i],
+      coolYield: coolYields[i],
+      perennialYield: perennialYields[i],
+      weather: weatherData[i]
+    }));
   };
 
-  // Simulate weather conditions for a full year
-  const simulateWeatherYear = (summerScenario, winterScenario) => {
-    // Summer heat stress days (affects yields)
-    const summerStressProb = {
-      mild: 0.1, normal: 0.25, extreme: 0.45, catastrophic: 0.7
-    };
-    const stressDays = Math.floor(Math.random() * 60) * summerStressProb[summerScenario];
+  // Generate realistic simulation parameters based on portfolio and conditions
+  const generateSimulationParameters = (portfolio, baseInvestment, portfolioMultiplier) => {
+    const sizeMultiplier = (locationConfig?.gardenSizeActual || 100) / 100;
+    const climateSeverity = getClimateSeverity(selectedSummer, selectedWinter);
     
-    // Winter freeze events
-    const winterFreezeProb = {
-      none: 0, warm: 0.1, mild: 0.3, traditional: 0.6
-    };
-    const freezeEvents = Math.random() < winterFreezeProb[winterScenario] ? 
-      Math.floor(Math.random() * 5) + 1 : 0;
+    // Base yields per crop type using mapping constants
+    const baseYields = Object.entries(BASE_YIELD_MULTIPLIERS).reduce((yields, [cropType, multiplier]) => {
+      yields[cropType] = portfolio[cropType] * multiplier * sizeMultiplier;
+      return yields;
+    }, {});
     
-    // Rainfall variation (Durham average ~46 inches)
-    const annualRainfall = 35 + Math.random() * 22; // 35-57 inch range
+    // Calculate expected harvest value using market price mappings
+    const expectedHarvest = 
+      baseYields.heatSpecialists * MARKET_PRICES.heat * climateSeverity.heat +
+      baseYields.coolSeason * MARKET_PRICES.cool * climateSeverity.cool +
+      baseYields.perennials * MARKET_PRICES.herbs * climateSeverity.perennial;
     
-    return { stressDays, freezeEvents, annualRainfall };
-  };
-
-  // Simulate crop yields with realistic distributions
-  const simulateCropYields = (portfolio, weather) => {
-    // Base yields per percentage point of portfolio
-    const baseYields = { heatSpecialists: 4, coolSeason: 3, perennials: 6 };
-    
-    // Weather impact factors
-    const heatStressImpact = Math.max(0.3, 1 - (weather.stressDays * 0.015));
-    const freezeImpact = Math.max(0.5, 1 - (weather.freezeEvents * 0.1));
-    const rainImpact = Math.min(1.3, Math.max(0.6, weather.annualRainfall / 46));
-    
-    // Natural yield variation (log-normal distribution approximation)
-    const yieldVariation = () => Math.max(0.2, -Math.log(Math.random()) * 0.3 + 0.8);
+    const harvestStd = expectedHarvest * 0.3; // 30% variability in harvest
+    const investmentMean = baseInvestment * portfolioMultiplier;
+    const investmentStd = investmentMean * 0.1; // 10% variability in costs
     
     return {
-      heatSpecialists: portfolio.heatSpecialists * baseYields.heatSpecialists * 
-        Math.max(0.5, heatStressImpact * 1.2) * rainImpact * yieldVariation(),
-      coolSeason: portfolio.coolSeason * baseYields.coolSeason * 
-        heatStressImpact * freezeImpact * rainImpact * yieldVariation(),
-      perennials: portfolio.perennials * baseYields.perennials * 
-        Math.min(heatStressImpact * 1.1, 1.0) * freezeImpact * yieldVariation()
+      harvest: { mean: expectedHarvest, std: harvestStd },
+      investment: { mean: investmentMean, std: investmentStd },
+      heatYield: { 
+        mean: baseYields.heatSpecialists * MARKET_PRICES.heat, 
+        std: baseYields.heatSpecialists * MARKET_PRICES.heat * 0.4 
+      },
+      coolYield: { 
+        mean: baseYields.coolSeason * MARKET_PRICES.cool, 
+        std: baseYields.coolSeason * MARKET_PRICES.cool * 0.4 
+      },
+      perennialYield: { 
+        mean: baseYields.perennials * MARKET_PRICES.herbs, 
+        std: baseYields.perennials * MARKET_PRICES.herbs * 0.3 
+      }
     };
   };
 
-  // Simulate market prices with seasonal variation
-  const simulateMarketPrices = () => {
-    // Base prices with seasonal and market variation
-    const seasonalMultiplier = 0.8 + Math.random() * 0.6; // ±30% seasonal variation
-    const marketVolatility = 0.9 + Math.random() * 0.2; // ±10% market variation
+
+  // Generate weather samples for visualization (simplified)
+  const generateWeatherSamples = (iterations) => {
+    const stressDaysParams = getStressDaysParams();
+    const freezeParams = getFreezeParams();
+    const rainfallParams = getRainfallParams();
     
-    return {
-      heatCrops: 1.2 * seasonalMultiplier * marketVolatility, // $1.2 base per unit
-      coolCrops: 0.8 * seasonalMultiplier * marketVolatility, // $0.8 base per unit
-      herbs: 2.5 * seasonalMultiplier * marketVolatility     // $2.5 base per unit (high value)
-    };
+    const stressDays = jStat.poisson.sample(stressDaysParams.lambda, iterations);
+    const freezeEvents = jStat.poisson.sample(freezeParams.lambda, iterations);
+    const rainfall = jStat.normal.sample(rainfallParams.mean, rainfallParams.std, iterations);
+    
+    return stressDays.map((stress, i) => ({
+      stressDays: Math.max(0, stress),
+      freezeEvents: Math.max(0, freezeEvents[i]),
+      annualRainfall: Math.max(10, rainfall[i])
+    }));
+  };
+
+  const getStressDaysParams = () => {
+    const baseDays = locationConfig?.heatDays || 100;
+    const scenarioMultiplier = { mild: 0.3, normal: 0.5, extreme: 0.8, catastrophic: 1.2 };
+    return { lambda: baseDays * 0.3 * (scenarioMultiplier[selectedSummer] || 0.5) };
+  };
+
+  const getFreezeParams = () => {
+    const hardinessNumber = parseInt(locationConfig?.hardiness?.[0] || '7');
+    const baseFreeze = hardinessNumber < 6 ? 8 : hardinessNumber < 8 ? 4 : 1;
+    const scenarioMultiplier = { none: 0, warm: 0.3, mild: 0.7, traditional: 1.0 };
+    return { lambda: baseFreeze * (scenarioMultiplier[selectedWinter] || 0.5) };
+  };
+
+  const getRainfallParams = () => {
+    const avgRainfall = locationConfig?.avgRainfall || 46;
+    return { mean: avgRainfall, std: avgRainfall * 0.2 };
+  };
+
+
+  // Calculate total investment from custom inputs
+  const calculateTotalInvestment = () => {
+    const sizeMultiplier = (locationConfig?.gardenSizeActual || 100) / 100;
+    return Object.values(customInvestment).reduce((sum, cost) => sum + cost, 0) * sizeMultiplier;
+  };
+
+  // Get investment breakdown with descriptions
+  const getInvestmentBreakdown = () => {
+    const sizeMultiplier = (locationConfig?.gardenSizeActual || 100) / 100;
+    return [
+      { category: 'Seeds & Starts', amount: customInvestment.seeds * sizeMultiplier, description: 'Seed packets, transplants, bulbs', editable: true, key: 'seeds' },
+      { category: 'Infrastructure', amount: customInvestment.infrastructure * sizeMultiplier, description: 'Raised beds, trellises, stakes', editable: true, key: 'infrastructure' },
+      { category: 'Irrigation System', amount: customInvestment.irrigation * sizeMultiplier, description: 'Drip lines, timers, emitters', editable: true, key: 'irrigation' },
+      { category: 'Containers & Pots', amount: customInvestment.containers * sizeMultiplier, description: 'Pots, grow bags, planters', editable: true, key: 'containers' },
+      { category: 'Tools', amount: customInvestment.tools * sizeMultiplier, description: 'Hand tools, pruners, hose', editable: true, key: 'tools' },
+      { category: 'Soil & Amendments', amount: customInvestment.soil * sizeMultiplier, description: 'Compost, potting mix, fertilizer base', editable: true, key: 'soil' },
+      { category: 'Season Fertilizer', amount: customInvestment.fertilizer * sizeMultiplier, description: 'Ongoing nutrients through season', editable: true, key: 'fertilizer' },
+      { category: 'Weather Protection', amount: customInvestment.protection * sizeMultiplier, description: 'Row covers, shade cloth, stakes', editable: true, key: 'protection' }
+    ];
   };
 
   // Format currency using browser's native Intl.NumberFormat API
@@ -401,48 +905,44 @@ function App() {
     }).format(amount);
   };
 
-  // Calculate statistics from Monte Carlo results
+  // Calculate statistics using simple-statistics professional library
   const calculateStatistics = (results) => {
-    const sorted = {
-      harvestValue: results.map(r => r.harvestValue).sort((a, b) => a - b),
-      netReturn: results.map(r => r.netReturn).sort((a, b) => a - b),
-      roi: results.map(r => r.roi).sort((a, b) => a - b)
-    };
-    
-    const percentile = (arr, p) => arr[Math.floor(arr.length * p / 100)];
-    const mean = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+    const harvestValues = results.map(r => r.harvestValue);
+    const netReturns = results.map(r => r.netReturn);
+    const rois = results.map(r => r.roi);
+    const investments = results.map(r => r.investment);
     
     return {
-      investment: mean(results.map(r => r.investment)),
+      investment: ss.mean(investments),
       harvestValue: {
-        mean: mean(sorted.harvestValue),
-        p10: percentile(sorted.harvestValue, 10),
-        p50: percentile(sorted.harvestValue, 50),
-        p90: percentile(sorted.harvestValue, 90)
+        mean: ss.mean(harvestValues),
+        p10: ss.quantile(harvestValues, 0.1),
+        p50: ss.median(harvestValues),
+        p90: ss.quantile(harvestValues, 0.9)
       },
       netReturn: {
-        mean: mean(sorted.netReturn),
-        p10: percentile(sorted.netReturn, 10),
-        p50: percentile(sorted.netReturn, 50),
-        p90: percentile(sorted.netReturn, 90)
+        mean: ss.mean(netReturns),
+        p10: ss.quantile(netReturns, 0.1),
+        p50: ss.median(netReturns),
+        p90: ss.quantile(netReturns, 0.9)
       },
       roi: {
-        mean: mean(sorted.roi),
-        p10: percentile(sorted.roi, 10),
-        p50: percentile(sorted.roi, 50),
-        p90: percentile(sorted.roi, 90)
+        mean: ss.mean(rois),
+        p10: ss.quantile(rois, 0.1),
+        p50: ss.median(rois),
+        p90: ss.quantile(rois, 0.9)
       },
-      successRate: (results.filter(r => r.netReturn > 0).length / results.length) * 100,
-      heatYield: mean(results.map(r => r.heatYield)),
-      coolYield: mean(results.map(r => r.coolYield)),
-      perennialYield: mean(results.map(r => r.perennialYield))
+      successRate: (netReturns.filter(r => r > 0).length / netReturns.length) * 100,
+      heatYield: ss.mean(results.map(r => r.heatYield)),
+      coolYield: ss.mean(results.map(r => r.coolYield)),
+      perennialYield: ss.mean(results.map(r => r.perennialYield))
     };
   };
 
-  // Generate histogram data for visualization
+  // Generate histogram data using simple-statistics
   const generateHistogramData = (values, buckets = 20) => {
-    const min = Math.min(...values);
-    const max = Math.max(...values);
+    const min = ss.min(values);
+    const max = ss.max(values);
     const bucketSize = (max - min) / buckets;
     
     const histogram = Array(buckets).fill(0).map((_, i) => ({
@@ -473,42 +973,161 @@ function App() {
     };
   };
 
-  const runSimulation = () => {
-    console.log('Running Monte Carlo simulation...', { selectedSummer, selectedWinter, selectedPortfolio });
-    setSimulating(true);
+
+  // Investment Details Component
+  const InvestmentDetails = () => {
+    const breakdown = getInvestmentBreakdown();
+    const total = calculateTotalInvestment();
     
-    // Add a small delay to show the loading state
-    setTimeout(() => {
-      // Run Monte Carlo simulation
-      const monteCarloResults = runMonteCarloSimulation(5000); // 5000 iterations for speed
-      const statistics = calculateStatistics(monteCarloResults);
-      
-      // Generate 12-month garden calendar based on climate scenarios
-      const gardenCalendar = generateGardenCalendar(selectedSummer, selectedWinter, selectedPortfolio);
-      
-      // Generate visualization data
-      const weatherRiskData = generateWeatherRiskData(monteCarloResults);
-      const returnHistogram = generateHistogramData(monteCarloResults.map(r => r.netReturn), 25);
-      const roiHistogram = generateHistogramData(monteCarloResults.map(r => r.roi), 25);
-      
-      console.log('Monte Carlo results:', statistics);
-      setSimulationResults({ 
-        ...statistics, 
-        gardenCalendar, 
-        rawResults: monteCarloResults,
-        weatherRiskData,
-        returnHistogram,
-        roiHistogram
-      });
-      setSimulating(false);
-    }, 800); // Slightly longer delay for more complex calculation
+    const handleInvestmentChange = (key, value) => {
+      // Validate and format input
+      const numValue = Math.max(0, parseFloat(value) || 0);
+      setCustomInvestment(prev => ({
+        ...prev,
+        [key]: Math.round(numValue * 100) / 100 // Round to 2 decimal places
+      }));
+    };
+
+    return (
+      <div className="section investment-details">
+        <div className="investment-header">
+          <h3>💰 Investment Planning</h3>
+          <button 
+            className="button small"
+            onClick={() => setShowInvestmentDetails(!showInvestmentDetails)}
+          >
+            {showInvestmentDetails ? 'Hide Details' : 'Customize Costs'}
+          </button>
+        </div>
+        
+        <div className="investment-summary">
+          <div className="investment-total">
+            <span className="investment-label">Total Investment:</span>
+            <span className="investment-amount">{formatCurrency(total)}</span>
+          </div>
+          <div className="investment-note">
+            Scaled by garden size ({locationConfig?.gardenSizeActual || 100} sq ft)
+          </div>
+          <div className="investment-breakdown-summary">
+            <div className="breakdown-row">
+              <span>Base Costs:</span>
+              <span>{formatCurrency(Object.values(customInvestment).reduce((sum, cost) => sum + cost, 0))}</span>
+            </div>
+            <div className="breakdown-row">
+              <span>Size Multiplier:</span>
+              <span>{((locationConfig?.gardenSizeActual || 100) / 100).toFixed(2)}x</span>
+            </div>
+          </div>
+        </div>
+
+        {showInvestmentDetails && (
+          <div className="investment-breakdown">
+            <h4>Cost Breakdown & Customization</h4>
+            <div className="investment-grid">
+              {breakdown.map((item, index) => (
+                <div key={index} className="investment-item">
+                  <div className="investment-item-header">
+                    <label className="investment-category">{item.category}</label>
+                    <span className="investment-item-amount">{formatCurrency(item.amount)}</span>
+                  </div>
+                  
+                  <div className="investment-slider-container">
+                    <input
+                      type="range"
+                      min="0"
+                      max={Math.max(200, customInvestment[item.key] * 2)}
+                      step="5"
+                      value={customInvestment[item.key]}
+                      onChange={(e) => handleInvestmentChange(item.key, e.target.value)}
+                      className="investment-slider"
+                    />
+                    <div className="slider-labels">
+                      <span>$0</span>
+                      <span>${Math.max(200, customInvestment[item.key] * 2)}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="investment-input-row">
+                    <input
+                      type="number"
+                      min="0"
+                      step="5"
+                      value={customInvestment[item.key]}
+                      onChange={(e) => handleInvestmentChange(item.key, e.target.value)}
+                      className="investment-input"
+                    />
+                    <span className="input-label">Base Cost</span>
+                  </div>
+                  
+                  <div className="investment-description">{item.description}</div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="investment-presets">
+              <h5>Quick Presets</h5>
+              <div className="preset-buttons">
+                <button 
+                  className="button small"
+                  onClick={() => setCustomInvestment(INVESTMENT_PRESETS.budget.config)}
+                >
+                  💰 {INVESTMENT_PRESETS.budget.name} (${INVESTMENT_PRESETS.budget.totalCost})
+                </button>
+                <button 
+                  className="button small"
+                  onClick={() => setCustomInvestment(INVESTMENT_PRESETS.standard.config)}
+                >
+                  🏡 {INVESTMENT_PRESETS.standard.name} (${INVESTMENT_PRESETS.standard.totalCost})
+                </button>
+                <button 
+                  className="button small"
+                  onClick={() => setCustomInvestment(INVESTMENT_PRESETS.premium.config)}
+                >
+                  🌟 {INVESTMENT_PRESETS.premium.name} (${INVESTMENT_PRESETS.premium.totalCost})
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
+
+  // Get current climate scenarios based on location
+  const currentClimateScenarios = generateClimateScenarios(locationConfig);
+
+  if (showSetup) {
+    return <LocationSetup />;
+  }
 
   return (
     <div className="app">
       <div className="header">
-        <h1>🌡️ Climate Garden Simulation</h1>
-        <p>Durham Heat-Adapted Garden Strategy Tester</p>
+        <h1>🌡️ Climate-Science Garden Simulation</h1>
+        <p>{locationConfig?.name || 'Garden'} Future Climate Strategy Planner</p>
+        <div className="header-buttons">
+          <button 
+            className="button small"
+            onClick={() => setShowSetup(true)}
+          >
+            Change Location
+          </button>
+          <button 
+            className="button small"
+            onClick={() => {
+              if (window.confirm('Reset all settings to defaults? This will clear your saved preferences.')) {
+                try {
+                  ['gardenSim_locationConfig', 'gardenSim_climateSelection', 'gardenSim_investmentConfig', 'gardenSim_uiPreferences'].forEach(key => 
+                    localStorage.removeItem(key)
+                  );
+                } catch {}
+                window.location.reload();
+              }
+            }}
+          >
+            Reset to Defaults
+          </button>
+        </div>
       </div>
 
       <div className="simulation-container">
@@ -524,18 +1143,6 @@ function App() {
             )}
             {weatherData.forecast.length > 0 && (
               <div>
-                <div className="forecast-summary">
-                  <h4>14-Day Forecast (Durham, NC)</h4>
-                  <div className="forecast-grid">
-                    {weatherData.forecast.slice(0, 4).map((period, idx) => (
-                      <div key={idx} className="forecast-item">
-                        <div className="forecast-day">{period.name}</div>
-                        <div className="forecast-temp">{period.temperature}°{period.temperatureUnit}</div>
-                        <div className="forecast-desc">{period.shortForecast}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
                 {(getRecommendedScenario().summer || getRecommendedScenario().winter) && !recommendationDismissed && (
                   <div className="recommendation">
                     <h4>🎯 AI Recommendations</h4>
@@ -577,7 +1184,6 @@ function App() {
                     </div>
                   </div>
                 )}
-                <p className="data-source">Data: NOAA Weather Service • Updated: {new Date(weatherData.lastUpdated).toLocaleString()}</p>
               </div>
             )}
           </div>
@@ -586,15 +1192,13 @@ function App() {
         <div className="section">
           <h3>🔥 Summer Climate Bet</h3>
           <div className="scenario-grid">
-            {climateScenarios.summer.map(scenario => (
+            {currentClimateScenarios.summer.map(scenario => (
               <div 
                 key={scenario.id}
                 className={`scenario-card ${selectedSummer === scenario.id ? 'selected' : ''}`}
                 onClick={() => setSelectedSummer(scenario.id)}
               >
                 <h4>{scenario.name}</h4>
-                <p><strong>{scenario.temp}</strong></p>
-                <p>{scenario.duration}</p>
                 <p>{scenario.probability}% chance</p>
                 <p><em>{scenario.impact}</em></p>
               </div>
@@ -605,15 +1209,13 @@ function App() {
         <div className="section">
           <h3>❄️ Winter Climate Bet</h3>
           <div className="scenario-grid">
-            {climateScenarios.winter.map(scenario => (
+            {currentClimateScenarios.winter.map(scenario => (
               <div 
                 key={scenario.id}
                 className={`scenario-card ${selectedWinter === scenario.id ? 'selected' : ''}`}
                 onClick={() => setSelectedWinter(scenario.id)}
               >
                 <h4>{scenario.name}</h4>
-                <p><strong>{scenario.temp}</strong></p>
-                <p>{scenario.duration}</p>
                 <p>{scenario.probability}% chance</p>
                 <p><em>{scenario.impact}</em></p>
               </div>
@@ -621,10 +1223,12 @@ function App() {
           </div>
         </div>
 
+        <InvestmentDetails />
+
         <div className="section">
           <h3>🌱 Portfolio Strategy</h3>
           <div className="scenario-grid">
-            {Object.entries(portfolioStrategies).map(([key, portfolio]) => (
+            {Object.entries(getPortfolioStrategies(locationConfig)).map(([key, portfolio]) => (
               <div 
                 key={key}
                 className={`scenario-card ${selectedPortfolio === key ? 'selected' : ''}`}
@@ -653,8 +1257,8 @@ function App() {
 
         <div className="section">
           <h3>📊 Current Selection</h3>
-          <p>Selected scenario: <strong>{climateScenarios.summer.find(s => s.id === selectedSummer)?.name}</strong> + <strong>{climateScenarios.winter.find(s => s.id === selectedWinter)?.name}</strong></p>
-          <p>Portfolio: <strong>{portfolioStrategies[selectedPortfolio].name}</strong></p>
+          <p>Selected scenario: <strong>{currentClimateScenarios.summer.find(s => s.id === selectedSummer)?.name}</strong> + <strong>{currentClimateScenarios.winter.find(s => s.id === selectedWinter)?.name}</strong></p>
+          <p>Portfolio: <strong>{getPortfolioStrategies(locationConfig)[selectedPortfolio]?.name}</strong></p>
           {simulating && <p>🎲 Updating results...</p>}
 
           {simulationResults && (
@@ -838,7 +1442,7 @@ function App() {
               {simulationResults.gardenCalendar && (
                 <div className="garden-calendar">
                   <h4>📅 12-Month Garden Calendar</h4>
-                  <p className="calendar-subtitle">Optimized for {climateScenarios.summer.find(s => s.id === selectedSummer)?.name} + {climateScenarios.winter.find(s => s.id === selectedWinter)?.name}</p>
+                  <p className="calendar-subtitle">Optimized for {currentClimateScenarios.summer.find(s => s.id === selectedSummer)?.name} + {currentClimateScenarios.winter.find(s => s.id === selectedWinter)?.name}</p>
                   <div className="calendar-grid">
                     {simulationResults.gardenCalendar.map((monthData, index) => (
                       <div key={index} className={`calendar-month ${monthData.emphasis}`}>
