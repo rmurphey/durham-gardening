@@ -1,23 +1,33 @@
-# Pak Choi - White Stem & Shanghai
+# Pak Choi - White Stem & Shanghai  
+*Cool Season Priority Crop*
 
 ## Variety Details
 - **White Stem Pak Choi:** Classic variety with thick white stems (4g packet)
 - **Shanghai Pak Choi:** All-green variety, versatile for microgreens too (3g packet)
-- **Days to maturity:** 45-50 days
-- **Size:** 6-10 inches tall when mature
+- **Days to maturity:** 45-50 days full size, 25-35 days baby greens
+- **Climate reality:** Heat-sensitive crop, not suitable for summer heat survival strategy
 
-## Planting
-- **When:** June for summer harvest, August for fall harvest
-- **Where:** Main beds with 6+ hours sun, tolerates some afternoon shade
-- **Spacing:** 6-8 inches apart for full heads, closer for baby greens
+## Heat-Adapted Growing Strategy
+- **PRIMARY SEASONS:** October-March (peak productivity)
+- **Secondary:** April & September (transition periods only)
+- **Summer:** NOT RECOMMENDED - bolts immediately in heat, poor water efficiency
+- **Where:** Any main bed during cool seasons, morning sun preferred
+- **Spacing:** 6-8 inches apart for full heads, 4 inches for baby greens/microgreens
 - **Depth:** ¼ inch deep
-- **Soil:** Rich, well-draining soil with good organic matter
+- **Soil:** Rich, well-draining soil enhanced with cheap compost ($10/40lb)
 
-## Care
-- **Water:** Consistent moisture - pak choi is 90% water
-- **Temperature:** Prefers cooler weather; may bolt in extreme heat
-- **Fertilizer:** Light feeding with balanced fertilizer or compost
-- **Mulch:** Keep roots cool and moist with light mulch
+## Seasonal Care Focus
+### **Cool Season Production (Oct-Mar)**
+- **Water:** Drip irrigation preferred, consistent moisture critical
+- **Temperature:** Thrives in 50-70°F range (common during peak season)  
+- **Fertilizer:** Monthly compost application, responds well to consistent feeding
+- **Success rate:** High yields, excellent quality, multiple successions possible
+
+### **Summer Reality Check**
+- **Heat sensitivity:** Bolts to seed within days above 80°F
+- **Water inefficiency:** Requires constant moisture when heat-stressed
+- **Economic reality:** Poor return on water/space investment vs. cool season crops
+- **Recommendation:** Skip summer entirely, focus effort on heat-adapted crops
 
 ## Growing Options
 - **Full size heads:** Space 6-8 inches apart, harvest whole plant

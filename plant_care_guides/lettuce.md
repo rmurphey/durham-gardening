@@ -1,60 +1,62 @@
 # Red Sails Lettuce
+*Primary Cool-Season Crop with Limited Heat Tolerance*
 
 ## Variety Details
 - **Type:** Loose-leaf lettuce with red-tinged leaves
-- **Days to maturity:** 45-55 days
-- **Heat tolerance:** Excellent for summer growing
+- **Days to maturity:** 45-55 days to full head, 25-35 days for baby greens
+- **Climate reality:** "Heat-tolerant" is relative - still struggles above 85°F
 - **Appearance:** Green leaves with red edges, very attractive
+- **Best seasons:** October-April for consistent production
 
-## Planting
-- **When:** June through August (heat-tolerant variety)
-- **Where:** Partial shade areas, morning sun spots, or containers
-- **Spacing:** 8-10 inches apart for full heads, 4-6 inches for baby greens
+## Heat-Adapted Planting Strategy
+- **PRIMARY SEASONS:** October-March (peak productivity)
+- **Secondary:** April & September (transition periods)
+- **Summer survival:** June-August only with shade cloth + extra care
+- **Where:** Morning sun areas, containers for mobility
+- **Spacing:** 6-8 inches apart for succession harvests, 4 inches for baby greens
 - **Depth:** ¼ inch deep (barely cover seeds)
-- **Soil:** Well-draining soil enriched with compost
+- **Soil:** Well-draining, enriched with cheap compost ($10/40lb)
 
-## Care
-- **Water:** Consistent moisture, avoid overhead watering in heat
-- **Temperature:** More heat-tolerant than most lettuce varieties
-- **Fertilizer:** Light, frequent feeding with balanced fertilizer
-- **Shade:** Benefits from afternoon shade in summer heat
-- **Mulch:** Light mulch to keep roots cool
+## Seasonal Care Strategy
+### **Cool Season Production (Oct-Mar)**
+- **Water:** Drip irrigation 2-3x/week, consistent moisture
+- **Fertilizer:** Monthly compost application, thrives in cool weather
+- **Protection:** Row covers only for hard freezes
+- **Succession:** Plant every 2-3 weeks for continuous harvest
 
-## Growing Methods
-- **Full heads:** Space widely, harvest entire plant
-- **Baby greens:** Space closely, harvest young leaves
-- **Cut-and-come-again:** Harvest outer leaves, let center regrow
+### **Heat Survival Mode (Jun-Aug)**
+- **Only if:** You have shade cloth and are committed to extra care
+- **Water:** Daily drip irrigation, morning watering only
+- **Fertilizer:** Minimal - heat-stressed plants can't process nutrients
+- **Reality check:** Often not worth the water/effort vs. cool season yields
 
-## Succession Planting
-- **June:** First planting for summer harvest
-- **July:** Second planting (watch for heat stress)
-- **August:** Third planting for fall harvest
-- **Interval:** Every 2-3 weeks for continuous harvest
+## Optimized Growing Methods
+- **Baby greens focus:** Faster harvest, less heat stress risk
+- **Cut-and-come-again:** Best method for continuous cool-season harvest
+- **Container growing:** Mobility for seasonal management
 
-## Harvest
-- **Baby greens:** 25-35 days, cut outer leaves
-- **Full heads:** 45-55 days, harvest entire plant
-- **Best time:** Early morning when leaves are crisp
-- **Storage:** Use within 2-3 days for best quality
+## Revised Succession Schedule
+- **Fall peak:** October, November, December (best production)
+- **Winter:** January, February (warm winter advantage)
+- **Spring:** March, early April (before heat builds)
+- **Summer:** Skip unless committed to shade infrastructure
+- **Interval:** Every 2 weeks during peak season for continuous harvest
 
-## Heat Management
-- **Shade cloth:** Use 30-50% shade cloth in extreme heat
-- **Morning sun:** Position for morning sun, afternoon shade
-- **Containers:** Move containers to shadier spots as needed
-- **Watering:** Deep, infrequent watering in early morning
+## Harvest & Economics
+- **Baby greens:** 25-35 days, premium grocery value ($4-6/lb vs. $0.50/packet)
+- **Cut-and-come-again:** Multiple harvests from single planting
+- **Best time:** Early morning when leaves are crisp and sweet
+- **Storage:** Use within 2-3 days; continuous harvest eliminates storage needs
+- **ROI:** Excellent return during cool seasons, poor return in summer heat
 
-## Common Issues
-- **Bolting:** Even heat-tolerant varieties will bolt in extreme heat
-- **Bitter leaves:** Caused by heat stress or irregular watering
-- **Pests:** Aphids, slugs (less common in hot weather)
+## Problem Management
+- **Bolting:** Rare problem during cool seasons vs. inevitable in summer
+- **Bitter leaves:** Avoided entirely with cool-season focus
+- **Pests:** Fewer issues during cool weather
+- **Value focus:** Don't waste effort on stressed summer crops
 
-## Space Planning
-- **Bed allocation:** 4-6 sq ft per succession planting
-- **Container growing:** Excellent in containers that can be moved
-- **Companion plants:** Works well with all other crops in your plan
-- **Cool spots:** Utilize morning sun areas and partial shade zones
-
-## Special Considerations
-- **Appearance:** Red-tinged leaves add color to salads and garden
-- **Fresh eating:** Prioritize this variety for immediate consumption
-- **Summer success:** One of the best lettuces for Durham summer heat
+## Value-Focused Space Planning
+- **Peak season allocation:** 6-8 sq ft for continuous succession
+- **Container strategy:** Mobility for optimal light management
+- **Companion plants:** Cool-season herbs, radishes, carrots
+- **Economic reality:** Focus space/effort on productive seasons only

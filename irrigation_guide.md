@@ -1,60 +1,67 @@
-# Sprinkler System Guide - Durham Garden
+# Heat-Adapted Irrigation System - Durham Garden
 
-## System Overview
+## System Overview - Climate Reality Update
 - **Coverage**: All three garden beds (3×15, 4×8, 4×5) and container areas
-- **Automation**: Basic timer functions available
-- **Climate**: Zone 7 Durham, NC with hot, humid summers
+- **Current**: Basic sprinkler system with timer
+- **Upgrade plan**: Drip irrigation integration for water efficiency
+- **Climate**: Zone 7 with extreme heat summers (100-107°F) + warm winters
+- **New focus**: Year-round production with seasonal intensity shifts
 
 ---
 
-## Seasonal Watering Schedule
+## Heat-Adapted Seasonal Schedule
 
-### June-August (Hot Season)
-**Frequency**: Every other day (3-4 times per week)
-**Duration**: 20-25 minutes per zone
-**Best times**: 
-- **Preferred**: 5:00-7:00 AM (reduces evaporation, allows leaves to dry)
-- **Acceptable**: 6:00-8:00 PM (if morning not possible)
+### **June-August (Extreme Heat Survival)**
+**Reality**: 100-107°F with heat index up to 110°F
+**Strategy**: Survival mode for existing plants only
+**Frequency**: Daily watering may be needed for containers
+**Duration**: 25-30 minutes per zone
+**Critical timing**: 5:00-6:30 AM ONLY (never midday)
 
-**Automation setting**: 
+**Sprinkler automation**: 
 - Program for Monday, Wednesday, Friday, Sunday
-- 6:00 AM start time
-- 25 minutes per zone
+- 5:30 AM start time  
+- 25-30 minutes per zone
+- **Manual override**: Skip if rain expected, add extra day if 100°F+
 
-### September-October (Moderate Season)
-**Frequency**: 2-3 times per week
-**Duration**: 15-20 minutes per zone
-**Best times**: 6:00-8:00 AM
+### **September-November (Peak Season Transition)**
+**Strategy**: Garden recovery + heavy planting season
+**Frequency**: 3 times per week
+**Duration**: 20 minutes per zone
+**Best times**: 6:00-7:00 AM
 
 **Automation setting**:
-- Program for Monday, Thursday, Saturday
-- 6:30 AM start time
+- Program for Monday, Wednesday, Saturday
+- 6:00 AM start time
 - 20 minutes per zone
 
-### November-March (Cool Season)
-**Frequency**: 1-2 times per week (weather dependent)
-**Duration**: 10-15 minutes per zone
-**Best times**: Mid-morning (8:00-10:00 AM)
+### **December-March (Peak Production Season)**
+**Strategy**: Maximum productivity period with warm winters
+**Frequency**: 2-3 times per week (more than traditional winter)
+**Duration**: 15-20 minutes per zone
+**Times**: 7:00-8:00 AM (later start in cool season)
 
-**Manual operation recommended**: Check soil moisture before watering
+**Warm winter reality**: More watering needed than traditional Zone 7 winters
 
 ---
 
-## Crop-Specific Considerations
+## Heat-Adapted Crop Water Strategies
 
-### High Water Needs
-- **Pak Choi**: Needs consistent moisture (90% water content)
-- **Lettuce**: Requires steady moisture to prevent bolting
-- **Containers**: Check daily, may need supplemental hand watering
+### **Extreme Heat Survivors (June-August)**
+- **Okra**: Drought-tolerant, thrives with deep weekly watering
+- **Peppers**: Established plants handle heat, consistent moisture for fruit set
+- **Herbs**: Mediterranean types (oregano, thyme) very drought-tolerant
+- **Containers**: Critical - check twice daily, may need daily watering
 
-### Moderate Water Needs
-- **Beans**: Deep, less frequent watering preferred
-- **Carrots**: Consistent moisture prevents splitting
-- **Nasturtiums**: Moderate water, drought-tolerant once established
+### **Peak Season Producers (October-April)**
+- **Lettuce & Greens**: Consistent moisture critical for quality, less water than summer
+- **Root vegetables**: Deep, less frequent watering develops strong roots
+- **Beans**: Moderate water needs, avoid overwatering in cool weather
+- **Succession crops**: Higher water needs during establishment, reduce as plants mature
 
-### Lower Water Needs (once established)
-- **Okra**: Very drought tolerant, thrives in heat
-- **Parsnips**: Deep taproot, less frequent watering
+### **Water-Intensive to Avoid in Heat**
+- **Pak Choi**: Not worth the water cost during extreme heat
+- **Traditional summer crops**: Most struggle with water efficiency in 100°F+
 
 ---
 
@@ -159,4 +166,32 @@ Check soil moisture every few days, even with automation running
 - **Fall**: Gradually decrease as temperatures drop
 - **Winter**: Switch to manual, minimal watering
 
-This system should provide excellent coverage for your Durham garden while conserving water and promoting healthy plant growth.
+## Drip Irrigation Upgrade Plan
+
+### **Phase 1 - October 2025 Installation** ($40-60)
+- **Drip irrigation starter kit** for 1-2 beds
+- **Install timing**: Best during fall when plants are establishing
+- **Focus beds**: Start with most water-intensive areas
+- **Benefits**: 50% water savings, better plant health, less disease
+
+### **Phase 2 - February 2026 Expansion** ($40-80)  
+- **Complete system coverage** for all beds
+- **Integration**: Connect to existing sprinkler timer system
+- **Container integration**: Drip lines for container plants
+- **ROI**: Water savings + reduced labor + better yields
+
+### **System Benefits for Heat-Adapted Garden**
+- **Water efficiency**: Critical during 100°F+ heat waves
+- **Disease prevention**: No wet foliage = fewer fungal problems
+- **Consistent moisture**: Better for heat-stressed plants
+- **Labor savings**: Less hand watering during extreme heat
+- **Year-round value**: Efficient watering during peak production season
+
+### **Economic Justification**
+- **Initial cost**: $80-140 total system
+- **Water savings**: 30-50% reduction in usage
+- **Plant survival**: Better establishment during heat stress
+- **Time savings**: Reduced daily hand-watering during summer
+- **Value focus**: Infrastructure that reduces ongoing costs
+
+This upgraded system provides efficient, heat-adapted irrigation for year-round production while minimizing water waste and labor during extreme weather.

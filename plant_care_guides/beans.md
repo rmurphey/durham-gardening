@@ -1,42 +1,52 @@
 # Blue Lake Bush Beans (Bush Bean 274)
+*Heat-Adapted Cool Season Focus*
 
 ## Variety Details
 - **Type:** Bush bean, determinate
 - **Days to maturity:** 50-60 days
 - **Packet size:** 4 oz (enough for multiple plantings)
+- **Climate note:** Traditional summer crop, now grown in cooler months to avoid extreme heat
 
-## Planting
-- **When:** June through August (succession plant every 2 weeks)
-- **Where:** Any of the three main beds (needs 6+ hours sun)
+## Heat-Adapted Planting Schedule
+- **PRIMARY SEASON:** September-November & February-April (cool weather focus)
+- **Summer growing:** Possible with shade cloth protection but not recommended
+- **Where:** Any main bed with morning sun, afternoon shade in summer
 - **Spacing:** 4-6 inches apart in rows, 18 inches between rows
 - **Depth:** 1-2 inches deep
-- **Soil temp:** Wait until soil is 60°F+ consistently
+- **Soil temp:** 60-75°F optimal (avoid 90°F+ soil temperatures)
 
-## Care
-- **Water:** Deep watering 2-3 times per week; keep consistent moisture
-- **Fertilizer:** Light side-dressing with compost mid-season
-- **Support:** Bush type, no trellising needed
-- **Mulch:** Apply around plants to retain moisture and suppress weeds
+## Seasonal Care Strategy
+### **Cool Season Growing (Sept-Nov, Feb-Apr)**
+- **Water:** Drip irrigation preferred, deep watering 2x/week
+- **Fertilizer:** Light compost ($10/40lb bag) - beans fix their own nitrogen
+- **Protection:** Row covers for unexpected cold snaps only
 
-## Succession Planting Schedule
-- **First planting:** Early June
-- **Second planting:** Mid-June
-- **Third planting:** Early July
-- **Fourth planting:** Mid-July
-- **Final planting:** Early August
+### **Summer Survival Growing (June-Aug)** 
+- **Only if:** Using 50% shade cloth and extra water
+- **Water:** Daily drip irrigation during heat waves
+- **Fertilizer:** Minimal - plants stressed, avoid overfeeding
+- **Reality check:** Not economical given water/effort vs. yield
 
-## Harvest
+## Revised Succession Schedule
+- **Fall primary:** September, early October (best yields)
+- **Winter:** November (warm winter harvest)
+- **Spring primary:** February, March (before heat builds)
+- **Summer:** Skip unless you have reliable shade infrastructure
+
+## Harvest & Storage
 - **When:** Pick when pods are tender but seeds haven't fully developed
 - **Frequency:** Harvest every 2-3 days during peak season
 - **Storage:** Use fresh within a few days; blanch and freeze for longer storage
-- **Yield:** Expect 2-3 weeks of harvesting per planting
+- **Yield:** 2-3 weeks of harvesting per cool-season planting (longer than stressed summer crops)
 
-## Common Issues
-- **Pests:** Watch for Mexican bean beetles, aphids
-- **Diseases:** Avoid overhead watering to prevent fungal issues
-- **Weather:** Hot, dry weather can cause poor pod set
+## Heat-Adapted Problem Solving
+- **Heat stress:** Plants flower but don't set pods above 85°F
+- **Pests:** Fewer issues during cool seasons vs. summer stress periods
+- **Diseases:** Drip irrigation prevents most fungal problems
+- **Economics:** Cool season yields justify space; summer yields often don't
 
-## Space Planning
-- **Bed allocation:** Dedicate 10-15 sq ft per succession planting
-- **Companion plants:** Works well with carrots, nasturtiums
-- **Rotation:** Don't plant in same spot as last year's legumes
+## Value-Focused Space Planning
+- **Bed allocation:** 10-15 sq ft per succession (prioritize cool season plantings)
+- **Companion plants:** Carrots, cool-season herbs, nasturtiums
+- **Rotation:** Follow beans with heavy feeders (okra, peppers) that use residual nitrogen
+- **ROI:** Focus effort on September-March plantings for best return on space/water
