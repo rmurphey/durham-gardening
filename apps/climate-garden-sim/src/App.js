@@ -24,7 +24,10 @@ import {
   MICROCLIMATE_OPTIONS,
   calculateMicroclimateEffects,
   getMicroclimateAdjustedRecommendations,
-  DEFAULT_LOCATION_CONFIG
+  DEFAULT_LOCATION_CONFIG,
+  SHADEMAP_CONFIG,
+  convertSolarDataToCanopyShade,
+  getEnhancedMicroclimateRecommendations
 } from './config.js';
 import './index.css';
 
@@ -326,6 +329,10 @@ function App() {
   const LocationSetup = () => {
     const [selectedPreset, setSelectedPreset] = useState(null);
     const [showMicroclimate, setShowMicroclimate] = useState(false);
+    const [solarDataConsent, setSolarDataConsent] = useState(false);
+    const [shademapApiKey, setShademapApiKey] = useState('');
+    const [loadingSolarData, setLoadingSolarData] = useState(false);
+    const [solarData, setSolarData] = useState(null);
     const [customConfig, setCustomConfig] = useState({
       name: '',
       region: 'us', // Default to US
@@ -349,6 +356,40 @@ function App() {
 
     const getBudgetFromLevel = (level) => 
       getScaleValue(INVESTMENT_LEVEL_SCALE, level) || 200;
+
+    const fetchSolarData = async () => {
+      if (!solarDataConsent || !customConfig.lat || !customConfig.lon) {
+        return null;
+      }
+      
+      setLoadingSolarData(true);
+      try {
+        const data = await SHADEMAP_CONFIG.requestSolarData(
+          customConfig.lat, 
+          customConfig.lon, 
+          shademapApiKey
+        );
+        setSolarData(data);
+        
+        // Auto-update canopy shade if solar data available
+        if (data) {
+          const suggestedShade = convertSolarDataToCanopyShade(data);
+          if (suggestedShade) {
+            setCustomConfig(prev => ({
+              ...prev,
+              microclimate: { ...prev.microclimate, canopyShade: suggestedShade }
+            }));
+          }
+        }
+        
+        return data;
+      } catch (error) {
+        console.error('Failed to fetch solar data:', error);
+        return null;
+      } finally {
+        setLoadingSolarData(false);
+      }
+    };
 
     const handlePresetSelect = (presetKey) => {
       console.log('Preset selected:', presetKey);
@@ -379,10 +420,17 @@ function App() {
       }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+      // Fetch solar data if consented
+      const currentSolarData = solarDataConsent ? await fetchSolarData() : null;
+      
       // Calculate microclimate effects
       const microclimateEffects = calculateMicroclimateEffects(customConfig.microclimate);
       const adjustedConfig = getMicroclimateAdjustedRecommendations(customConfig, microclimateEffects);
+      
+      // Generate enhanced recommendations with solar data
+      const enhancedRecommendations = currentSolarData ? 
+        getEnhancedMicroclimateRecommendations(currentSolarData, customConfig.microclimate) : [];
       
       const finalConfig = {
         ...customConfig,
@@ -390,7 +438,9 @@ function App() {
         heatDays: getHeatDaysFromIntensity(customConfig.heatIntensity),
         gardenSizeActual: getGardenSizeFromScale(customConfig.gardenSize),
         budget: getBudgetFromLevel(customConfig.investmentLevel),
-        microclimateEffects // Store the calculated effects
+        microclimateEffects, // Store the calculated effects
+        solarData: currentSolarData, // Store solar data if available
+        enhancedRecommendations // Store enhanced recommendations
       };
       setLocationConfig(finalConfig);
       setShowSetup(false);
@@ -753,6 +803,99 @@ function App() {
                     );
                   })()}
                 </div>
+              </div>
+            )}
+          </div>
+
+          <div className="setup-section">
+            <div className="shademap-header">
+              <h3>☀️ Precision Solar Data</h3>
+              <p>Get exact sun exposure for your garden location using satellite and terrain data from ShadeMap.app</p>
+            </div>
+            
+            <div className="shademap-consent">
+              <label className="consent-checkbox">
+                <input
+                  type="checkbox"
+                  checked={solarDataConsent}
+                  onChange={(e) => setSolarDataConsent(e.target.checked)}
+                />
+                <span className="consent-text">
+                  I consent to requesting solar exposure data from ShadeMap.app for my garden coordinates. 
+                  This will provide precise sun/shade information based on satellite imagery and terrain analysis.
+                </span>
+              </label>
+            </div>
+
+            {solarDataConsent && (
+              <div className="shademap-config">
+                <div className="api-key-section">
+                  <label>ShadeMap API Key (Optional):</label>
+                  <input
+                    type="text"
+                    value={shademapApiKey}
+                    onChange={(e) => setShademapApiKey(e.target.value)}
+                    placeholder="Your ShadeMap API key for enhanced data"
+                    className="api-key-input"
+                  />
+                  <div className="api-key-help">
+                    <p>Get your free API key at <a href="https://shademap.app/api" target="_blank" rel="noopener noreferrer">shademap.app/api</a></p>
+                    <p>Without an API key, manual sun/shade selection will be used above.</p>
+                  </div>
+                </div>
+
+                {customConfig.lat && customConfig.lon && (
+                  <div className="solar-preview">
+                    <button
+                      type="button"
+                      className="button small"
+                      onClick={fetchSolarData}
+                      disabled={loadingSolarData}
+                    >
+                      {loadingSolarData ? 'Fetching Solar Data...' : 'Preview Solar Data'}
+                    </button>
+                    
+                    {solarData && (
+                      <div className="solar-results">
+                        <h4>🌞 Solar Analysis Results</h4>
+                        <div className="solar-stats">
+                          <div className="solar-stat">
+                            <span className="stat-label">Annual Sun Hours:</span>
+                            <span className="stat-value">{solarData.annualSunHours}</span>
+                          </div>
+                          <div className="solar-stat">
+                            <span className="stat-label">Daily Average:</span>
+                            <span className="stat-value">{(solarData.annualSunHours / 365).toFixed(1)} hours</span>
+                          </div>
+                          <div className="solar-stat">
+                            <span className="stat-label">Data Confidence:</span>
+                            <span className="stat-value">{solarData.confidence}</span>
+                          </div>
+                          <div className="solar-stat">
+                            <span className="stat-label">Recommended Setting:</span>
+                            <span className="stat-value">
+                              {MICROCLIMATE_OPTIONS.canopyShade[convertSolarDataToCanopyShade(solarData)]?.name}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {solarData.seasonalVariation && (
+                          <div className="seasonal-variation">
+                            <h5>Seasonal Variation</h5>
+                            <div className="season-stats">
+                              {Object.entries(solarData.seasonalVariation).map(([season, hours]) => (
+                                <div key={season} className="season-stat">
+                                  <span>{season.replace('_', ' ')}:</span>
+                                  <span>{hours} hours</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -1603,6 +1746,39 @@ function App() {
             <div className="zone-adjustment">
               <strong>Effective Hardiness Zone:</strong> {locationConfig.microAdjustedZone} 
               (adjusted from {locationConfig.hardiness} based on your site conditions)
+            </div>
+          )}
+        </div>
+      )}
+
+      {locationConfig?.enhancedRecommendations && locationConfig.enhancedRecommendations.length > 0 && (
+        <div className="section enhanced-recommendations">
+          <h3>🔍 Precision Growing Insights</h3>
+          <div className="recommendations-grid">
+            {locationConfig.enhancedRecommendations.map((rec, index) => (
+              <div key={index} className={`recommendation-card ${rec.type}`}>
+                <div className="recommendation-header">
+                  <h4>{rec.title}</h4>
+                  {rec.confidence && (
+                    <span className={`confidence-badge ${rec.confidence}`}>
+                      {rec.confidence} confidence
+                    </span>
+                  )}
+                </div>
+                <p className="recommendation-description">{rec.description}</p>
+                <p className="recommendation-action"><strong>Action:</strong> {rec.action}</p>
+              </div>
+            ))}
+          </div>
+          
+          {locationConfig.solarData && (
+            <div className="solar-data-summary">
+              <h4>☀️ Solar Analysis Summary</h4>
+              <p>
+                Your garden receives <strong>{(locationConfig.solarData.annualSunHours / 365).toFixed(1)} hours</strong> of 
+                direct sunlight daily on average, based on satellite and terrain analysis from ShadeMap.app.
+                This precise data enables optimized crop selection and planting strategies.
+              </p>
             </div>
           )}
         </div>

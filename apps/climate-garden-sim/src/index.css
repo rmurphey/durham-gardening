@@ -1115,6 +1115,292 @@ body {
   margin-top: 15px;
 }
 
+/* ShadeMap Integration Styles */
+.shademap-header {
+  background: linear-gradient(135deg, #f1c40f, #f39c12);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.shademap-header h3 {
+  margin: 0 0 10px 0;
+  border: none;
+  padding: 0;
+}
+
+.shademap-header p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+.shademap-consent {
+  background: #fffbf0;
+  border: 2px solid #f39c12;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.consent-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.consent-checkbox input[type="checkbox"] {
+  margin-top: 4px;
+  transform: scale(1.2);
+}
+
+.consent-text {
+  flex: 1;
+  line-height: 1.5;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.shademap-config {
+  background: #f8faff;
+  border: 2px solid #f1c40f;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 15px;
+}
+
+.api-key-section {
+  margin-bottom: 20px;
+}
+
+.api-key-section label {
+  display: block;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.api-key-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.api-key-help {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 12px;
+}
+
+.api-key-help p {
+  margin: 0 0 5px 0;
+}
+
+.api-key-help a {
+  color: #0984e3;
+  text-decoration: none;
+}
+
+.api-key-help a:hover {
+  text-decoration: underline;
+}
+
+.solar-preview {
+  margin-top: 20px;
+}
+
+.solar-results {
+  background: white;
+  border: 2px solid #27ae60;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 15px;
+}
+
+.solar-results h4 {
+  margin: 0 0 15px 0;
+  color: #27ae60;
+  border-bottom: 2px solid #27ae60;
+  padding-bottom: 8px;
+}
+
+.solar-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.solar-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: #f8fff8;
+  border-radius: 4px;
+  border-left: 3px solid #f1c40f;
+}
+
+.stat-label {
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 13px;
+}
+
+.stat-value {
+  font-weight: bold;
+  color: #f39c12;
+  font-size: 14px;
+}
+
+.seasonal-variation {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.seasonal-variation h5 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.season-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.season-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px;
+  background: #f0f8ff;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.season-stat span:first-child {
+  text-transform: capitalize;
+  color: #666;
+}
+
+.season-stat span:last-child {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Enhanced Recommendations Styles */
+.enhanced-recommendations {
+  background: linear-gradient(135deg, #e8f5e8, #f0fff0);
+  border-left: 4px solid #27ae60;
+  margin-bottom: 20px;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.recommendation-card {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #27ae60;
+}
+
+.recommendation-card.solar_precision { border-left-color: #f1c40f; }
+.recommendation-card.winter_shade { border-left-color: #3498db; }
+.recommendation-card.summer_intensity { border-left-color: #e74c3c; }
+.recommendation-card.heat_stress_risk { border-left-color: #e74c3c; }
+
+.recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.recommendation-header h4 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 16px;
+  flex: 1;
+}
+
+.confidence-badge {
+  background: #ecf0f1;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 10px;
+}
+
+.confidence-badge.high {
+  background: #d4edda;
+  color: #155724;
+}
+
+.confidence-badge.medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.confidence-badge.low {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.recommendation-description {
+  margin: 0 0 10px 0;
+  color: #34495e;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.recommendation-action {
+  margin: 0;
+  font-size: 13px;
+  color: #2c3e50;
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 3px solid #27ae60;
+}
+
+.solar-data-summary {
+  background: white;
+  border: 2px solid #f1c40f;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+.solar-data-summary h4 {
+  margin: 0 0 10px 0;
+  color: #f39c12;
+  border-bottom: 2px solid #f1c40f;
+  padding-bottom: 8px;
+}
+
+.solar-data-summary p {
+  margin: 0;
+  color: #2c3e50;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
 /* Investment Details Styles */
 .investment-details {
   grid-column: 1 / -1;

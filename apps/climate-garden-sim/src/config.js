@@ -598,6 +598,123 @@ export const MICROCLIMATE_OPTIONS = {
   }
 };
 
+// ShadeMap.app API integration for precise solar data
+export const SHADEMAP_CONFIG = {
+  baseUrl: 'https://shademap.app/api',
+  // API key would be provided by user or obtained through ShadeMap account
+  requestSolarData: async (lat, lon, apiKey) => {
+    if (!apiKey) {
+      return null; // No API key provided, use manual selection
+    }
+    
+    try {
+      // Request annual solar exposure data for the coordinates
+      const response = await fetch(`${SHADEMAP_CONFIG.baseUrl}/solar-exposure`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          lat: parseFloat(lat),
+          lon: parseFloat(lon),
+          analysis_type: 'annual_hours',
+          resolution: 'high'
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`ShadeMap API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // Convert ShadeMap data to our microclimate format
+      return {
+        annualSunHours: data.annual_sun_hours || 0,
+        seasonalVariation: data.seasonal_variation || {},
+        shadowPatterns: data.shadow_patterns || {},
+        confidence: data.confidence || 'medium',
+        dataSource: 'shademap'
+      };
+    } catch (error) {
+      console.error('ShadeMap API request failed:', error);
+      return null;
+    }
+  }
+};
+
+// Convert ShadeMap solar data to microclimate canopy shade setting
+export const convertSolarDataToCanopyShade = (solarData) => {
+  if (!solarData || !solarData.annualSunHours) {
+    return null;
+  }
+  
+  const dailyAverage = solarData.annualSunHours / 365;
+  
+  if (dailyAverage >= 8) {
+    return 'full-sun';
+  } else if (dailyAverage >= 6) {
+    return 'partial';
+  } else if (dailyAverage >= 4) {
+    return 'filtered';
+  } else {
+    return 'heavy-shade';
+  }
+};
+
+// Enhanced microclimate recommendations with solar data
+export const getEnhancedMicroclimateRecommendations = (solarData, microclimate) => {
+  const recommendations = [];
+  
+  if (solarData && solarData.dataSource === 'shademap') {
+    const dailyAverage = solarData.annualSunHours / 365;
+    
+    recommendations.push({
+      type: 'solar_precision',
+      title: 'Precise Solar Data Available',
+      description: `Based on satellite and terrain data: ${dailyAverage.toFixed(1)} hours daily sun`,
+      confidence: solarData.confidence,
+      action: 'crop recommendations optimized for exact light conditions'
+    });
+    
+    // Seasonal recommendations based on solar variation
+    if (solarData.seasonalVariation) {
+      if (solarData.seasonalVariation.winter_sun_hours < 4) {
+        recommendations.push({
+          type: 'winter_shade',
+          title: 'Winter Shade Challenge',
+          description: 'Limited winter sun may affect cool-season crops',
+          action: 'Consider cold frames or season extenders for winter growing'
+        });
+      }
+      
+      if (solarData.seasonalVariation.summer_sun_hours > 10) {
+        recommendations.push({
+          type: 'summer_intensity',
+          title: 'Intense Summer Sun',
+          description: 'Peak summer exposure may require heat protection',
+          action: 'Plan shade cloth installation for heat-sensitive crops'
+        });
+      }
+    }
+  }
+  
+  // Combine with traditional microclimate factors
+  const effects = calculateMicroclimateEffects(microclimate);
+  
+  if (effects.temperatureAdjustment > 5 && solarData && solarData.annualSunHours > 2800) {
+    recommendations.push({
+      type: 'heat_stress_risk',
+      title: 'High Heat Stress Risk',
+      description: 'Combination of full sun and warm microclimate creates challenging conditions',
+      action: 'Prioritize heat-tolerant varieties and implement cooling strategies'
+    });
+  }
+  
+  return recommendations;
+};
+
 // Calculate microclimate adjustments
 export const calculateMicroclimateEffects = (microclimate) => {
   const effects = {
