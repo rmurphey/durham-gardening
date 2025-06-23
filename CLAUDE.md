@@ -26,6 +26,12 @@ When editing or adding content:
 - Update space calculations when changing plant spacing or bed assignments
 - Focus on practical garden management over theoretical information
 
+## Code Development Principles
+
+- Prepare a commit with every substantial change
+- Every commit that includes functional files should include associated tests
+- Aim to minimize complex if/else statements by using more elegant code structures
+
 ## Garden Management Focus
 
 - **Monthly planning**: What to plant, when, and where in specific beds
@@ -81,3 +87,15 @@ This project is for a garden in Durham, North Carolina. In addition to a variety
 ## Currency and Financial Considerations
 
 - The UI should show currency to appropriate decimal precision depending on the currency. For example, USD should have two-digit decimal precision, whereas JPY generally requires zero decimal precision for common transactions.
+
+## Design Principles
+
+- The interfaces in this project meet the needs of the task, and nothing more. If data doesn't impact a decision, it is not shown.
+
+## Interaction Guidelines
+
+- It is OK to ask about the task to be performed if it helps inform the solution
+
+## Data Sourcing
+
+- We trust NOAA data and other government-provided data
