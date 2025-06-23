@@ -1,6 +1,7 @@
 /**
  * Monte Carlo Simulation Engine for Garden Planning
  * Handles statistical modeling, yield calculations, and risk analysis
+ * Enhanced with real-time weather data integration
  */
 
 import jStat from 'jstat';
@@ -10,6 +11,11 @@ import {
   BASE_YIELD_MULTIPLIERS,
   MARKET_PRICES
 } from '../config.js';
+import { weatherDataService } from './weatherDataService.js';
+import { 
+  generateWeatherSamplesFromRealData,
+  applyWeatherAdjustments 
+} from './weatherIntegration.js';
 
 /**
  * Run complete Monte Carlo simulation for garden planning
@@ -17,32 +23,55 @@ import {
  * @param {number} iterations - Number of simulation iterations
  * @returns {Object} Complete simulation results
  */
-export const runCompleteSimulation = (config, iterations = 1000) => {
+export const runCompleteSimulation = async (config, iterations = 1000) => {
   const { 
     portfolio, 
     baseInvestment, 
     selectedSummer, 
     selectedWinter, 
     locationConfig,
-    portfolioMultiplier = 1.0
+    portfolioMultiplier = 1.0,
+    weatherData = null // Optional real-time weather data
   } = config;
 
   try {
-    // Run Monte Carlo simulation
+    // Enhance simulation with weather data if available
+    let enhancedConfig = { ...config };
+    if (locationConfig?.lat && locationConfig?.lon && !weatherData) {
+      try {
+        const currentWeather = await weatherDataService.getCurrentWeather(locationConfig.lat, locationConfig.lon);
+        const forecast = await weatherDataService.getWeatherForecast(locationConfig.lat, locationConfig.lon, 14);
+        const gddData = await weatherDataService.getGrowingDegreeDays(locationConfig.lat, locationConfig.lon);
+        
+        enhancedConfig.weatherData = {
+          current: currentWeather,
+          forecast,
+          gddData,
+          timestamp: new Date()
+        };
+      } catch (weatherError) {
+        console.warn('Weather data unavailable, using static scenarios:', weatherError.message);
+      }
+    } else if (weatherData) {
+      enhancedConfig.weatherData = weatherData;
+    }
+
+    // Run Monte Carlo simulation with enhanced weather data
     const monteCarloResults = runMonteCarloSimulation({
       portfolio,
       baseInvestment,
       selectedSummer,
       selectedWinter,
       locationConfig,
-      portfolioMultiplier
+      portfolioMultiplier,
+      weatherData: enhancedConfig.weatherData
     }, iterations);
 
     // Calculate statistics
     const statistics = calculateStatistics(monteCarloResults);
     
-    // Generate visualization data
-    const weatherRiskData = generateWeatherRiskData(monteCarloResults);
+    // Generate visualization data with weather integration
+    const weatherRiskData = generateWeatherRiskData(monteCarloResults, enhancedConfig.weatherData);
     const returnHistogram = generateHistogramData(monteCarloResults.map(r => r.netReturn), 25);
     const roiHistogram = generateHistogramData(monteCarloResults.map(r => r.roi), 25);
 
@@ -51,7 +80,9 @@ export const runCompleteSimulation = (config, iterations = 1000) => {
       rawResults: monteCarloResults,
       weatherRiskData,
       returnHistogram,
-      roiHistogram
+      roiHistogram,
+      weatherEnhanced: !!enhancedConfig.weatherData,
+      weatherTimestamp: enhancedConfig.weatherData?.timestamp
     };
   } catch (error) {
     console.error('Simulation error:', error);
@@ -66,16 +97,18 @@ export const runCompleteSimulation = (config, iterations = 1000) => {
  * @returns {Array} Array of simulation results
  */
 export const runMonteCarloSimulation = (params, iterations = 1000) => {
-  const { portfolio, baseInvestment, selectedSummer, selectedWinter, locationConfig, portfolioMultiplier } = params;
+  const { portfolio, baseInvestment, selectedSummer, selectedWinter, locationConfig, portfolioMultiplier, weatherData } = params;
   
   // Generate simulation parameters using proper statistical distributions
+  // Enhanced with real-time weather data if available
   const simParams = generateSimulationParameters(
     portfolio, 
     baseInvestment, 
     portfolioMultiplier, 
     locationConfig,
     selectedSummer,
-    selectedWinter
+    selectedWinter,
+    weatherData
   );
   
   // Generate normal distribution samples using correct jStat API
@@ -96,7 +129,10 @@ export const runMonteCarloSimulation = (params, iterations = 1000) => {
   const perennialYields = generateNormalSamples(simParams.perennialYield.mean, simParams.perennialYield.std, iterations);
   
   // Generate weather data for visualization
-  const weatherData = generateWeatherSamples(iterations, locationConfig, selectedSummer, selectedWinter);
+  // Use real weather data if available, otherwise use synthetic data
+  const simulationWeatherData = weatherData 
+    ? generateWeatherSamplesFromRealData(iterations, weatherData, locationConfig)
+    : generateWeatherSamples(iterations, locationConfig, selectedSummer, selectedWinter);
   
   // Package results in expected format
   return harvestValues.map((harvestValue, i) => ({
@@ -107,7 +143,7 @@ export const runMonteCarloSimulation = (params, iterations = 1000) => {
     heatYield: heatYields[i],
     coolYield: coolYields[i],
     perennialYield: perennialYields[i],
-    weather: weatherData[i]
+    weather: simulationWeatherData[i]
   }));
 };
 
@@ -127,7 +163,8 @@ export const generateSimulationParameters = (
   portfolioMultiplier, 
   locationConfig,
   selectedSummer,
-  selectedWinter
+  selectedWinter,
+  weatherData = null
 ) => {
   const sizeMultiplier = (locationConfig?.gardenSizeActual || 100) / 100;
   const climateSeverity = getClimateSeverity(selectedSummer, selectedWinter);
@@ -148,7 +185,7 @@ export const generateSimulationParameters = (
   const investmentMean = baseInvestment * portfolioMultiplier;
   const investmentStd = investmentMean * 0.1; // 10% variability in costs
   
-  return {
+  const baseParams = {
     harvest: { mean: expectedHarvest, std: harvestStd },
     investment: { mean: investmentMean, std: investmentStd },
     heatYield: { 
@@ -164,6 +201,11 @@ export const generateSimulationParameters = (
       std: (baseYields.perennials || 0) * MARKET_PRICES.herbs * 0.3 
     }
   };
+
+  // Apply weather adjustments if real weather data is available
+  return weatherData 
+    ? applyWeatherAdjustments(baseParams, weatherData, locationConfig)
+    : baseParams;
 };
 
 /**
@@ -301,16 +343,29 @@ export const generateHistogramData = (data, bins = 25) => {
  * @param {Array} results - Monte Carlo results
  * @returns {Object} Weather risk data
  */
-export const generateWeatherRiskData = (results) => {
+export const generateWeatherRiskData = (results, weatherData = null) => {
   if (!results || results.length === 0) return {};
   
   const stressDays = results.map(r => r.weather?.stressDays || 0);
   const freezeEvents = results.map(r => r.weather?.freezeEvents || 0);
-  const rainfall = results.map(r => r.weather?.annualRainfall || 0);
+  const rainfall = results.map(r => r.weather?.rainfall || 0);
   
-  return {
+  const riskData = {
     stressDays: generateHistogramData(stressDays, 15),
     freezeEvents: generateHistogramData(freezeEvents, 15),
     rainfall: generateHistogramData(rainfall, 15)
   };
+
+  // Add real weather context if available
+  if (weatherData) {
+    riskData.realWeatherContext = {
+      currentTemp: weatherData.current?.temperature?.current,
+      weeklyGDD: weatherData.forecast?.slice(0, 7).reduce((sum, day) => sum + (day.gdd || 0), 0),
+      upcomingPrecipitation: weatherData.forecast?.slice(0, 7).reduce((sum, day) => sum + (day.precipitation || 0), 0),
+      dataSource: 'real',
+      timestamp: weatherData.timestamp
+    };
+  }
+  
+  return riskData;
 };

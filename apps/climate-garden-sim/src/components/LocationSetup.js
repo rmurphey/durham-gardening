@@ -18,10 +18,13 @@ import RegionPresetSelector from './LocationSetup/RegionPresetSelector.js';
 import BasicLocationForm from './LocationSetup/BasicLocationForm.js';
 import MicroclimateTuner from './LocationSetup/MicroclimateTuner.js';
 import SolarDataIntegration from './LocationSetup/SolarDataIntegration.js';
+import { useWeatherData } from '../hooks/useWeatherData.js';
+import { generateWeatherRiskAnalysis } from '../services/weatherIntegration.js';
 
 const LocationSetup = ({ onConfigUpdate, onComplete }) => {
   const [selectedPreset, setSelectedPreset] = useState(null);
   const solarIntegrationRef = useRef(null);
+  const [showWeatherPreview, setShowWeatherPreview] = useState(false);
   const [customConfig, setCustomConfig] = useState({
     name: '',
     region: 'us',
@@ -47,6 +50,18 @@ const LocationSetup = ({ onConfigUpdate, onComplete }) => {
       reflectiveHeat: 'minimal'
     }
   });
+
+  // Use weather data hook for location preview
+  const weatherData = useWeatherData(
+    customConfig.lat && customConfig.lon ? customConfig : null,
+    {
+      autoRefresh: false,
+      enableForecast: true,
+      enableHistorical: false,
+      enableGDD: true,
+      enableFrostDates: true
+    }
+  );
 
   const getHeatDaysFromIntensity = (intensity) => 
     getScaleValue(HEAT_INTENSITY_SCALE, intensity) || 100;
@@ -115,6 +130,16 @@ const LocationSetup = ({ onConfigUpdate, onComplete }) => {
     const microclimateEffects = calculateMicroclimateEffects(customConfig.microclimate);
     const adjustedConfig = getMicroclimateAdjustedRecommendations(customConfig, microclimateEffects);
     
+    // Include weather data and risk analysis if available
+    let weatherRiskAnalysis = null;
+    if (weatherData.hasWeatherData) {
+      weatherRiskAnalysis = generateWeatherRiskAnalysis({
+        current: weatherData.current,
+        forecast: weatherData.forecast,
+        gddData: weatherData.gddData
+      }, customConfig);
+    }
+
     const finalConfig = {
       ...customConfig,
       ...adjustedConfig,
@@ -123,7 +148,14 @@ const LocationSetup = ({ onConfigUpdate, onComplete }) => {
       budget: getBudgetFromLevel(customConfig.investmentLevel),
       microclimateEffects,
       solarData: currentSolarData,
-      enhancedRecommendations
+      enhancedRecommendations,
+      weatherData: weatherData.hasWeatherData ? {
+        current: weatherData.current,
+        forecast: weatherData.forecast,
+        gddData: weatherData.gddData,
+        frostDates: weatherData.frostDates
+      } : null,
+      weatherRiskAnalysis
     };
     
     if (onConfigUpdate) {
@@ -160,6 +192,82 @@ const LocationSetup = ({ onConfigUpdate, onComplete }) => {
           customConfig={customConfig}
           onConfigChange={setCustomConfig}
         />
+
+        {customConfig.lat && customConfig.lon && (
+          <div className="setup-section">
+            <div className="weather-preview-header">
+              <h3>🌦️ Location Weather Preview</h3>
+              <button 
+                className="button small"
+                onClick={() => setShowWeatherPreview(!showWeatherPreview)}
+              >
+                {showWeatherPreview ? 'Hide Weather Info' : 'Show Weather Info'}
+              </button>
+            </div>
+            
+            {showWeatherPreview && (
+              <div className="weather-preview">
+                {weatherData.loading && (
+                  <div className="weather-loading">
+                    <span>🌦️ Loading weather data...</span>
+                  </div>
+                )}
+                
+                {weatherData.current && (
+                  <div className="weather-current">
+                    <h4>Current Conditions</h4>
+                    <div className="weather-summary">
+                      <span className="temp">{weatherData.current.temperature.current}°F</span>
+                      <span className="condition">{weatherData.current.condition.description}</span>
+                    </div>
+                  </div>
+                )}
+                
+                {weatherData.forecast.length > 0 && (
+                  <div className="weather-forecast">
+                    <h4>7-Day Outlook</h4>
+                    <div className="forecast-summary">
+                      <div className="forecast-item">
+                        <span className="label">Temperature Range:</span>
+                        <span className="value">
+                          {Math.min(...weatherData.forecast.slice(0, 7).map(d => d.temperature.min))}°F - 
+                          {Math.max(...weatherData.forecast.slice(0, 7).map(d => d.temperature.max))}°F
+                        </span>
+                      </div>
+                      <div className="forecast-item">
+                        <span className="label">Weekly GDD:</span>
+                        <span className="value">
+                          {Math.round(weatherData.forecast.slice(0, 7).reduce((sum, d) => sum + d.gdd, 0))}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {weatherData.frostDates && (
+                  <div className="weather-frost">
+                    <h4>Frost Information</h4>
+                    <div className="frost-summary">
+                      <div className="frost-item">
+                        <span className="label">Growing Season:</span>
+                        <span className="value">{weatherData.frostDates.growingSeasonLength || 'Unknown'} days</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {weatherData.errors.length > 0 && (
+                  <div className="weather-errors">
+                    <h4>⚠️ Weather Data Issues</h4>
+                    {weatherData.errors.slice(0, 2).map((error, index) => (
+                      <div key={index} className="error-message">{error}</div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="setup-actions">
           <button 
