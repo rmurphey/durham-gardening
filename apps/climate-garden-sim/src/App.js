@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './index.css';
 
 const climateScenarios = {
@@ -438,6 +439,40 @@ function App() {
     };
   };
 
+  // Generate histogram data for visualization
+  const generateHistogramData = (values, buckets = 20) => {
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const bucketSize = (max - min) / buckets;
+    
+    const histogram = Array(buckets).fill(0).map((_, i) => ({
+      x: min + i * bucketSize,
+      xEnd: min + (i + 1) * bucketSize,
+      count: 0,
+      label: `${(min + i * bucketSize).toFixed(0)} - ${(min + (i + 1) * bucketSize).toFixed(0)}`
+    }));
+    
+    values.forEach(value => {
+      const bucketIndex = Math.min(Math.floor((value - min) / bucketSize), buckets - 1);
+      histogram[bucketIndex].count++;
+    });
+    
+    return histogram;
+  };
+
+  // Generate weather risk visualization data
+  const generateWeatherRiskData = (results) => {
+    const stressDays = results.map(r => r.weather.stressDays);
+    const freezeEvents = results.map(r => r.weather.freezeEvents);
+    const rainfall = results.map(r => r.weather.annualRainfall);
+    
+    return {
+      stressDays: generateHistogramData(stressDays, 15),
+      freezeEvents: generateHistogramData(freezeEvents, 8),
+      rainfall: generateHistogramData(rainfall, 15)
+    };
+  };
+
   const runSimulation = () => {
     console.log('Running Monte Carlo simulation...', { selectedSummer, selectedWinter, selectedPortfolio });
     setSimulating(true);
@@ -451,8 +486,20 @@ function App() {
       // Generate 12-month garden calendar based on climate scenarios
       const gardenCalendar = generateGardenCalendar(selectedSummer, selectedWinter, selectedPortfolio);
       
+      // Generate visualization data
+      const weatherRiskData = generateWeatherRiskData(monteCarloResults);
+      const returnHistogram = generateHistogramData(monteCarloResults.map(r => r.netReturn), 25);
+      const roiHistogram = generateHistogramData(monteCarloResults.map(r => r.roi), 25);
+      
       console.log('Monte Carlo results:', statistics);
-      setSimulationResults({ ...statistics, gardenCalendar, rawResults: monteCarloResults });
+      setSimulationResults({ 
+        ...statistics, 
+        gardenCalendar, 
+        rawResults: monteCarloResults,
+        weatherRiskData,
+        returnHistogram,
+        roiHistogram
+      });
       setSimulating(false);
     }, 800); // Slightly longer delay for more complex calculation
   };
@@ -681,6 +728,109 @@ function App() {
                   <div className="crop-result-item">
                     <span className="crop-result-label">Perennials:</span>
                     <span className="crop-result-value">{formatCurrency(simulationResults.perennialYield)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="visual-analysis">
+                <h4>📊 Visual Risk Analysis</h4>
+                
+                <div className="chart-container">
+                  <h5>Net Return Distribution</h5>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart data={simulationResults.returnHistogram}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="x" 
+                        tickFormatter={(value) => `$${Math.round(value)}`}
+                        angle={-45}
+                        textAnchor="end"
+                        height={80}
+                      />
+                      <YAxis />
+                      <Tooltip 
+                        formatter={(value) => [value, 'Simulations']}
+                        labelFormatter={(value) => `Return: $${Math.round(value)} - $${Math.round(value + (simulationResults.returnHistogram[1]?.x - simulationResults.returnHistogram[0]?.x || 0))}`}
+                      />
+                      <Bar dataKey="count" fill="#4CAF50" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <p className="chart-description">Distribution of potential net returns from 5,000 simulations</p>
+                </div>
+
+                <div className="chart-container">
+                  <h5>ROI Distribution</h5>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart data={simulationResults.roiHistogram}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="x" 
+                        tickFormatter={(value) => `${Math.round(value)}%`}
+                        angle={-45}
+                        textAnchor="end"
+                        height={80}
+                      />
+                      <YAxis />
+                      <Tooltip 
+                        formatter={(value) => [value, 'Simulations']}
+                        labelFormatter={(value) => `ROI: ${Math.round(value)}% - ${Math.round(value + (simulationResults.roiHistogram[1]?.x - simulationResults.roiHistogram[0]?.x || 0))}%`}
+                      />
+                      <Bar dataKey="count" fill="#2196F3" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <p className="chart-description">Return on investment percentage distribution</p>
+                </div>
+
+                <div className="weather-risk-charts">
+                  <h5>Weather Risk Factors</h5>
+                  <div className="weather-charts-grid">
+                    <div className="weather-chart">
+                      <h6>Heat Stress Days</h6>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <BarChart data={simulationResults.weatherRiskData.stressDays}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="x" tickFormatter={(value) => Math.round(value)} />
+                          <YAxis />
+                          <Tooltip 
+                            formatter={(value) => [value, 'Simulations']}
+                            labelFormatter={(value) => `${Math.round(value)} - ${Math.round(value + 4)} days`}
+                          />
+                          <Bar dataKey="count" fill="#FF5722" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="weather-chart">
+                      <h6>Freeze Events</h6>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <BarChart data={simulationResults.weatherRiskData.freezeEvents}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="x" tickFormatter={(value) => Math.round(value)} />
+                          <YAxis />
+                          <Tooltip 
+                            formatter={(value) => [value, 'Simulations']}
+                            labelFormatter={(value) => `${Math.round(value)} events`}
+                          />
+                          <Bar dataKey="count" fill="#03A9F4" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="weather-chart">
+                      <h6>Annual Rainfall (inches)</h6>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <BarChart data={simulationResults.weatherRiskData.rainfall}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="x" tickFormatter={(value) => Math.round(value)} />
+                          <YAxis />
+                          <Tooltip 
+                            formatter={(value) => [value, 'Simulations']}
+                            labelFormatter={(value) => `${Math.round(value)} - ${Math.round(value + 2)} inches`}
+                          />
+                          <Bar dataKey="count" fill="#009688" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
                 </div>
               </div>

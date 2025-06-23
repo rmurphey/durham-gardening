@@ -511,3 +511,81 @@ body {
   color: #666;
   font-style: italic;
 }
+
+/* Visual Analysis Charts */
+.visual-analysis {
+  margin: 30px 0;
+  padding: 20px;
+  border: 2px solid black;
+  background: #f8f9fa;
+}
+
+.visual-analysis h4 {
+  margin-top: 0;
+  color: black;
+  border-bottom: 2px solid black;
+  padding-bottom: 10px;
+}
+
+.chart-container {
+  margin: 25px 0;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.chart-container h5 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+.chart-description {
+  margin: 10px 0 0 0;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  font-style: italic;
+}
+
+.weather-risk-charts {
+  margin: 25px 0;
+}
+
+.weather-risk-charts h5 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+.weather-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.weather-chart {
+  padding: 15px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.weather-chart h6 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 16px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .weather-charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-container {
+    padding: 15px;
+  }
+}
