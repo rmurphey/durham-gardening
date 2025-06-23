@@ -1,14 +1,17 @@
 # Climate Garden Simulation
 
-A React app for testing climate scenarios and crop hedging strategies for your heat-adapted Durham garden.
+A comprehensive React application for climate-aware garden planning with Monte Carlo simulation, dynamic calendar generation, and global crop database integration.
 
-## Features
+## Current Features
 
-- **Real Weather Data**: Live NOAA forecasts for Durham, NC with AI recommendations
-- **Climate Betting**: Choose from 4 summer and 4 winter scenarios
-- **Portfolio Strategies**: Conservative, Aggressive, or Hedge approaches
-- **Economic Simulation**: Real investment tracking and ROI calculations
-- **Interactive Results**: See how different crop allocations perform
+- **Global Climate Database**: 15+ crop varieties with climate adaptations and multi-language support
+- **Dynamic Location Support**: Multi-region presets (Durham NC, Phoenix AZ, Minneapolis MN, Seattle WA, Miami FL)
+- **Advanced Portfolio Management**: Three adaptive strategies plus full granular customization
+- **Monte Carlo Simulation**: Professional statistical modeling using jStat library (5,000 iterations)
+- **12-Month Garden Calendar**: Dynamically generated planting, harvesting, and care schedules
+- **Climate Timeline Visualization**: Interactive bars showing scenario overlap across growing seasons
+- **Investment Tracking**: Detailed breakdown with customizable budget allocations
+- **Real-time Validation**: Smart percentage formatting and allocation validation
 
 ## Getting Started
 
@@ -26,37 +29,149 @@ A React app for testing climate scenarios and crop hedging strategies for your h
 
 ## How to Use
 
-1. **Review Weather Intelligence**: Check 14-day NOAA forecast and AI recommendations
-2. **Select Climate Scenarios**: Click on summer and winter climate predictions
-3. **Choose Portfolio Strategy**: Pick your crop allocation approach
-4. **Run Simulation**: Click "Run Climate Simulation" to see results
-5. **Analyze Results**: Review ROI, crop performance, and economic outcomes
+1. **Location Setup**: Choose from preset locations or configure custom climate parameters
+2. **Climate Scenarios**: Select from 4 summer and 4 winter climate predictions with visual timeline
+3. **Portfolio Strategy**: Pick from three adaptive strategies or create custom allocations
+4. **Investment Planning**: Adjust budget across 8 categories (seeds, irrigation, tools, etc.)
+5. **Simulation Analysis**: Run Monte Carlo simulation to see probabilistic outcomes
+6. **Garden Calendar**: Review month-by-month planting and harvesting schedule
+7. **Risk Assessment**: Analyze success rates, worst-case scenarios, and confidence intervals
 
-## Scenarios
+## Climate Scenarios
 
-### Summer Climate Options
-- **Mild Summer** (20%): 85-95°F, traditional crops might survive
-- **Normal Heat** (30%): 95-100°F, heat-adapted strategy works
-- **Extreme Heat** (40%): 100-107°F, current planning scenario
-- **Catastrophic** (10%): 107°F+, only specialists survive
+### Summer Options (with probability weights)
+- **Mild Summer** (20%): 85-95°F, Jun-Aug, traditional crops survive
+- **Normal Heat** (30%): 95-100°F, Jun-Sep, heat-adapted strategy works  
+- **Extreme Heat** (40%): 100-107°F, May-Sep, current planning scenario
+- **Catastrophic** (10%): 107°F+, Apr-Oct, only specialists survive
 
-### Portfolio Strategies
-- **Conservative**: 60% success rate, balanced approach
-- **Aggressive**: High upside potential, higher risk
-- **Hedge**: 70% success rate, diversified risk management
+### Winter Options (with probability weights)
+- **Traditional Winter** (15%): 20-30°F lows, Dec-Feb, need cold protection
+- **Mild Winter** (35%): 30-40°F lows, Dec-Jan, extended cool season
+- **Warm Winter** (40%): 40-50°F lows, Dec-Jan, current planning
+- **No Winter** (10%): 50°F+ minimum, year-round growing
+
+## Portfolio Strategies
+
+### Preset Strategies (Climate-Adaptive)
+- **Conservative Portfolio**: 60% success rate, adapted to local conditions
+- **Aggressive Portfolio**: 80% upside potential, climate-optimized allocations
+- **Hedge Portfolio**: 70% success rate, climate-balanced approach
+
+### Custom Portfolio Builder
+- **Granular Control**: Adjust four crop categories with interactive sliders
+- **Real-time Validation**: Ensures allocations total 100% with visual feedback
+- **Crop Categories**:
+  - Heat-Tolerant Crops: Okra, hot peppers, amaranth, sweet potatoes
+  - Cool-Season Crops: Kale, cabbage, lettuce, spinach, carrots
+  - Perennial Herbs: Rosemary, thyme, oregano, mint
+  - Experimental: New varieties and climate adaptation trials
 
 ## Economic Model
 
-Based on real costs:
-- Seeds: $75-105 per season
-- Infrastructure: $60-110 (drip irrigation)
-- Market values: Herbs $15/oz, Peppers $4-6/lb, Greens $2-4/lb
+### Investment Categories (Fully Customizable)
+- **Seeds**: $45-120 per season (variety-dependent)
+- **Infrastructure**: $65-180 (drip irrigation, raised beds, trellises)  
+- **Tools**: $25-75 (hand tools, wheelbarrow, pruners)
+- **Soil**: $20-60 (compost, amendments, mulch)
+- **Containers**: $35-100 (pots, grow bags, planters)
+- **Irrigation**: $45-150 (timers, hoses, emitters)
+- **Protection**: $15-45 (row covers, shade cloth, cages)
+- **Fertilizer**: $20-50 (organic feeds, amendments)
 
-The simulation includes randomness (±20%) to reflect real-world variability.
+### Market Values (Regional)
+- **Heat Crops**: $1.20/lb premium for heat-adapted varieties
+- **Cool Crops**: $0.80/lb baseline for traditional varieties  
+- **Herbs**: $2.50/lb premium for fresh perennial herbs
+- **Regional Multipliers**: 1.0-1.3x based on location (higher in urban areas)
 
-## Weather Data Sources
+### Statistical Modeling
+- **Monte Carlo Simulation**: 5,000 iterations using proper statistical distributions
+- **Weather Events**: Poisson distribution for heat stress and freeze probability
+- **Harvest Variability**: Normal distribution reflecting real-world yield ranges
+- **Risk Metrics**: Success rates, percentile ranges, worst-case scenarios
 
-- **NOAA National Weather Service**: 14-day forecasts for Durham, NC (35.994°N, 78.899°W)
-- **Climate Prediction Center**: Seasonal outlook data when available
-- **Real-time Updates**: Fresh forecast data loaded on each session
-- **AI Recommendations**: Algorithm analyzes forecast trends to suggest optimal climate scenarios
+## Global Crop Database
+
+### Heat-Tolerant Varieties
+- **Okra** (Zones 6-11): Excellent drought/heat tolerance, 4-month harvest
+- **Hot Peppers** (Zones 5-11): Excellent heat tolerance, 5-month harvest  
+- **Amaranth Greens** (Zones 4-11): Excellent drought/heat/humidity tolerance
+- **Sweet Potato** (Zones 6-11): Excellent drought/heat tolerance
+- **Malabar Spinach** (Zones 7-11): Excellent heat/humidity tolerance
+
+### Cool-Season Varieties  
+- **Kale** (Zones 2-9): Poor heat tolerance, 4-month harvest
+- **Cabbage** (Zones 1-9): Poor heat tolerance, 2-month harvest
+- **Lettuce** (Zones 2-9): Poor heat/drought tolerance, 2-month harvest
+- **Spinach** (Zones 2-9): Poor heat tolerance, 2-month harvest
+- **Carrots** (Zones 3-10): Fair heat tolerance, 1-month harvest
+
+### Perennial Herbs
+- **Rosemary** (Zones 6-10): Excellent drought/heat tolerance, year-round harvest
+- **Thyme** (Zones 4-9): Excellent drought tolerance, year-round harvest
+- **Oregano** (Zones 4-10): Good drought/heat tolerance, year-round harvest
+- **Mint** (Zones 3-9): Poor drought tolerance, excellent humidity tolerance
+
+## Technology Stack
+
+- **Frontend**: React 18 with hooks-based state management
+- **Statistics**: jStat library for Monte Carlo simulation
+- **Charting**: Recharts for data visualization
+- **Styling**: CSS Grid and Flexbox for responsive design
+- **Storage**: localStorage for configuration persistence
+- **Build**: Create React App with fast refresh
+
+## Project Architecture
+
+### Key Files
+- `src/App.js` - Main application component with simulation logic
+- `src/config.js` - Consolidated configuration, crop database, and helper functions
+- `src/index.css` - Complete styling including responsive design
+- `restart.sh` - Development utility for clean server restarts
+
+### Design Principles
+- **Decision-Focused Interface**: Only show data that impacts decisions
+- **Functional Programming**: Avoid mutation, prefer functional patterns
+- **Performance Optimized**: Debounced simulations, efficient state management
+- **Mobile Responsive**: Works on desktop, tablet, and mobile devices
+
+## Available Scripts
+
+- `npm start` - Start development server with fast refresh
+- `npm run build` - Create production build  
+- `npm test` - Run test suite
+- `./restart.sh` - Kill existing server and start fresh (development utility)
+
+## Current Status
+
+This application represents a fully functional climate-aware garden planning system with:
+
+✅ **Complete Feature Set**: All core functionality implemented and tested  
+✅ **Professional Statistics**: Monte Carlo simulation with proper statistical modeling  
+✅ **Global Adaptability**: Multi-region support with localized crop recommendations  
+✅ **User Customization**: Granular control over all planning parameters  
+✅ **Visual Analytics**: Interactive charts and timeline visualizations  
+✅ **Persistent Storage**: Configuration saved between sessions  
+✅ **Responsive Design**: Works across all device sizes  
+
+### Future Enhancements
+- Integration with weather APIs for live data
+- Additional crop varieties and regional adaptations
+- Export functionality for garden calendars
+- Social sharing of simulation results
+- Advanced risk modeling for climate change scenarios
+
+## Contributing
+
+This project follows functional programming principles and emphasizes decision-focused interfaces. When adding features:
+
+1. Ensure changes don't decrease maintainability or readability
+2. Use the TodoWrite tool for planning complex changes
+3. Run linting and formatting after code changes
+4. Focus on data that impacts user decisions
+5. Maintain the existing responsive design patterns
+
+## License
+
+This project is for educational and personal garden planning use.
