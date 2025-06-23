@@ -31,6 +31,7 @@ When editing or adding content:
 - Prepare a commit with every substantial change
 - Every commit that includes functional files should include associated tests
 - Aim to minimize complex if/else statements by using more elegant code structures
+- The database is the source of truth. It should always build. Automation should prevent commits if it doesn't build. It should always have the most recent data. There is a simple npm script to update the database
 
 ## Garden Management Focus
 

@@ -14,12 +14,13 @@
     "start": "FAST_REFRESH=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:db": "jest scripts/__tests__/database-manager.test.js",
     "eject": "react-scripts eject",
-    "db:build": "cd database && ./build_database.sh",
-    "db:test": "cd database && ./test_database.sh",
-    "db:verify": "sqlite3 database/plant_varieties.db 'PRAGMA integrity_check;' && echo 'Database verified successfully'",
-    "db:update": "npm run db:build && npm run db:test",
-    "db:status": "sqlite3 database/plant_varieties.db 'SELECT * FROM data_freshness;'",
+    "db:build": "node scripts/database.js build",
+    "db:test": "node scripts/database.js test",
+    "db:verify": "node scripts/database.js verify",
+    "db:update": "node scripts/database.js update",
+    "db:status": "node scripts/database.js status",
     "precommit": "npm run db:verify"
   },
   "eslintConfig": {
@@ -44,6 +45,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
-    "msw": "^2.10.2"
+    "msw": "^2.10.2",
+    "sqlite3": "^5.1.7"
   }
 }

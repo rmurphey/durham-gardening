@@ -5,7 +5,7 @@ repos:
         name: Database Integrity Check
         entry: npm run db:verify
         language: system
-        files: ^database/.*\.(sql|sh)$
+        files: ^database/.*\.sql$
         stages: [commit]
         
       - id: database-rebuild
