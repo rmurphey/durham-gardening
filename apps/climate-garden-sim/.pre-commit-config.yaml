@@ -1,0 +1,17 @@
+repos:
+  - repo: local
+    hooks:
+      - id: database-integrity
+        name: Database Integrity Check
+        entry: npm run db:verify
+        language: system
+        files: ^database/.*\.(sql|sh)$
+        stages: [commit]
+        
+      - id: database-rebuild
+        name: Database Rebuild Check
+        entry: npm run db:build
+        language: system
+        files: ^database/.*\.sql$
+        stages: [commit]
+        pass_filenames: false

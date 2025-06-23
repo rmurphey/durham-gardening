@@ -50,6 +50,15 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Apply data updates for current information
+echo "Applying current data updates..."
+sqlite3 "$DB_DIR/$DB_NAME" < update_data.sql
+
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to apply data updates"
+    exit 1
+fi
+
 # Verify database integrity
 echo "Verifying database integrity..."
 sqlite3 "$DB_DIR/$DB_NAME" "PRAGMA integrity_check;"
@@ -115,6 +124,17 @@ SELECT pmd.common_name,
 FROM plant_market_data pmd 
 WHERE pmd.category_name = 'Perennial Herbs' AND pmd.region_code = 'US'
 ORDER BY pmd.price_per_lb DESC;"
+
+echo ""
+# Run comprehensive tests
+echo ""
+echo "Running database tests..."
+./test_database.sh
+
+if [ $? -ne 0 ]; then
+    echo "Error: Database tests failed"
+    exit 1
+fi
 
 echo ""
 echo "Database successfully created at: $DB_DIR/$DB_NAME"

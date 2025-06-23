@@ -179,22 +179,70 @@ The database focuses on **practical, climate-resilient varieties** rather than e
 - **Companion Planting Research** from agricultural universities
 - **Climate Adaptation Studies** from IPCC and regional climate assessments
 
+## Database Automation & Quality Assurance
+
+### NPM Scripts for Database Management
+```bash
+npm run db:build      # Build database from source files
+npm run db:test       # Run comprehensive integrity tests
+npm run db:verify     # Quick integrity check
+npm run db:update     # Full rebuild and test cycle
+npm run db:status     # Check data freshness
+```
+
+### Automated Quality Checks
+- **Pre-commit hooks**: Prevent commits if database doesn't build
+- **GitHub Actions**: CI/CD pipeline for database validation
+- **Integrity testing**: Comprehensive validation of all data
+- **Data freshness tracking**: Monitor when data was last updated
+
+### Database as Source of Truth
+The database is designed to always build successfully:
+- **Automated testing** prevents broken commits
+- **Data validation** ensures completeness and accuracy
+- **Version tracking** maintains update history
+- **Reproducible builds** from source SQL files
+
 ## Using the Database
+
+### Development Workflow
+```bash
+# Make changes to SQL files
+vim database/populate_data.sql
+
+# Rebuild and test
+npm run db:update
+
+# Check status
+npm run db:status
+
+# Commit only if tests pass
+git add . && git commit -m "Update plant data"
+```
 
 ### Interactive Exploration
 ```bash
 sqlite3 plant_varieties.db
 ```
 
-### Common Views Available
+### Available Views
 - `plant_details` - Complete plant information with names
 - `regional_planting_calendar` - Planting schedules by region
 - `plant_market_data` - Economic data with currency formatting
+- `data_freshness` - Track when data was last updated
+- `data_quality` - Monitor data completeness metrics
 
 ### Integration Options
-- Direct SQLite integration for web applications
-- CSV export for spreadsheet analysis
-- JSON export for API development
-- SQL dumps for database migration
+- **Direct SQLite**: Web applications with sqlite3 library
+- **API Integration**: RESTful services with database backend
+- **Data Export**: CSV/JSON for analysis and reporting
+- **CI/CD Pipeline**: Automated testing and deployment
 
-This database provides a solid foundation for climate-aware garden planning applications with comprehensive, scientifically-backed plant data optimized for changing climate conditions.
+### Quality Assurance Features
+- **Comprehensive Testing**: 12+ validation checks per build
+- **Data Integrity**: Foreign key constraints and proper normalization
+- **Completeness Validation**: Ensures all plants have required data
+- **Performance Optimization**: Indexed queries and optimized schema
+- **Version Control**: Full audit trail of data changes
+
+This database provides a production-ready foundation for climate-aware garden planning applications with automated quality assurance and comprehensive data validation.

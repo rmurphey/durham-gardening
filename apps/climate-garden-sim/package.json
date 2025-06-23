@@ -14,7 +14,13 @@
     "start": "FAST_REFRESH=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "db:build": "cd database && ./build_database.sh",
+    "db:test": "cd database && ./test_database.sh",
+    "db:verify": "sqlite3 database/plant_varieties.db 'PRAGMA integrity_check;' && echo 'Database verified successfully'",
+    "db:update": "npm run db:build && npm run db:test",
+    "db:status": "sqlite3 database/plant_varieties.db 'SELECT * FROM data_freshness;'",
+    "precommit": "npm run db:verify"
   },
   "eslintConfig": {
     "extends": [
