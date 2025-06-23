@@ -2760,7 +2760,7 @@ function App() {
             );
           })()}
           
-          {simulationResults.gardenCalendar && (
+          {simulationResults?.gardenCalendar && (
             <div className="garden-calendar">
               <h4>📅 12-Month Garden Calendar</h4>
               <p className="calendar-subtitle">Optimized for {climateScenarios.summer.find(s => s.id === selectedSummer)?.name} + {climateScenarios.winter.find(s => s.id === selectedWinter)?.name}</p>
