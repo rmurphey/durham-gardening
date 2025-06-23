@@ -348,7 +348,18 @@ function App() {
       marketMultiplier: 1.0,
       gardenSize: 2, // 1-5 scale (small to large)
       investmentLevel: 3, // 1-5 scale (minimal to premium)
-      microclimate: { ...DEFAULT_LOCATION_CONFIG.microclimate }
+      microclimate: {
+        slope: 'flat',
+        aspect: 'south',
+        windExposure: 'moderate',
+        soilDrainage: 'moderate',
+        buildingHeat: 'minimal',
+        canopyShade: 'partial',
+        elevation: 'average',
+        waterAccess: 'municipal',
+        frostPocket: false,
+        reflectiveHeat: 'minimal'
+      }
     });
 
     const getHeatDaysFromIntensity = (intensity) => 
@@ -415,7 +426,19 @@ function App() {
           heatIntensity,
           winterSeverity,
           gardenSize: 2,
-          investmentLevel: 3
+          investmentLevel: 3,
+          microclimate: {
+            slope: 'flat',
+            aspect: 'south',
+            windExposure: 'moderate',
+            soilDrainage: 'moderate',
+            buildingHeat: 'minimal',
+            canopyShade: 'partial',
+            elevation: 'average',
+            waterAccess: 'municipal',
+            frostPocket: false,
+            reflectiveHeat: 'minimal'
+          }
         });
         console.log('Config updated:', { ...preset, heatIntensity, winterSeverity });
       } catch (error) {
