@@ -1,103 +1,104 @@
-# Heat-Adapted Complete Seed Order - True Leaf Market
-*Ready to Order - July 2025*
+# Heat-Adapted Fall/Winter Seed Order - True Leaf Market
+*July 2025 Order for Fall Planting*
 
-## Order Strategy
-**Focus**: Climate-adapted varieties for hot summers + warm winters  
-**Peak Season**: October-April (7 months high productivity)  
-**Summer Strategy**: Heat-specialized survival crops only  
+## Order Strategy - Timing Adjusted
+**Reality Check**: Too late for summer 2025 crops (needed March-April establishment)  
+**This Order Focus**: Fall/winter varieties for September 2025 - April 2026 planting  
+**Next Summer Order**: February 2026 for March 2026 heat-crop establishment  
 **Target**: $75+ for free shipping  
-**Timing**: Order now, store seeds until September planting
+**Timing**: Order July 2025, plant September-February 2026
 
 ---
 
-## Phase 1: Heat-Specialized Summer Survivors ($35-45)
+## Phase 1: Extended Cool-Season Powerhouses ($30-40)
 
-### **Essential Summer Crops** (Will thrive in 100°F+):
-1. **Okra - Clemson Spineless** (2 packets) - $6-8
-   - Thrives in extreme heat, continuous harvest June-September
-   - $4-6/lb grocery value vs. $3-4/packet
+### **Peak Season Producers** (Sept 2025 - April 2026):
+1. **Slow-Bolt Lettuce - Red Sails** (2 packets) - $6-8
+   - Heat-resistant for extended season, succession plantings
 
-2. **Hot Peppers - Cayenne** (1 packet) - $3-4
-   - Heat-adapted, high grocery value ($6+/lb)
-   
-3. **Hot Peppers - Jalapeño** (1 packet) - $3-4
-   - Versatile, expensive to buy fresh
-   
-4. **Eggplant - Black Beauty** (1 packet) - $3-4
-   - Heat-tolerant, $3-4/lb grocery value
-
-5. **Heat-Tolerant Basil - Genovese** (2 packets) - $6-8
-   - $3/oz grocery value, summer survivor
-   
-6. **Heat-Tolerant Basil - African Blue** (1 packet) - $3-4
-   - Perennial in warm climates, continuous harvest
-
-7. **Cherry Tomatoes - Heat-Tolerant Variety** (1 packet) - $3-4
-   - Manageable size for shade cloth protection
-
-**Subtotal**: ~$35-45
-
----
-
-## Phase 2: Extended Cool-Season Powerhouses ($25-35)
-
-### **Peak Season Producers** (Oct-April focus):
-8. **Slow-Bolt Lettuce - Red Sails** (1 packet) - $3-4
-   - Heat-resistant for extended season
-
-9. **Slow-Bolt Lettuce - Buttercrunch** (1 packet) - $3-4
+2. **Slow-Bolt Lettuce - Buttercrunch** (1 packet) - $3-4
    - Premium variety, extended harvest
 
-10. **Cold-Hardy Kale - Winterbor** (1 packet) - $3-4
-    - Year-round production in warm winters
+3. **Cold-Hardy Kale - Winterbor** (2 packets) - $6-8
+   - Year-round production in warm winters, cut-and-come-again
 
-11. **Asian Greens - Tatsoi** (1 packet) - $3-4
-    - Heat-resistant, multiple harvests
+4. **Asian Greens - Tatsoi** (1 packet) - $3-4
+   - Heat-resistant, multiple harvests
 
-12. **Asian Greens - Mizuna** (1 packet) - $3-4
-    - Cut-and-come-again, extended season
+5. **Asian Greens - Mizuna** (1 packet) - $3-4
+   - Cut-and-come-again, extended season
 
-13. **Succession Radishes - Cherry Belle** (1 packet) - $3-4
-    - Quick turnover for peak season
+6. **Succession Radishes - Cherry Belle** (2 packets) - $6-8
+   - Quick turnover for peak season, multiple plantings
 
-14. **Succession Radishes - French Breakfast** (1 packet) - $3-4
-    - Premium variety, continuous planting
+7. **Arugula - Rocket** (1 packet) - $3-4
+   - High-value green, thrives in cool weather
+
+**Subtotal**: ~$30-40
+
+---
+
+## Phase 2: Root Vegetables & Storage Crops ($25-35)
+
+### **Fall/Winter Harvest & Storage**:
+8. **Carrots - Kuroda Long** (2 packets) - $6-8
+   - Storage variety, fall/winter harvest, succession plantings
+
+9. **Carrots - Scarlet Nantes** (1 packet) - $3-4
+   - Premium eating variety
+
+10. **Parsnips - Hollow Crown** (1 packet) - $3-4
+    - Long storage, expensive to buy, winter harvest
+
+11. **Turnips - Purple Top White Globe** (1 packet) - $3-4
+    - Dual purpose (roots + greens), fall harvest
+
+12. **Beets - Detroit Dark Red** (1 packet) - $3-4
+    - Cool weather crop, greens + roots
+
+13. **Winter Radishes - Daikon** (1 packet) - $3-4
+    - Storage radish, unique variety
 
 **Subtotal**: ~$25-35
 
 ---
 
-## Phase 3: High-Value Perennials & Storage Crops ($15-25)
+## Phase 3: Cool-Season Herbs & Succession Crops ($20-30)
 
-### **Long-term Investments**:
-15. **Carrots - Kuroda Long** (1 packet) - $3-4
-    - Storage variety, fall/winter harvest
+### **Fall Establishment for Next Year**:
+14. **Cilantro - Slow Bolt** (2 packets) - $6-8
+    - Cool weather herb, succession plantings
 
-16. **Carrots - Scarlet Nantes** (1 packet) - $3-4
-    - Premium eating variety
+15. **Dill - Bouquet** (1 packet) - $3-4
+    - Cool season, high grocery value
 
-17. **Parsnips - Hollow Crown** (1 packet) - $3-4
-    - Long storage, expensive to buy
+16. **Parsley - Flat Leaf** (1 packet) - $3-4
+    - Biennial, overwinter in warm climate
 
-18. **Mediterranean Oregano** (1 packet) - $3-4
-    - Perennial, heat-adapted, high grocery value
+17. **Spinach - Winter Giant** (2 packets) - $6-8
+    - Cold-hardy, warm winter production
 
-19. **Thyme - French** (1 packet) - $3-4
-    - Perennial, heat-tolerant, $15+/oz grocery value
+18. **Swiss Chard - Rainbow** (1 packet) - $3-4
+    - Cut-and-come-again, colorful
 
-**Subtotal**: ~$15-25
+**Subtotal**: ~$20-30
 
 ---
 
 ## Total Order Summary
 
 **Category Totals**:
-- Heat-Specialized Summer: $35-45
-- Extended Cool-Season: $25-35  
-- High-Value Perennials: $15-25
+- Extended Cool-Season Greens: $30-40
+- Root Vegetables & Storage: $25-35  
+- Cool-Season Herbs & Succession: $20-30
 - **Grand Total**: $75-105
 
 **Free Shipping**: ✅ (Over $75)
+
+## Summer 2026 Reminder
+**Order separately in February 2026 for March planting**:
+- Heat-adapted summer crops (okra, peppers, eggplant, heat-tolerant basil)
+- These need March-April establishment before extreme heat
 
 ---
 
@@ -109,13 +110,13 @@
 - [ ] Have shipping/payment info ready
 
 ### **Step 2: Add All Items to Cart**
-Add exactly as listed above (19 total items):
-- [ ] Heat-Specialized Summer (7 items)
-- [ ] Extended Cool-Season (7 items)  
-- [ ] High-Value Perennials (5 items)
+Add exactly as listed above (18 total items):
+- [ ] Extended Cool-Season Greens (7 items)
+- [ ] Root Vegetables & Storage (6 items)  
+- [ ] Cool-Season Herbs & Succession (5 items)
 
 ### **Step 3: Cart Review**
-- [ ] Verify all 19 items in cart
+- [ ] Verify all 18 items in cart
 - [ ] Check total is $75+ for free shipping
 - [ ] Apply promo code: **POLLEN25** (free wildflower mix)
 
