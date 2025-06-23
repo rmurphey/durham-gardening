@@ -4,6 +4,7 @@ A React app for testing climate scenarios and crop hedging strategies for your h
 
 ## Features
 
+- **Real Weather Data**: Live NOAA forecasts for Durham, NC with AI recommendations
 - **Climate Betting**: Choose from 4 summer and 4 winter scenarios
 - **Portfolio Strategies**: Conservative, Aggressive, or Hedge approaches
 - **Economic Simulation**: Real investment tracking and ROI calculations
@@ -25,10 +26,11 @@ A React app for testing climate scenarios and crop hedging strategies for your h
 
 ## How to Use
 
-1. **Select Climate Scenarios**: Click on summer and winter climate predictions
-2. **Choose Portfolio Strategy**: Pick your crop allocation approach
-3. **Run Simulation**: Click "Run Climate Simulation" to see results
-4. **Analyze Results**: Review ROI, crop performance, and economic outcomes
+1. **Review Weather Intelligence**: Check 14-day NOAA forecast and AI recommendations
+2. **Select Climate Scenarios**: Click on summer and winter climate predictions
+3. **Choose Portfolio Strategy**: Pick your crop allocation approach
+4. **Run Simulation**: Click "Run Climate Simulation" to see results
+5. **Analyze Results**: Review ROI, crop performance, and economic outcomes
 
 ## Scenarios
 
@@ -51,3 +53,10 @@ Based on real costs:
 - Market values: Herbs $15/oz, Peppers $4-6/lb, Greens $2-4/lb
 
 The simulation includes randomness (±20%) to reflect real-world variability.
+
+## Weather Data Sources
+
+- **NOAA National Weather Service**: 14-day forecasts for Durham, NC (35.994°N, 78.899°W)
+- **Climate Prediction Center**: Seasonal outlook data when available
+- **Real-time Updates**: Fresh forecast data loaded on each session
+- **AI Recommendations**: Algorithm analyzes forecast trends to suggest optimal climate scenarios

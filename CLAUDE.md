@@ -77,3 +77,7 @@ This project is for a garden in Durham, North Carolina. In addition to a variety
 - I'm happy to invest in things like drip irrigation that have perennial value and reduce ongoing effort/costs.
 - Avoid short-term/low-value spending and heroic measures to save failing plants.
 - Focus on infrastructure that builds a low-maintenance, high-productivity system over time.
+
+## Currency and Financial Considerations
+
+- The UI should show currency to appropriate decimal precision depending on the currency. For example, USD should have two-digit decimal precision, whereas JPY generally requires zero decimal precision for common transactions.
