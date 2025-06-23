@@ -1,225 +1,81 @@
 # Durham, NC Garden Calendar - Zone 7
+*Heat-Adapted Garden System*
 
-## June 2025
+## New Climate Reality - Extended Heat + Warmer Winters
+**Current Status (June 2025)**: Record heat summers (100-107°F) + warmer winters becoming standard  
+**New Growing Strategy**: **Year-round production with seasonal intensity shifts**  
+**Peak Season**: **October through April** (mild winter = extended harvest)  
+**Summer Strategy**: **Heat-specialized crops + infrastructure focus**  
+**Winter Strategy**: **Extended cool-season production without traditional dormancy**
 
-### 3×15 Bed (45 sq ft)
-- **Plant**: Blue Lake Beans (1st succession) - 15 sq ft back section
-- **Plant**: Kuroda Long Carrots (1st succession) - 8 sq ft between/around beans
-- **Plant**: Pak Choi (White Stem & Shanghai) - 8 sq ft front section, 6 plants each variety
-- **Reserve**: 14 sq ft for July succession plantings
-- **Care**: Deep watering, mulch new plantings, side-dress established plants
-
-### 4×8 Bed (32 sq ft)
-- **Plant**: Red Sails Lettuce (1st succession) - 6 sq ft front section, 8 plants
-- **Plant**: Scarlet Red Carrots - 6 sq ft middle section, 8 linear feet
-- **Plant**: Okra - 12 sq ft back section, 3 plants with 12-18" spacing
-- **Reserve**: 8 sq ft for succession lettuce plantings
-- **Care**: Afternoon shade management for lettuce, stake okra if needed
-
-### 4×5 Bed (20 sq ft)
-- **Plant**: Red Sails Lettuce - 6 sq ft in partial shade area
-- **Reserve**: 14 sq ft for July parsnip planting (long-season commitment)
-- **Care**: Monitor soil moisture, prepare reserved area for parsnips
-
-### Containers (15-20 sq ft)
-- **Plant**: Alaska Mix Nasturtiums - 2 containers, 4 sq ft
-- **Plant**: Empress of India Nasturtiums - 2 containers, 4 sq ft
-- **Position**: Morning sun locations, move as needed for optimal light
-- **Care**: Daily watering checks, deadhead flowers to encourage blooms
-
-### Garden-Wide Care
-- **Sprinkler system**: Set to every other day (M/W/F/Sun), 6 AM, 25 minutes per zone
-- Hand-check containers daily for extra watering needs
-- Mulch around newly planted seedlings
-- Begin weekly succession sowings of quick crops
-
-## July 2025
-
-### 3×15 Bed (45 sq ft)
-- **Plant**: Blue Lake Beans (2nd succession) - replant same 15 sq ft area after 1st harvest
-- **Plant**: Kuroda Long Carrots (2nd succession) - new 6 sq ft area between beans
-- **Harvest**: Begin harvesting 1st succession beans (50-60 days from June planting)
-- **Harvest**: Pak choi as ready (45-50 days), succession plant in same area
-- **Care**: Side-dress beans with compost, maintain consistent watering
-
-### 4×8 Bed (32 sq ft)
-- **Plant**: Red Sails Lettuce (2nd succession) - replant front 6 sq ft after harvest
-- **Harvest**: 1st succession lettuce, continue carrot thinning
-- **Monitor**: Okra growth (will accelerate in heat), begin staking if needed
-- **Care**: Provide afternoon shade for lettuce during heat waves
-
-### 4×5 Bed (20 sq ft)
-- **Plant**: Parsnips (Hollow Crown & Harris Model) - use reserved 14 sq ft
-- **Harvest**: Red Sails lettuce from June planting
-- **Care**: Keep parsnip area consistently moist for germination (14-21 days)
-- **Long-term**: Parsnips will occupy this space through December
-
-### Containers & Herbs
-- **Plant**: Winter Chervil - front yard morning sun areas or containers
-- **Care**: Nasturtiums - deadhead regularly, move containers for optimal morning sun
-- **Harvest**: Begin using nasturtium flowers and leaves in salads
-
-### Garden-Wide Care
-- **Sprinkler system**: Continue every other day schedule, extend to 25+ minutes if heat wave
-- Check containers twice daily in extreme heat
-- Side-dress heavy feeders (beans, pak choi)
-- Begin planning fall crop areas
-
-## August 2025
-
-### 3×15 Bed (45 sq ft)
-- **Plant**: Blue Lake Beans (3rd/final succession) - same 15 sq ft area
-- **Plant**: Winter Giant Spinach - 8 sq ft area where pak choi was harvested
-- **Harvest**: 2nd succession beans, continue carrot succession harvests
-- **Prepare**: Clear finished areas for potential cover crop planting in September
-
-### 4×8 Bed (32 sq ft)
-- **Plant**: Purple Top Turnips - 6 sq ft where lettuce was harvested
-- **Plant**: Mesclun Mix - 6 sq ft interplanted with turnips or adjacent area
-- **Harvest**: Continue okra daily harvesting (peak production period)
-- **Harvest**: Scarlet Red carrots as they size up
-
-### 4×5 Bed (20 sq ft)
-- **Monitor**: Parsnips growing slowly (normal - most growth happens in fall)
-- **Plant**: Small succession of lettuce if space allows around parsnips
-- **Care**: Keep parsnip area weeded and consistently watered
-
-### Containers & Front Yard
-- **Refresh**: Nasturtiums (2nd succession) for fall bloom period
-- **Harvest**: Winter chervil begins producing
-- **Prepare**: Front yard morning sun spots for cover crop planting
-
-### Garden-Wide Care
-- **Sprinkler system**: Continue summer schedule, monitor for late summer dry spells
-- Test soil and amend as needed for fall plantings
-- Clear spent summer plants to make room for fall transitions
-- Begin planning cover crop areas
-
-## September 2025
-
-### 3×15 Bed (45 sq ft)
-- **Harvest**: Final bean succession, clear spent plants
-- **Plant**: Garden Cover Crop Mix - 15-20 sq ft in cleared bean area (1 oz seed)
-- **Continue**: Winter Giant Spinach growing, thin and harvest baby leaves
-- **Maintain**: Carrot succession areas still producing
-
-### 4×8 Bed (32 sq ft)
-- **Harvest**: Final okra production, clear plants when production slows
-- **Plant**: Garden Cover Crop Mix - 10-15 sq ft in cleared areas (0.75 oz seed)
-- **Continue**: Turnips and mesclun mix establishing, begin light harvesting
-- **Maintain**: Carrots continuing to size up
-
-### 4×5 Bed (20 sq ft)
-- **Monitor**: Parsnips entering main growth period as weather cools
-- **Plant**: No-Till Pollinator Mix - 5-6 sq ft around parsnips (0.25 oz seed)
-- **Care**: Keep parsnip area well-weeded, they dislike competition
-
-### Front Yard & Containers
-- **Plant**: No-Till Pollinator Mix - morning sun spots between ornamentals (0.5 oz seed)
-- **Harvest**: Nasturtium flowers and leaves, chervil for fall cooking
-- **Prepare**: Plan winter protection for tender container plants
-
-### Garden-Wide Care
-- **Sprinkler system**: Reduce to 3x/week (M/W/Sat), 6:30 AM, 20 minutes per zone
-- Begin fall cleanup of finished summer crops
-- Plan winter garden protection (row covers, cold frames)
-- Order garlic bulbs for October planting
-
-## October 2025
-
-### Planting
-- **Garlic cloves** - Plant for next summer harvest
-- **Cover crops** (if not planted in September):
-  - **Garden Cover Crop Mix** - can still plant in main beds if areas become available
-  - **No-Till Pollinator Mix** - final opportunity for front yard spots
-
-### Garden Care
-- Harvest root vegetables (parsnips, carrots, turnips)
-- Continue harvesting winter greens
-- Mulch tender perennials for winter protection
-
-### Winter Preparation
-- Clean and store summer equipment
-- Harvest and preserve final crops
-- Plan next year's garden layout
-
-## November-December 2025
-
-### Harvest
-- Continue harvesting cold-hardy crops (spinach, kale, chervil)
-- Root vegetables as needed
-- Fresh herbs from protected areas
-
-### Garden Care
-- Apply winter mulch to beds
-- Protect sensitive plants with row covers
-- Maintain tools and equipment
-
-### Planning
-- Review this year's garden notes
-- Plan next year's varieties and layout
-- Order seed catalogs for next year
-
-## January-February 2026
-
-### Planning & Preparation
-- Finalize next year's garden plan
-- **Cover crop seeds in storage** - you have multi-year supply of both mixes for future seasons
-- Order vegetable seeds for spring planting
-- Start cool-season seeds indoors (if desired)
-
-### Maintenance
-- Check stored tools and supplies
-- Plan any garden infrastructure improvements
-- Monitor stored root vegetables
-
-### Early Season Prep
-- Prepare seed starting setup
-- Plan succession planting schedules
-
-## March 2026
-
-### Starting the Cycle
-- **Terminate cover crops** - mow Garden Cover Crop Mix areas, No-Till Pollinator Mix will winter-kill naturally
-- **Till cover crop residue** 2-3 weeks before vegetable planting
-- Direct sow cool-season crops (peas, early greens)
-- Begin hardening off any indoor seedlings
-- Prepare beds for spring planting
-
-### Garden Preparation
-- Remove winter mulch as soil warms
-- Test and amend soil as needed
-- Plan warm-season crop placements
-
-## April-May 2026
-
-### Spring Planting
-- Direct sow cool-season vegetables
-- Transplant seedlings after last frost
-- Begin succession planting schedules
-
-### Garden Activation
-- Resume regular watering schedule
-- Apply organic fertilizers
-- Monitor for pests and diseases
+## Strategic Infrastructure Investment Plan (Multi-Year Value)
+**Year 1 High-Value**: Shade cloth ($20), Drip irrigation starter ($40-60), Quality mulch ($20) - **Total: ~$80-100**  
+**Year 2 Expansion**: Complete drip system coverage ($40-80), Permanent mulch pathways ($30-50)  
+**Ongoing Low-Cost**: Compost ($10/month), seeds for proven varieties, system maintenance  
+**Avoid**: Expensive structures, annual costly inputs, short-term plant救 rescue attempts
 
 ---
 
-## Daily/Weekly Tasks (Growing Season)
+## Monthly Garden Schedule
 
-### Daily (5-10 minutes)
-- Check container plants for water needs
-- Harvest ready vegetables and herbs
-- Quick pest/disease inspection
+| Month | Existing Plant Care | Heat Management | Available Space Additions | New Systematic Areas | Irrigation & Feeding | Key Tasks |
+|-------|-------------------|-----------------|---------------------------|---------------------|-------------------|-----------|
+| **June** | 🥄 Side-dress heat-tolerant crops only. Support cucumber. Deadhead marigolds | **Invest in shade cloth ($20)** - reusable every summer. **Let struggling squash die** - don't waste money saving them | **NO new plantings** - focus on survival | **Plan drip irrigation** for fall installation | Morning watering only (5:30-6:30 AM), 25-30 min. 🥄 Cheap compost only ($10) | **Survival + smart infrastructure planning** |
+| **July** | 🥬 Harvest early morning only. Deep mulch everything. **Clear dead/dying plants** | **Expect hottest month**. Shade cloth for containers. Morning-only garden work | **NO plantings** - anything planted will likely die | **Plan for September restart** | **Increase watering** - may need twice daily for containers. No feeding | **Survival only** - expect losses |
+| **August** | Continue minimal care. **Accept plant losses**. Maintain only thriving plants | Late August *might* bring slight relief. Prep for fall recovery | **Still too hot** - wait for September. **Exception: Replant pumpkins early August** for Halloween harvest | **Prep beds for fall restart** in cooler areas | Maintain survival irrigation. Begin planning fall varieties | **Late summer prep** - still very hot |
+| **September** | 🥬 Harvest survivors. **Assess damage**. Clear dead plants | **Finally cooler!** Remove failed summer crops | 🌱 **Fall restart**: Cool season crops in cleared spaces | 🌱 **Begin systematic beds**: First organized plantings | Reduce to 3x/week watering. 🥄 Resume feeding | **Garden recovery begins** |
+| **October** | 🥬 Continue harvest from survivors. Plan winter protection | Normal fall temperatures | 🌱 **Peak fall planting** in all available spaces | 🌱 **Expand systematic areas** - cover crops + fall crops | **Install drip irrigation** - best time before winter. 🥄 Feed new plantings with cheap compost | **Major replanting + infrastructure month** |
+| **November** | 🥬 **Continue active harvest** - no dormancy in warm winters | **Minimal winter protection needed** | 🌱 **Extended fall planting** - season runs longer | 🌱 **Expand systematic winter production** | Regular watering continues, 🥄 light feeding | **Extended growing season** |
+| **December** | 🥬 **Active winter harvest** - lettuce, greens, herbs thrive | **Mild winter management** | 🌱 **Mid-winter succession plantings** possible | 🌱 **Year-round systematic production** | Moderate watering, 🥄 winter feeding for active growth | **Peak winter productivity** |
+| **January** | 🥬 **Peak winter harvest** + 🌱 **major spring prep plantings** | **Design permanent shade for coming summer** | 🌱 **Heavy planting**: Cool crops that will mature before heat | 🛠️ **Expand year-round systematic beds** | Increase watering for active growth, heavy 🥄 compost | **Winter productivity + spring prep** |
+| **February** | 🛠️ **Expand drip system** + 🌱 **spring succession** | **Complete heat infrastructure before March** | 🌱 **Final cool-season plantings** before heat buildup | 🌱 **Systematic spring beds** - maximize before summer | **Drip irrigation efficient watering**, 🥄 heavy compost feeding | **Complete infrastructure + final spring push** |
+| **March** | 🌱 **Heat-tolerant spring varieties ONLY** | **Final heat prep before summer** | 🌱 **Last chance plantings** before heat season | 🌱 **Heat-specialized summer crops** (peppers, eggplant, okra) under shade | Transition to heat-season watering | **Transition to summer survival mode** |
+| **April-May** | 🌱 **Summer survivors only**: established heat crops | **All shade/protection systems active** | 🥬 **Harvest spring crops before heat** | 🛠️ **Summer beds prepared for dormancy/minimal production** | **Full heat-season irrigation** - daily deep watering | **Pre-heat harvest, prepare for summer dormancy** |
 
-### Weekly Tasks (30-60 minutes)
-- Deep watering if no rain
-- Succession sowings as scheduled
-- Weeding and maintenance
-- Side-dressing heavy feeders
+---
 
-### Weekend Projects (as needed)
-- Bed preparation and major plantings
-- Trellis installation and maintenance
-- Tool maintenance and organization
-- Harvest processing and preservation
+## Emoji Legend
+- 🌱 Plant/sow seeds
+- 🔄 Succession planting (2nd, 3rd rounds)
+- 🥬 Harvest
+- 🛠️ Garden prep/planning work
+- 🥄 Feeding/fertilizing
+
+## Feeding Schedule Summary
+- **Weekly**: Liquid fertilizer for okra only (June-September)
+- **Monthly**: Compost for all other crops during growing season
+- **At planting**: Bone meal for parsnips and transplants
+- **Fall/Winter**: Minimal feeding, compost only for active growth
+
+## Irrigation Programs
+- **Summer (June-August)**: Every other day, 6 AM, 25 minutes
+- **Spring/Fall (April-May, September-October)**: 3x/week, 6:30 AM, 20 minutes  
+- **Winter (November-March)**: Manual operation, 1-2x/week as needed
+
+## Year-Round Growing Strategy (Hot Summers + Warm Winters)
+
+### **Peak Production Season (October-April)**
+- **October-December**: Extended fall harvest + winter planting (no dormancy)
+- **January-February**: Peak winter production + heavy spring prep
+- **March-April**: Spring harvest race - beat the summer heat
+
+### **Summer Management Season (May-September)**
+- **May**: Final cool-season harvest + heat infrastructure activation
+- **June-August**: Heat-specialized crops only + survival mode
+- **September**: Recovery begins, fall restart
+
+### **Year-Round Crop Selection**
+- **Cool-season (Oct-Apr)**: All traditional cool crops + extended seasons
+- **Heat-tolerant year-round**: Peppers, eggplant, okra, Mediterranean herbs, succulents
+- **Warm-winter advantages**: Perennial herbs thrive, winter greens extended, no plant loss to cold
+
+### **Long-term Infrastructure (Year-Round System)**
+- **Summer shade**: Essential for 4-month extreme heat period
+- **Winter productivity**: Extend growing areas (no cold protection needed)
+- **Water efficiency**: Critical for year-round active growth
+- **Soil management**: Constant production requires constant compost input
+
+### **Daily Tasks - No True Dormant Season**
+- **Peak season (Oct-Apr)**: Full garden activity, succession planting, heavy harvest
+- **Summer transition (May-Sep)**: Morning-only care, infrastructure maintenance, heat-crop focus
+- **Year-round**: Continuous watering, feeding, and harvest - no winter break

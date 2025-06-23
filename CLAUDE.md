@@ -53,9 +53,27 @@ This project is for a garden in Durham, North Carolina. In addition to a variety
 - **Time availability**: Daily maintenance possible, larger projects scheduled for weekends
 - **Focus**: Emphasize fresh harvest varieties over long-storage crops due to storage limitations
 - **Irrigation**: Backyard sprinkler system with basic automation covers all garden beds and containers
+- **Budget Realism**: Our budget isn't actually unlimited. We can make practical expenditures, and we are happy to make long-term investments, but we also don't need heroics. Plants die.
 
 ## Sun Exposure
 
 - **Main garden beds**: All three beds (3×15, 4×8, 4×5) receive ~6 hours of good sun daily - suitable for most vegetables
 - **Front yard**: Significantly shaded by trees with some morning sun areas - contains existing plantings (ferns, hydrangea, jacob's ladder, other ornamentals) with limited space for edibles
 - **Container placement**: Can be moved to optimize sun exposure as needed
+
+## Sustainability Practices
+
+- **Compost**: We have ready access to compost
+- We can get a 40lb compost bag for $10 whenever we want
+
+## Climate Adaptation
+
+- Let's assume extended heat waves are the new average, and adjust long-term plans accordingly. Winters, too, should be expected to tend to be warmer than normal. Don't plant things that may not survive a heat wave, and don't assume plants won't overwinter, because they might.
+
+## Economic Goals
+
+- Our overall goal is for this garden to produce more dollar value than the dollar value we input to it. Assume our manual labor is free as long as it can fit easily within the obligations of full-time employment. 
+- I don't care if the garden is profitable, this is more about not wanting to spend unnecessarily.
+- I'm happy to invest in things like drip irrigation that have perennial value and reduce ongoing effort/costs.
+- Avoid short-term/low-value spending and heroic measures to save failing plants.
+- Focus on infrastructure that builds a low-maintenance, high-productivity system over time.
