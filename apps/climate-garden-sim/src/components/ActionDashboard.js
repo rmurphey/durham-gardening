@@ -180,11 +180,77 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
 
   const getSeasonalInstructions = (actionTitle) => {
     const instructionMaps = {
+      'Plan Spring Garden Layout': [
+        { step: '1. Review last year\'s notes', details: 'What worked? What failed? Where were pest/disease issues?', timing: 'Before planning new layout' },
+        { step: '2. Plan crop rotation', details: 'Don\'t plant same families in same spots. Tomatoes→greens→legumes→root crops', timing: 'Use garden journal' },
+        { step: '3. Calculate space needs', details: 'Durham beds: 3×15 (45 sq ft), 4×8 (32 sq ft), 4×5 (20 sq ft). Total: 97 sq ft', timing: 'Include succession plantings' },
+        { step: '4. Create planting calendar', details: 'Durham Zone 7b: Last frost ~April 15, first frost ~November 15', timing: 'Schedule by weeks, not months' }
+      ],
+      'Order Seeds for Spring': [
+        { step: '1. Review portfolio allocation', details: 'Check simulation results: focus on high-performing crop categories from your analysis', timing: 'Use simulation data' },
+        { step: '2. Calculate seed quantities', details: 'Durham beds total 97 sq ft. Cool crops: kale (1 pkt/25 sq ft), lettuce (succession every 2 weeks)', timing: 'Plan for multiple plantings' },
+        { step: '3. Choose Durham varieties', details: 'Red Russian kale (heat tolerant), Buttercrunch lettuce, Easter Egg radishes', timing: 'Focus on heat tolerance' },
+        { step: '4. Place order at True Leaf Market', details: 'Preferred vendor with proven success. Order by January 31 for February delivery', timing: 'Order early for best selection' }
+      ],
+      'Prepare Cold Frames': [
+        { step: '1. Choose location', details: 'South-facing spot protected from north winds. Needs 6+ hours direct sun', timing: 'Scout location in December' },
+        { step: '2. Build or buy frame', details: 'DIY: old window + lumber box. Commercial: $80-120. Size: 3x6 ft covers 18 sq ft', timing: 'Complete by mid-January' },
+        { step: '3. Prepare soil inside', details: 'Add 4" compost, ensure drainage. Durham clay needs sand/perlite amendment', timing: '2 weeks before planting' },
+        { step: '4. Test temperature control', details: 'Install automatic opener ($25) or check daily. Vent when over 75°F', timing: 'Practice before using' }
+      ],
       'Start Cool-Season Seeds Indoors': [
-        { step: '1. Set up seed starting area', details: 'Use a south-facing window or grow lights. Maintain 65-70°F temperature.', timing: 'Do this first' },
+        { step: '1. Set up seed starting area', details: 'Use south-facing window or grow lights. Maintain 65-70°F temperature', timing: 'Do this first' },
         { step: '2. Choose varieties', details: 'Red Russian kale, broccoli (Green Magic), cabbage (Early Jersey Wakefield)', timing: '6-8 weeks before last frost' },
         { step: '3. Plant seeds', details: 'Use seed starting mix, plant 1/4" deep, keep moist but not soggy', timing: 'February 15-March 1' },
         { step: '4. Care instructions', details: 'Water from bottom, thin seedlings when 2" tall, fertilize weekly with diluted fish emulsion', timing: 'Ongoing until transplant' }
+      ],
+      'Direct Seed Hardy Crops': [
+        { step: '1. Check soil conditions', details: 'Soil workable, not muddy. Durham clay: add compost if too wet', timing: 'When soil crumbles in hand' },
+        { step: '2. Choose protected areas', details: 'Cold frame, south side of house, or row cover areas', timing: 'Use microclimates' },
+        { step: '3. Plant peas and radishes', details: 'Peas: 2" apart, 1" deep. Radishes: 1" apart, 1/2" deep. Soak peas overnight', timing: 'Soil temp 35°F+' },
+        { step: '4. Install protection', details: 'Row cover on hoops, remove when temps hit 60°F consistently', timing: 'Cover immediately after planting' }
+      ],
+      'Soil Test and Amendment': [
+        { step: '1. Take soil samples', details: 'Dig 6" deep, take from 5 spots per bed, mix together. Avoid recent rain', timing: 'When soil is moist, not wet' },
+        { step: '2. Send for testing', details: 'NC State Extension: $4 test, 7-day results. Test pH, nutrients, organic matter', timing: 'Mail by February 15' },
+        { step: '3. Interpret results', details: 'Durham target: pH 6.0-6.8, 3%+ organic matter. Note recommendations', timing: 'Results arrive in 1 week' },
+        { step: '4. Apply amendments', details: 'Add lime if pH<6.0, sulfur if pH>7.0. Always add 2-4" compost', timing: '4 weeks before planting' }
+      ],
+      'Transplant Cool-Season Starts': [
+        { step: '1. Harden off seedlings', details: 'Gradually expose to outdoor conditions over 7 days. Start with 2 hours, increase daily', timing: 'Week before transplant' },
+        { step: '2. Check soil temperature', details: 'Soil 45°F+ for cool crops. Use soil thermometer at 2" depth', timing: 'Check 3 consecutive days' },
+        { step: '3. Prepare planting holes', details: 'Dig holes same depth as pot, twice as wide. Space kale 12", broccoli 18"', timing: 'Day of transplanting' },
+        { step: '4. Plant and protect', details: 'Plant at soil level, water well, install row cover if frost expected', timing: 'Evening planting reduces stress' }
+      ],
+      'Direct Seed Cool Crops': [
+        { step: '1. Prepare seedbed', details: 'Rake smooth, remove rocks. Durham clay: add compost and sand for drainage', timing: 'Day before planting' },
+        { step: '2. Create planting rows', details: 'Lettuce rows 8" apart, carrot rows 6" apart. Use string line for straight rows', timing: 'Mark with stakes' },
+        { step: '3. Plant seeds', details: 'Lettuce: 1/4" deep, thin to 4". Carrots: 1/2" deep, thin to 2". Beets: 1/2" deep, thin to 3"', timing: 'Follow packet instructions' },
+        { step: '4. Water and mark', details: 'Gentle mist daily, mark rows with labels. Germination: lettuce 7 days, carrots 14 days', timing: 'Keep soil moist until germination' }
+      ],
+      'Prepare Heat-Loving Seed Starts': [
+        { step: '1. Set up warm starting area', details: 'Heat mat to maintain 75-80°F soil temperature. Use thermostat for control', timing: '8-10 weeks before last frost' },
+        { step: '2. Choose varieties for Durham', details: 'Cherokee Purple tomatoes, Fish pepper, Hungarian Hot Wax peppers - heat tolerant', timing: 'Focus on heat adaptation' },
+        { step: '3. Plant seeds', details: 'Use seed starting mix, plant 1/4" deep, one seed per cell. Keep soil consistently moist', timing: 'March 1-15 for Durham' },
+        { step: '4. Provide adequate light', details: 'Grow lights 2" above seedlings, 14-16 hours daily, or bright south window', timing: 'Start lights immediately after germination' }
+      ],
+      'Plant Heat-Sensitive Crops': [
+        { step: '1. Check last frost date', details: 'Durham average: April 15. Wait 2 weeks after for heat-sensitive crops', timing: 'May 1+ for safety' },
+        { step: '2. Prepare beds', details: 'Work in 2-4" compost, ensure good drainage. Raised beds work best in Durham clay', timing: '2 weeks before planting' },
+        { step: '3. Plant potatoes', details: 'Cut seed potatoes with 2+ eyes, let dry 2 days. Plant 4" deep, 12" apart', timing: 'Soil temp 45°F+' },
+        { step: '4. Plant onion sets', details: 'Plant sets 1" deep, 4" apart. Choose short-day varieties for Durham', timing: 'Same time as potatoes' }
+      ],
+      'Succession Plant Cool Crops': [
+        { step: '1. Calculate timing', details: 'Plant lettuce every 2 weeks, radishes every 10 days for continuous harvest', timing: 'Mark calendar through May' },
+        { step: '2. Prepare small sections', details: 'Only prepare area needed for each planting. Keep rest of bed productive', timing: 'Work in sections' },
+        { step: '3. Use heat-tolerant varieties', details: 'Switch to heat-tolerant lettuce: Nevada, Jericho, Muir for later plantings', timing: 'Different varieties by season' },
+        { step: '4. Provide afternoon shade', details: 'Use taller plants or shade cloth as temperatures rise', timing: 'Install before 80°F days' }
+      ],
+      'Harden Off Heat Starts': [
+        { step: '1. Check plant readiness', details: 'Plants 6-8 weeks old, 6"+ tall with strong stems. Not recently fertilized', timing: '2 weeks before transplant date' },
+        { step: '2. Start gradual exposure', details: 'Day 1-2: shade for 2 hours. Day 3-4: morning sun for 2 hours', timing: 'Increase exposure daily' },
+        { step: '3. Increase outdoor time', details: 'Day 5-7: full sun 4 hours. Day 8-10: full day outside, bring in at night', timing: 'Watch for wilting, stress' },
+        { step: '4. Final preparation', details: 'Day 11-14: leave outside overnight if temps above 50°F', timing: 'Ready to transplant after 2 weeks' }
       ],
       'Transplant Heat-Loving Crops': [
         { step: '1. Check soil temperature', details: 'Soil must be 60°F+ at 2" depth for 3 consecutive days', timing: 'Use soil thermometer daily' },
@@ -192,22 +258,40 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
         { step: '3. Prepare beds', details: 'Add 2-4" compost, ensure good drainage. In Durham clay, consider raised beds', timing: '2 weeks before transplant' },
         { step: '4. Plant transplants', details: 'Plant after last frost date (April 15 in Durham). Space tomatoes 24" apart, peppers 18" apart', timing: 'May 1-15 in Durham' }
       ],
+      'Install Support Systems': [
+        { step: '1. Install tomato cages', details: 'Use 6-ft tall cages, install at transplanting. Indeterminate varieties need stronger support', timing: 'Same day as transplanting' },
+        { step: '2. Set up trellises', details: 'Install 6-8 ft posts, string with wire or netting. For beans, peas, cucumbers', timing: 'Before plants need support' },
+        { step: '3. Stake tall plants', details: 'Use 1"x2" stakes, 6 ft tall. Tie with soft material, not wire', timing: 'Install early, tie as plants grow' },
+        { step: '4. Plan for expansion', details: 'Plants grow bigger than expected. Leave room for full-sized plants', timing: 'Design for mature size' }
+      ],
+      'Mulch All Beds': [
+        { step: '1. Choose mulch type', details: 'Organic: straw, shredded leaves, compost. Inorganic: landscape fabric, cardboard', timing: 'Source mulch in advance' },
+        { step: '2. Prepare soil first', details: 'Weed thoroughly, water well, apply fertilizer. Mulch locks in current conditions', timing: 'Clean beds completely' },
+        { step: '3. Apply proper thickness', details: '2-4" organic mulch, keep 3" away from plant stems to prevent disease', timing: 'After soil warms to 60°F' },
+        { step: '4. Maintain throughout season', details: 'Add more as it decomposes. Pull back for new plantings', timing: 'Check monthly, refresh as needed' }
+      ],
+      'Plant Heat-Loving Succession': [
+        { step: '1. Choose heat-adapted varieties', details: 'Okra (heat lover), yard-long beans, Malabar spinach for Durham summers', timing: 'Plant after soil hits 70°F' },
+        { step: '2. Plan succession timing', details: 'Plant beans every 3 weeks through July. Squash every 4 weeks', timing: 'Mark calendar dates' },
+        { step: '3. Prepare beds in heat', details: 'Work soil early morning or evening. Add extra compost for water retention', timing: 'Avoid midday soil work' },
+        { step: '4. Provide immediate protection', details: 'Shade cloth first week, extra water, mulch heavily', timing: 'Protect from heat stress' }
+      ],
       'Install Irrigation System': [
         { step: '1. Plan layout', details: 'Map bed locations, water source, and slope. Durham yards often have clay soil requiring slower water application', timing: 'Before purchasing materials' },
         { step: '2. Buy materials', details: 'Drip tape, pressure compensating emitters, timer, filter, pressure regulator', timing: 'Order 2 weeks before installation' },
         { step: '3. Install system', details: 'Connect to spigot, run main lines, install drip tape in beds. Test thoroughly', timing: 'Early May before heat arrives' },
         { step: '4. Set schedule', details: 'Durham summers: water deeply 2-3x/week early morning. Adjust for rainfall', timing: 'Program timer monthly' }
       ],
-      'Plan Spring Garden Layout': [
-        { step: '1. Review last year\'s notes', details: 'What worked? What failed? Where were pest/disease issues?', timing: 'Before planning new layout' },
-        { step: '2. Plan crop rotation', details: 'Don\'t plant same families in same spots. Tomatoes→greens→legumes→root crops', timing: 'Use garden journal' },
-        { step: '3. Calculate space needs', details: 'Durham beds: 3×15 (45 sq ft), 4×8 (32 sq ft), 4×5 (20 sq ft). Total: 97 sq ft', timing: 'Include succession plantings' },
-        { step: '4. Create planting calendar', details: 'Durham Zone 7b: Last frost ~April 15, first frost ~November 15', timing: 'Schedule by weeks, not months' }
+      'Harvest Early Crops': [
+        { step: '1. Check harvest timing', details: 'Peas: pick daily when pods fill out. Spinach: cut outer leaves when 4"+ long', timing: 'Harvest in cool morning' },
+        { step: '2. Use proper technique', details: 'Cut, don\'t pull. Use clean knife or scissors. Leave roots for nitrogen', timing: 'Clean tools between plants' },
+        { step: '3. Handle heat stress', details: 'Cool crops bolt in heat. Harvest everything before 85°F+ days', timing: 'Watch weather forecast' },
+        { step: '4. Succession planning', details: 'Remove spent plants immediately, prepare space for heat-loving crops', timing: 'Quick turnaround for bed space' }
       ]
     };
     
     return instructionMaps[actionTitle] || [
-      { step: 'Detailed instructions needed', details: 'This task needs more specific breakdown', timing: 'Contact for details' }
+      { step: 'General garden task', details: 'This is a standard gardening activity for your area and season', timing: 'Follow normal gardening practices' }
     ];
   };
 
