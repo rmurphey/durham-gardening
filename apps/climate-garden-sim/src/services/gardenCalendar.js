@@ -4,14 +4,11 @@
  */
 
 import { 
-  getClimateAdaptedCrops,
-  isPlantingSeasonValid,
-  isDirectSowingViable,
-  getAlternativePlantingMethod
+  getClimateAdaptedCrops
 } from '../config.js';
 import { getPortfolioStrategies } from '../data/portfolioStrategies.js';
 import { DURHAM_CROPS } from '../config/durhamConfig.js';
-import { CURRENT_GARDEN_STATUS, shouldShowCropActivity } from '../config/gardenStatus.js';
+import { shouldShowCropActivity } from '../config/gardenStatus.js';
 
 /**
  * Get climate zone classification from location
@@ -50,7 +47,6 @@ const addDurhamShoppingActivities = (activities, monthNumber, portfolio) => {
       // Skip crops that aren't wanted based on garden status
       if (!shouldShowCropActivity(cropKey, 'shopping')) return;
       
-      const name = crop.name;
       const seeds = crop.shopping?.seeds || 'seeds';
       const cost = crop.shopping?.cost || '$3-4';
 
@@ -359,8 +355,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
             
           case 'peppers':
           case 'hotPeppers':
-            // You have peppers growing - show relevant care and harvest
-            if (monthNumber === 7 && isGrowing) {
+            if (monthNumber === 7) {
               activities.push({
                 type: 'care',
                 crop: 'Hot Peppers',
@@ -369,7 +364,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
                 priority: 'medium'
               });
             }
-            if (monthNumber >= 7 && monthNumber <= 10 && isGrowing) {
+            if (monthNumber >= 7 && monthNumber <= 10) {
               activities.push({
                 type: 'harvest',
                 crop: 'Hot Peppers',
@@ -411,8 +406,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
             break;
             
           case 'sweetPotato':
-            // You have sweet potatoes growing - focus on care and harvest
-            if (monthNumber === 7 && isGrowing) {
+            if (monthNumber === 7) {
               activities.push({
                 type: 'care',
                 crop: 'Sweet Potato',
@@ -421,7 +415,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
                 priority: 'medium'
               });
             }
-            if (monthNumber === 9 && isGrowing) {
+            if (monthNumber === 9) {
               activities.push({
                 type: 'harvest',
                 crop: 'Sweet Potato',
@@ -432,10 +426,9 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
             }
             break;
 
-          // Crops you actually have growing
           case 'cantaloupe':
           case 'melon':
-            if (isGrowing && monthNumber >= 7 && monthNumber <= 9) {
+            if (monthNumber >= 7 && monthNumber <= 9) {
               activities.push({
                 type: 'harvest',
                 crop: 'Cantaloupe',
@@ -444,7 +437,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
                 priority: 'high'
               });
             }
-            if (isGrowing && monthNumber === 7) {
+            if (monthNumber === 7) {
               activities.push({
                 type: 'care',
                 crop: 'Cantaloupe',
@@ -456,7 +449,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
             break;
 
           case 'cucumber':
-            if (isGrowing && monthNumber >= 6 && monthNumber <= 9) {
+            if (monthNumber >= 6 && monthNumber <= 9) {
               activities.push({
                 type: 'harvest',
                 crop: 'Cucumber',
@@ -465,7 +458,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
                 priority: 'high'
               });
             }
-            if (isGrowing && monthNumber === 7) {
+            if (monthNumber === 7) {
               activities.push({
                 type: 'care',
                 crop: 'Cucumber',
@@ -477,7 +470,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
             break;
 
           case 'tomatillo':
-            if (isGrowing && monthNumber >= 7 && monthNumber <= 10) {
+            if (monthNumber >= 7 && monthNumber <= 10) {
               activities.push({
                 type: 'harvest',
                 crop: 'Tomatillo',
@@ -486,7 +479,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
                 priority: 'high'
               });
             }
-            if (isGrowing && monthNumber === 7) {
+            if (monthNumber === 7) {
               activities.push({
                 type: 'care',
                 crop: 'Tomatillo',
@@ -498,7 +491,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
             break;
 
           case 'squash':
-            if (isDying && monthNumber === 6) {
+            if (monthNumber === 6) {
               activities.push({
                 type: 'cleanup',
                 crop: 'Squash',
