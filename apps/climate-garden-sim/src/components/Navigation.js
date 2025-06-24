@@ -44,6 +44,12 @@ const Navigation = ({ activeView, onViewChange, hasShoppingItems, hasTasks }) =>
       label: 'Setup',
       icon: '⚙️',
       description: 'Garden configuration'
+    },
+    {
+      id: 'cards',
+      label: 'Cards Demo',
+      icon: '🃏',
+      description: 'New card system'
     }
   ];
 

@@ -22,6 +22,7 @@ import Navigation from './components/Navigation.js';
 import DashboardView from './components/DashboardView.js';
 import TasksView from './components/TasksView.js';
 import ShoppingView from './components/ShoppingView.js';
+import CardDemo from './components/CardDemo.js';
 
 // Configuration Components
 import ClimateScenarioSelector from './components/ClimateScenarioSelector.js';
@@ -126,18 +127,6 @@ function App() {
     loadGardenCalendar();
   }, [selectedSummer, selectedWinter, selectedPortfolio, locationConfig, customPortfolio]);
 
-  // Debug recommendations
-  console.log('Recommendations debug:', {
-    simulationResults: !!simulationResults,
-    selectedPortfolio,
-    portfolioData: portfolioStrategies[selectedPortfolio],
-    monthlyFocus: typeof monthlyFocus === 'string' ? monthlyFocus.length : monthlyFocus?.length || 0,
-    weeklyActions: weeklyActions?.length || 0,
-    successOutlook: typeof successOutlook === 'string' ? successOutlook.length : successOutlook?.length || 0,
-    investmentPriority: investmentPriority?.length || 0,
-    topCropRecommendations: topCropRecommendations?.length || 0,
-    siteSpecificRecommendations: siteSpecificRecommendations?.length || 0
-  });
 
   const renderView = () => {
     switch (activeView) {
@@ -199,6 +188,8 @@ function App() {
             />
           </div>
         );
+      case 'cards':
+        return <CardDemo />;
       default:
         return <DashboardView shoppingActions={shoppingActions} taskActions={taskActions} monthlyFocus={monthlyFocus} />;
     }
