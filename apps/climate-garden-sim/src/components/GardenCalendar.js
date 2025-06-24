@@ -33,8 +33,11 @@ const GardenCalendar = ({ gardenCalendar }) => {
                   <div key={i} className={`activity activity-${activity.type} priority-${activity.priority || 'medium'}`}>
                     <div className="activity-header">
                       <span className="activity-crop">{activity.crop}</span>
-                      {activity.priority === 'high' && (
-                        <span className="activity-priority">urgent</span>
+                      {getCategoryIcon(activity.type)}
+                      {(activity.priority === 'high' || activity.priority === 'critical') && (
+                        <span className={`activity-priority priority-${activity.priority}`}>
+                          {activity.priority === 'critical' ? 'critical' : 'urgent'}
+                        </span>
                       )}
                     </div>
                     <div className="activity-action">{activity.action}</div>
@@ -62,6 +65,23 @@ function getMonthName(monthNumber) {
   const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June',
                      'July', 'August', 'September', 'October', 'November', 'December'];
   return monthNames[monthNumber];
+}
+
+// Helper function to get category icons for activities
+function getCategoryIcon(activityType) {
+  const icons = {
+    'maintenance': '🔧',
+    'direct-sow': '🌱',
+    'transplant': '🌿',
+    'harvest': '🥬',
+    'care': '💚',
+    'infrastructure': '🏗️',
+    'planning': '📋',
+    'shopping': '🛒',
+    'succession': '🔄',
+    'rotation': '🔄'
+  };
+  return <span className="activity-icon">{icons[activityType] || '📝'}</span>;
 }
 
 export default GardenCalendar;
