@@ -1699,3 +1699,259 @@ button:focus,
 .legend-color.negative {
   background: var(--color-error);
 }
+
+/* ========================================
+   INVESTMENT SUFFICIENCY ANALYSIS
+======================================== */
+
+/* Investment analysis result card */
+.result-card.investment-analysis {
+  position: relative;
+  overflow: hidden;
+}
+
+.result-card.investment-analysis::before {
+  content: "💰";
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  opacity: 0.6;
+}
+
+.result-card.warning {
+  border-left: 4px solid var(--color-warning);
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-warning-light) 100%);
+}
+
+.text-warning {
+  color: var(--color-warning-dark);
+}
+
+/* Investment recommendations section */
+.investment-recommendations {
+  margin-top: var(--spacing-2xl);
+  padding: var(--spacing-lg);
+  background: var(--color-background-subtle);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.investment-recommendations h3 {
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Investment breakdown */
+.investment-breakdown {
+  margin-bottom: var(--spacing-xl);
+}
+
+.breakdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.breakdown-header h4 {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.totals {
+  display: flex;
+  gap: var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.actual-total {
+  color: var(--color-primary);
+}
+
+.required-total {
+  color: var(--color-text-secondary);
+}
+
+.category-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.category-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm);
+  background: var(--color-background);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-light);
+  font-size: var(--font-size-sm);
+}
+
+.category-name {
+  color: var(--color-text-secondary);
+  text-transform: capitalize;
+}
+
+.required-amount {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Recommendations list */
+.recommendations-list {
+  margin-bottom: var(--spacing-xl);
+}
+
+.recommendations-list h4 {
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.recommendation-item {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+  border-left: 4px solid var(--color-border);
+  background: var(--color-background);
+}
+
+.recommendation-item.excellent {
+  border-left-color: var(--color-success);
+  background: var(--color-success-light);
+}
+
+.recommendation-item.good {
+  border-left-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.recommendation-item.caution {
+  border-left-color: var(--color-warning);
+  background: var(--color-warning-light);
+}
+
+.recommendation-item.warning {
+  border-left-color: var(--color-error);
+  background: var(--color-error-light);
+}
+
+.recommendation-text {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Critical categories */
+.critical-categories h4 {
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.critical-item {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+}
+
+.critical-item.critical {
+  border-left: 4px solid var(--color-error);
+  background: var(--color-error-light);
+}
+
+.critical-item.high {
+  border-left: 4px solid var(--color-warning);
+  background: var(--color-warning-light);
+}
+
+.critical-item.medium {
+  border-left: 4px solid var(--color-info);
+  background: var(--color-info-light);
+}
+
+.critical-item.low {
+  border-left: 4px solid var(--color-border-dark);
+  background: var(--color-background-light);
+}
+
+.critical-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.critical-header strong {
+  color: var(--color-text-primary);
+  text-transform: capitalize;
+  font-weight: var(--font-weight-semibold);
+}
+
+.action-badge {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+}
+
+.action-badge.increase {
+  background: var(--color-success);
+  color: var(--color-background);
+}
+
+.action-badge.reduce {
+  background: var(--color-warning);
+  color: var(--color-background);
+}
+
+.critical-description {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.critical-amount {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Mobile responsiveness for investment analysis */
+@media (max-width: 768px) {
+  .breakdown-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .totals {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .category-breakdown {
+    grid-template-columns: 1fr;
+  }
+  
+  .critical-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+  
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+}
