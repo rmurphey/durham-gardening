@@ -1,17 +1,34 @@
-# Climate Garden Simulation
+# Durham Garden Planner
 
-A comprehensive React application for climate-aware garden planning with Monte Carlo simulation, dynamic calendar generation, and global crop database integration.
+A modern React application for climate-aware garden planning with intelligent card-based recommendations, Monte Carlo simulation, and comprehensive garden management tools.
 
 ## Current Features
 
-- **Global Climate Database**: 15+ crop varieties with climate adaptations and multi-language support
+### 🃏 **Modern Card System**
+- **Smart Recommendation Cards**: Purchase, Task, Planning, and Info cards with state management
+- **Visual Priority System**: Urgent, high, medium, low priorities with animations
+- **State Tracking**: Pending → Committed → Completed/Dismissed workflow
+- **Expandable Content**: Show more/less functionality for detailed information
+- **Mobile Optimized**: Touch-friendly card interactions and responsive design
+
+### 🧭 **Compact Navigation**
+- **Horizontal Top Navigation**: Content immediately visible above the fold
+- **Space Efficient**: Icon + label design with tooltip descriptions
+- **Mobile Responsive**: Horizontal scrolling instead of content push-down
+- **Badge Notifications**: Shopping items and task indicators
+
+### 📊 **Garden Intelligence**
+- **Global Climate Database**: 15+ crop varieties with climate adaptations
 - **Dynamic Location Support**: Multi-region presets (Durham NC, Phoenix AZ, Minneapolis MN, Seattle WA, Miami FL)
-- **Advanced Portfolio Management**: Three adaptive strategies plus full granular customization
 - **Monte Carlo Simulation**: Professional statistical modeling using jStat library (5,000 iterations)
 - **12-Month Garden Calendar**: Dynamically generated planting, harvesting, and care schedules
-- **Climate Timeline Visualization**: Interactive bars showing scenario overlap across growing seasons
-- **Investment Tracking**: Detailed breakdown with customizable budget allocations
-- **Real-time Validation**: Smart percentage formatting and allocation validation
+- **Climate Timeline Visualization**: Interactive charts showing scenario overlap across growing seasons
+
+### 💰 **Investment & Planning**
+- **Smart Shopping Cards**: Purchase recommendations with timing and consequences
+- **Task Management**: Garden task cards with deadlines and priorities
+- **Portfolio Strategies**: Three adaptive strategies plus full granular customization
+- **Budget Tracking**: Detailed breakdown with customizable allocations
 
 ## Getting Started
 
@@ -138,11 +155,29 @@ A comprehensive React application for climate-aware garden planning with Monte C
 
 ## Available Scripts
 
+### Development
 - `npm start` - Start development server with fast refresh
 - `npm run dev` - Start development server with nodemon auto-restart (recommended)
 - `npm run build` - Create production build  
 - `npm test` - Run test suite
+- `npm run test:interfaces` - Run card component integration tests
 - `./restart.sh` - Kill existing server and start fresh (development utility)
+
+### Database Operations
+- `npm run db:build` - Build SQLite database from SQL source files
+- `npm run db:test` - Run comprehensive database integrity tests
+- `npm run db:verify` - Quick database integrity check (used in precommit)
+- `npm run db:update` - Full rebuild and test cycle
+
+### Deployment
+- `npm run deploy` - Deploy to Vercel (builds database + app, then deploys)
+- `npm run vercel:build` - Build for Vercel (includes database build)
+- `npm run vercel:dev` - Run Vercel dev environment locally
+
+### Code Quality
+- `npm run lint:changed:fix` - Format and fix linting for changed files
+- `npm run check:react` - Check React compilation
+- `npm run precommit` - Run all pre-commit checks (React, tests, database)
 
 ## Current Status
 
