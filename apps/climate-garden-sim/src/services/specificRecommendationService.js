@@ -4,55 +4,74 @@
  * with exact products, prices, and shopping list integration
  */
 
+import { getLocationConfig, getCurrentMonthConfig, getSupplierPreferences, shouldRecommendItem } from '../config/locationConfig.js';
+
 /**
  * Generate specific actionable recommendations for any planning scenario
  */
 export const generateSpecificRecommendations = (scenario, context = {}) => {
   const currentMonth = new Date().getMonth() + 1;
-  const { bedSizes = ['3×15', '4×8', '4×5'], budget = 'moderate' } = context;
+  const { 
+    bedSizes, 
+    budget = 'moderate', 
+    location = 'Durham, NC' 
+  } = context;
+  
+  const locationConfig = getLocationConfig(location);
+  const monthConfig = getCurrentMonthConfig(location);
+  const suppliers = getSupplierPreferences(location);
+  
+  // Use location config for bed sizes if not provided
+  const beds = bedSizes || locationConfig.bedConfiguration.standard;
 
+  const params = { currentMonth, beds, locationConfig, monthConfig, suppliers };
+  
   switch (scenario) {
     case 'spring-garden-layout':
-      return getSpringLayoutRecommendations(currentMonth, bedSizes);
+      return getSpringLayoutRecommendations(params);
     
     case 'fall-garden-planning':
-      return getFallPlanningRecommendations(currentMonth);
+      return getFallPlanningRecommendations(params);
     
     case 'winter-garden-planning':
-      return getWinterPlanningRecommendations(currentMonth);
+      return getWinterPlanningRecommendations(params);
     
     case 'next-year-planning':
-      return getNextYearPlanningRecommendations(currentMonth);
+      return getNextYearPlanningRecommendations(params);
     
     case 'heat-wave-preparation':
-      return getHeatWaveRecommendations(currentMonth);
+      return getHeatWaveRecommendations(params);
     
     case 'bed-rotation-planning':
-      return getBedRotationRecommendations(currentMonth, bedSizes);
+      return getBedRotationRecommendations(params);
     
     case 'garden-review':
-      return getGardenReviewRecommendations(currentMonth);
+      return getGardenReviewRecommendations(params);
     
     default:
       return [];
   }
 };
 
-const getSpringLayoutRecommendations = (month, bedSizes) => {
-  if (month < 1 || month > 4) return [];
+const getSpringLayoutRecommendations = ({ currentMonth, beds, locationConfig, suppliers }) => {
+  const springMonths = locationConfig.climate.seasons.spring;
+  if (!springMonths.includes(currentMonth)) return [];
+  
+  const seedSupplier = suppliers.find(s => s.specialty?.includes('Seeds'))?.name || 'Local nursery';
+  const localSupplier = suppliers.find(s => s.local)?.name || 'Local store';
   
   return [
     {
       id: 'soil-test-kit',
-      item: 'Soil pH and Nutrient Test Kit',
+      item: `${locationConfig.soil.type.charAt(0).toUpperCase() + locationConfig.soil.type.slice(1)} Soil Test Kit`,
       price: 12.99,
       category: 'Spring Prep',
       urgency: 'medium',
       timing: 'Test soil before adding amendments',
-      why: 'Know exact soil needs before buying fertilizers and amendments',
-      where: 'Home Depot or Amazon',
+      why: `Know exact needs for ${locationConfig.location.name} ${locationConfig.soil.type} soil`,
+      where: localSupplier,
       quantity: 1,
-      specifications: 'Tests pH, nitrogen, phosphorus, potassium levels'
+      specifications: `Tests pH, nutrients for ${locationConfig.soil.type} soil management`
     },
     {
       id: 'measuring-layout-kit',
@@ -61,146 +80,165 @@ const getSpringLayoutRecommendations = (month, bedSizes) => {
       category: 'Planning Tools',
       urgency: 'low',
       timing: 'Use during winter planning months',
-      why: 'Accurate bed measurements for optimal plant spacing',
-      where: 'Harbor Freight or Amazon',
+      why: `Accurate measurements for ${beds.map(b => b.name || b).join(', ')} bed layout`,
+      where: localSupplier,
       quantity: 1,
       specifications: '25ft tape measure, stakes, string, grid planning sheets'
     },
     {
       id: 'succession-planting-calendar',
-      item: 'Succession Planting Seed Collection',
+      item: `${locationConfig.location.zone} Succession Planting Collection`,
       price: 32.00,
       category: 'Spring Seeds',
       urgency: 'medium',
       timing: 'Order now for staggered plantings',
-      why: 'Continuous harvest with 2-week intervals',
-      where: 'True Leaf Market',
+      why: `Continuous harvest adapted to ${locationConfig.location.zone} growing season`,
+      where: seedSupplier,
       quantity: 1,
-      specifications: 'Lettuce, radish, beans in weekly succession packets'
+      specifications: `Zone ${locationConfig.location.zone} varieties in succession packets`
     }
   ];
 };
 
-const getFallPlanningRecommendations = (month) => {
-  if (month < 6 || month > 9) return [];
+const getFallPlanningRecommendations = ({ currentMonth, beds, locationConfig, suppliers }) => {
+  // Check if we're in fall planning season (summer to early fall)
+  if (currentMonth < 6 || currentMonth > 9) return [];
+  
+  const seedSupplier = suppliers.find(s => s.specialty?.includes('Seeds') || s.specialty?.includes('Heat-tolerant'))?.name || 'Local nursery';
+  const localSupplier = suppliers.find(s => s.local)?.name || 'Local store';
+  const firstFrost = locationConfig.climate.firstFrost;
   
   return [
     {
       id: 'fall-seed-collection',
-      item: 'Fall Garden Seed Collection',
+      item: `${locationConfig.location.zone} Fall Garden Seed Collection`,
       price: 28.00,
       category: 'Fall Seeds',
-      urgency: month >= 8 ? 'urgent' : 'high',
-      timing: month >= 8 ? 'Order immediately for September planting' : 'Order for August-September planting',
-      why: 'Cool-season crops for fall and winter harvest',
-      where: 'Southern Exposure or True Leaf Market',
+      urgency: currentMonth >= 8 ? 'urgent' : 'high',
+      timing: currentMonth >= 8 ? 'Order immediately for September planting' : 'Order for August-September planting',
+      why: `Cool-season crops for fall harvest before ${firstFrost.description} frost`,
+      where: seedSupplier,
       quantity: 1,
-      specifications: 'Kale, spinach, lettuce, radishes, Asian greens'
+      specifications: `Zone ${locationConfig.location.zone} fall varieties: kale, spinach, lettuce, radishes`
     },
     {
       id: 'fall-fertilizer',
-      item: 'Organic Fall Garden Fertilizer',
+      item: `${locationConfig.soil.type.charAt(0).toUpperCase() + locationConfig.soil.type.slice(1)} Soil Fall Fertilizer`,
       price: 15.99,
       category: 'Fall Prep',
       urgency: 'medium',
       timing: 'Apply before fall planting',
-      why: 'Lower nitrogen blend appropriate for fall growth',
-      where: 'Local nursery or Espoma online',
+      why: `Lower nitrogen blend appropriate for ${locationConfig.soil.type} soil and fall growth`,
+      where: localSupplier,
       quantity: 1,
-      specifications: '4-6-4 NPK ratio, covers 500 sq ft'
+      specifications: `4-6-4 NPK ratio for ${locationConfig.soil.type} soil, covers 500 sq ft`
     },
     {
       id: 'row-covers',
-      item: 'Floating Row Covers for Season Extension',
+      item: 'Season Extension Row Covers',
       price: 22.00,
       category: 'Season Extension',
       urgency: 'medium',
-      timing: 'Install before first frost threat',
-      why: 'Extends fall harvest by 4-6 weeks',
-      where: 'Johnny Seeds or local supplier',
+      timing: `Install before ${firstFrost.description} frost threat`,
+      why: `Extends fall harvest by 4-6 weeks in ${locationConfig.location.zone}`,
+      where: seedSupplier,
       quantity: 1,
-      specifications: '10x20ft lightweight fabric, includes hoops'
+      specifications: `10x20ft lightweight fabric for ${locationConfig.location.zone} frost protection`
     }
   ];
 };
 
-const getWinterPlanningRecommendations = (month) => {
-  if (month < 10 && month > 2) return [];
+const getWinterPlanningRecommendations = ({ currentMonth, beds, locationConfig, suppliers }) => {
+  const winterMonths = locationConfig.climate.seasons.winter;
+  const fallMonths = locationConfig.climate.seasons.fall;
+  if (!winterMonths.includes(currentMonth) && !fallMonths.includes(currentMonth)) return [];
+  
+  const localSupplier = suppliers.find(s => s.local)?.name || 'Local store';
+  const seedSupplier = suppliers.find(s => s.specialty?.includes('Seeds'))?.name || 'Local nursery';
+  const firstFrost = locationConfig.climate.firstFrost;
   
   return [
     {
       id: 'cold-frame-kit',
-      item: 'DIY Cold Frame Construction Kit',
+      item: `${locationConfig.location.zone} Cold Frame Kit`,
       price: 89.99,
       category: 'Winter Growing',
-      urgency: month >= 11 ? 'urgent' : 'high',
-      timing: month >= 11 ? 'Build immediately before hard freeze' : 'Build before November freeze',
-      why: 'Grow fresh greens through Durham winter',
-      where: 'Home Depot or cold frame kit supplier',
+      urgency: currentMonth >= 11 ? 'urgent' : 'high',
+      timing: currentMonth >= 11 ? 'Build immediately before hard freeze' : `Build before ${firstFrost.description} freeze`,
+      why: `Grow fresh greens through ${locationConfig.location.name} winter`,
+      where: localSupplier,
       quantity: 1,
-      specifications: 'Polycarbonate panels, hinges, automatic vent opener'
+      specifications: `Polycarbonate panels for ${locationConfig.location.zone} winter conditions`
     },
     {
       id: 'winter-seeds',
-      item: 'Winter Hardy Greens Seed Collection',
+      item: `${locationConfig.location.zone} Winter Hardy Greens`,
       price: 24.00,
       category: 'Winter Seeds',
       urgency: 'medium',
-      timing: 'Plant in cold frame by early November',
-      why: 'Fresh greens all winter in protected environment',
-      where: 'High Mowing Seeds or Southern Exposure',
+      timing: `Plant in cold frame by ${firstFrost.description}`,
+      why: `Fresh greens all winter in ${locationConfig.location.zone} protected environment`,
+      where: seedSupplier,
       quantity: 1,
-      specifications: 'Winter-hardy kale, spinach, mache, winter lettuce'
+      specifications: `Zone ${locationConfig.location.zone} winter varieties: hardy kale, spinach, mache`
     }
   ];
 };
 
-const getNextYearPlanningRecommendations = (month) => {
-  if (month < 11 && month > 2) return [];
+const getNextYearPlanningRecommendations = ({ currentMonth, beds, locationConfig, suppliers }) => {
+  const winterMonths = locationConfig.climate.seasons.winter;
+  if (!winterMonths.includes(currentMonth) && currentMonth !== 11) return [];
+  
+  const seedSupplier = suppliers.find(s => s.specialty?.includes('Seeds'))?.name || 'Local nursery';
+  const nextYear = new Date().getFullYear() + 1;
   
   return [
     {
       id: 'next-year-seed-order',
-      item: 'Early Bird 2025 Seed Collection',
+      item: `Early Bird ${nextYear} ${locationConfig.location.zone} Seed Collection`,
       price: 55.00,
       category: 'Next Year Planning',
       urgency: 'low',
       timing: 'Order by January for best selection and prices',
-      why: 'Secure popular varieties before they sell out',
-      where: 'True Leaf Market or Southern Exposure',
+      why: `Secure ${locationConfig.location.zone}-adapted varieties before they sell out`,
+      where: seedSupplier,
       quantity: 1,
-      specifications: 'Full year collection: spring, summer, fall varieties'
+      specifications: `Full year collection for ${locationConfig.location.zone}: spring, summer, fall varieties`
     },
     {
       id: 'garden-journal',
-      item: 'Garden Planning Journal and Tracker',
+      item: `${locationConfig.location.name} Garden Planning Journal`,
       price: 16.99,
       category: 'Planning Tools',
       urgency: 'low',
       timing: 'Start tracking this winter',
-      why: 'Record successes and failures for better next-year planning',
+      why: `Record ${locationConfig.location.name} specific successes and failures`,
       where: 'Amazon or bookstore',
       quantity: 1,
-      specifications: 'Planting tracker, harvest log, weather notes, variety records'
+      specifications: `${locationConfig.location.zone} planting tracker, harvest log, local weather notes`
     }
   ];
 };
 
-const getHeatWaveRecommendations = (month) => {
-  if (month < 4 || month > 8) return [];
+const getHeatWaveRecommendations = ({ currentMonth, beds, locationConfig, suppliers }) => {
+  if (currentMonth < 4 || currentMonth > 8) return [];
+  
+  const localSupplier = suppliers.find(s => s.local)?.name || 'Local store';
+  const heatThreshold = locationConfig.climate.heatWaveThreshold;
+  const summerMonths = locationConfig.climate.criticalMonths.hottest;
   
   return [
     {
       id: 'emergency-cooling-kit',
-      item: 'Garden Heat Emergency Kit',
+      item: `${locationConfig.location.name} Heat Emergency Kit`,
       price: 45.00,
       category: 'Heat Wave Prep',
-      urgency: month >= 6 ? 'urgent' : 'high',
-      timing: month >= 6 ? 'Deploy immediately during heat waves' : 'Prepare before summer heat',
-      why: 'Save crops during 95°F+ Durham heat waves',
-      where: 'Local garden center for immediate pickup',
+      urgency: summerMonths.includes(currentMonth) ? 'urgent' : 'high',
+      timing: summerMonths.includes(currentMonth) ? 'Deploy immediately during heat waves' : 'Prepare before summer heat',
+      why: `Save crops during ${heatThreshold}°F+ ${locationConfig.location.name} heat waves`,
+      where: localSupplier,
       quantity: 1,
-      specifications: 'Shade cloth, soaker hoses, mulch, plant cooling spray'
+      specifications: `${locationConfig.infrastructure.shadeCloth.percentage}% shade cloth, soaker hoses, mulch for ${locationConfig.soil.type} soil`
     },
     {
       id: 'backup-water-system',
@@ -209,60 +247,65 @@ const getHeatWaveRecommendations = (month) => {
       category: 'Heat Wave Prep',
       urgency: 'high',
       timing: 'Install before peak summer',
-      why: 'Redundant watering when primary irrigation fails',
-      where: 'Home Depot or irrigation supplier',
+      why: `Redundant watering essential for ${locationConfig.location.name} summer survival`,
+      where: localSupplier,
       quantity: 1,
-      specifications: 'Portable sprinkler, 100ft hose, timer, backup fittings'
+      specifications: `Portable sprinkler, 100ft hose, timer for ${beds.reduce((total, bed) => total + (bed.area || 20), 0)} sq ft`
     }
   ];
 };
 
-const getBedRotationRecommendations = (month, bedSizes) => {
-  const currentSeason = month >= 3 && month <= 8 ? 'growing' : 'planning';
+const getBedRotationRecommendations = ({ currentMonth, beds, locationConfig, suppliers }) => {
+  const growingMonths = [...locationConfig.climate.seasons.spring, ...locationConfig.climate.seasons.summer];
   
-  if (currentSeason === 'growing') return []; // Don't recommend bed changes during growing season
+  if (growingMonths.includes(currentMonth)) return []; // Don't recommend bed changes during growing season
+  
+  const localSupplier = suppliers.find(s => s.local)?.name || 'Local store';
+  const totalArea = beds.reduce((sum, bed) => sum + (bed.area || 20), 0);
   
   return [
     {
       id: 'soil-amendment-rotation',
-      item: 'Bed Rotation Soil Amendment Kit',
+      item: `${locationConfig.soil.type.charAt(0).toUpperCase() + locationConfig.soil.type.slice(1)} Soil Amendment Kit`,
       price: 34.00,
       category: 'Soil Management',
       urgency: 'medium',
       timing: 'Apply during bed transitions',
-      why: 'Different amendments for different crop families',
-      where: 'Local nursery or bulk supplier',
+      why: `Different amendments for ${locationConfig.soil.type} soil crop families`,
+      where: localSupplier,
       quantity: 1,
-      specifications: 'Compost, bone meal, kelp meal for proper rotation'
+      specifications: `Compost, bone meal, kelp meal for ${locationConfig.soil.type} soil rotation`
     },
     {
       id: 'cover-crop-seeds',
-      item: 'Cover Crop Seed Mix for Bed Rest',
+      item: `${locationConfig.location.zone} Cover Crop Seed Mix`,
       price: 18.00,
       category: 'Soil Improvement',
       urgency: 'low',
       timing: 'Plant in unused beds during off-season',
-      why: 'Improve soil structure and fertility between main crops',
-      where: 'Southern States or seed supplier',
-      quantity: 1,
-      specifications: 'Crimson clover, winter rye mix for Durham Zone 7b'
+      why: `Improve ${locationConfig.soil.type} soil structure and fertility between main crops`,
+      where: localSupplier,
+      quantity: Math.ceil(totalArea / 200), // 1 package per 200 sq ft
+      specifications: `Crimson clover, winter rye mix for ${locationConfig.location.zone}`
     }
   ];
 };
 
-const getGardenReviewRecommendations = (month) => {
+const getGardenReviewRecommendations = ({ currentMonth, beds, locationConfig, suppliers }) => {
+  const localSupplier = suppliers.find(s => s.local)?.name || 'Local store';
+  
   return [
     {
       id: 'garden-evaluation-tools',
-      item: 'Garden Assessment and Planning Tools',
+      item: `${locationConfig.location.name} Garden Assessment Kit`,
       price: 24.99,
       category: 'Garden Analysis',
       urgency: 'low',
       timing: 'Use during any season for evaluation',
-      why: 'Systematic review of garden performance and needs',
-      where: 'Amazon or garden supply',
+      why: `Systematic review of ${locationConfig.location.zone} garden performance and needs`,
+      where: localSupplier,
       quantity: 1,
-      specifications: 'pH meter, moisture meter, planning templates, record sheets'
+      specifications: `pH meter for ${locationConfig.soil.type} soil, moisture meter, ${locationConfig.location.zone} planning templates`
     }
   ];
 };
