@@ -106,7 +106,7 @@ const VendorGroupPanel = ({
                     {item.packetsNeeded && (
                       <span className="packet-info">{item.packetsNeeded} packets</span>
                     )}
-                    <span className="cost-info">${(item.totalCost || item.cost).toFixed(2)}</span>
+                    <span className="cost-info">${(item.totalCost || item.cost || 0).toFixed(2)}</span>
                   </div>
                   {(item.notes || item.description) && (
                     <div className="item-notes">{item.notes || item.description}</div>
