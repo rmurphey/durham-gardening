@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import ActionableRecommendations from './ActionableRecommendations';
 
 const RecommendationsPanel = ({
   monthlyFocus,
@@ -106,47 +107,57 @@ const RecommendationsPanel = ({
                 })}
               </div>
             ) : Array.isArray(recommendation.content) ? (
-              <div className="recommendation-list">
-                {recommendation.content.map((item, idx) => {
-                  // Debug logging for site-specific tips
-                  if (recommendation.title === "Site-Specific Tips") {
-                    console.log("Site tip item:", item);
-                  }
-                  return (
-                  <div key={idx} className="recommendation-item">
-                    {item.icon && <span className="item-icon">{item.icon}</span>}
-                    {item.task && (
-                      <div className="task-item">
-                        <strong>{item.task}</strong>
-                        {item.timing && <span className="timing"> - {item.timing}</span>}
-                        {item.urgency && <span className={`urgency urgency-${item.urgency}`}>{item.urgency}</span>}
-                      </div>
-                    )}
-                    {item.crop && (
-                      <div className="crop-item">
-                        <strong>{item.crop}</strong>
-                        {item.reason && <span className="reason"> - {item.reason}</span>}
-                        {item.varieties && item.varieties.length > 0 && (
-                          <div className="varieties">Try: {item.varieties.join(', ')}</div>
-                        )}
-                      </div>
-                    )}
-                    {item.category && (
-                      <div className="priority-item">
-                        <strong>{item.category}:</strong> {item.description}
-                        {item.amount && <span className="amount"> (${item.amount})</span>}
-                        {item.timing && <span className="timing"> - {item.timing}</span>}
-                      </div>
-                    )}
-                    {item.tip && (
-                      <div className="site-tip">
-                        {item.tip}
-                      </div>
-                    )}
-                  </div>
-                  );
-                })}
-              </div>
+              recommendation.title === "Investment Priority" ? (
+                <ActionableRecommendations 
+                  recommendations={recommendation.content} 
+                  onAddToShoppingList={(shoppingItem) => {
+                    console.log('Added to shopping list:', shoppingItem);
+                    // TODO: Integrate with actual shopping list state management
+                  }}
+                />
+              ) : (
+                <div className="recommendation-list">
+                  {recommendation.content.map((item, idx) => {
+                    // Debug logging for site-specific tips
+                    if (recommendation.title === "Site-Specific Tips") {
+                      console.log("Site tip item:", item);
+                    }
+                    return (
+                    <div key={idx} className="recommendation-item">
+                      {item.icon && <span className="item-icon">{item.icon}</span>}
+                      {item.task && (
+                        <div className="task-item">
+                          <strong>{item.task}</strong>
+                          {item.timing && <span className="timing"> - {item.timing}</span>}
+                          {item.urgency && <span className={`urgency urgency-${item.urgency}`}>{item.urgency}</span>}
+                        </div>
+                      )}
+                      {item.crop && (
+                        <div className="crop-item">
+                          <strong>{item.crop}</strong>
+                          {item.reason && <span className="reason"> - {item.reason}</span>}
+                          {item.varieties && item.varieties.length > 0 && (
+                            <div className="varieties">Try: {item.varieties.join(', ')}</div>
+                          )}
+                        </div>
+                      )}
+                      {item.category && (
+                        <div className="priority-item">
+                          <strong>{item.category}:</strong> {item.description}
+                          {item.amount && <span className="amount"> (${item.amount})</span>}
+                          {item.timing && <span className="timing"> - {item.timing}</span>}
+                        </div>
+                      )}
+                      {item.tip && (
+                        <div className="site-tip">
+                          {item.tip}
+                        </div>
+                      )}
+                    </div>
+                    );
+                  })}
+                </div>
+              )
             ) : (
               <p>Complex recommendation data available</p>
             )}

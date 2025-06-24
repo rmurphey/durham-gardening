@@ -272,48 +272,266 @@ export const generateDurhamSiteRecommendations = () => {
 };
 
 /**
- * Generate investment priorities for Durham
+ * Generate specific, actionable investment recommendations for Durham
+ * Only recommends items that have immediate value based on current date
  */
 export const generateDurhamInvestmentPriority = (customInvestment) => {
-  const priorities = [];
+  const recommendations = [];
   const currentMonth = new Date().getMonth() + 1;
+  const currentDate = new Date();
+  const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 
+                     'July', 'August', 'September', 'October', 'November', 'December'];
 
-  // Durham-specific infrastructure priorities
-  if (currentMonth >= 3 && currentMonth <= 5) {
-    priorities.push({
-      category: 'Irrigation System',
-      amount: 85,
-      timing: 'Before summer heat',
-      urgency: 'high',
-      description: 'Essential for Durham summer survival'
+  // December (Month 12) - Planning season, order for spring
+  if (currentMonth === 12) {
+    recommendations.push({
+      id: 'heat-tolerant-seeds-early',
+      item: 'Early Spring Seed Order: Heat-tolerant varieties bundle',
+      price: 45.00,
+      category: 'Planning',
+      urgency: 'medium',
+      timing: 'Order now for best selection, plant in February-March',
+      why: 'Get first pick of heat-tolerant varieties before they sell out',
+      where: 'True Leaf Market, Southern Exposure',
+      quantity: 1,
+      specifications: 'Okra, amaranth, heat-tolerant lettuce, and pepper seeds'
+    });
+
+    recommendations.push({
+      id: 'garden-planning-tools',
+      item: 'Garden Planning Tools: Measuring tape, stakes, string',
+      price: 25.00,
+      category: 'Planning',
+      urgency: 'low',
+      timing: 'Plan bed layouts during winter downtime',
+      why: 'Prep for efficient spring planting and bed organization',
+      where: 'Home Depot or Harbor Freight',
+      quantity: 1,
+      specifications: '25ft measuring tape, 10 wooden stakes, 100ft garden string'
     });
   }
 
-  priorities.push({
-    category: 'Shade Cloth',
-    amount: 45,
-    timing: 'Early spring setup',
-    urgency: 'high',
-    description: 'Critical for Durham heat protection'
+  // January (Month 1) - Indoor seed starting prep
+  else if (currentMonth === 1) {
+    recommendations.push({
+      id: 'seed-starting-setup',
+      item: 'Indoor Seed Starting Kit with Heat Mat',
+      price: 67.00,
+      category: 'Seed Starting',
+      urgency: 'high',
+      timing: 'Set up now for February pepper/tomato starts',
+      why: 'Essential for starting warm-season crops indoors before last frost',
+      where: 'Amazon or local nursery',
+      quantity: 1,
+      specifications: 'Seed trays, heat mat, dome covers, seed starting soil'
+    });
+
+    recommendations.push({
+      id: 'grow-lights',
+      item: 'LED Grow Light for Seedlings',
+      price: 45.00,
+      category: 'Seed Starting',
+      urgency: 'high',
+      timing: 'Install before starting seeds in February',
+      why: 'Durham winter light insufficient for strong seedlings',
+      where: 'Amazon or grow supply store',
+      quantity: 1,
+      specifications: 'Full spectrum LED, adjustable height, covers 2x4 area'
+    });
+  }
+
+  // February (Month 2) - Active seed starting season
+  else if (currentMonth === 2) {
+    recommendations.push({
+      id: 'quality-seed-starting-soil',
+      item: 'Premium Seed Starting Mix (2 cu ft)',
+      price: 18.00,
+      category: 'Seed Starting',
+      urgency: 'high',
+      timing: 'Buy now for immediate pepper and tomato seeding',
+      why: 'Regular potting soil too heavy for delicate seedlings',
+      where: 'Local nursery preferred for freshness',
+      quantity: 2,
+      specifications: 'Sterile, fine-textured, good drainage for germination'
+    });
+
+    recommendations.push({
+      id: 'compost-spring-prep',
+      item: 'Bulk Compost Delivery (1 cubic yard)',
+      price: 45.00,
+      category: 'Soil Amendment',
+      urgency: 'medium',
+      timing: 'Order for March delivery when clay soil is workable',
+      why: 'Durham clay needs amendment before spring planting',
+      where: 'Local nursery or landscape supply',
+      quantity: 1,
+      specifications: 'Aged compost, delivered when soil conditions allow working'
+    });
+  }
+
+  // March (Month 3) - Spring prep and infrastructure
+  else if (currentMonth === 3) {
+    recommendations.push({
+      id: 'irrigation-planning',
+      item: 'Drip Irrigation Planning Kit',
+      price: 35.00,
+      category: 'Irrigation Prep',
+      urgency: 'high',
+      timing: 'Design now, install in April before heat',
+      why: 'Critical to have watering plan before Durham summer heat arrives',
+      where: 'DripWorks.com for planning materials',
+      quantity: 1,
+      specifications: 'Measuring tools, planning guide, sample fittings'
+    });
+
+    recommendations.push({
+      id: 'shade-structure-materials',
+      item: 'PVC Shade Structure Materials',
+      price: 35.00,
+      category: 'Heat Prep',
+      urgency: 'medium',
+      timing: 'Build structure now, install cloth in April',
+      why: 'Framework must be ready before installing shade cloth',
+      where: 'Home Depot or Lowes',
+      quantity: 1,
+      specifications: '1/2" PVC pipes, joints, ground stakes for bed coverage'
+    });
+  }
+
+  // April (Month 4) - Critical installation window
+  else if (currentMonth === 4) {
+    recommendations.push({
+      id: 'drip-irrigation-system',
+      item: 'Complete Drip Irrigation System',
+      price: 89.99,
+      category: 'Irrigation',
+      urgency: 'urgent',
+      timing: 'Install NOW before May heat waves begin',
+      why: 'Last chance to install before summer survival mode',
+      where: 'Home Depot for immediate pickup',
+      quantity: 1,
+      specifications: 'Timer, tubing, emitters for all three beds'
+    });
+
+    recommendations.push({
+      id: 'shade-cloth-install',
+      item: 'Agfabric 30% Shade Cloth',
+      price: 42.99,
+      category: 'Heat Protection',
+      urgency: 'urgent',
+      timing: 'Install immediately - heat stress starts early May',
+      why: 'Essential for preventing crop failure in Durham heat',
+      where: 'Amazon for quick delivery',
+      quantity: 1,
+      specifications: '12x20ft covers 4×8 and 4×5 beds with overlap'
+    });
+  }
+
+  // May-August (Months 5-8) - Summer survival mode, minimal infrastructure changes
+  else if (currentMonth >= 5 && currentMonth <= 8) {
+    recommendations.push({
+      id: 'emergency-shade',
+      item: 'Emergency Shade Cloth (if not installed)',
+      price: 25.00,
+      category: 'Emergency Heat Protection',
+      urgency: 'urgent',
+      timing: 'Install immediately to save struggling plants',
+      why: 'Crops are actively suffering from heat stress without protection',
+      where: 'Local store for same-day pickup',
+      quantity: 1,
+      specifications: 'Quick-install shade cloth for immediate relief'
+    });
+
+    recommendations.push({
+      id: 'mulch-emergency',
+      item: 'Organic Mulch (5 bags)',
+      price: 30.00,
+      category: 'Soil Protection',
+      urgency: 'high',
+      timing: 'Apply immediately to retain moisture',
+      why: 'Reduces watering frequency and keeps roots cool',
+      where: 'Home Depot or Lowes',
+      quantity: 5,
+      specifications: 'Shredded hardwood or straw, 2-3 inch layer'
+    });
+
+    // Only recommend fall seeds in July-August
+    if (currentMonth >= 7) {
+      recommendations.push({
+        id: 'fall-garden-seeds',
+        item: 'Fall Garden Seed Collection',
+        price: 25.00,
+        category: 'Fall Planning',
+        urgency: 'medium',
+        timing: 'Order now for August-September planting',
+        why: 'Plan fall garden while summer crops are still producing',
+        where: 'True Leaf Market or Southern Exposure',
+        quantity: 1,
+        specifications: 'Kale, lettuce, spinach for fall harvest'
+      });
+    }
+  }
+
+  // September (Month 9) - Fall transition
+  else if (currentMonth === 9) {
+    recommendations.push({
+      id: 'fall-planting-supplies',
+      item: 'Fall Planting Supplies',
+      price: 35.00,
+      category: 'Fall Garden',
+      urgency: 'high',
+      timing: 'Use immediately for fall crop establishment',
+      why: 'Window for fall planting closes quickly in Durham',
+      where: 'Local nursery for fresh transplants',
+      quantity: 1,
+      specifications: 'Fall transplants, fall fertilizer, row cover'
+    });
+  }
+
+  // October-November (Months 10-11) - Winter prep
+  else if (currentMonth >= 10 && currentMonth <= 11) {
+    recommendations.push({
+      id: 'winter-protection',
+      item: 'Cold Weather Protection Kit',
+      price: 45.00,
+      category: 'Winter Prep',
+      urgency: 'high',
+      timing: 'Install before first hard freeze (mid-late November)',
+      why: 'Extends harvest season for cold-hardy crops',
+      where: 'Amazon or garden center',
+      quantity: 1,
+      specifications: 'Row covers, frost blankets, hoops for winter greens'
+    });
+
+    recommendations.push({
+      id: 'cold-frame',
+      item: 'Cold Frame for Season Extension',
+      price: 125.00,
+      category: 'Season Extension',
+      urgency: 'medium',
+      timing: 'Install now for winter growing',
+      why: 'Allows continued harvest of greens through winter',
+      where: 'Local greenhouse supply or Amazon',
+      quantity: 1,
+      specifications: 'Polycarbonate cold frame, covers 4×5 bed section'
+    });
+  }
+
+  // Filter out any items that don't make sense for current month
+  const timeSensitiveRecommendations = recommendations.filter(item => {
+    // Remove items that are clearly out of season
+    if (currentMonth >= 6 && currentMonth <= 8) {
+      // Summer: no irrigation installation, no shade cloth unless emergency
+      return !item.item.includes('Installation') || item.category.includes('Emergency');
+    }
+    if (currentMonth >= 11 || currentMonth <= 1) {
+      // Winter: no summer prep items
+      return !item.category.includes('Heat');
+    }
+    return true;
   });
 
-  priorities.push({
-    category: 'Mulch & Compost',
-    amount: 60,
-    timing: 'Spring application',
-    urgency: 'medium',
-    description: 'Clay soil improvement and moisture retention'
-  });
-
-  priorities.push({
-    category: 'Heat-Tolerant Seeds',
-    amount: 25,
-    timing: 'Early season ordering',
-    urgency: 'medium',
-    description: 'Durham-proven varieties'
-  });
-
-  return priorities;
+  return timeSensitiveRecommendations;
 };
 
 // Helper functions
