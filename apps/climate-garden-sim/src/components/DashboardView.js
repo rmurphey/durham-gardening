@@ -1,26 +1,42 @@
 /**
  * Dashboard View Component
- * Focused view of today's priorities and actionable items
+ * Critical decision-making information for Durham garden management
  */
 
 import React from 'react';
 import TaskCardList from './TaskCardList';
 import ShoppingCardList from './ShoppingCardList';
 import { generateGardenTasks, generatePureShoppingRecommendations } from '../services/temporalShoppingService';
+import { 
+  getDurhamWeatherAlerts, 
+  getReadyToHarvest, 
+  getCriticalTimingWindows,
+  getInvestmentPerformance,
+  getTodaysActionableGuidance 
+} from '../services/dashboardDataService';
 
 const DashboardView = ({ 
   shoppingActions, 
   taskActions,
-  monthlyFocus 
+  monthlyFocus,
+  simulationResults,
+  onViewChange 
 }) => {
-  // Get only the most urgent items for dashboard
+  // Get critical data for decision making
+  const weatherAlerts = getDurhamWeatherAlerts();
+  const readyToHarvest = getReadyToHarvest();
+  const criticalWindows = getCriticalTimingWindows();
+  const investmentData = getInvestmentPerformance(shoppingActions, simulationResults);
+  const actionableGuidance = getTodaysActionableGuidance();
+  
+  // Get urgent items (limited for dashboard focus)
   const urgentTasks = (generateGardenTasks() || []).filter(task => 
-    task.urgency === 'urgent' || task.daysUntilPlanting <= 14
-  );
+    task.urgency === 'urgent' || task.daysUntilPlanting <= 7
+  ).slice(0, 3); // Limit to top 3 for dashboard
   
   const urgentShopping = (generatePureShoppingRecommendations() || []).filter(item => 
-    item.urgency === 'urgent' || item.daysUntilPlanting <= 30
-  );
+    item.urgency === 'urgent' || item.daysUntilPlanting <= 14
+  ).slice(0, 3); // Limit to top 3 for dashboard
 
   const getCurrentDate = () => {
     const now = new Date();
@@ -32,98 +48,180 @@ const DashboardView = ({
     });
   };
 
+  const getTimeOfDayIcon = () => {
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 12) return '🌅';
+    if (hour >= 12 && hour < 17) return '☀️';
+    if (hour >= 17 && hour < 20) return '🌆';
+    return '🌙';
+  };
+
   return (
     <div className="dashboard-view">
       <div className="dashboard-header">
-        <h2>🎯 Today's Priorities</h2>
+        <h2>{getTimeOfDayIcon()} Durham Garden Dashboard</h2>
         <p className="current-date">{getCurrentDate()}</p>
       </div>
 
-      <div className="priority-grid">
-        {/* This Month's Focus */}
-        <div className="focus-card">
-          <h3>📅 This Month's Focus</h3>
-          <div className="focus-content">
-            {monthlyFocus ? (
-              monthlyFocus.split('\n').slice(0, 3).map((line, index) => {
-                if (line.trim() === '') return null;
-                if (line.startsWith('**') && line.endsWith('**')) {
-                  return <h4 key={index} className="focus-header">{line.slice(2, -2)}</h4>;
-                }
-                if (line.startsWith('- ')) {
-                  return <div key={index} className="focus-bullet">{line.slice(2)}</div>;
-                }
-                return <p key={index}>{line}</p>;
-              })
-            ) : (
-              <p>Loading this month's focus...</p>
+      <div className="critical-alerts">
+        {weatherAlerts.map((alert, index) => (
+          <div key={index} className={`alert alert-${alert.urgency}`}>
+            <span className="alert-icon">{alert.icon}</span>
+            <div className="alert-content">
+              <strong>{alert.title}:</strong> {alert.message}
+              <div className="alert-action">👉 {alert.action}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="dashboard-grid">
+        {/* Critical Timing Windows */}
+        {criticalWindows.length > 0 && (
+          <div className="critical-timing card">
+            <h3>⏰ Critical Timing</h3>
+            {criticalWindows.map((window, index) => (
+              <div key={index} className="timing-window">
+                <div className="timing-header">
+                  <span className="timing-icon">{window.icon}</span>
+                  <strong>{window.title}</strong>
+                  <span className="days-left">{window.daysLeft} days</span>
+                </div>
+                <p className="timing-message">{window.message}</p>
+                <div className="timing-action">✅ {window.action}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Ready to Harvest */}
+        {readyToHarvest.length > 0 && (
+          <div className="harvest-ready card">
+            <h3>🥬 Ready to Harvest</h3>
+            <div className="harvest-list">
+              {readyToHarvest.map((item, index) => (
+                <div key={index} className="harvest-item">
+                  <div className="harvest-main">
+                    <strong>{item.crop}</strong>
+                    {item.variety && <span className="variety"> ({item.variety})</span>}
+                    <span className="harvest-value">{item.value}</span>
+                  </div>
+                  {item.daysReady === 0 ? (
+                    <div className="harvest-now">🔴 Harvest Today</div>
+                  ) : (
+                    <div className="harvest-soon">📅 {item.daysReady} days</div>
+                  )}
+                  <div className="harvest-note">{item.note}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Investment Performance */}
+        <div className="investment-performance card">
+          <h3>💰 Garden ROI</h3>
+          <div className="performance-stats">
+            <div className="stat-item">
+              <span className="stat-label">Invested:</span>
+              <span className="stat-value">${investmentData.totalSpent.toFixed(2)}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Est. Value:</span>
+              <span className="stat-value">${investmentData.estimatedValue.toFixed(2)}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">ROI:</span>
+              <span className={`stat-value ${investmentData.roi > 0 ? 'positive' : 'neutral'}`}>
+                {investmentData.roi > 0 ? '+' : ''}{investmentData.roi.toFixed(1)}%
+              </span>
+            </div>
+          </div>
+          {investmentData.roi > 50 && (
+            <div className="roi-success">🎉 Excellent return on investment!</div>
+          )}
+        </div>
+
+        {/* Today's Actionable Guidance */}
+        {actionableGuidance.length > 0 && (
+          <div className="actionable-guidance card">
+            <h3>🎯 Today's Focus</h3>
+            {actionableGuidance.map((guidance, index) => (
+              <div key={index} className="guidance-section">
+                <h4>
+                  <span className="guidance-icon">{guidance.icon}</span>
+                  {guidance.title}
+                </h4>
+                <ul className="guidance-actions">
+                  {guidance.actions.map((action, actionIndex) => (
+                    <li key={actionIndex}>{action}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Urgent Tasks (Condensed) */}
+        {urgentTasks.length > 0 && (
+          <div className="urgent-tasks card">
+            <h3>🔥 Urgent Tasks</h3>
+            <div className="task-list-condensed">
+              {urgentTasks.map((task, index) => (
+                <div key={index} className="task-item-condensed">
+                  <span className="task-urgency">{task.daysUntilPlanting}d</span>
+                  <span className="task-name">{task.crop} - {task.action}</span>
+                  <button 
+                    className="task-complete-btn"
+                    onClick={() => taskActions.markTaskComplete(task.id)}
+                    disabled={taskActions.getTaskStatus(task.id) === 'completed'}
+                  >
+                    {taskActions.getTaskStatus(task.id) === 'completed' ? '✓' : '○'}
+                  </button>
+                </div>
+              ))}
+            </div>
+            {urgentTasks.length > 0 && (
+              <button 
+                className="view-all-tasks"
+                onClick={() => onViewChange('tasks')}
+              >
+                View All Tasks ({urgentTasks.length > 3 ? '3+' : urgentTasks.length})
+              </button>
             )}
           </div>
-        </div>
-
-        {/* Urgent Tasks */}
-        {urgentTasks.length > 0 && (
-          <div className="urgent-section">
-            <h3>🔥 Urgent Garden Tasks</h3>
-            <TaskCardList 
-              tasks={urgentTasks}
-              onMarkComplete={taskActions.markTaskComplete}
-              getTaskStatus={taskActions.getTaskStatus}
-            />
-          </div>
         )}
 
-        {/* Critical Shopping */}
+        {/* Critical Shopping (Condensed) */}
         {urgentShopping.length > 0 && (
-          <div className="urgent-section">
-            <h3>⚡ Time-Sensitive Shopping</h3>
-            <ShoppingCardList 
-              recommendations={urgentShopping}
-              onAddToShoppingList={shoppingActions.addToShoppingList}
-              onMarkAsOwned={shoppingActions.markAsOwned}
-              onRejectItem={shoppingActions.rejectItem}
-              getItemStatus={shoppingActions.getItemStatus}
-            />
+          <div className="urgent-shopping card">
+            <h3>⚡ Critical Shopping</h3>
+            <div className="shopping-list-condensed">
+              {urgentShopping.slice(0, 3).map((item, index) => (
+                <div key={index} className="shopping-item-condensed">
+                  <span className="shopping-urgency">{item.daysUntilPlanting}d</span>
+                  <span className="shopping-name">{item.item}</span>
+                  <span className="shopping-price">${item.price}</span>
+                  <button 
+                    className="shopping-add-btn"
+                    onClick={() => shoppingActions.addToShoppingList(item)}
+                    disabled={shoppingActions.getItemStatus(item.id) !== 'unselected'}
+                  >
+                    {shoppingActions.getItemStatus(item.id) === 'shopping' ? '✓' : '+'}
+                  </button>
+                </div>
+              ))}
+            </div>
+            {urgentShopping.length > 0 && (
+              <button 
+                className="view-all-shopping"
+                onClick={() => onViewChange('shopping')}
+              >
+                View Shopping Plan ({urgentShopping.length > 3 ? '3+' : urgentShopping.length})
+              </button>
+            )}
           </div>
         )}
-
-        {/* Quick Actions */}
-        <div className="quick-actions-card">
-          <h3>⚡ Quick Actions</h3>
-          <div className="quick-actions-grid">
-            <button className="quick-action" onClick={() => window.location.reload()}>
-              🔄 Refresh recommendations
-            </button>
-            <button className="quick-action">
-              📋 View all tasks
-            </button>
-            <button className="quick-action">
-              🛒 Check shopping list
-            </button>
-            <button className="quick-action">
-              📅 View calendar
-            </button>
-          </div>
-        </div>
-
-        {/* Status Summary */}
-        <div className="status-summary">
-          <h3>📊 Garden Status</h3>
-          <div className="status-items">
-            <div className="status-item">
-              <span className="status-label">Active Tasks:</span>
-              <span className="status-value">{urgentTasks.length}</span>
-            </div>
-            <div className="status-item">
-              <span className="status-label">Shopping Items:</span>
-              <span className="status-value">{urgentShopping.length}</span>
-            </div>
-            <div className="status-item">
-              <span className="status-label">Season:</span>
-              <span className="status-value">Summer Growing</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

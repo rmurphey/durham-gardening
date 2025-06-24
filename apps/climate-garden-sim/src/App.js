@@ -141,6 +141,8 @@ function App() {
             shoppingActions={shoppingActions}
             taskActions={taskActions}
             monthlyFocus={monthlyFocus}
+            simulationResults={simulationResults}
+            onViewChange={setActiveView}
           />
         );
       case 'tasks':
