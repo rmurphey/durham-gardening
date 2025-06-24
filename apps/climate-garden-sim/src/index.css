@@ -5716,6 +5716,133 @@ button:focus,
   color: var(--color-text-primary);
 }
 
+/* Specific ordering instructions styling */
+.specific-ordering-instructions {
+  margin-top: var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.instructions-toggle {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-background-light);
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--color-primary);
+  border: none;
+  width: 100%;
+  text-align: left;
+  list-style: none;
+}
+
+.instructions-toggle:hover {
+  background: var(--color-primary-light);
+}
+
+.instructions-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.instructions-content {
+  padding: var(--spacing-md);
+  background: var(--color-background);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.instructions-content pre {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--color-text-primary);
+}
+
+.vendor-link {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.vendor-link a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.vendor-link a:hover {
+  text-decoration: underline;
+}
+
+/* Ordering Timeline Guide */
+.ordering-timeline-guide {
+  margin: var(--spacing-xl) 0;
+}
+
+.ordering-timeline-guide h4 {
+  margin: 0 0 var(--spacing-lg) 0;
+  color: var(--color-primary);
+  font-size: 1.3rem;
+}
+
+.timeline-months {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.timeline-month {
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background-light);
+}
+
+.timeline-month h5 {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-primary-dark);
+  font-size: 1.1rem;
+  border-bottom: 2px solid var(--color-primary-light);
+  padding-bottom: var(--spacing-xs);
+}
+
+.timeline-month ul {
+  margin: 0;
+  padding-left: var(--spacing-lg);
+  list-style: disc;
+}
+
+.timeline-month li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.timeline-key-tips {
+  background: var(--color-primary-pale);
+  border: 1px solid var(--color-primary-light);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+}
+
+.timeline-key-tips h5 {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-primary-dark);
+  font-size: 1.1rem;
+}
+
+.timeline-key-tips ul {
+  margin: 0;
+  padding-left: var(--spacing-lg);
+  list-style: disc;
+}
+
+.timeline-key-tips li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
 @media (max-width: 768px) {
   .purchase-windows-grid,
   .vendor-groups-grid {

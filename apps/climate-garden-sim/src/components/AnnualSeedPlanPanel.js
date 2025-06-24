@@ -184,7 +184,7 @@ const AnnualSeedPlanPanel = ({
                   )}
                   <div className="detail-row">
                     <span className="detail-label">Cost:</span>
-                    <span className="detail-value">${(item.totalCost || item.cost).toFixed(2)}</span>
+                    <span className="detail-value">${(item.totalCost || item.cost || 0).toFixed(2)}</span>
                   </div>
                   {item.vendor && (
                     <div className="detail-row">
@@ -196,6 +196,24 @@ const AnnualSeedPlanPanel = ({
 
                 {(item.notes || item.description) && (
                   <div className="item-notes">{item.notes || item.description}</div>
+                )}
+
+                {item.specificInstructions && (
+                  <div className="specific-ordering-instructions">
+                    <details>
+                      <summary className="instructions-toggle">📋 Specific Ordering Instructions</summary>
+                      <div className="instructions-content">
+                        <pre>{item.specificInstructions}</pre>
+                        {item.vendorUrl && item.vendorUrl !== 'https://www.trueleafmarket.com' && (
+                          <div className="vendor-link">
+                            <a href={item.vendorUrl} target="_blank" rel="noopener noreferrer">
+                              🔗 View on {item.vendor} website
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    </details>
+                  </div>
                 )}
 
                 {item.purchaseWindow && (

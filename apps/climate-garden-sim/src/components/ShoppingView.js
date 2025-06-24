@@ -16,16 +16,53 @@ import { DURHAM_CONFIG } from '../config/durhamConfig';
 
 const ShoppingView = ({ shoppingActions }) => {
   const [viewMode, setViewMode] = useState('annual'); // 'annual' or 'urgent'
+  const [annualPlan, setAnnualPlan] = useState(null);
+  const [isLoadingPlan, setIsLoadingPlan] = useState(true);
   
-  // Generate annual seed plan
-  const portfolioStrategies = getPortfolioStrategies(DURHAM_CONFIG);
-  const annualPlan = generateAnnualSeedPlan(portfolioStrategies.hedge, DURHAM_CONFIG);
+  // Generate annual seed plan (now async)
+  React.useEffect(() => {
+    const loadAnnualPlan = async () => {
+      try {
+        setIsLoadingPlan(true);
+        const portfolioStrategies = getPortfolioStrategies(DURHAM_CONFIG);
+        const plan = await generateAnnualSeedPlan(portfolioStrategies.hedge, DURHAM_CONFIG);
+        setAnnualPlan(plan);
+      } catch (error) {
+        console.error('Error loading annual seed plan:', error);
+        // Fallback to empty plan
+        setAnnualPlan({
+          seedOrders: [],
+          infrastructure: [],
+          supplies: [],
+          totalBudget: 0,
+          purchaseWindows: [],
+          vendorGroups: {}
+        });
+      } finally {
+        setIsLoadingPlan(false);
+      }
+    };
+    
+    loadAnnualPlan();
+  }, []);
   
   // Legacy urgent recommendations for comparison
   const allRecommendations = generatePureShoppingRecommendations() || [];
   const urgentShopping = allRecommendations.filter(item => 
     item.urgency === 'urgent' || item.daysUntilPlanting <= 30
   );
+
+  // Show loading state while plan is being generated
+  if (isLoadingPlan || !annualPlan) {
+    return (
+      <div className="shopping-view">
+        <div className="loading-state">
+          <h2>🛒 Loading Annual Seed Plan...</h2>
+          <p>Querying database for specific seed ordering recommendations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="shopping-view">
@@ -154,6 +191,54 @@ const ShoppingView = ({ shoppingActions }) => {
           )}
         </div>
       )}
+
+      {/* Ordering Timeline Guide */}
+      <div className="ordering-timeline-guide card">
+        <h4>📅 Durham Garden Ordering Timeline</h4>
+        <div className="timeline-months">
+          <div className="timeline-month">
+            <h5>🗓️ December - January</h5>
+            <ul>
+              <li><strong>Primary Seed Orders</strong> - Best selection, early bird pricing</li>
+              <li><strong>Hot Weather Varieties</strong> - Jericho lettuce, Space spinach, heat-tolerant crops</li>
+              <li><strong>Johnny's Seeds & True Leaf Market</strong> - Main orders for reliability</li>
+            </ul>
+          </div>
+          <div className="timeline-month">
+            <h5>🗓️ February</h5>
+            <ul>
+              <li><strong>Seed Starting Supplies</strong> - Trays, heat mats, grow lights</li>
+              <li><strong>Start Peppers & Slow Crops</strong> - 8-10 weeks before last frost</li>
+              <li><strong>Final Seed Orders</strong> - Last chance for specialty varieties</li>
+            </ul>
+          </div>
+          <div className="timeline-month">
+            <h5>🗓️ March</h5>
+            <ul>
+              <li><strong>Bulk Soil Amendments</strong> - Compost (10 bags), organic fertilizer</li>
+              <li><strong>Spring Infrastructure</strong> - Irrigation setup, row covers</li>
+              <li><strong>Direct Sow Cool Crops</strong> - Lettuce, spinach, kale succession starts</li>
+            </ul>
+          </div>
+          <div className="timeline-month">
+            <h5>🗓️ April - May</h5>
+            <ul>
+              <li><strong>Mulch & Protection</strong> - Straw/leaf mulch, shade cloth setup</li>
+              <li><strong>Last-Minute Needs</strong> - Replace failed seeds, summer varieties</li>
+              <li><strong>Plant Out Warm Crops</strong> - After soil temps hit 65°F</li>
+            </ul>
+          </div>
+        </div>
+        <div className="timeline-key-tips">
+          <h5>🎯 Key Durham-Specific Tips</h5>
+          <ul>
+            <li><strong>Clay Soil Focus</strong> - Round carrots (Paris Market), raised beds for drainage</li>
+            <li><strong>Heat Adaptation</strong> - Only buy bolt-resistant lettuce/spinach varieties</li>
+            <li><strong>Vendor Strategy</strong> - True Leaf Market for reliability, Johnny's for specialty</li>
+            <li><strong>Succession Timing</strong> - Plant lettuce every 2 weeks March-April, resume August</li>
+          </ul>
+        </div>
+      </div>
 
       <div className="shopping-help">
         <h4>💡 About Annual Seed Planning</h4>

@@ -16,6 +16,9 @@ import TaskCardList from '../components/TaskCardList';
 import PurchaseCard from '../components/PurchaseCard';
 import TaskCard from '../components/TaskCard';
 import Card from '../components/Card';
+import AnnualSeedPlanPanel from '../components/AnnualSeedPlanPanel';
+import VendorGroupPanel from '../components/VendorGroupPanel';
+import PurchaseWindowPanel from '../components/PurchaseWindowPanel';
 
 import { useShoppingList } from '../hooks/useShoppingList';
 import { useTaskManager } from '../hooks/useTaskManager';
@@ -276,6 +279,68 @@ describe('Interface Validation - Prevent Runtime Prop Errors', () => {
       // this will fail with the exact same errors users see in the browser
       expect(() => {
         render(<App />);
+      }).not.toThrow();
+    });
+  });
+
+  describe('New Annual Seed Planning Components', () => {
+    test('AnnualSeedPlanPanel renders with minimal props', () => {
+      const minimalSeedPlan = {
+        seedOrders: [],
+        infrastructure: [],
+        supplies: []
+      };
+      
+      expect(() => {
+        render(<AnnualSeedPlanPanel seedPlan={minimalSeedPlan} />);
+      }).not.toThrow();
+    });
+
+    test('VendorGroupPanel renders with minimal props', () => {
+      const minimalVendor = {
+        name: 'Test Vendor',
+        items: [],
+        totalCost: 0,
+        shippingThreshold: 50,
+        notes: ''
+      };
+      
+      expect(() => {
+        render(<VendorGroupPanel vendor={minimalVendor} />);
+      }).not.toThrow();
+    });
+
+    test('PurchaseWindowPanel renders with minimal props', () => {
+      const minimalWindow = {
+        name: 'Test Window',
+        timing: 'Test timing',
+        description: 'Test description',
+        items: [],
+        totalCost: 0
+      };
+      
+      expect(() => {
+        render(<PurchaseWindowPanel window={minimalWindow} />);
+      }).not.toThrow();
+    });
+
+    test('AnnualSeedPlanPanel handles missing callback functions', () => {
+      const mockSeedPlan = {
+        seedOrders: [{
+          id: 'test-seed',
+          crop: 'Test Crop',
+          variety: 'Test Variety',
+          category: 'Seeds',
+          totalCost: 5.00,
+          vendor: 'Test Vendor'
+        }],
+        infrastructure: [],
+        supplies: []
+      };
+      
+      // Should not crash even without callback functions
+      expect(() => {
+        render(<AnnualSeedPlanPanel seedPlan={mockSeedPlan} />);
       }).not.toThrow();
     });
   });
