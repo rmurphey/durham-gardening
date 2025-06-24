@@ -6,7 +6,7 @@
 import React from 'react';
 import SimpleInvestmentPanel from './SimpleInvestmentPanel';
 import ShoppingListPanel from './ShoppingListPanel';
-import { generateSimpleInvestmentRecommendations } from '../services/simpleInvestmentService';
+import { generateTemporalShoppingRecommendations } from '../services/temporalShoppingService';
 import { useShoppingList } from '../hooks/useShoppingList';
 
 const RecommendationsPanelSimple = ({
@@ -16,8 +16,14 @@ const RecommendationsPanelSimple = ({
   topCropRecommendations,
   siteSpecificRecommendations
 }) => {
-  // Generate simple investment recommendations
-  const investmentRecommendations = generateSimpleInvestmentRecommendations();
+  // Generate temporal shopping recommendations
+  const investmentRecommendations = generateTemporalShoppingRecommendations();
+  
+  // Debug logging
+  console.log('🔍 Temporal recommendations generated:', investmentRecommendations.length);
+  if (investmentRecommendations.length > 0) {
+    console.log('📅 First recommendation:', investmentRecommendations[0]);
+  }
   
   // Shopping list management
   const {

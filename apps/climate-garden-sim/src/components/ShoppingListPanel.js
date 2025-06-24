@@ -1,9 +1,10 @@
 /**
  * Shopping List Panel Component
- * Displays and manages the shopping list with manual clearing
+ * Displays and manages the shopping list with temporal planting awareness
  */
 
 import React, { useState } from 'react';
+import { getTemporalContext } from '../services/temporalShoppingService';
 
 const ShoppingListPanel = ({ 
   shoppingList, 
@@ -40,7 +41,7 @@ const ShoppingListPanel = ({
         <div className="shopping-list-content">
           <div className="shopping-items">
             {shoppingList.map((item) => (
-              <div key={item.id} className="shopping-item">
+              <div key={item.id} className={`shopping-item ${item.daysUntilPlanting <= 7 ? 'urgent-timing' : ''}`}>
                 <div className="item-info">
                   <div className="item-name">{item.item}</div>
                   <div className="item-details">
@@ -48,7 +49,20 @@ const ShoppingListPanel = ({
                     <span className={`urgency urgency-${item.urgency}`}>
                       {item.urgency}
                     </span>
+                    {item.plantingDate && (
+                      <span className="planting-info">
+                        for {item.plantingDate}
+                      </span>
+                    )}
                   </div>
+                  {item.daysUntilPlanting !== undefined && (
+                    <div className="timing-reminder">
+                      {item.daysUntilPlanting <= 7 
+                        ? `⚡ Needed ${getTemporalContext(item)}`
+                        : `📅 For planting in ${getTemporalContext(item)}`
+                      }
+                    </div>
+                  )}
                 </div>
                 <button 
                   className="remove-btn"

@@ -1,9 +1,10 @@
 /**
  * Simple Investment Panel Component
- * Clean, focused investment recommendations with shopping list integration
+ * Clean, focused investment recommendations with temporal planting awareness
  */
 
-import React from 'react';
+import React, { useState } from 'react';
+import { getTemporalContext } from '../services/temporalShoppingService';
 
 const SimpleInvestmentPanel = ({ 
   recommendations = [], 
@@ -12,6 +13,7 @@ const SimpleInvestmentPanel = ({
   onRejectItem, 
   getItemStatus 
 }) => {
+  const [showTiming, setShowTiming] = useState(true);
   const getUrgencyIcon = (urgency) => {
     switch (urgency) {
       case 'urgent': return '🔥';
@@ -80,7 +82,16 @@ const SimpleInvestmentPanel = ({
     <div className="simple-investment-panel">
       <div className="panel-header">
         <h3>💰 Smart Investments</h3>
-        <span className="item-count">{recommendations.length} items</span>
+        <div className="header-controls">
+          <span className="item-count">{recommendations.length} items</span>
+          <button 
+            className={`timing-toggle ${showTiming ? 'active' : ''}`}
+            onClick={() => setShowTiming(!showTiming)}
+            title="Toggle planting timeline"
+          >
+            📅 Timeline
+          </button>
+        </div>
       </div>
 
       <div className="investment-list">
@@ -90,7 +101,7 @@ const SimpleInvestmentPanel = ({
           return (
             <div 
               key={item.id} 
-              className={`investment-item ${status}`}
+              className={`investment-item ${status} ${item.daysUntilPlanting <= 30 ? 'urgent-timing' : ''}`}
             >
               <div className="item-main">
                 <div className="item-icon">
@@ -99,6 +110,24 @@ const SimpleInvestmentPanel = ({
                 <div className="item-content">
                   <div className="item-name">{item.item}</div>
                   <div className="item-reason">{item.why}</div>
+                  
+                  {showTiming && item.plantingDate && (
+                    <div className="timing-info">
+                      <div className="planting-timeline">
+                        <span className="timeline-label">For:</span>
+                        <span className="planting-date">{item.plantingDate}</span>
+                        <span className="time-until">
+                          ({getTemporalContext(item)} away)
+                        </span>
+                      </div>
+                      {item.consequences && (
+                        <div className="consequences">
+                          <span className="warning-icon">⚠️</span>
+                          {item.consequences}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="item-price">${item.price}</div>
               </div>

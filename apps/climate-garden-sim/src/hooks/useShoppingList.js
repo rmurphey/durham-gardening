@@ -61,6 +61,9 @@ export const useShoppingList = () => {
         price: item.price,
         category: item.category,
         urgency: item.urgency,
+        plantingDate: item.plantingDate,
+        daysUntilPlanting: item.daysUntilPlanting,
+        plantingWindow: item.plantingWindow,
         addedAt: new Date().toISOString()
       }];
     });
