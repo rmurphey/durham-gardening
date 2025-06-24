@@ -1928,6 +1928,86 @@ button:focus,
   font-weight: var(--font-weight-medium);
 }
 
+/* Loading states for investment analysis */
+.loading-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-background-light);
+  border-radius: var(--radius-sm);
+}
+
+.loading-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+.shimmer-value {
+  width: 60px;
+  height: var(--font-size-3xl);
+  background: var(--color-border-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.shimmer-label {
+  width: 120px;
+  height: var(--font-size-sm);
+  background: var(--color-border-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.shimmer-confidence {
+  width: 100px;
+  height: var(--font-size-xs);
+  background: var(--color-border-light);
+  border-radius: var(--radius-sm);
+}
+
+.shimmer-text {
+  height: 1em;
+  background: var(--color-border-light);
+  border-radius: var(--radius-sm);
+  min-width: 80px;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Enhanced loading state for result cards */
+.result-card .loading-shimmer {
+  text-align: center;
+}
+
+.result-card .loading-shimmer .shimmer-value {
+  margin: 0 auto var(--spacing-sm) auto;
+}
+
+.result-card .loading-shimmer .shimmer-label {
+  margin: 0 auto var(--spacing-xs) auto;
+}
+
+.result-card .loading-shimmer .shimmer-confidence {
+  margin: 0 auto;
+}
+
 /* Mobile responsiveness for investment analysis */
 @media (max-width: 768px) {
   .breakdown-header {

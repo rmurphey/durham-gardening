@@ -49,7 +49,15 @@ const SimulationResults = ({
         </div>
 
         {/* Investment Sufficiency Analysis */}
-        {simulationResults.rawResults?.[0]?.investmentSufficiency && (
+        {simulating ? (
+          <div className="result-card investment-analysis neutral">
+            <div className="loading-shimmer">
+              <div className="shimmer-value"></div>
+              <div className="shimmer-label">Investment Sufficiency</div>
+              <div className="shimmer-confidence"></div>
+            </div>
+          </div>
+        ) : simulationResults.rawResults?.[0]?.investmentSufficiency && (
           <div className={`result-card investment-analysis ${
             simulationResults.rawResults[0].investmentSufficiency.level === 'excellent' ? 'positive' :
             simulationResults.rawResults[0].investmentSufficiency.level === 'good' ? 'neutral' :
@@ -127,7 +135,45 @@ const SimulationResults = ({
       )}
 
       {/* Investment Recommendations */}
-      {simulationResults.rawResults?.[0]?.investmentSufficiency && (
+      {simulating ? (
+        <div className="investment-recommendations">
+          <h3>💰 Investment Analysis</h3>
+          
+          {/* Loading breakdown */}
+          <div className="investment-breakdown">
+            <div className="breakdown-header">
+              <h4>Investment Breakdown</h4>
+              <div className="totals">
+                <span className="actual-total">Your Budget: ${totalInvestment}</span>
+                <span className="required-total loading-shimmer">
+                  <div className="shimmer-text">Required: Calculating...</div>
+                </span>
+              </div>
+            </div>
+            
+            <div className="category-breakdown">
+              {['seeds', 'soil', 'fertilizer', 'protection'].map((category) => (
+                <div key={category} className="category-row">
+                  <span className="category-name">{category}</span>
+                  <span className="required-amount loading-shimmer">
+                    <div className="shimmer-text">$--</div>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Loading recommendations */}
+          <div className="recommendations-list">
+            <h4>Recommendations</h4>
+            <div className="recommendation-item neutral">
+              <div className="loading-shimmer">
+                <div className="shimmer-text">Analyzing investment requirements...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : simulationResults.rawResults?.[0]?.investmentSufficiency && (
         <div className="investment-recommendations">
           <h3>💰 Investment Analysis</h3>
           
