@@ -93,9 +93,9 @@ const PurchaseWindowPanel = ({
                 <button
                   className="action-button add-button"
                   onClick={() => handleAddToShoppingList(item)}
-                  disabled={getItemStatus(item.id) === 'added'}
+                  disabled={getItemStatus(item.id) === 'shopping'}
                 >
-                  {getItemStatus(item.id) === 'added' ? '✓ Added' : '+ Add'}
+                  {getItemStatus(item.id) === 'shopping' ? '✓ Added' : '+ Add'}
                 </button>
                 <button
                   className="action-button owned-button"

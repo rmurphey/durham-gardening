@@ -15,7 +15,7 @@ const VendorGroupPanel = ({
 
   const handleAddAllToShoppingList = () => {
     vendor.items.forEach(item => {
-      if (getItemStatus(item.id) !== 'added' && getItemStatus(item.id) !== 'owned') {
+      if (getItemStatus(item.id) !== 'shopping' && getItemStatus(item.id) !== 'owned') {
         onAddToShoppingList({
           id: item.id,
           item: item.item || item.crop,
@@ -116,9 +116,9 @@ const VendorGroupPanel = ({
                   <button
                     className="action-button add-button"
                     onClick={() => handleAddToShoppingList(item)}
-                    disabled={getItemStatus(item.id) === 'added'}
+                    disabled={getItemStatus(item.id) === 'shopping'}
                   >
-                    {getItemStatus(item.id) === 'added' ? '✓ Added' : '+ Add'}
+                    {getItemStatus(item.id) === 'shopping' ? '✓ Added' : '+ Add'}
                   </button>
                   <button
                     className="action-button owned-button"

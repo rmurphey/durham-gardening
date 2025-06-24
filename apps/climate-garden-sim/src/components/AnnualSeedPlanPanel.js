@@ -29,7 +29,7 @@ const AnnualSeedPlanPanel = ({
     
     if (showOnlyNeeded) {
       items = items.filter(item => 
-        getItemStatus(item.id) !== 'added' && getItemStatus(item.id) !== 'owned'
+        getItemStatus(item.id) !== 'shopping' && getItemStatus(item.id) !== 'owned'
       );
     }
     
@@ -54,18 +54,21 @@ const AnnualSeedPlanPanel = ({
 
   const handleAddAllNeeded = () => {
     const neededItems = getAllItems().filter(item => 
-      getItemStatus(item.id) !== 'added' && getItemStatus(item.id) !== 'owned'
+      getItemStatus(item.id) !== 'shopping' && getItemStatus(item.id) !== 'owned'
     );
     
-    neededItems.forEach(item => handleAddToShoppingList(item));
+    neededItems.forEach(item => {
+      handleAddToShoppingList(item);
+    });
+    
   };
 
   const getItemStatusCounts = () => {
     const allItems = getAllItems();
-    const added = allItems.filter(item => getItemStatus(item.id) === 'added').length;
+    const added = allItems.filter(item => getItemStatus(item.id) === 'shopping').length;
     const owned = allItems.filter(item => getItemStatus(item.id) === 'owned').length;
     const needed = allItems.filter(item => 
-      getItemStatus(item.id) !== 'added' && getItemStatus(item.id) !== 'owned'
+      getItemStatus(item.id) !== 'shopping' && getItemStatus(item.id) !== 'owned'
     ).length;
     
     return { added, owned, needed, total: allItems.length };
@@ -206,9 +209,9 @@ const AnnualSeedPlanPanel = ({
                   <button
                     className="action-button add-button"
                     onClick={() => handleAddToShoppingList(item)}
-                    disabled={getItemStatus(item.id) === 'added'}
+                    disabled={getItemStatus(item.id) === 'shopping'}
                   >
-                    {getItemStatus(item.id) === 'added' ? '✓ Added' : '+ Add to List'}
+                    {getItemStatus(item.id) === 'shopping' ? '✓ Added' : '+ Add to List'}
                   </button>
                   <button
                     className="action-button owned-button"
