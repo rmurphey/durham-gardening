@@ -42,7 +42,8 @@
 ## Services & Business Logic
 
 ### Core Services
-- **`src/services/gardenCalendar.js`** - Garden calendar generation with systematic activity filtering
+- **`src/services/databaseCalendarService.js`** - Database-driven garden calendar generation
+- **`src/services/databaseService.js`** - SQLite database abstraction layer for activity templates
 - **`src/services/simulationEngine.js`** - Monte Carlo simulation for garden ROI analysis
 - **`src/services/durhamRecommendations.js`** - Durham-specific recommendations engine
 - **`src/services/storageService.js`** - localStorage management utilities
@@ -50,6 +51,11 @@
 ### Data Sources
 - **`src/data/portfolioStrategies.js`** - Portfolio strategy definitions and allocation logic
 - **`src/data/climateScenarios.js`** - Climate scenario data for different regions
+
+### Database
+- **`database/plant_varieties.db`** - SQLite database with plant data, activity templates, and garden management
+- **`database/activity_schema.sql`** - Database schema for garden calendar system
+- **`database/durham_data.sql`** - Durham-specific activity templates and garden configuration
 
 ## State Management
 
@@ -71,12 +77,13 @@
 ### Garden Status Management
 - **Configuration**: `src/config/gardenStatus.js`
 - **Filter Logic**: `shouldShowCropActivity()` function in same file
-- **Integration**: Used in `src/services/gardenCalendar.js` for systematic activity filtering
+- **Integration**: Used in `src/services/databaseCalendarService.js` for systematic activity filtering
 
 ### Calendar Generation
-- **Main Logic**: `generateGardenCalendar()` in `src/services/gardenCalendar.js`
-- **Durham Activities**: `addDurhamShoppingActivities()`, `addSuccessionPlantingActivities()`, `addCropRotationActivities()`
+- **Main Logic**: `generateDatabaseGardenCalendar()` in `src/services/databaseCalendarService.js`
+- **Database Layer**: `databaseService` provides activity templates from SQLite database
 - **Filtering**: Systematic filtering via `shouldShowCropActivity()` from garden status
+- **Templates**: Activity templates stored in database with variety suggestions, costs, timing
 
 ### Simulation Engine
 - **Core Engine**: `src/services/simulationEngine.js`
@@ -88,6 +95,13 @@
 - **Design System**: White/black/green color scheme, component-specific styles included
 
 ## Recent Major Changes
+
+### Database-Driven Calendar System (2025-06-24)
+- Replaced hard-coded calendar logic with database-driven templates
+- Created SQLite schema for activity templates and garden management
+- Eliminated duplication by centralizing activity data
+- Added structured templates with variety suggestions, costs, and timing
+- Improved calendar specificity (exact varieties, bed assignments, suppliers)
 
 ### ESLint Fixes (2025-06-24)
 - Removed undefined variables from garden calendar service

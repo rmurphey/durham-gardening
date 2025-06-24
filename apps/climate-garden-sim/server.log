@@ -363,3 +363,15 @@ src/services/gardenCalendar.js
   Line 621:5:  Expected a default case  default-case
 
 webpack compiled with 1 warning
+/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/react-scripts/scripts/start.js:19
+  throw err;
+  ^
+
+[Error: ENOENT: no such file or directory, stat '/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/.cache/default-development/9.pack'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/.cache/default-development/9.pack'
+}
+
+Node.js v22.16.0

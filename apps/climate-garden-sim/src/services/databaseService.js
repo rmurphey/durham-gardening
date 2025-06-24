@@ -1,30 +1,22 @@
 /**
  * Database Service for Garden Calendar
- * Provides abstraction layer for SQLite database operations
+ * Provides abstraction layer for activity template data
+ * Note: In a production app, this would connect to a real database
+ * For now, using structured data that mirrors the database schema
  */
-
-// For now, we'll use a mock implementation that reads from the database
-// In a full implementation, you'd use better-sqlite3 or similar
 
 class DatabaseService {
   constructor() {
-    this.dbPath = './database/plant_varieties.db';
-    // Note: This would require a Node.js backend or better-sqlite3 in Electron
-    // For now, we'll provide a bridge interface
+    // Initialize with structured template data
+    // This data structure matches what would come from the SQLite database
+    this.loadDurhamActivityTemplates();
   }
 
-  /**
-   * Get activity templates for a specific region and month
-   * @param {number} regionId - Region ID (1 for US)
-   * @param {number} month - Month number (1-12)
-   * @param {Array} enabledPlantKeys - Plant keys that are enabled in garden status
-   * @returns {Promise<Array>} Activity templates
-   */
-  async getActivityTemplates(regionId = 1, month, enabledPlantKeys = []) {
-    // This would be a real database query in production
-    // For now, return structured data based on the database schema
+  loadDurhamActivityTemplates() {
+    // Durham-specific activity templates (extracted from database)
+    // This data matches the structure in durham_data.sql
     
-    const templates = [
+    this.activityTemplates = [
       // Hot peppers shopping (February)
       {
         id: 1,
@@ -34,11 +26,11 @@ class DatabaseService {
         action_template: 'Order pepper seeds: {varieties} from {supplier}',
         timing_template: 'Start indoors March 1st, need 8-10 weeks before transplant',
         priority: 'medium',
-        variety_suggestions: ['Habanero', 'Jalapeño', 'Thai Chili'],
-        supplier_preferences: ['True Leaf Market', 'Southern Exposure'],
+        variety_suggestions: ['Habanero', 'Jalapeño', 'Thai Chili', 'Carolina Reaper'],
+        supplier_preferences: ['True Leaf Market', 'Southern Exposure', 'Baker Creek'],
         estimated_cost_min: 12.00,
         estimated_cost_max: 18.00,
-        conditions: { min_temp_indoors: 70 }
+        bed_requirements: { min_spacing_inches: 18, plants_per_sqft: 0.25 }
       },
       
       // Sweet potato shopping (April)  
@@ -50,11 +42,16 @@ class DatabaseService {
         action_template: 'Order {quantity} {variety} sweet potato slips from {supplier}',
         timing_template: 'Plant in 4×8 bed after soil reaches 65°F (mid-May)',
         priority: 'medium',
-        variety_suggestions: ['Beauregard', 'Georgia Jet'],
-        supplier_preferences: ['Local nursery', 'Southern Exposure'],
+        variety_suggestions: ['Beauregard', 'Georgia Jet', 'Centennial'],
+        supplier_preferences: ['Local nursery', 'Southern Exposure', 'Johnny Seeds'],
         estimated_cost_min: 18.00,
         estimated_cost_max: 24.00,
-        bed_requirements: { recommended_bed: '4×8 Bed', quantity: 12 }
+        bed_requirements: { 
+          min_spacing_inches: 12, 
+          plants_per_sqft: 1.0, 
+          recommended_bed: '4×8 Bed',
+          quantity: 12 
+        }
       },
 
       // Kale spring shopping (February)
@@ -66,11 +63,15 @@ class DatabaseService {
         action_template: 'Buy kale seeds: {varieties} from {supplier}',
         timing_template: 'Direct sow in 3×15 bed mid-February, 18-inch spacing',
         priority: 'medium',
-        variety_suggestions: ['Red Russian', 'Winterbor'],
-        supplier_preferences: ['True Leaf Market'],
+        variety_suggestions: ['Red Russian', 'Winterbor', 'Lacinato'],
+        supplier_preferences: ['True Leaf Market', 'Southern Exposure'],
         estimated_cost_min: 8.00,
         estimated_cost_max: 12.00,
-        bed_requirements: { recommended_bed: '3×15 Bed' }
+        bed_requirements: { 
+          min_spacing_inches: 18, 
+          plants_per_sqft: 0.25, 
+          recommended_bed: '3×15 Bed' 
+        }
       },
 
       // Kale fall shopping (July)
@@ -83,10 +84,14 @@ class DatabaseService {
         timing_template: 'Direct sow in 4×5 bed in August, harvest through winter',
         priority: 'medium',
         variety_suggestions: ['Red Russian', 'Winterbor'],
-        supplier_preferences: ['True Leaf Market'],
+        supplier_preferences: ['True Leaf Market', 'Southern Exposure'],
         estimated_cost_min: 8.00,
         estimated_cost_max: 12.00,
-        bed_requirements: { recommended_bed: '4×5 Bed' }
+        bed_requirements: { 
+          min_spacing_inches: 18, 
+          plants_per_sqft: 0.25, 
+          recommended_bed: '4×5 Bed' 
+        }
       },
 
       // Pepper care (July)
@@ -111,25 +116,62 @@ class DatabaseService {
         timing_template: 'Peak harvest season - check every 2-3 days',
         priority: 'high',
         harvest_info: { frequency: 'every_2_3_days' }
+      },
+
+      // Additional crop activities
+      {
+        id: 7,
+        plant_key: 'sweet_potato',
+        activity_type: 'care',
+        month: 7,
+        action_template: 'Mulch sweet potato beds, train vines away from paths',
+        timing_template: 'Summer growth management',
+        priority: 'medium'
+      },
+
+      {
+        id: 8,
+        plant_key: 'sweet_potato',
+        activity_type: 'harvest',
+        month: 9,
+        action_template: 'Harvest sweet potatoes before first frost',
+        timing_template: 'Before soil gets too cold',
+        priority: 'high'
+      },
+
+      {
+        id: 9,
+        plant_key: 'cantaloupe',
+        activity_type: 'harvest',
+        month: 8,
+        action_template: 'Check for ripe melons - should slip easily from vine',
+        timing_template: 'Peak summer harvest',
+        priority: 'high'
+      },
+
+      {
+        id: 10,
+        plant_key: 'cucumber',
+        activity_type: 'harvest',
+        month: 7,
+        action_template: 'Daily cucumber harvest to maintain production',
+        timing_template: 'Continuous harvest period',
+        priority: 'high'
+      },
+
+      {
+        id: 11,
+        plant_key: 'tomatillo',
+        activity_type: 'harvest',
+        month: 8,
+        action_template: 'Harvest tomatillos when husks are full and papery',
+        timing_template: 'Extended harvest season',
+        priority: 'high'
       }
     ];
 
-    // Filter by month and enabled plants
-    return templates.filter(template => {
-      const matchesMonth = template.month === month;
-      const isEnabled = !template.plant_key || enabledPlantKeys.includes(template.plant_key);
-      return matchesMonth && isEnabled;
-    });
-  }
-
-  /**
-   * Get rotation templates for specific month
-   * @param {number} regionId - Region ID
-   * @param {number} month - Month number
-   * @returns {Promise<Array>} Rotation activity templates
-   */
-  async getRotationTemplates(regionId = 1, month) {
-    const rotations = [
+    // Rotation templates
+    this.rotationTemplates = [
       {
         id: 101,
         activity_type: 'rotation',
@@ -177,17 +219,8 @@ class DatabaseService {
       }
     ];
 
-    return rotations.filter(rotation => rotation.month === month);
-  }
-
-  /**
-   * Get succession planting templates
-   * @param {number} regionId - Region ID
-   * @param {number} month - Month number
-   * @returns {Promise<Array>} Succession planting templates
-   */
-  async getSuccessionTemplates(regionId = 1, month) {
-    const successions = [
+    // Succession planting templates
+    this.successionTemplates = [
       {
         id: 201,
         activity_type: 'succession',
@@ -252,8 +285,40 @@ class DatabaseService {
         varieties: ['spinach', 'arugula']
       }
     ];
+  }
 
-    return successions.filter(succession => succession.month === month);
+  /**
+   * Get activity templates for a specific region and month
+   * @param {number} regionId - Region ID (1 for US)
+   * @param {number} month - Month number (1-12)
+   * @param {Array} enabledPlantKeys - Plant keys that are enabled in garden status
+   * @returns {Promise<Array>} Activity templates
+   */
+  async getActivityTemplates(regionId = 1, month, enabledPlantKeys = []) {
+    return this.activityTemplates.filter(template => 
+      template.month === month &&
+      (!template.plant_key || enabledPlantKeys.includes(template.plant_key))
+    );
+  }
+
+  /**
+   * Get rotation templates for specific month
+   * @param {number} regionId - Region ID
+   * @param {number} month - Month number
+   * @returns {Promise<Array>} Rotation activity templates
+   */
+  async getRotationTemplates(regionId = 1, month) {
+    return this.rotationTemplates.filter(template => template.month === month);
+  }
+
+  /**
+   * Get succession planting templates
+   * @param {number} regionId - Region ID
+   * @param {number} month - Month number
+   * @returns {Promise<Array>} Succession planting templates
+   */
+  async getSuccessionTemplates(regionId = 1, month) {
+    return this.successionTemplates.filter(template => template.month === month);
   }
 
   /**
