@@ -11,6 +11,7 @@ import {
 } from '../config.js';
 import { getPortfolioStrategies } from '../data/portfolioStrategies.js';
 import { DURHAM_CROPS } from '../config/durhamConfig.js';
+import { CURRENT_GARDEN_STATUS, shouldShowCropActivity } from '../config/gardenStatus.js';
 
 /**
  * Get climate zone classification from location
@@ -46,23 +47,16 @@ const addDurhamShoppingActivities = (activities, monthNumber, portfolio) => {
     }
 
     Object.entries(relevantCrops).forEach(([cropKey, crop]) => {
+      // Skip crops that aren't wanted based on garden status
+      if (!shouldShowCropActivity(cropKey, 'shopping')) return;
+      
       const name = crop.name;
       const seeds = crop.shopping?.seeds || 'seeds';
       const cost = crop.shopping?.cost || '$3-4';
 
       // Add shopping activities based on planting timing
       switch (cropKey) {
-        case 'okra':
-          if (monthNumber === 4) {
-            activities.push({
-              type: 'shopping',
-              crop: 'Okra',
-              action: `Buy okra seeds (${seeds}) - ${cost}`,
-              timing: 'Plant in May when soil warms',
-              priority: 'high'
-            });
-          }
-          break;
+        // No okra case - we don't want it
           
         case 'hotPeppers':
           if (monthNumber === 2) {
@@ -71,7 +65,7 @@ const addDurhamShoppingActivities = (activities, monthNumber, portfolio) => {
               crop: 'Hot Peppers',
               action: `Buy pepper seeds (${seeds}) - ${cost}`,
               timing: 'Start indoors in March',
-              priority: 'high'
+              priority: 'medium'
             });
           }
           break;
@@ -125,7 +119,7 @@ const addDurhamShoppingActivities = (activities, monthNumber, portfolio) => {
               crop: 'Lettuce (Fall)',
               action: `Buy lettuce seeds (${seeds}) - ${cost}`,
               timing: 'Fall succession planting',
-              priority: 'medium'
+              priority: 'low'
             });
           }
           break;
@@ -207,7 +201,7 @@ const addSuccessionPlantingActivities = (activities, monthNumber, portfolio) => 
 const addCropRotationActivities = (activities, monthNumber, portfolio, monthIndex) => {
   // Durham-specific rotation schedule
   const rotationPlan = {
-    // Spring transition (March-April)
+    // Spring transition (March-April)  
     spring: {
       months: [3, 4],
       actions: [
@@ -216,14 +210,14 @@ const addCropRotationActivities = (activities, monthNumber, portfolio, monthInde
           crop: 'Winter Crops',
           action: 'Remove spent winter greens, prepare beds for summer crops',
           timing: 'Before soil warms for summer planting',
-          priority: 'high'
+          priority: 'medium'
         },
         {
           type: 'rotation',
           crop: 'Soil Health',
           action: 'Add compost to beds, check soil drainage',
           timing: 'Durham clay needs amendment before summer',
-          priority: 'high'
+          priority: 'medium'
         }
       ]
     },
@@ -236,14 +230,14 @@ const addCropRotationActivities = (activities, monthNumber, portfolio, monthInde
           crop: 'Spring Crops',
           action: 'Clear bolted spring crops, plant fall succession',
           timing: 'Make space for fall plantings',
-          priority: 'high'
+          priority: 'medium'
         },
         {
           type: 'rotation',
           crop: 'Bed Preparation',
           action: 'Mulch heavily for fall crops, plan winter garden',
           timing: 'Prepare for fall/winter rotation',
-          priority: 'medium'
+          priority: 'low'
         }
       ]
     },
@@ -263,7 +257,7 @@ const addCropRotationActivities = (activities, monthNumber, portfolio, monthInde
           crop: 'Winter Garden',
           action: 'Protect overwintering crops, plan spring rotation',
           timing: 'Set up winter garden system',
-          priority: 'medium'
+          priority: 'low'
         }
       ]
     }
@@ -319,13 +313,6 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
   const adaptedCrops = getClimateAdaptedCrops(locationConfig, summerScenario);
   const climateZone = getClimateZoneFromLocation(locationConfig);
   
-  // Track existing plants (simulate some plants already growing)
-  const existingPlants = {
-    perennials: Object.keys(adaptedCrops.perennials || {}).slice(0, 3), // First 3 available perennials
-    activeHarvests: currentMonth >= 10 || currentMonth <= 4 ? 
-      Object.keys(adaptedCrops.coolSeason || {}).slice(0, 3) : 
-      Object.keys(adaptedCrops.heatTolerant || {}).slice(0, 2)
-  };
   
   // Generate dynamic calendar for next 12 months
   for (let i = 0; i < 12; i++) {
@@ -356,7 +343,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
                 crop: 'Okra',
                 action: 'Direct sow okra seeds in warm soil (65°F+)',
                 timing: 'After last frost, soil is warm',
-                priority: 'high'
+                priority: 'medium'
               });
             }
             if (monthNumber === 8) {
@@ -371,31 +358,24 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
             break;
             
           case 'peppers':
-            if (monthNumber === 3) {
+          case 'hotPeppers':
+            // You have peppers growing - show relevant care and harvest
+            if (monthNumber === 7 && isGrowing) {
               activities.push({
-                type: 'start-transplants',
+                type: 'care',
                 crop: 'Hot Peppers',
-                action: 'Start pepper seeds indoors with heat mat',
-                timing: '8-10 weeks before last frost',
-                priority: 'high'
+                action: 'Support heavy pepper plants, consistent watering in heat',
+                timing: 'Durham summer care',
+                priority: 'medium'
               });
             }
-            if (monthNumber === 5) {
-              activities.push({
-                type: 'transplant',
-                crop: 'Hot Peppers',
-                action: 'Transplant peppers after soil warms to 65°F',
-                timing: '2-3 weeks after last frost',
-                priority: 'high'
-              });
-            }
-            if (monthNumber === 8) {
+            if (monthNumber >= 7 && monthNumber <= 10 && isGrowing) {
               activities.push({
                 type: 'harvest',
                 crop: 'Hot Peppers',
                 action: 'Harvest peppers regularly to encourage production',
                 timing: 'Peak harvest season',
-                priority: 'medium'
+                priority: 'high'
               });
             }
             break;
@@ -407,7 +387,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
                 crop: 'Kale',
                 action: 'Direct sow kale for fall harvest',
                 timing: '12-14 weeks before first frost',
-                priority: 'high'
+                priority: 'medium'
               });
             }
             if (monthNumber === 2) {
@@ -416,7 +396,7 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
                 crop: 'Kale',
                 action: 'Direct sow kale for spring harvest',
                 timing: '4-6 weeks before last frost',
-                priority: 'high'
+                priority: 'medium'
               });
             }
             if (monthNumber === 10) {
@@ -431,21 +411,99 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
             break;
             
           case 'sweetPotato':
-            if (monthNumber === 5) {
+            // You have sweet potatoes growing - focus on care and harvest
+            if (monthNumber === 7 && isGrowing) {
               activities.push({
-                type: 'transplant',
+                type: 'care',
                 crop: 'Sweet Potato',
-                action: 'Plant sweet potato slips in raised beds',
-                timing: 'After soil warms to 65°F',
-                priority: 'high'
+                action: 'Mulch sweet potato beds, train vines away from paths',
+                timing: 'Summer growth management',
+                priority: 'medium'
               });
             }
-            if (monthNumber === 9) {
+            if (monthNumber === 9 && isGrowing) {
               activities.push({
                 type: 'harvest',
                 crop: 'Sweet Potato',
                 action: 'Harvest sweet potatoes before first frost',
                 timing: 'Before soil gets too cold',
+                priority: 'high'
+              });
+            }
+            break;
+
+          // Crops you actually have growing
+          case 'cantaloupe':
+          case 'melon':
+            if (isGrowing && monthNumber >= 7 && monthNumber <= 9) {
+              activities.push({
+                type: 'harvest',
+                crop: 'Cantaloupe',
+                action: 'Check for ripe melons - should slip easily from vine',
+                timing: 'Peak summer harvest',
+                priority: 'high'
+              });
+            }
+            if (isGrowing && monthNumber === 7) {
+              activities.push({
+                type: 'care',
+                crop: 'Cantaloupe',
+                action: 'Place boards under developing melons, consistent watering',
+                timing: 'Fruit development stage',
+                priority: 'medium'
+              });
+            }
+            break;
+
+          case 'cucumber':
+            if (isGrowing && monthNumber >= 6 && monthNumber <= 9) {
+              activities.push({
+                type: 'harvest',
+                crop: 'Cucumber',
+                action: 'Daily cucumber harvest to maintain production',
+                timing: 'Continuous harvest period',
+                priority: 'high'
+              });
+            }
+            if (isGrowing && monthNumber === 7) {
+              activities.push({
+                type: 'care',
+                crop: 'Cucumber',
+                action: 'Support vines, deep watering in Durham heat',
+                timing: 'Summer vine management',
+                priority: 'medium'
+              });
+            }
+            break;
+
+          case 'tomatillo':
+            if (isGrowing && monthNumber >= 7 && monthNumber <= 10) {
+              activities.push({
+                type: 'harvest',
+                crop: 'Tomatillo',
+                action: 'Harvest tomatillos when husks are full and papery',
+                timing: 'Extended harvest season',
+                priority: 'high'
+              });
+            }
+            if (isGrowing && monthNumber === 7) {
+              activities.push({
+                type: 'care',
+                crop: 'Tomatillo',
+                action: 'Support tall tomatillo plants, prune suckers',
+                timing: 'Summer growth management',
+                priority: 'medium'
+              });
+            }
+            break;
+
+          case 'squash':
+            if (isDying && monthNumber === 6) {
+              activities.push({
+                type: 'cleanup',
+                crop: 'Squash',
+                action: 'Remove dying squash plants, clear beds for succession planting',
+                timing: 'Replace failed summer crops',
                 priority: 'high'
               });
             }
@@ -723,10 +781,15 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
       return typeOrder[a.type] - typeOrder[b.type];
     });
     
+    // SYSTEMATIC FILTER: Only show activities relevant to current garden status
+    const filteredActivities = activities.filter(activity => 
+      shouldShowCropActivity(activity.crop, activity.type)
+    );
+    
     calendar.push({
       month,
       monthNumber,
-      activities: activities.slice(0, 8) // Limit to 8 activities per month
+      activities: filteredActivities.slice(0, 8) // Limit to 8 activities per month
     });
   }
   
