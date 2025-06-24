@@ -1,6 +1,10 @@
 // Vercel Edge Function for Weather API Proxying
 // This provides API key security and rate limiting across all users
 
+export const config = {
+  runtime: 'edge',
+};
+
 const CACHE_DURATION = 6 * 60 * 60; // 6 hours in seconds
 
 export default async function handler(request) {
