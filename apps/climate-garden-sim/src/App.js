@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { generateSuccessOutlook } from './config.js';
 import { 
   generateDurhamMonthlyFocus,
@@ -20,7 +20,7 @@ import SimulationResults from './components/SimulationResults.js';
 import GardenCalendar from './components/GardenCalendar.js';
 import RecommendationsPanel from './components/RecommendationsPanel.js';
 import InvestmentConfigurer from './components/InvestmentConfigurer.js';
-import { generateGardenCalendar } from './services/gardenCalendar.js';
+import { generateDatabaseGardenCalendar } from './services/databaseCalendarService.js';
 import './index.css';
 
 function App() {
@@ -34,8 +34,8 @@ function App() {
     setSelectedPortfolio
   } = useClimateSelection();
 
-  // Durham-only configuration - no location setup needed
-  const locationConfig = {
+  // Durham-only configuration - memoize to prevent useEffect re-runs
+  const locationConfig = useMemo(() => ({
     ...DURHAM_CONFIG,
     gardenSize: 2,
     investmentLevel: 3,
@@ -44,7 +44,7 @@ function App() {
     budget: 400,
     heatIntensity: 3, // Durham heat intensity level
     heatDays: 95 // Extreme heat days per year
-  };
+  }), []);
   
   const [customInvestment, setCustomInvestment] = useInvestmentConfig();
 
@@ -85,7 +85,29 @@ function App() {
   const investmentPriority = generateDurhamInvestmentPriority(customInvestment);
   const topCropRecommendations = generateDurhamTopCrops(portfolioStrategies[selectedPortfolio]);
   const siteSpecificRecommendations = generateDurhamSiteRecommendations();
-  const gardenCalendar = generateGardenCalendar(selectedSummer, selectedWinter, selectedPortfolio, locationConfig, customPortfolio);
+  // State for async garden calendar
+  const [gardenCalendar, setGardenCalendar] = useState([]);
+
+  // Generate garden calendar asynchronously
+  useEffect(() => {
+    const loadGardenCalendar = async () => {
+      try {
+        const calendar = await generateDatabaseGardenCalendar(
+          selectedSummer, 
+          selectedWinter, 
+          selectedPortfolio, 
+          locationConfig, 
+          customPortfolio
+        );
+        setGardenCalendar(calendar);
+      } catch (error) {
+        console.error('Error loading garden calendar:', error);
+        setGardenCalendar([]);
+      }
+    };
+
+    loadGardenCalendar();
+  }, [selectedSummer, selectedWinter, selectedPortfolio, locationConfig, customPortfolio]);
 
   // Debug recommendations
   console.log('Recommendations debug:', {
