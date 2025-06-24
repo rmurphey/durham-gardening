@@ -63,7 +63,7 @@ export const generateDatabaseGardenCalendar = async (
           type: template.activity_type,
           crop: template.plant_key ? getCropDisplayName(template.plant_key) : 'General',
           action: databaseService.generateActionText(template),
-          timing: template.timing_template || '',
+          timing: databaseService.generateTimingText(template),
           priority: template.priority || 'medium'
         });
       });
@@ -74,7 +74,7 @@ export const generateDatabaseGardenCalendar = async (
           type: template.activity_type,
           crop: 'Bed Management',
           action: databaseService.generateActionText(template),
-          timing: template.timing_template || '',
+          timing: databaseService.generateTimingText(template),
           priority: template.priority || 'medium'
         });
       });
@@ -90,7 +90,7 @@ export const generateDatabaseGardenCalendar = async (
           type: template.activity_type,
           crop: template.plant_key ? getCropDisplayName(template.plant_key) : 'Succession Planning',
           action: databaseService.generateActionText(template),
-          timing: template.timing_template || '',
+          timing: databaseService.generateTimingText(template),
           priority: template.priority || 'medium'
         });
       });

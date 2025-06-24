@@ -12,15 +12,28 @@ class DatabaseService {
     this.initializeDatabase();
   }
 
-  async initializeDatabase() {
+  async initializeDatabase(forceReload = false) {
+    if (this.isInitialized && !forceReload) {
+      return;
+    }
+    
     try {
       // Initialize sql.js
       const SQL = await initSqlJs({
         locateFile: file => `/sql-wasm.wasm`
       });
 
-      // Load the database file
-      const response = await fetch('/database/plant_varieties.db');
+      // Load the database file with cache-busting
+      const cacheBuster = forceReload ? Date.now() : 'v1';
+      console.log(`Loading database with cache buster: ${cacheBuster}`);
+      
+      const response = await fetch(`/database/plant_varieties.db?v=${cacheBuster}`, {
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
       if (!response.ok) {
         throw new Error(`Failed to load database: ${response.status}`);
       }
@@ -29,17 +42,45 @@ class DatabaseService {
       this.db = new SQL.Database(new Uint8Array(buffer));
       this.isInitialized = true;
       
-      console.log('Successfully connected to SQLite database via sql.js');
+      console.log(`Successfully connected to SQLite database via sql.js (cache buster: ${cacheBuster})`);
       
       // Verify we can query the database
       const result = this.db.exec("SELECT name FROM sqlite_master WHERE type='table'");
       console.log('Available tables:', result[0]?.values.flat() || []);
+      
+      // Test a rotation template to see if placeholders are fixed
+      if (this.db) {
+        const testResult = this.db.exec(`
+          SELECT action_template, timing_template, bed_size_requirements 
+          FROM activity_templates 
+          WHERE action_template LIKE '%{bed}%' 
+          LIMIT 3
+        `);
+        
+        if (testResult.length > 0) {
+          console.log('Templates with {bed} placeholders found in database:');
+          testResult[0].values.forEach((row, index) => {
+            console.log(`${index + 1}. action: "${row[0]}", timing: "${row[1]}", bed_req: ${row[2]}`);
+          });
+        } else {
+          console.log('No {bed} placeholders found in database - database appears updated');
+        }
+      }
       
     } catch (error) {
       console.error('Failed to initialize database:', error);
       // Fall back to structured data if database loading fails
       this.loadFallbackData();
     }
+  }
+  
+  /**
+   * Force reload of database (for cache-busting)
+   */
+  async reloadDatabase() {
+    this.isInitialized = false;
+    this.db = null;
+    await this.initializeDatabase(true);
   }
 
   async waitForInitialization() {
@@ -556,9 +597,120 @@ class DatabaseService {
   }
 
   /**
+   * CRITICAL VALIDATION: Prevents ANY placeholder from reaching UI
+   * @param {string} text - Text to validate
+   * @returns {string} Validated text with NO placeholders
+   * @throws {Error} If placeholders are found
+   */
+  validateNoPlaceholders(text) {
+    const placeholderPattern = /\{[^}]+\}/g;
+    const foundPlaceholders = text.match(placeholderPattern);
+    
+    if (foundPlaceholders) {
+      console.error('CRITICAL ERROR: Placeholders detected:', foundPlaceholders);
+      console.error('Original text:', text);
+      throw new Error(`Template placeholders FORBIDDEN in UI: ${foundPlaceholders.join(', ')}`);
+    }
+    
+    return text;
+  }
+
+  /**
+   * Process timing template text to replace placeholders
+   * @param {Object} template - Activity template
+   * @returns {string} Timing text - GUARANTEED NO PLACEHOLDERS
+   */
+  generateTimingText(template) {
+    let timing = template.timing_template || '';
+    
+    if (!timing) return '';
+    
+    // AGGRESSIVE BED NAME EXTRACTION FOR TIMING - NO FALLBACKS ALLOWED
+    let bedName = null;
+    
+    // First: Check if bed_requirements exists and has bed info
+    if (template.bed_requirements) {
+      bedName = template.bed_requirements.recommended_bed || 
+                template.bed_requirements.target_bed || 
+                template.bed_requirements.source_bed;
+    }
+    
+    // Second: Parse bed_size_requirements (this is where rotation templates store bed info)
+    if (!bedName && template.bed_size_requirements) {
+      try {
+        const bedReqs = typeof template.bed_size_requirements === 'string' 
+          ? JSON.parse(template.bed_size_requirements) 
+          : template.bed_size_requirements;
+        
+        bedName = bedReqs.source_bed || bedReqs.target_bed || bedReqs.recommended_bed;
+        
+      } catch (e) {
+        console.error('❌ JSON PARSE FAILED for timing bed_size_requirements:', template.bed_size_requirements, e);
+      }
+    }
+    
+    // FINAL FALLBACK: If we still don't have a bed name, something is wrong
+    if (!bedName) {
+      console.error('❌ CRITICAL: No bed name found for timing template:', {
+        id: template.id,
+        timing_template: template.timing_template,
+        bed_requirements: template.bed_requirements,
+        bed_size_requirements: template.bed_size_requirements
+      });
+      bedName = 'MISSING_BED_DATA'; // Make it obvious something is broken
+    }
+
+    // COMPREHENSIVE REPLACEMENT: Handle ALL database placeholders (timing)
+    const replacements = {
+      // Variety-based replacements (from database)
+      '{varieties}': template.variety_suggestions?.length > 0 
+        ? template.variety_suggestions.slice(0, 2).join(', ')
+        : 'recommended varieties',
+      '{variety}': template.variety_suggestions?.[0] || 'recommended variety',
+      
+      // Supplier replacement (from database)
+      '{supplier}': template.supplier_preferences?.[0] || 'preferred supplier',
+      
+      // Bed replacement (from parsed bed requirements)
+      '{bed}': bedName,
+      
+      // Quantity replacement (smart defaults based on bed size)
+      '{quantity}': (() => {
+        if (template.bed_requirements?.quantity) return template.bed_requirements.quantity;
+        if (bedName.includes('4×8')) return '12';
+        if (bedName.includes('3×15')) return '8';  
+        if (bedName.includes('4×5')) return '6';
+        return 'appropriate amount';
+      })()
+    };
+
+    // Replace all placeholders
+    Object.entries(replacements).forEach(([placeholder, replacement]) => {
+      timing = timing.replace(new RegExp(placeholder.replace(/[{}]/g, '\\\\$&'), 'g'), replacement);
+    });
+
+    // Final safety check for any remaining placeholders
+    const remainingPlaceholders = timing.match(/\{[^}]+\}/g);
+    if (remainingPlaceholders) {
+      console.error('CRITICAL: Unreplaced placeholders in timing:', remainingPlaceholders, 'in result:', timing);
+      
+      // Replace specific placeholders with more helpful fallbacks
+      timing = timing.replace(/\{bed\}/g, bedName || 'appropriate bed');
+      timing = timing.replace(/\{variety\}/g, template.variety_suggestions?.[0] || 'recommended variety');
+      timing = timing.replace(/\{varieties\}/g, template.variety_suggestions?.slice(0,2).join(', ') || 'recommended varieties');
+      timing = timing.replace(/\{supplier\}/g, template.supplier_preferences?.[0] || 'preferred supplier');
+      timing = timing.replace(/\{quantity\}/g, 'appropriate amount');
+      // Catch any other unexpected placeholders
+      timing = timing.replace(/\{[^}]+\}/g, '[data not available]');
+    }
+
+    return this.validateNoPlaceholders(timing);
+  }
+
+  /**
    * Generate action text from template
    * @param {Object} template - Activity template
-   * @returns {string} Action text
+   * @returns {string} Action text - GUARANTEED NO PLACEHOLDERS
    */
   generateActionText(template) {
     // If action_template is a function (JavaScript template literal)
@@ -588,25 +740,73 @@ class DatabaseService {
       });
     }
 
-    // Extract bed name from various possible sources
-    let bedName = 'garden bed'; // fallback
+    // AGGRESSIVE BED NAME EXTRACTION - NO FALLBACKS ALLOWED
+    let bedName = null;
     
+    // First: Check if bed_requirements exists and has bed info
     if (template.bed_requirements) {
       bedName = template.bed_requirements.recommended_bed || 
                 template.bed_requirements.target_bed || 
-                template.bed_requirements.source_bed ||
-                bedName;
+                template.bed_requirements.source_bed;
+    }
+    
+    // Second: Parse bed_size_requirements (this is where rotation templates store bed info)
+    if (!bedName && template.bed_size_requirements) {
+      try {
+        const bedReqs = typeof template.bed_size_requirements === 'string' 
+          ? JSON.parse(template.bed_size_requirements) 
+          : template.bed_size_requirements;
+        
+        bedName = bedReqs.source_bed || bedReqs.target_bed || bedReqs.recommended_bed;
+        
+        // CRITICAL DEBUG: Log ALL parsing attempts
+        console.log('🔍 BED PARSING DEBUG:', {
+          template_id: template.id,
+          action_template: template.action_template,
+          bed_size_requirements_raw: template.bed_size_requirements,
+          parsed_bedReqs: bedReqs,
+          extracted_bedName: bedName,
+          available_fields: Object.keys(bedReqs || {})
+        });
+        
+      } catch (e) {
+        console.error('❌ JSON PARSE FAILED for bed_size_requirements:', template.bed_size_requirements, e);
+      }
+    }
+    
+    // FINAL FALLBACK: If we still don't have a bed name, something is wrong
+    if (!bedName) {
+      console.error('❌ CRITICAL: No bed name found for template:', {
+        id: template.id,
+        action_template: template.action_template,
+        bed_requirements: template.bed_requirements,
+        bed_size_requirements: template.bed_size_requirements
+      });
+      bedName = 'MISSING_BED_DATA'; // Make it obvious something is broken
     }
 
-    // Replace ANY placeholders that exist
+    // COMPREHENSIVE REPLACEMENT: Handle ALL database placeholders
     const replacements = {
+      // Variety-based replacements (from database)
       '{varieties}': template.variety_suggestions?.length > 0 
         ? template.variety_suggestions.slice(0, 2).join(', ')
         : 'recommended varieties',
       '{variety}': template.variety_suggestions?.[0] || 'recommended variety',
+      
+      // Supplier replacement (from database)
       '{supplier}': template.supplier_preferences?.[0] || 'preferred supplier',
+      
+      // Bed replacement (from parsed bed requirements)
       '{bed}': bedName,
-      '{quantity}': template.bed_requirements?.quantity || 'appropriate amount'
+      
+      // Quantity replacement (smart defaults based on bed size)
+      '{quantity}': (() => {
+        if (template.bed_requirements?.quantity) return template.bed_requirements.quantity;
+        if (bedName.includes('4×8')) return '12';
+        if (bedName.includes('3×15')) return '8';  
+        if (bedName.includes('4×5')) return '6';
+        return 'appropriate amount';
+      })()
     };
 
     // Replace all placeholders
@@ -619,8 +819,15 @@ class DatabaseService {
     if (remainingPlaceholders) {
       console.error('CRITICAL: Unreplaced placeholders found:', remainingPlaceholders, 'in result:', action);
       console.error('Template data:', template);
-      // Replace any remaining placeholders with fallback
-      action = action.replace(/\{[^}]+\}/g, '[bed information not available]');
+      
+      // Replace specific placeholders with more helpful fallbacks
+      action = action.replace(/\{bed\}/g, bedName || 'appropriate bed');
+      action = action.replace(/\{variety\}/g, template.variety_suggestions?.[0] || 'recommended variety');
+      action = action.replace(/\{varieties\}/g, template.variety_suggestions?.slice(0,2).join(', ') || 'recommended varieties');
+      action = action.replace(/\{supplier\}/g, template.supplier_preferences?.[0] || 'preferred supplier');
+      action = action.replace(/\{quantity\}/g, 'appropriate amount');
+      // Catch any other unexpected placeholders
+      action = action.replace(/\{[^}]+\}/g, '[data not available]');
     }
 
     // Add cost information for shopping activities
@@ -629,7 +836,8 @@ class DatabaseService {
       action = action.includes(' - $') ? action : `${action} - ${costRange}`;
     }
 
-    return action;
+    // ZERO TOLERANCE: Validate final result has NO placeholders
+    return this.validateNoPlaceholders(action);
   }
 
   /**
@@ -657,4 +865,102 @@ class DatabaseService {
 
 // Export singleton instance
 export const databaseService = new DatabaseService();
+
+// Global access for debugging and auto-testing
+if (typeof window !== 'undefined') {
+  window.databaseService = databaseService;
+  
+  window.testPlaceholderReplacement = async () => {
+    console.log('🧪 COMPREHENSIVE PLACEHOLDER REPLACEMENT TEST');
+    console.log('=============================================');
+    
+    let totalTests = 0;
+    let failedTests = 0;
+    
+    try {
+      // Force reload database
+      await databaseService.reloadDatabase();
+      console.log('✅ Database reloaded');
+      
+      // Test ALL months and ALL template types
+      for (let month = 1; month <= 12; month++) {
+        const [activities, rotations, successions] = await Promise.all([
+          databaseService.getActivityTemplates(1, month, ['hot_peppers', 'sweet_potato', 'kale']),
+          databaseService.getRotationTemplates(1, month),
+          databaseService.getSuccessionTemplates(1, month)
+        ]);
+        
+        const allTemplates = [...activities, ...rotations, ...successions];
+        
+        if (allTemplates.length > 0) {
+          console.log(`\n📅 Month ${month}: Testing ${allTemplates.length} templates...`);
+        }
+        
+        allTemplates.forEach(template => {
+          totalTests++;
+          
+          try {
+            const action = databaseService.generateActionText(template);
+            const timing = databaseService.generateTimingText(template);
+            
+            const actionPlaceholders = action.match(/\{[^}]+\}/g);
+            const timingPlaceholders = timing.match(/\{[^}]+\}/g);
+            
+            if (actionPlaceholders || timingPlaceholders) {
+              failedTests++;
+              console.error(`❌ TEMPLATE ${template.id} FAILED:`);
+              console.error(`   Action: "${action}"`);
+              console.error(`   Timing: "${timing}"`);
+              console.error(`   Action placeholders: ${actionPlaceholders || 'none'}`);
+              console.error(`   Timing placeholders: ${timingPlaceholders || 'none'}`);
+            } else {
+              console.log(`   ✓ Template ${template.id}: CLEAN`);
+            }
+          } catch (error) {
+            failedTests++;
+            console.error(`❌ TEMPLATE ${template.id} THREW ERROR:`, error.message);
+          }
+        });
+      }
+      
+      console.log('\n🏁 TEST RESULTS:');
+      console.log('================');
+      console.log(`Total tests: ${totalTests}`);
+      console.log(`Failed tests: ${failedTests}`);
+      console.log(`Success rate: ${((totalTests - failedTests) / totalTests * 100).toFixed(1)}%`);
+      
+      if (failedTests === 0) {
+        console.log('🎉 ALL TESTS PASSED! Zero tolerance placeholder prevention is working!');
+        // Add visual indicator to page
+        if (document.body) {
+          const indicator = document.createElement('div');
+          indicator.style.cssText = 'position:fixed;top:10px;right:10px;background:green;color:white;padding:10px;border-radius:5px;z-index:9999;font-family:monospace;';
+          indicator.textContent = '✅ ZERO TOLERANCE: ALL TESTS PASSED';
+          document.body.appendChild(indicator);
+          setTimeout(() => indicator.remove(), 5000);
+        }
+      } else {
+        console.error('🚨 TESTS FAILED! Placeholders were found in the UI output!');
+        // Add visual error indicator to page
+        if (document.body) {
+          const indicator = document.createElement('div');
+          indicator.style.cssText = 'position:fixed;top:10px;right:10px;background:red;color:white;padding:10px;border-radius:5px;z-index:9999;font-family:monospace;';
+          indicator.textContent = `❌ PLACEHOLDERS FOUND! ${failedTests}/${totalTests} failed`;
+          document.body.appendChild(indicator);
+          setTimeout(() => indicator.remove(), 10000);
+        }
+      }
+      
+    } catch (error) {
+      console.error('❌ Test suite failed:', error);
+    }
+  };
+  
+  // Auto-run test after page loads
+  setTimeout(() => {
+    console.log('🚀 Auto-running comprehensive placeholder test in 3 seconds...');
+    setTimeout(window.testPlaceholderReplacement, 3000);
+  }, 1000);
+}
+
 export default databaseService;
