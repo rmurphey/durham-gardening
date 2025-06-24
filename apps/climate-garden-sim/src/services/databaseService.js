@@ -435,7 +435,9 @@ class DatabaseService {
             at.action_template,
             at.timing_template,
             at.priority,
-            at.bed_size_requirements
+            at.bed_size_requirements,
+            at.variety_suggestions,
+            at.supplier_preferences
           FROM activity_templates at
           JOIN activity_types aty ON at.activity_type_id = aty.id
           WHERE at.region_id = ? AND at.month = ? AND at.plant_id IS NULL AND aty.type_key = 'rotation'
@@ -454,12 +456,28 @@ class DatabaseService {
             template[col] = row[index];
           });
           
-          // Parse bed_size_requirements JSON to extract bed info
+          // Parse JSON fields to extract data for template replacement
           if (template.bed_size_requirements) {
             try {
               template.bed_requirements = JSON.parse(template.bed_size_requirements);
             } catch (e) {
               template.bed_requirements = {};
+            }
+          }
+          
+          if (template.variety_suggestions) {
+            try {
+              template.variety_suggestions = JSON.parse(template.variety_suggestions);
+            } catch (e) {
+              template.variety_suggestions = [];
+            }
+          }
+          
+          if (template.supplier_preferences) {
+            try {
+              template.supplier_preferences = JSON.parse(template.supplier_preferences);
+            } catch (e) {
+              template.supplier_preferences = [];
             }
           }
           
@@ -561,6 +579,25 @@ class DatabaseService {
     // Handle string templates (including from database) - MUST replace ALL placeholders
     let action = template.action_template || 'Garden activity';
 
+    // Debug logging to see what data we have
+    if (action.includes('{bed}')) {
+      console.log('Template with {bed} placeholder:', {
+        action_template: template.action_template,
+        bed_requirements: template.bed_requirements,
+        bed_size_requirements: template.bed_size_requirements
+      });
+    }
+
+    // Extract bed name from various possible sources
+    let bedName = 'garden bed'; // fallback
+    
+    if (template.bed_requirements) {
+      bedName = template.bed_requirements.recommended_bed || 
+                template.bed_requirements.target_bed || 
+                template.bed_requirements.source_bed ||
+                bedName;
+    }
+
     // Replace ANY placeholders that exist
     const replacements = {
       '{varieties}': template.variety_suggestions?.length > 0 
@@ -568,10 +605,7 @@ class DatabaseService {
         : 'recommended varieties',
       '{variety}': template.variety_suggestions?.[0] || 'recommended variety',
       '{supplier}': template.supplier_preferences?.[0] || 'preferred supplier',
-      '{bed}': template.bed_requirements?.recommended_bed || 
-               template.bed_requirements?.target_bed || 
-               template.bed_requirements?.source_bed || 
-               '3×15 bed',
+      '{bed}': bedName,
       '{quantity}': template.bed_requirements?.quantity || 'appropriate amount'
     };
 
@@ -579,6 +613,15 @@ class DatabaseService {
     Object.entries(replacements).forEach(([placeholder, replacement]) => {
       action = action.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), replacement);
     });
+
+    // CRITICAL: Final safety check - if ANY placeholder remains, log error and replace
+    const remainingPlaceholders = action.match(/\{[^}]+\}/g);
+    if (remainingPlaceholders) {
+      console.error('CRITICAL: Unreplaced placeholders found:', remainingPlaceholders, 'in result:', action);
+      console.error('Template data:', template);
+      // Replace any remaining placeholders with fallback
+      action = action.replace(/\{[^}]+\}/g, '[bed information not available]');
+    }
 
     // Add cost information for shopping activities
     if (template.estimated_cost_min && template.estimated_cost_max && template.activity_type === 'shopping') {
