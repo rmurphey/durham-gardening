@@ -27,9 +27,20 @@
   --color-border-dark: #dee2e6;
   
   --color-success: #27ae60;
+  --color-success-light: #d5f4e6;
+  --color-success-dark: #1e8449;
+  
   --color-warning: #f39c12;
+  --color-warning-light: #fdeaa7;
+  --color-warning-dark: #b7791f;
+  
   --color-error: #e74c3c;
+  --color-error-light: #fadbd8;
+  --color-error-dark: #a93226;
+  
   --color-info: #3498db;
+  --color-info-light: #d6eaf8;
+  --color-info-dark: #2471a3;
   
   /* Spacing */
   --spacing-xs: 4px;
@@ -986,4 +997,146 @@ button:focus,
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   OUTCOME UTILITIES (POSITIVE/NEGATIVE)
+======================================== */
+
+/* Text colors for positive/negative values */
+.text-positive {
+  color: var(--color-success);
+}
+
+.text-negative {
+  color: var(--color-error);
+}
+
+.text-neutral {
+  color: var(--color-text-tertiary);
+}
+
+/* Background colors for outcomes */
+.bg-positive {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.bg-negative {
+  background-color: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.bg-warning {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+/* Border colors for outcomes */
+.border-positive {
+  border-color: var(--color-success);
+}
+
+.border-negative {
+  border-color: var(--color-error);
+}
+
+.border-warning {
+  border-color: var(--color-warning);
+}
+
+/* Value styling with automatic color coding */
+.value-display {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+}
+
+.value-display.positive {
+  color: var(--color-success);
+}
+
+.value-display.negative {
+  color: var(--color-error);
+}
+
+.value-display.zero {
+  color: var(--color-text-tertiary);
+}
+
+/* Result cards with outcome-based styling */
+.result-card.positive {
+  border-left: 4px solid var(--color-success);
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-success-light) 100%);
+}
+
+.result-card.negative {
+  border-left: 4px solid var(--color-error);
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-error-light) 100%);
+}
+
+.result-card.neutral {
+  border-left: 4px solid var(--color-border-dark);
+}
+
+/* Metric indicators */
+.metric-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+}
+
+.metric-indicator.positive {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.metric-indicator.negative {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.metric-indicator::before {
+  content: "↗";
+  font-size: var(--font-size-base);
+}
+
+.metric-indicator.negative::before {
+  content: "↘";
+}
+
+/* Chart legend for positive/negative outcomes */
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-background-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-sm);
+}
+
+.legend-color.positive {
+  background: var(--color-success);
+}
+
+.legend-color.negative {
+  background: var(--color-error);
 }

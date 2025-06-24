@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { formatPercentage } from '../config.js';
 
 const SimulationResults = ({
@@ -30,29 +30,35 @@ const SimulationResults = ({
 
       <div className="results-grid">
         {/* Key Metrics */}
-        <div className="result-card">
-          <div className="result-value">${isFinite(simulationResults.mean) ? simulationResults.mean.toFixed(0) : '0'}</div>
+        <div className={`result-card ${simulationResults.mean > 0 ? 'positive' : simulationResults.mean < 0 ? 'negative' : 'neutral'}`}>
+          <div className={`result-value ${simulationResults.mean > 0 ? 'text-positive' : simulationResults.mean < 0 ? 'text-negative' : 'text-neutral'}`}>
+            ${isFinite(simulationResults.mean) ? simulationResults.mean.toFixed(0) : '0'}
+          </div>
           <div className="result-label">Expected Net Return</div>
           <div className="result-confidence">
             Range: ${isFinite(simulationResults.percentiles?.p10) ? simulationResults.percentiles.p10.toFixed(0) : '0'} - ${isFinite(simulationResults.percentiles?.p90) ? simulationResults.percentiles.p90.toFixed(0) : '0'}
           </div>
         </div>
 
-        <div className="result-card">
-          <div className="result-value">{isFinite(simulationResults.successRate) ? formatPercentage(simulationResults.successRate / 100) : '0%'}</div>
+        <div className={`result-card ${simulationResults.successRate > 70 ? 'positive' : simulationResults.successRate < 30 ? 'negative' : 'neutral'}`}>
+          <div className={`result-value ${simulationResults.successRate > 70 ? 'text-positive' : simulationResults.successRate < 30 ? 'text-negative' : 'text-neutral'}`}>
+            {isFinite(simulationResults.successRate) ? formatPercentage(simulationResults.successRate / 100) : '0%'}
+          </div>
           <div className="result-label">Success Rate</div>
           <div className="result-confidence">Probability of positive return</div>
         </div>
 
-        <div className="result-card">
-          <div className="result-value">{isFinite(simulationResults.roi?.mean) ? simulationResults.roi.mean.toFixed(1) : '0'}%</div>
+        <div className={`result-card ${simulationResults.roi?.mean > 0 ? 'positive' : simulationResults.roi?.mean < 0 ? 'negative' : 'neutral'}`}>
+          <div className={`result-value ${simulationResults.roi?.mean > 0 ? 'text-positive' : simulationResults.roi?.mean < 0 ? 'text-negative' : 'text-neutral'}`}>
+            {isFinite(simulationResults.roi?.mean) ? simulationResults.roi.mean.toFixed(1) : '0'}%
+          </div>
           <div className="result-label">ROI</div>
           <div className="result-confidence">
             Median: {isFinite(simulationResults.roi?.median) ? simulationResults.roi.median.toFixed(1) : '0'}%
           </div>
         </div>
 
-        <div className="result-card">
+        <div className="result-card neutral">
           <div className="result-value">${isFinite(totalInvestment) ? totalInvestment : '0'}</div>
           <div className="result-label">Total Investment</div>
           <div className="result-confidence">Annual budget allocation</div>
@@ -72,9 +78,26 @@ const SimulationResults = ({
                 formatter={(value, name) => [`${value} outcomes`, 'Count']}
                 labelFormatter={(value) => `Net Return: $${value.toFixed(0)}`}
               />
-              <Bar dataKey="value" fill="var(--color-primary)" />
+              <Bar dataKey="value">
+                {simulationResults.returnHistogram.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={entry.x < 0 ? 'var(--color-error)' : 'var(--color-primary)'} 
+                  />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
+          <div className="chart-legend">
+            <div className="legend-item">
+              <div className="legend-color positive"></div>
+              <span>Profitable outcomes</span>
+            </div>
+            <div className="legend-item">
+              <div className="legend-color negative"></div>
+              <span>Loss outcomes</span>
+            </div>
+          </div>
           <p className="text-tertiary text-center mt-md">Distribution of potential net returns from 1,000 simulations</p>
         </div>
       )}
