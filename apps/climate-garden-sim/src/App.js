@@ -29,7 +29,6 @@ import PortfolioManager from './components/PortfolioManager.js';
 import SimulationResults from './components/SimulationResults.js';
 import GardenCalendar from './components/GardenCalendar.js';
 import InvestmentConfigurer from './components/InvestmentConfigurer.js';
-import ActionDashboard from './components/ActionDashboard.js';
 import { generateDatabaseGardenCalendar } from './services/databaseCalendarService.js';
 import './index.css';
 
@@ -51,6 +50,15 @@ function App() {
   const shoppingActions = useShoppingList();
   const taskActions = useTaskManager();
 
+  const [customInvestment, setCustomInvestment] = useInvestmentConfig();
+
+  // Calculate total budget from investment categories
+  const totalBudget = useMemo(() => {
+    return Object.values(customInvestment || {}).reduce((sum, value) => {
+      return sum + (parseFloat(value) || 0);
+    }, 0);
+  }, [customInvestment]);
+  
   // Durham-only configuration - memoize to prevent useEffect re-runs
   const locationConfig = useMemo(() => ({
     ...DURHAM_CONFIG,
@@ -58,18 +66,16 @@ function App() {
     investmentLevel: 3,
     marketMultiplier: 1.0,
     gardenSizeActual: 100,
-    budget: 400,
+    budget: totalBudget,
     heatIntensity: 3, // Durham heat intensity level
     heatDays: 95 // Extreme heat days per year
-  }), []);
-  
-  const [customInvestment, setCustomInvestment] = useInvestmentConfig();
+  }), [totalBudget]);
 
   // Custom portfolio state (not persisted by default)
   const [customPortfolio, setCustomPortfolio] = useState(null);
   
   // Use simulation hook
-  const { simulationResults, simulating, totalInvestment } = useSimulation(
+  const { simulationResults, simulating } = useSimulation(
     selectedSummer,
     selectedWinter,
     selectedPortfolio,
@@ -146,15 +152,33 @@ function App() {
       case 'results':
         return (
           <div className="results-view">
+            <div className="view-header">
+              <h2>📊 Analysis & Results</h2>
+              <p className="view-subtitle">Configure weather scenarios and view simulation results</p>
+            </div>
+            
+            {/* Weather Scenario Selection */}
+            <div className="weather-control card">
+              <div className="card-header">
+                <h3>🌡️ Weather Scenarios</h3>
+                <p className="card-subtitle">
+                  Current budget: <strong>${totalBudget}</strong> (set in Configuration tab)
+                </p>
+              </div>
+              
+              <ClimateScenarioSelector
+                climateScenarios={currentClimateScenarios}
+                selectedSummer={selectedSummer}
+                selectedWinter={selectedWinter}
+                onSummerChange={setSelectedSummer}
+                onWinterChange={setSelectedWinter}
+              />
+            </div>
+            
             <SimulationResults 
               simulationResults={simulationResults}
               simulating={simulating}
-              totalInvestment={totalInvestment}
-            />
-            <ActionDashboard
-              simulationResults={simulationResults}
-              weatherData={null}
-              gardenConfig={locationConfig}
+              totalInvestment={totalBudget}
             />
           </div>
         );
