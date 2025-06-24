@@ -159,3 +159,7 @@ This application demonstrates production-quality architecture with comprehensive
 ## Code Maintenance
 
 - Maintain a memory map of where various functionality exists, rather than having to find it constantly. Store this as a file as necessary. Keep it updated as the codebase changes.
+
+## Claude Memories
+
+- If you say the dev server is running, it is only because you've received a 200 response

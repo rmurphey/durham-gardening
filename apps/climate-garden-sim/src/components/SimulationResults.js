@@ -48,6 +48,30 @@ const SimulationResults = ({
           <div className="result-confidence">Probability of positive return</div>
         </div>
 
+        {/* Investment Sufficiency Analysis */}
+        {simulationResults.rawResults?.[0]?.investmentSufficiency && (
+          <div className={`result-card investment-analysis ${
+            simulationResults.rawResults[0].investmentSufficiency.level === 'excellent' ? 'positive' :
+            simulationResults.rawResults[0].investmentSufficiency.level === 'good' ? 'neutral' :
+            simulationResults.rawResults[0].investmentSufficiency.level === 'caution' ? 'warning' : 'negative'
+          }`}>
+            <div className={`result-value ${
+              simulationResults.rawResults[0].investmentSufficiency.level === 'excellent' ? 'text-positive' :
+              simulationResults.rawResults[0].investmentSufficiency.level === 'good' ? 'text-neutral' :
+              simulationResults.rawResults[0].investmentSufficiency.level === 'caution' ? 'text-warning' : 'text-negative'
+            }`}>
+              {(simulationResults.rawResults[0].investmentSufficiency.ratio * 100).toFixed(0)}%
+            </div>
+            <div className="result-label">Investment Sufficiency</div>
+            <div className="result-confidence">
+              {simulationResults.rawResults[0].investmentSufficiency.status === 'abundant' && 'Exceeds requirements'}
+              {simulationResults.rawResults[0].investmentSufficiency.status === 'adequate' && 'Meets requirements'}
+              {simulationResults.rawResults[0].investmentSufficiency.status === 'marginal' && `$${simulationResults.rawResults[0].investmentSufficiency.gap} shortfall`}
+              {simulationResults.rawResults[0].investmentSufficiency.status === 'insufficient' && `$${simulationResults.rawResults[0].investmentSufficiency.gap} shortfall`}
+            </div>
+          </div>
+        )}
+
         <div className={`result-card ${simulationResults.roi?.mean > 0 ? 'positive' : simulationResults.roi?.mean < 0 ? 'negative' : 'neutral'}`}>
           <div className={`result-value ${simulationResults.roi?.mean > 0 ? 'text-positive' : simulationResults.roi?.mean < 0 ? 'text-negative' : 'text-neutral'}`}>
             {isFinite(simulationResults.roi?.mean) ? simulationResults.roi.mean.toFixed(1) : '0'}%
@@ -99,6 +123,64 @@ const SimulationResults = ({
             </div>
           </div>
           <p className="text-tertiary text-center mt-md">Distribution of potential net returns from 1,000 simulations</p>
+        </div>
+      )}
+
+      {/* Investment Recommendations */}
+      {simulationResults.rawResults?.[0]?.investmentSufficiency && (
+        <div className="investment-recommendations">
+          <h3>💰 Investment Analysis</h3>
+          
+          {/* Required vs Actual Breakdown */}
+          <div className="investment-breakdown">
+            <div className="breakdown-header">
+              <h4>Investment Breakdown</h4>
+              <div className="totals">
+                <span className="actual-total">Your Budget: ${totalInvestment}</span>
+                <span className="required-total">
+                  Required: ${Math.round(simulationResults.rawResults[0].requiredInvestment.total)}
+                </span>
+              </div>
+            </div>
+            
+            <div className="category-breakdown">
+              {Object.entries(simulationResults.rawResults[0].requiredInvestment.breakdown).map(([category, required]) => (
+                <div key={category} className="category-row">
+                  <span className="category-name">{category}</span>
+                  <span className="required-amount">${Math.round(required)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Recommendations */}
+          <div className="recommendations-list">
+            <h4>Recommendations</h4>
+            {simulationResults.rawResults[0].investmentSufficiency.recommendations.map((rec, index) => (
+              <div key={index} className={`recommendation-item ${simulationResults.rawResults[0].investmentSufficiency.level}`}>
+                <span className="recommendation-text">{rec}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Critical Categories */}
+          {simulationResults.rawResults[0].investmentSufficiency.criticalCategories.length > 0 && (
+            <div className="critical-categories">
+              <h4>Priority Areas</h4>
+              {simulationResults.rawResults[0].investmentSufficiency.criticalCategories.map((category, index) => (
+                <div key={index} className={`critical-item ${category.importance}`}>
+                  <div className="critical-header">
+                    <strong>{category.category}</strong>
+                    <span className={`action-badge ${category.action.includes('reducing') ? 'reduce' : 'increase'}`}>
+                      {category.action}
+                    </span>
+                  </div>
+                  <div className="critical-description">{category.description}</div>
+                  <div className="critical-amount">Required: ${Math.round(category.required)}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </section>

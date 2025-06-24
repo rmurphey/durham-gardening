@@ -133,7 +133,7 @@ export const runMonteCarloSimulation = (params, iterations = 1000) => {
     ? generateWeatherSamplesFromRealData(iterations, weatherData, locationConfig)
     : generateWeatherSamples(iterations, locationConfig, selectedSummer, selectedWinter);
   
-  // Package results in expected format
+  // Package results in expected format with investment analysis
   return harvestValues.map((harvestValue, i) => ({
     harvestValue,
     investment: investments[i],
@@ -142,7 +142,9 @@ export const runMonteCarloSimulation = (params, iterations = 1000) => {
     heatYield: heatYields[i],
     coolYield: coolYields[i],
     perennialYield: perennialYields[i],
-    weather: simulationWeatherData[i]
+    weather: simulationWeatherData[i],
+    investmentSufficiency: simParams.investmentSufficiency,
+    requiredInvestment: simParams.requiredInvestment
   }));
 };
 
@@ -184,9 +186,20 @@ export const generateSimulationParameters = (
   const investmentMean = baseInvestment * portfolioMultiplier;
   const investmentStd = investmentMean * 0.1; // 10% variability in costs
   
+  // Calculate required investment for conditions
+  const requiredInvestment = calculateRequiredInvestment(
+    portfolio, 
+    selectedSummer, 
+    selectedWinter, 
+    sizeMultiplier,
+    locationConfig
+  );
+  
   const baseParams = {
     harvest: { mean: expectedHarvest, std: harvestStd },
     investment: { mean: investmentMean, std: investmentStd },
+    requiredInvestment,
+    investmentSufficiency: calculateInvestmentSufficiency(investmentMean, requiredInvestment),
     heatYield: { 
       mean: (baseYields.heatSpecialists || 0) * MARKET_PRICES.heat, 
       std: (baseYields.heatSpecialists || 0) * MARKET_PRICES.heat * 0.4 
@@ -355,6 +368,187 @@ export const generateHistogramData = (data, bins = 25) => {
   });
   
   return histogram;
+};
+
+/**
+ * Calculate required investment based on growing conditions
+ * @param {Object} portfolio - Portfolio allocation
+ * @param {string} selectedSummer - Summer scenario
+ * @param {string} selectedWinter - Winter scenario
+ * @param {number} sizeMultiplier - Garden size multiplier
+ * @param {Object} locationConfig - Location configuration
+ * @returns {Object} Required investment breakdown
+ */
+export const calculateRequiredInvestment = (
+  portfolio, 
+  selectedSummer, 
+  selectedWinter, 
+  sizeMultiplier,
+  locationConfig
+) => {
+  // Base costs per category (scaled to Durham garden size)
+  const baseCosts = {
+    seeds: 80 * sizeMultiplier,
+    soil: 45 * sizeMultiplier,
+    fertilizer: 35 * sizeMultiplier,
+    protection: 25 * sizeMultiplier,
+    infrastructure: 15 * sizeMultiplier,
+    tools: 10 * sizeMultiplier,
+    containers: 12 * sizeMultiplier,
+    irrigation: 8 * sizeMultiplier
+  };
+
+  // Climate adjustment factors
+  const climateFactors = {
+    extreme: { heat: 1.4, protection: 1.6, irrigation: 1.8 },
+    catastrophic: { heat: 1.8, protection: 2.2, irrigation: 2.5 },
+    normal: { heat: 1.0, protection: 1.0, irrigation: 1.0 },
+    mild: { heat: 0.9, protection: 0.8, irrigation: 0.7 }
+  };
+
+  // Portfolio adjustment factors
+  const portfolioFactors = {
+    heatSpecialists: { protection: 1.3, irrigation: 1.4 },
+    coolSeason: { protection: 0.9, soil: 1.1 },
+    perennials: { infrastructure: 1.2, tools: 1.1 }
+  };
+
+  const summerFactor = climateFactors[selectedSummer] || climateFactors.normal;
+  const winterFactor = climateFactors[selectedWinter] || climateFactors.normal;
+
+  // Calculate adjusted costs
+  const adjustedCosts = { ...baseCosts };
+  
+  // Apply climate adjustments
+  adjustedCosts.protection *= Math.max(summerFactor.protection, winterFactor.protection || 1.0);
+  adjustedCosts.irrigation *= summerFactor.irrigation || 1.0;
+  adjustedCosts.fertilizer *= summerFactor.heat || 1.0;
+
+  // Apply portfolio adjustments
+  Object.entries(portfolio).forEach(([cropType, allocation]) => {
+    if (allocation > 0 && portfolioFactors[cropType]) {
+      Object.entries(portfolioFactors[cropType]).forEach(([category, factor]) => {
+        if (adjustedCosts[category]) {
+          adjustedCosts[category] *= 1 + ((factor - 1) * allocation / 100);
+        }
+      });
+    }
+  });
+
+  const totalRequired = Object.values(adjustedCosts).reduce((sum, cost) => sum + cost, 0);
+
+  return {
+    breakdown: adjustedCosts,
+    total: totalRequired,
+    climateAdjustments: {
+      summer: selectedSummer,
+      winter: selectedWinter,
+      summerFactor: summerFactor.protection,
+      winterFactor: winterFactor.protection || 1.0
+    }
+  };
+};
+
+/**
+ * Calculate investment sufficiency analysis
+ * @param {number} actualInvestment - User's planned investment
+ * @param {Object} requiredInvestment - Required investment breakdown
+ * @returns {Object} Investment sufficiency analysis
+ */
+export const calculateInvestmentSufficiency = (actualInvestment, requiredInvestment) => {
+  const ratio = actualInvestment / requiredInvestment.total;
+  const gap = requiredInvestment.total - actualInvestment;
+  
+  let status, level, recommendations;
+  
+  if (ratio >= 1.2) {
+    status = 'abundant';
+    level = 'excellent';
+    recommendations = [
+      'Investment exceeds requirements - consider premium varieties',
+      'Opportunity for infrastructure upgrades',
+      'Buffer available for unexpected costs'
+    ];
+  } else if (ratio >= 1.0) {
+    status = 'adequate';
+    level = 'good';
+    recommendations = [
+      'Investment meets requirements',
+      'Consider small buffer for contingencies',
+      'Well-positioned for planned portfolio'
+    ];
+  } else if (ratio >= 0.8) {
+    status = 'marginal';
+    level = 'caution';
+    recommendations = [
+      `Consider increasing investment by $${Math.ceil(gap)}`,
+      'Focus on essential categories (seeds, soil, protection)',
+      'Risk of reduced yields or crop failures'
+    ];
+  } else {
+    status = 'insufficient';
+    level = 'warning';
+    recommendations = [
+      `Investment shortfall of $${Math.ceil(gap)} may cause significant issues`,
+      'Prioritize seeds and soil amendments',
+      'Consider reducing portfolio complexity',
+      'Risk of poor garden performance'
+    ];
+  }
+
+  return {
+    ratio,
+    gap: Math.max(0, gap),
+    surplus: Math.max(0, -gap),
+    status,
+    level,
+    recommendations,
+    criticalCategories: identifyCriticalCategories(actualInvestment, requiredInvestment)
+  };
+};
+
+/**
+ * Identify categories that need attention based on investment levels
+ * @param {number} actualInvestment - User's planned investment
+ * @param {Object} requiredInvestment - Required investment breakdown
+ * @returns {Array} Critical categories that need more investment
+ */
+export const identifyCriticalCategories = (actualInvestment, requiredInvestment) => {
+  const critical = [];
+  const ratio = actualInvestment / requiredInvestment.total;
+  
+  if (ratio < 1.0) {
+    // Prioritize categories by importance for garden success
+    const priorityOrder = [
+      { category: 'seeds', importance: 'critical', description: 'Essential for any harvest' },
+      { category: 'soil', importance: 'critical', description: 'Foundation of plant health' },
+      { category: 'protection', importance: 'high', description: 'Weather and pest protection' },
+      { category: 'fertilizer', importance: 'high', description: 'Sustained plant nutrition' },
+      { category: 'irrigation', importance: 'medium', description: 'Water delivery systems' },
+      { category: 'infrastructure', importance: 'medium', description: 'Support structures' },
+      { category: 'containers', importance: 'low', description: 'Additional growing space' },
+      { category: 'tools', importance: 'low', description: 'Garden maintenance equipment' }
+    ];
+
+    // Suggest cuts based on priority if investment is insufficient
+    priorityOrder.forEach(item => {
+      if (ratio < 0.6 && item.importance === 'low') {
+        critical.push({
+          ...item,
+          action: 'consider reducing',
+          required: requiredInvestment.breakdown[item.category]
+        });
+      } else if (ratio < 0.8 && (item.importance === 'critical' || item.importance === 'high')) {
+        critical.push({
+          ...item,
+          action: 'prioritize funding',
+          required: requiredInvestment.breakdown[item.category]
+        });
+      }
+    });
+  }
+
+  return critical;
 };
 
 /**
