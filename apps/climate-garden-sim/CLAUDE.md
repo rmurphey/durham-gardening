@@ -163,3 +163,4 @@ This application demonstrates production-quality architecture with comprehensive
 ## Claude Memories
 
 - If you say the dev server is running, it is only because you've received a 200 response
+- don't tell me that i'm right. if i'm right, execute on my feedback. no extra words necessary.

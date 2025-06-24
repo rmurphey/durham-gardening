@@ -13,18 +13,30 @@ import { generateLocationSpecificScenarios } from './data/climateScenarios.js';
 import { getPortfolioStrategies, createCustomPortfolio, validatePortfolioAllocations } from './data/portfolioStrategies.js';
 import { useSimulation } from './hooks/useSimulation.js';
 import { useClimateSelection, useInvestmentConfig } from './hooks/useLocalStorage.js';
+import { useShoppingList } from './hooks/useShoppingList.js';
+import { useTaskManager } from './hooks/useTaskManager.js';
 import { DURHAM_CONFIG } from './config/durhamConfig.js';
+
+// Navigation and Views
+import Navigation from './components/Navigation.js';
+import DashboardView from './components/DashboardView.js';
+import TasksView from './components/TasksView.js';
+import ShoppingView from './components/ShoppingView.js';
+
+// Configuration Components
 import ClimateScenarioSelector from './components/ClimateScenarioSelector.js';
 import PortfolioManager from './components/PortfolioManager.js';
 import SimulationResults from './components/SimulationResults.js';
 import GardenCalendar from './components/GardenCalendar.js';
-import RecommendationsPanelSimple from './components/RecommendationsPanelSimple.js';
 import InvestmentConfigurer from './components/InvestmentConfigurer.js';
 import ActionDashboard from './components/ActionDashboard.js';
 import { generateDatabaseGardenCalendar } from './services/databaseCalendarService.js';
 import './index.css';
 
 function App() {
+  // Navigation state
+  const [activeView, setActiveView] = useState('dashboard');
+  
   // Use custom hooks for state management
   const {
     selectedSummer,
@@ -34,6 +46,10 @@ function App() {
     setSelectedWinter,
     setSelectedPortfolio
   } = useClimateSelection();
+
+  // Shopping and task management
+  const shoppingActions = useShoppingList();
+  const taskActions = useTaskManager();
 
   // Durham-only configuration - memoize to prevent useEffect re-runs
   const locationConfig = useMemo(() => ({
@@ -123,6 +139,70 @@ function App() {
     siteSpecificRecommendations: siteSpecificRecommendations?.length || 0
   });
 
+  const renderView = () => {
+    switch (activeView) {
+      case 'dashboard':
+        return (
+          <DashboardView 
+            shoppingActions={shoppingActions}
+            taskActions={taskActions}
+            monthlyFocus={monthlyFocus}
+          />
+        );
+      case 'tasks':
+        return <TasksView taskActions={taskActions} />;
+      case 'shopping':
+        return <ShoppingView shoppingActions={shoppingActions} />;
+      case 'calendar':
+        return <GardenCalendar gardenCalendar={gardenCalendar} />;
+      case 'results':
+        return (
+          <div className="results-view">
+            <SimulationResults 
+              simulationResults={simulationResults}
+              simulating={simulating}
+              totalInvestment={totalInvestment}
+            />
+            <ActionDashboard
+              simulationResults={simulationResults}
+              weatherData={null}
+              gardenConfig={locationConfig}
+            />
+          </div>
+        );
+      case 'config':
+        return (
+          <div className="config-view">
+            <div className="view-header">
+              <h2>⚙️ Garden Configuration</h2>
+              <p className="view-subtitle">Set up your garden parameters and preferences</p>
+            </div>
+            
+            <ClimateScenarioSelector
+              climateScenarios={currentClimateScenarios}
+              selectedSummer={selectedSummer}
+              selectedWinter={selectedWinter}
+              onSummerChange={setSelectedSummer}
+              onWinterChange={setSelectedWinter}
+            />
+
+            <PortfolioManager
+              portfolioStrategies={portfolioStrategies}
+              selectedPortfolio={selectedPortfolio}
+              onPortfolioChange={setSelectedPortfolio}
+              onCustomPortfolioChange={handleCustomPortfolioChange}
+            />
+
+            <InvestmentConfigurer
+              investmentConfig={customInvestment}
+              onInvestmentChange={setCustomInvestment}
+            />
+          </div>
+        );
+      default:
+        return <DashboardView shoppingActions={shoppingActions} taskActions={taskActions} monthlyFocus={monthlyFocus} />;
+    }
+  };
 
   return (
     <div className="App">
@@ -136,49 +216,16 @@ function App() {
         </div>
       </header>
 
+      <Navigation 
+        activeView={activeView}
+        onViewChange={setActiveView}
+        hasShoppingItems={shoppingActions.totalItems}
+        hasTasks={taskActions.getCompletedCount ? true : false}
+      />
+      
       {/* Main Content */}
       <main className="main-content">
-        <ClimateScenarioSelector
-          climateScenarios={currentClimateScenarios}
-          selectedSummer={selectedSummer}
-          selectedWinter={selectedWinter}
-          onSummerChange={setSelectedSummer}
-          onWinterChange={setSelectedWinter}
-        />
-
-        <PortfolioManager
-          portfolioStrategies={portfolioStrategies}
-          selectedPortfolio={selectedPortfolio}
-          onPortfolioChange={setSelectedPortfolio}
-          onCustomPortfolioChange={handleCustomPortfolioChange}
-        />
-
-        <InvestmentConfigurer
-          investmentConfig={customInvestment}
-          onInvestmentChange={setCustomInvestment}
-        />
-
-        <ActionDashboard
-          simulationResults={simulationResults}
-          weatherData={null}
-          gardenConfig={locationConfig}
-        />
-
-        <SimulationResults
-          simulationResults={simulationResults}
-          simulating={simulating}
-          totalInvestment={totalInvestment}
-        />
-
-        <GardenCalendar gardenCalendar={gardenCalendar} />
-
-        <RecommendationsPanelSimple
-          monthlyFocus={monthlyFocus}
-          weeklyActions={weeklyActions}
-          successOutlook={successOutlook}
-          topCropRecommendations={topCropRecommendations}
-          siteSpecificRecommendations={siteSpecificRecommendations}
-        />
+        {renderView()}
       </main>
     </div>
   );

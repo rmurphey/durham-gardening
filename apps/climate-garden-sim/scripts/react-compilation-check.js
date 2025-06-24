@@ -66,6 +66,24 @@ function checkReactFile(filePath) {
       throw new Error(`useState used but no imports found`);
     }
     
+    // Check for potential prop interface mismatches
+    if (content.includes('taskActions.')) {
+      const taskActionCalls = content.match(/taskActions\.(\w+)/g) || [];
+      const uniqueCalls = [...new Set(taskActionCalls)];
+      
+      // Common interface mismatches we want to catch
+      const problematicPatterns = [
+        'taskActions.markComplete', // Should be markTaskComplete
+        'taskActions.getStatus'     // Should be getTaskStatus
+      ];
+      
+      for (const pattern of problematicPatterns) {
+        if (uniqueCalls.includes(pattern)) {
+          throw new Error(`Potential interface mismatch: ${pattern} (check hook method names)`);
+        }
+      }
+    }
+    
     console.log(`✓ ${path.relative(srcDir, filePath)}`);
     return true;
   } catch (error) {
