@@ -3,7 +3,7 @@
  * Provides comprehensive forecasting capabilities including weather, growth, risk, and economic predictions
  */
 
-import { databaseService } from './databaseService.js';
+// import { databaseService } from './databaseService.js'; // Available for database-driven forecasting
 
 /**
  * Core forecasting engine with multiple prediction models
@@ -246,7 +246,7 @@ class ForecastingEngine {
    */
   async generateAdaptiveRecommendations(gardenConfig, days) {
     const recommendations = [];
-    const currentDate = new Date();
+    // const currentDate = new Date(); // Available for date-based recommendation filtering
 
     // Weather-based recommendations
     const weatherRecommendations = await this.generateWeatherBasedRecommendations(gardenConfig, days);
@@ -467,7 +467,7 @@ class ForecastingEngine {
 
   async generatePlantGrowthForecast(planting, days) {
     // Mock plant growth forecast - in production, use growth models
-    const plantedDate = new Date(planting.plantedDate || planting.plannedDate);
+    // const plantedDate = new Date(planting.plantedDate || planting.plannedDate); // Available for growth stage calculation
     const harvestDate = new Date(planting.expectedHarvest);
     
     return {

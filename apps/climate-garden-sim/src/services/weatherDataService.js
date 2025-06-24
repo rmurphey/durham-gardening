@@ -36,7 +36,7 @@ class WeatherDataService {
       const startDate = new Date(endDate.getFullYear() - years, 0, 1);
       
       const stationId = await this.findNearestWeatherStation(lat, lon);
-      const datasets = ['GHCND']; // Global Historical Climatology Network Daily
+      // const datasets = ['GHCND']; // Global Historical Climatology Network Daily - for reference
       
       const historicalData = await Promise.all([
         this.fetchNOAAData('data', {
@@ -299,7 +299,7 @@ class WeatherDataService {
    */
   calculateGDD(dailyTemp, baseTemp = 50, maxTemp = 86) {
     const { min, max } = dailyTemp;
-    const avgTemp = (min + max) / 2;
+    // const avgTemp = (min + max) / 2; // Available for alternative calculation methods
     
     // Standard single-sine method for GDD calculation
     if (max <= baseTemp) {

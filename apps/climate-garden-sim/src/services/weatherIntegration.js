@@ -3,7 +3,7 @@
  * Converts real weather data into simulation parameters
  */
 
-import { WEATHER_CONFIG } from '../config/weatherConfig.js';
+// import { WEATHER_CONFIG } from '../config/weatherConfig.js'; // Currently unused
 
 /**
  * Generate weather samples from real weather data
@@ -299,8 +299,10 @@ export const generateWeatherRiskAnalysis = (weatherData, locationConfig) => {
   };
 };
 
-export default {
+const weatherIntegration = {
   generateWeatherSamplesFromRealData,
   applyWeatherAdjustments,
   generateWeatherRiskAnalysis
 };
+
+export default weatherIntegration;

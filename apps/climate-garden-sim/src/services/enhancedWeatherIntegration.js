@@ -55,8 +55,8 @@ class EnhancedWeatherIntegration {
   async getComprehensiveForecast(options = {}) {
     const {
       days = 14,
-      includeHistorical = false,
-      includeAlerts = true,
+      // includeHistorical = false, // Available for future historical analysis
+      // includeAlerts = true, // Available for weather alerts integration
       userApiKeys = {},
       preferredProvider = 'auto'
     } = options;

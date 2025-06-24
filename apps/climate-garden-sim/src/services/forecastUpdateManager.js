@@ -4,7 +4,7 @@
  */
 
 import { forecastingEngine } from './forecastingEngine.js';
-import { databaseService } from './databaseService.js';
+// import { databaseService } from './databaseService.js'; // Available for database-driven forecast updates
 
 /**
  * Manages forecast updates with smart caching and update strategies

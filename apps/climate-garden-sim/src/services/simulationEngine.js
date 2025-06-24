@@ -11,7 +11,7 @@ import {
   BASE_YIELD_MULTIPLIERS,
   MARKET_PRICES
 } from '../config.js';
-import { weatherDataService } from './weatherDataService.js';
+// import { weatherDataService } from './weatherDataService.js'; // Currently unused
 import { 
   generateWeatherSamplesFromRealData,
   applyWeatherAdjustments 

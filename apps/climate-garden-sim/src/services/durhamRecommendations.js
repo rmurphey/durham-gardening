@@ -3,7 +3,8 @@
  * Actionable gardening advice for Durham, NC conditions
  */
 
-import { DURHAM_CROPS, DURHAM_CALENDAR } from '../config/durhamConfig.js';
+import { DURHAM_CROPS } from '../config/durhamConfig.js';
+// import { DURHAM_CALENDAR } from '../config/durhamConfig.js'; // Available for future calendar integration
 
 /**
  * Generate this month's focus for Durham gardening
@@ -15,7 +16,8 @@ export const generateDurhamMonthlyFocus = (portfolio, simulationResults) => {
   const monthName = monthNames[currentMonth];
 
   // Get base calendar activities for this month
-  const monthlyActivities = DURHAM_CALENDAR[monthName.toLowerCase()] || {};
+  // Note: monthlyActivities could be used for automated activity suggestions
+  // const monthlyActivities = DURHAM_CALENDAR[monthName.toLowerCase()] || {};
   
   let focus = `**${monthName} Focus for Durham Gardens:**\n\n`;
 
@@ -103,6 +105,13 @@ export const generateDurhamMonthlyFocus = (portfolio, simulationResults) => {
       focus += "- Order early spring seeds\n";
       focus += "- Tool maintenance and planning\n";
       break;
+    
+    default:
+      focus += "🌱 **Year-Round Durham Gardening**\n";
+      focus += "- Monitor soil moisture and weather conditions\n";
+      focus += "- Continue succession plantings appropriate for season\n";
+      focus += "- Maintain garden infrastructure and tools\n";
+      break;
   }
 
   // Add portfolio-specific advice
@@ -155,6 +164,10 @@ export const generateDurhamWeeklyActions = (portfolio) => {
         urgency: 'medium',
         timing: 'For fall garden'
       });
+      break;
+    
+    default:
+      // No specific seasonal actions for this month
       break;
   }
 
@@ -316,6 +329,9 @@ function getPortfolioAdvice(cropType, month) {
     case 'perennials':
       if (month === 3 || month === 4) return 'Spring care for established perennials';
       break;
+    
+    default:
+      return null;
   }
   return null;
 }
