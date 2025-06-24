@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
+import { generateSuccessOutlook } from './config.js';
 import { 
-  generateMonthlyFocus,
-  generateSuccessOutlook,
-  generateTopCropRecommendations,
-  generateWeeklyActions,
-  generateInvestmentPriority,
-  generateSiteSpecificRecommendations
-} from './config.js';
+  generateDurhamMonthlyFocus,
+  generateDurhamWeeklyActions,
+  generateDurhamTopCrops,
+  generateDurhamSiteRecommendations,
+  generateDurhamInvestmentPriority
+} from './services/durhamRecommendations.js';
 
 // New modular imports
 import { generateLocationSpecificScenarios } from './data/climateScenarios.js';
@@ -74,14 +74,29 @@ function App() {
     }
   };
 
-  // Generate enhanced recommendations if simulation results are available
-  const monthlyFocus = simulationResults ? generateMonthlyFocus(locationConfig, portfolioStrategies[selectedPortfolio], simulationResults) : '';
-  const weeklyActions = generateWeeklyActions(locationConfig, portfolioStrategies[selectedPortfolio]);
-  const successOutlook = simulationResults ? generateSuccessOutlook(simulationResults, locationConfig) : '';
-  const investmentPriority = generateInvestmentPriority(customInvestment);
-  const topCropRecommendations = generateTopCropRecommendations(locationConfig, portfolioStrategies[selectedPortfolio]);
-  const siteSpecificRecommendations = generateSiteSpecificRecommendations(locationConfig);
+  // Generate Durham-specific recommendations
+  const monthlyFocus = generateDurhamMonthlyFocus(portfolioStrategies[selectedPortfolio], simulationResults);
+  const weeklyActions = generateDurhamWeeklyActions(portfolioStrategies[selectedPortfolio]);
+  const successOutlook = simulationResults ? 
+    generateSuccessOutlook(simulationResults, locationConfig)?.message || 'Analyzing garden potential...' : 
+    'Run simulation to see success outlook';
+  const investmentPriority = generateDurhamInvestmentPriority(customInvestment);
+  const topCropRecommendations = generateDurhamTopCrops(portfolioStrategies[selectedPortfolio]);
+  const siteSpecificRecommendations = generateDurhamSiteRecommendations();
   const gardenCalendar = generateGardenCalendar(selectedSummer, selectedWinter, selectedPortfolio, locationConfig, customPortfolio);
+
+  // Debug recommendations
+  console.log('Recommendations debug:', {
+    simulationResults: !!simulationResults,
+    selectedPortfolio,
+    portfolioData: portfolioStrategies[selectedPortfolio],
+    monthlyFocus: typeof monthlyFocus === 'string' ? monthlyFocus.length : monthlyFocus?.length || 0,
+    weeklyActions: weeklyActions?.length || 0,
+    successOutlook: typeof successOutlook === 'string' ? successOutlook.length : successOutlook?.length || 0,
+    investmentPriority: investmentPriority?.length || 0,
+    topCropRecommendations: topCropRecommendations?.length || 0,
+    siteSpecificRecommendations: siteSpecificRecommendations?.length || 0
+  });
 
 
   return (

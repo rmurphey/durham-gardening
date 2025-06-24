@@ -88,21 +88,50 @@ const RecommendationsPanel = ({
               {recommendation.title}
             </h3>
             {typeof recommendation.content === 'string' ? (
-              <p>{recommendation.content}</p>
+              <div className="recommendation-content">
+                {recommendation.content.split('\n').map((line, lineIdx) => {
+                  if (line.trim() === '') return <br key={lineIdx} />;
+                  if (line.startsWith('**') && line.endsWith('**')) {
+                    return <h4 key={lineIdx} className="content-header">{line.slice(2, -2)}</h4>;
+                  }
+                  if (line.startsWith('- ')) {
+                    return <div key={lineIdx} className="content-bullet">{line.slice(2)}</div>;
+                  }
+                  return <p key={lineIdx}>{line}</p>;
+                })}
+              </div>
             ) : Array.isArray(recommendation.content) ? (
-              <div>
+              <div className="recommendation-list">
                 {recommendation.content.map((item, idx) => (
                   <div key={idx} className="recommendation-item">
-                    <h4>{item.title}</h4>
-                    <p>{item.description}</p>
-                    {item.items && (
-                      <ul>
-                        {item.items.map((subItem, subIdx) => (
-                          <li key={subIdx}>
-                            <strong>{subItem.name}:</strong> {subItem.reason}
-                          </li>
-                        ))}
-                      </ul>
+                    {item.icon && <span className="item-icon">{item.icon}</span>}
+                    {item.task && (
+                      <div className="task-item">
+                        <strong>{item.task}</strong>
+                        {item.timing && <span className="timing"> - {item.timing}</span>}
+                        {item.urgency && <span className={`urgency urgency-${item.urgency}`}>{item.urgency}</span>}
+                      </div>
+                    )}
+                    {item.crop && (
+                      <div className="crop-item">
+                        <strong>{item.crop}</strong>
+                        {item.reason && <span className="reason"> - {item.reason}</span>}
+                        {item.varieties && item.varieties.length > 0 && (
+                          <div className="varieties">Try: {item.varieties.join(', ')}</div>
+                        )}
+                      </div>
+                    )}
+                    {item.category && (
+                      <div className="priority-item">
+                        <strong>{item.category}:</strong> {item.description}
+                        {item.amount && <span className="amount"> (${item.amount})</span>}
+                        {item.timing && <span className="timing"> - {item.timing}</span>}
+                      </div>
+                    )}
+                    {item.tip && (
+                      <div className="site-tip">
+                        <strong>{item.category}:</strong> {item.tip}
+                      </div>
                     )}
                   </div>
                 ))}
