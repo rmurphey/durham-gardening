@@ -462,6 +462,27 @@
   border-left: 3px solid var(--color-warning);
 }
 
+/* Indoor Starting Emphasis */
+.investment-item .item-content .item-name {
+  font-weight: 500;
+}
+
+.investment-item[data-category="Indoor Starting"] .item-name {
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.investment-item[data-category="Indoor Starting"] {
+  background: var(--color-primary-pale);
+  border: 2px solid var(--color-primary);
+}
+
+.investment-item[data-category="Indoor Starting"] .consequences {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+  font-weight: 500;
+}
+
 .timing-info {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
@@ -518,6 +539,141 @@
 
 /* ========================================
    END TEMPORAL INVESTMENT FEATURES
+======================================== */
+
+/* ========================================
+   GARDEN TASKS PANEL
+======================================== */
+.garden-tasks-panel {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.garden-tasks-panel .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.garden-tasks-panel .header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.garden-tasks-panel h3 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+  transition: all 0.2s ease;
+}
+
+.task-item:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-pale);
+}
+
+.task-item.completed {
+  background: var(--color-success-light);
+  border-color: var(--color-success);
+  opacity: 0.8;
+}
+
+.task-item.urgent-timing {
+  border-left: 3px solid var(--color-error);
+}
+
+.task-item[data-category="Indoor Starting"] {
+  background: var(--color-info-light);
+  border: 2px solid var(--color-info);
+}
+
+.task-item[data-category="Indoor Starting"] .consequences {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+  font-weight: 500;
+}
+
+.task-item .task-main {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 1;
+}
+
+.task-item .task-icon {
+  font-size: 1.2rem;
+  width: 32px;
+  text-align: center;
+}
+
+.task-item .task-content {
+  flex: 1;
+}
+
+.task-item .task-name {
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.task-item .task-reason {
+  font-size: 0.9rem;
+  color: var(--color-text-tertiary);
+}
+
+.task-item .task-actions {
+  display: flex;
+  align-items: center;
+}
+
+.complete-btn {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+  border: 1px solid var(--color-success);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.complete-btn:hover {
+  background: var(--color-success);
+  color: white;
+}
+
+.task-status.completed {
+  color: var(--color-success-dark);
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+/* ========================================
+   END GARDEN TASKS PANEL
 ======================================== */
 
 /* ========================================

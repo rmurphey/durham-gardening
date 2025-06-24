@@ -75,11 +75,44 @@ export const generateTemporalShoppingRecommendations = () => {
         plantingWindow: 'Start seeds February 1-15',
         consequences: 'Late start = weaker transplants'
       });
+
+      // CRITICAL: Indoor starting timing for spring hot crops
+      recommendations.push({
+        id: 'start-hot-crops-indoors-feb',
+        item: '🏠 START INDOORS: Peppers & tomatoes (8-10 weeks before transplant)',
+        price: 0,
+        category: 'Indoor Starting',
+        urgency: 'urgent',
+        why: 'Must start 8-10 weeks before last frost (April 15)',
+        timing: 'Start seeds February 1-15',
+        plantingDate: formatPlantingDate(2, 'indoor starting'),
+        daysUntilPlanting: daysUntil(2, 1),
+        leadTime: 'Start now for May transplant',
+        plantingWindow: 'Start Feb 1-15, transplant May 1-15',
+        consequences: 'Short growing season if started late'
+      });
     }
   }
 
-  // March-April: Critical Infrastructure Window
+  // March-April: Critical Infrastructure Window + Cool Crop Indoor Starting
   else if (currentMonth >= 3 && currentMonth <= 4) {
+    // CRITICAL: Indoor starting timing for cool season crops
+    if (currentMonth === 3) {
+      recommendations.push({
+        id: 'start-cool-crops-indoors-march',
+        item: '🏠 START INDOORS: Cool crops (broccoli, cabbage, kale) for spring',
+        price: 0,
+        category: 'Indoor Starting',
+        urgency: 'high',
+        why: 'Start 6-8 weeks before transplant for spring harvest',
+        timing: 'Start seeds March 1-15',
+        plantingDate: formatPlantingDate(3, 'indoor starting'),
+        daysUntilPlanting: daysUntil(3, 1),
+        leadTime: 'Start now for April transplant',
+        plantingWindow: 'Start March 1-15, transplant April 15-30',
+        consequences: 'Miss optimal spring growing window'
+      });
+    }
     recommendations.push({
       id: 'irrigation-system',
       item: 'Drip irrigation system',
@@ -162,9 +195,41 @@ export const generateTemporalShoppingRecommendations = () => {
         plantingWindow: 'August 15 - September 15',
         consequences: 'Popular fall varieties sell out by July'
       });
+
+      // CRITICAL: Indoor starting timing for fall crops
+      recommendations.push({
+        id: 'start-fall-indoors-july',
+        item: '🏠 START INDOORS: Fall brassicas (kale, broccoli, cabbage)',
+        price: 0,
+        category: 'Indoor Starting',
+        urgency: 'high',
+        why: 'Durham heat makes outdoor germination difficult',
+        timing: 'Start indoors July 15-30',
+        plantingDate: formatPlantingDate(7, 'indoor starting'),
+        daysUntilPlanting: daysUntil(7, 15),
+        leadTime: 'Start seeds 6-8 weeks before transplant',
+        plantingWindow: 'Start July 15, transplant August 15-30',
+        consequences: 'Seeds fail to germinate in July heat outdoors'
+      });
     }
 
     if (currentMonth >= 7) {
+      // CRITICAL: Indoor starting timing - July is prime time for fall crops
+      recommendations.push({
+        id: 'start-fall-indoors-july-active',
+        item: '🏠 START INDOORS NOW: Fall brassicas (kale, broccoli, cabbage)',
+        price: 0,
+        category: 'Indoor Starting',
+        urgency: 'urgent',
+        why: 'CRITICAL WINDOW: Start now for August transplant',
+        timing: 'Start seeds July 15-30 ONLY',
+        plantingDate: formatPlantingDate(7, 'indoor starting'),
+        daysUntilPlanting: daysUntil(7, 15),
+        leadTime: 'Window closes July 30th',
+        plantingWindow: 'Start July 15-30, transplant August 15-30',
+        consequences: 'Miss this window = no fall garden this year'
+      });
+
       recommendations.push({
         id: 'fall-transplant-supplies',
         item: 'Fall transplant starting supplies',
@@ -218,6 +283,109 @@ export const generateTemporalShoppingRecommendations = () => {
   }
 
   return recommendations.slice(0, 4); // Top 4 temporal recommendations
+};
+
+/**
+ * Generate garden tasks (non-purchase actions) with timing
+ */
+export const generateGardenTasks = () => {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const tasks = [];
+  
+  console.log('📋 Current month:', currentMonth, '- Generating garden tasks...');
+
+  // Helper function to calculate days until target date
+  const daysUntil = (targetMonth, targetDay = 15) => {
+    const target = new Date(currentDate.getFullYear(), targetMonth - 1, targetDay);
+    if (target < currentDate) {
+      target.setFullYear(currentDate.getFullYear() + 1);
+    }
+    return Math.ceil((target - currentDate) / (1000 * 60 * 60 * 24));
+  };
+
+  // Helper function to format planting timeline
+  const formatPlantingDate = (month, activity) => {
+    const monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${monthNames[month]} ${activity}`;
+  };
+
+  // January-February: Indoor starting for spring
+  if (currentMonth >= 1 && currentMonth <= 2) {
+    tasks.push({
+      id: 'start-hot-crops-indoors-feb',
+      item: '🏠 START INDOORS: Peppers & tomatoes',
+      category: 'Indoor Starting',
+      urgency: 'urgent',
+      why: 'Must start 8-10 weeks before last frost (April 15)',
+      timing: 'Start seeds February 1-15',
+      plantingDate: formatPlantingDate(2, 'indoor starting'),
+      daysUntilPlanting: daysUntil(2, 1),
+      plantingWindow: 'Feb 1-15 (transplant May 1-15)',
+      consequences: 'Short growing season if started late'
+    });
+  }
+
+  // March: Cool season indoor starting
+  if (currentMonth === 3) {
+    tasks.push({
+      id: 'start-cool-crops-indoors-march',
+      item: '🏠 START INDOORS: Cool crops (broccoli, cabbage, kale)',
+      category: 'Indoor Starting',
+      urgency: 'high',
+      why: 'Start 6-8 weeks before transplant for spring harvest',
+      timing: 'Start seeds March 1-15',
+      plantingDate: formatPlantingDate(3, 'indoor starting'),
+      daysUntilPlanting: daysUntil(3, 1),
+      plantingWindow: 'Mar 1-15 (transplant Apr 15-30)',
+      consequences: 'Miss optimal spring growing window'
+    });
+  }
+
+  // June-July: Fall crop indoor starting
+  if (currentMonth >= 6 && currentMonth <= 7) {
+    tasks.push({
+      id: 'start-fall-indoors-july',
+      item: '🏠 START INDOORS: Fall brassicas (kale, broccoli, cabbage)',
+      category: 'Indoor Starting',
+      urgency: currentMonth === 7 ? 'urgent' : 'high',
+      why: 'Durham heat makes outdoor germination difficult',
+      timing: 'Start indoors July 15-30 ONLY',
+      plantingDate: formatPlantingDate(7, 'indoor starting'),
+      daysUntilPlanting: daysUntil(7, 15),
+      plantingWindow: 'Jul 15-30 (transplant Aug 15-30)',
+      consequences: currentMonth === 7 ? 'Miss this window = no fall garden this year' : 'Seeds fail to germinate in July heat outdoors'
+    });
+  }
+
+  // Seasonal care tasks
+  if (currentMonth >= 5 && currentMonth <= 8) {
+    tasks.push({
+      id: 'summer-care-routine',
+      item: '🌱 Daily summer care routine',
+      category: 'Plant Care',
+      urgency: 'medium',
+      why: 'Durham heat requires consistent daily attention',
+      timing: 'Daily morning checks',
+      plantingDate: 'Ongoing protection',
+      daysUntilPlanting: 0,
+      plantingWindow: 'Daily through summer',
+      consequences: 'Plants stress and fail without daily care'
+    });
+  }
+
+  return tasks.slice(0, 3); // Top 3 tasks
+};
+
+/**
+ * Separate shopping recommendations (purchases only)
+ */
+export const generatePureShoppingRecommendations = () => {
+  const recommendations = generateTemporalShoppingRecommendations();
+  
+  // Filter out $0 task items, keep only actual purchases
+  return recommendations.filter(item => item.price > 0);
 };
 
 /**

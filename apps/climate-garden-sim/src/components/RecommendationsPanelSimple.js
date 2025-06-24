@@ -6,8 +6,10 @@
 import React from 'react';
 import SimpleInvestmentPanel from './SimpleInvestmentPanel';
 import ShoppingListPanel from './ShoppingListPanel';
-import { generateTemporalShoppingRecommendations } from '../services/temporalShoppingService';
+import GardenTasksPanel from './GardenTasksPanel';
+import { generatePureShoppingRecommendations, generateGardenTasks } from '../services/temporalShoppingService';
 import { useShoppingList } from '../hooks/useShoppingList';
+import { useTaskManager } from '../hooks/useTaskManager';
 
 const RecommendationsPanelSimple = ({
   monthlyFocus,
@@ -16,14 +18,11 @@ const RecommendationsPanelSimple = ({
   topCropRecommendations,
   siteSpecificRecommendations
 }) => {
-  // Generate temporal shopping recommendations
-  const investmentRecommendations = generateTemporalShoppingRecommendations();
+  // Generate pure shopping recommendations (purchases only)
+  const shoppingRecommendations = generatePureShoppingRecommendations();
   
-  // Debug logging
-  console.log('🔍 Temporal recommendations generated:', investmentRecommendations.length);
-  if (investmentRecommendations.length > 0) {
-    console.log('📅 First recommendation:', investmentRecommendations[0]);
-  }
+  // Generate garden tasks (non-purchase actions)
+  const gardenTasks = generateGardenTasks();
   
   // Shopping list management
   const {
@@ -36,6 +35,12 @@ const RecommendationsPanelSimple = ({
     getItemStatus,
     getTotalCost
   } = useShoppingList();
+
+  // Task management
+  const {
+    markTaskComplete,
+    getTaskStatus
+  } = useTaskManager();
 
   const recommendations = [
     {
@@ -106,10 +111,19 @@ const RecommendationsPanelSimple = ({
         onClearList={clearShoppingList}
       />
 
-      {/* Simple Investment Panel */}
-      {investmentRecommendations.length > 0 && (
+      {/* Garden Tasks Panel */}
+      {gardenTasks.length > 0 && (
+        <GardenTasksPanel 
+          tasks={gardenTasks}
+          onMarkComplete={markTaskComplete}
+          getTaskStatus={getTaskStatus}
+        />
+      )}
+
+      {/* Pure Shopping Panel */}
+      {shoppingRecommendations.length > 0 && (
         <SimpleInvestmentPanel 
-          recommendations={investmentRecommendations}
+          recommendations={shoppingRecommendations}
           onAddToShoppingList={addToShoppingList}
           onMarkAsOwned={markAsOwned}
           onRejectItem={rejectItem}

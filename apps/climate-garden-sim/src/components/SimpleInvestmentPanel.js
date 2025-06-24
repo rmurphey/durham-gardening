@@ -102,6 +102,7 @@ const SimpleInvestmentPanel = ({
             <div 
               key={item.id} 
               className={`investment-item ${status} ${item.daysUntilPlanting <= 30 ? 'urgent-timing' : ''}`}
+              data-category={item.category}
             >
               <div className="item-main">
                 <div className="item-icon">
