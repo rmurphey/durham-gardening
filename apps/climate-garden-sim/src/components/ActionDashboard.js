@@ -478,21 +478,21 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
       {
         id: 'plan-succession',
         type: 'planning',
-        title: 'Plan Succession Planting Schedule',
-        description: 'Create detailed schedule for continuous harvests',
-        timeframe: 'Next season',
+        title: 'Review Garden Calendar Activities',
+        description: 'Check this month\'s specific planting and care tasks in garden calendar',
+        timeframe: 'This month',
         impact: 'medium',
-        effort: 'medium',
+        effort: 'low',
         category: 'Planning'
       },
       {
         id: 'plan-infrastructure',
         type: 'planning',
-        title: 'Plan Garden Infrastructure Upgrades',
-        description: 'Design irrigation, storage, and tool improvements',
-        timeframe: 'Off-season',
+        title: 'Review Investment Recommendations',
+        description: 'Check specific product recommendations for immediate value items',
+        timeframe: 'This month',
         impact: 'high',
-        effort: 'high',
+        effort: 'low',
         category: 'Infrastructure'
       }
     ];
