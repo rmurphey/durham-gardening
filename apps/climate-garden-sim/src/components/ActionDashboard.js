@@ -314,6 +314,36 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
         { step: '3. Plant seeds', details: 'Use seed starting mix, plant 1/4" deep, one seed per cell. Keep soil consistently moist', timing: 'March 1-15 for Durham' },
         { step: '4. Provide adequate light', details: 'Grow lights 2" above seedlings, 14-16 hours daily, or bright south window', timing: 'Start lights immediately after germination' }
       ],
+      'Start Tomato/Pepper Seeds Indoors': [
+        { step: '1. Calculate transplant date', details: 'Durham last frost ~April 15. Start tomatoes 8-10 weeks early (mid-February)', timing: 'Count backwards from transplant' },
+        { step: '2. Choose heat-loving varieties', details: 'Celebrity tomatoes, Early Girl, Fish peppers, Hungarian Hot Wax - Durham heat tolerance', timing: 'Select proven varieties' },
+        { step: '3. Use heat mat setup', details: 'Maintain 75-80°F soil temperature for germination. Seeds need consistent warmth', timing: 'Critical for germination success' },
+        { step: '4. Plan for 8-week growth', details: 'Will need space for 6-8" tall plants by transplant time. Prepare adequate indoor space', timing: 'Plants get large indoors' }
+      ],
+      'Start Early Brassicas Indoors': [
+        { step: '1. Choose cold-tolerant varieties', details: 'Broccoli (Green Magic), cauliflower (Snow Crown), cabbage (Early Jersey Wakefield)', timing: 'Can handle light frost' },
+        { step: '2. Start 6-8 weeks early', details: 'For March 15 transplant, start late January/early February indoors', timing: 'Count backwards from transplant' },
+        { step: '3. Keep cool after germination', details: '60-65°F daytime temperature prevents leggy growth. Cool windowsill or basement', timing: 'After initial germination' },
+        { step: '4. Harden off gradually', details: 'Expose to outdoor conditions 7-10 days before transplant. Start with 2 hours', timing: 'Week before transplant' }
+      ],
+      'Start Fall Brassicas Indoors': [
+        { step: '1. Beat the heat with indoor starts', details: 'July heat makes outdoor seeding difficult. Start indoors with AC/fans', timing: 'Critical during Durham summers' },
+        { step: '2. Choose fall varieties', details: 'Broccoli (Calabrese), kale (Red Russian), cauliflower - varieties that mature in cool weather', timing: 'Plan for fall harvest' },
+        { step: '3. Keep seedlings cool', details: 'Use coolest indoor location. Basement, north window, or air-conditioned room', timing: 'Prevent heat stress' },
+        { step: '4. Time for September transplant', details: 'Start 6-8 weeks before transplant when temperatures drop below 85°F', timing: 'Usually late August/early September' }
+      ],
+      'Start Summer Succession Indoors': [
+        { step: '1. Extend growing season', details: 'Start beans, cucumbers indoors for pest-free early start', timing: 'Get jump on outdoor planting' },
+        { step: '2. Choose quick varieties', details: 'Bush beans (Provider), cucumber (Suyo Long), summer squash for fast growth', timing: 'Select 50-60 day varieties' },
+        { step: '3. Use larger containers', details: 'These grow fast and large. Use 4" pots minimum for good root development', timing: 'Prevent root binding' },
+        { step: '4. Transplant timing', details: 'Move outdoors when soil is 60°F+ and night temps stay above 50°F', timing: 'Usually late June/July in Durham' }
+      ],
+      'Start Winter Greens Indoors': [
+        { step: '1. Plan for cold frame growing', details: 'Start spinach, arugula, lettuce indoors for cold frame transplant', timing: 'Prepare for winter growing' },
+        { step: '2. Choose cold-hardy varieties', details: 'Spinach (Space), arugula (Roquette), lettuce (Winter Density) - cold tolerance', timing: 'Select for Durham winters' },
+        { step: '3. Start 4-6 weeks early', details: 'For October transplant to cold frames, start late August/early September', timing: 'Time for cold frame setup' },
+        { step: '4. Plan protection', details: 'These will need cold frames or row covers for Durham winter survival', timing: 'Prepare protection systems' }
+      ]
       'Plant Heat-Sensitive Crops': [
         { step: '1. Check last frost date', details: 'Durham average: April 15. Wait 2 weeks after for heat-sensitive crops', timing: 'May 1+ for safety' },
         { step: '2. Prepare beds', details: 'Work in 2-4" compost, ensure good drainage. Raised beds work best in Durham clay', timing: '2 weeks before planting' },
@@ -385,12 +415,14 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
       0: [ // January
         { title: 'Plan Spring Garden Layout', desc: 'Design bed rotations and succession plantings', effort: 'medium' },
         { title: 'Order Seeds for Spring', desc: 'Order cool-season crops for February/March planting', effort: 'low' },
-        { title: 'Prepare Cold Frames', desc: 'Set up protection for early season starts', effort: 'medium' }
+        { title: 'Prepare Cold Frames', desc: 'Set up protection for early season starts', effort: 'medium' },
+        { title: 'Start Tomato/Pepper Seeds Indoors', desc: 'Begin heat-loving transplants 8-10 weeks early', effort: 'low' }
       ],
       1: [ // February
         { title: 'Start Cool-Season Seeds Indoors', desc: 'Kale, broccoli, cabbage for March transplant', effort: 'low' },
         { title: 'Direct Seed Hardy Crops', desc: 'Peas, radishes, spinach in protected areas', effort: 'low' },
-        { title: 'Soil Test and Amendment', desc: 'Test soil pH and add compost/amendments', effort: 'medium' }
+        { title: 'Soil Test and Amendment', desc: 'Test soil pH and add compost/amendments', effort: 'medium' },
+        { title: 'Start Early Brassicas Indoors', desc: 'Broccoli, cauliflower, cabbage for early spring', effort: 'low' }
       ],
       2: [ // March
         { title: 'Transplant Cool-Season Starts', desc: 'Move February starts to garden beds', effort: 'medium' },
@@ -410,7 +442,20 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
       5: [ // June
         { title: 'Plant Heat-Loving Succession', desc: 'Beans, squash, okra for summer harvest', effort: 'medium' },
         { title: 'Install Irrigation System', desc: 'Set up drip lines for summer watering', effort: 'high' },
-        { title: 'Harvest Early Crops', desc: 'Pick peas, spinach before heat stress', effort: 'low' }
+        { title: 'Harvest Early Crops', desc: 'Pick peas, spinach before heat stress', effort: 'low' },
+        { title: 'Start Summer Succession Indoors', desc: 'Begin beans, cucumbers, squash for July planting', effort: 'low' }
+      ],
+      6: [ // July
+        { title: 'Start Fall Brassicas Indoors', desc: 'Broccoli, kale, cauliflower for fall transplant', effort: 'low' },
+        { title: 'Start Fall Garden Planning', desc: 'Order seeds for August/September planting', effort: 'medium' }
+      ],
+      7: [ // August
+        { title: 'Start Fall Crops Indoors', desc: 'Cabbage, Brussels sprouts for October harvest', effort: 'low' },
+        { title: 'Start Cool-Season Herbs Indoors', desc: 'Cilantro, parsley for September transplant', effort: 'low' }
+      ],
+      8: [ // September
+        { title: 'Start Winter Greens Indoors', desc: 'Spinach, arugula, lettuce for cold frame growing', effort: 'low' },
+        { title: 'Transplant Fall Starts', desc: 'Move July/August starts to garden beds', effort: 'medium' }
       ]
       // Add more months as needed
     };
