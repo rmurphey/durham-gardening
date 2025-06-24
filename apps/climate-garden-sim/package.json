@@ -15,6 +15,7 @@
   "scripts": {
     "start": "FAST_REFRESH=true craco start",
     "dev": "nodemon --exec 'FAST_REFRESH=true craco start' --watch src --watch public --ext js,jsx,ts,tsx,css,html",
+    "dev:quiet": "ESLINT_NO_DEV_ERRORS=true FAST_REFRESH=true nodemon --exec 'craco start' --watch src --watch public --ext js,jsx,ts,tsx,css,html --ignore 'src/**/*.test.js'",
     "build": "craco build",
     "test": "craco test",
     "test:db": "jest scripts/__tests__/database-manager.test.js",

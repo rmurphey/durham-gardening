@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { formatCurrency } from '../config.js';
 
 const InvestmentConfigurer = ({ 
   investmentConfig, 
@@ -143,13 +144,13 @@ const InvestmentConfigurer = ({
       <div className="investment-summary">
         <div className="summary-stats">
           <div className="stat-item">
-            <strong>Total Annual: ${totalInvestment}</strong>
+            <strong>Total Annual: {formatCurrency(totalInvestment)}</strong>
           </div>
           <div className="stat-item">
-            Annual Costs: ${annualCosts}
+            Annual Costs: {formatCurrency(annualCosts)}
           </div>
           <div className="stat-item">
-            Equipment: ${equipmentCosts}
+            Equipment: {formatCurrency(equipmentCosts)}
           </div>
         </div>
       </div>
@@ -167,7 +168,7 @@ const InvestmentConfigurer = ({
               <strong>{preset.name}</strong>
               <div className="preset-description">{preset.description}</div>
               <div className="preset-total">
-                ${Object.values(preset.config).reduce((sum, value) => sum + value, 0)}/year
+                {formatCurrency(Object.values(preset.config).reduce((sum, value) => sum + value, 0))}/year
               </div>
             </button>
           ))}
@@ -208,7 +209,7 @@ const InvestmentConfigurer = ({
                       onChange={(e) => handleCategoryChange(category, e.target.value)}
                       className="investment-slider"
                     />
-                    <span className="investment-value">${investmentConfig[category] || 0}</span>
+                    <span className="investment-value">{formatCurrency(investmentConfig[category] || 0)}</span>
                   </label>
                 </div>
               </div>
@@ -224,22 +225,22 @@ const InvestmentConfigurer = ({
           {equipmentCosts > annualCosts && (
             <div className="recommendation-item warning">
               <strong>High Equipment Costs</strong>
-              <p>You're allocating ${equipmentCosts} to equipment vs ${annualCosts} for annual costs. 
+              <p>You're allocating {formatCurrency(equipmentCosts)} to equipment vs {formatCurrency(annualCosts)} for annual costs. 
               Consider using the "Established Garden" preset if you already have most equipment.</p>
             </div>
           )}
           {totalInvestment < 150 && (
             <div className="recommendation-item info">
               <strong>Low Investment</strong>
-              <p>Your total investment of ${totalInvestment} may limit garden productivity. 
+              <p>Your total investment of {formatCurrency(totalInvestment)} may limit garden productivity. 
               Consider increasing seed and soil budgets for better results.</p>
             </div>
           )}
           {annualCosts > 0 && (
             <div className="recommendation-item success">
               <strong>Sustainable Approach</strong>
-              <p>Focusing on annual costs (${annualCosts}) is smart for established gardens. 
-              Your equipment investments (${equipmentCosts}) will pay off over multiple seasons.</p>
+              <p>Focusing on annual costs ({formatCurrency(annualCosts)}) is smart for established gardens. 
+              Your equipment investments ({formatCurrency(equipmentCosts)}) will pay off over multiple seasons.</p>
             </div>
           )}
         </div>

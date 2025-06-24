@@ -20,6 +20,7 @@ import SimulationResults from './components/SimulationResults.js';
 import GardenCalendar from './components/GardenCalendar.js';
 import RecommendationsPanel from './components/RecommendationsPanel.js';
 import InvestmentConfigurer from './components/InvestmentConfigurer.js';
+import ActionDashboard from './components/ActionDashboard.js';
 import { generateDatabaseGardenCalendar } from './services/databaseCalendarService.js';
 import './index.css';
 
@@ -155,6 +156,12 @@ function App() {
         <InvestmentConfigurer
           investmentConfig={customInvestment}
           onInvestmentChange={setCustomInvestment}
+        />
+
+        <ActionDashboard
+          simulationResults={simulationResults}
+          weatherData={null}
+          gardenConfig={locationConfig}
         />
 
         <SimulationResults

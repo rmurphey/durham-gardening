@@ -602,6 +602,37 @@ export const formatProbability = (percentage) => {
   return Math.round(percentage * 1000) / 1000;
 };
 
+// Currency formatting utility with proper decimal precision
+export const formatCurrency = (amount, currency = 'USD') => {
+  if (amount === null || amount === undefined || isNaN(amount)) {
+    return '$0.00';
+  }
+  
+  // Define precision rules by currency
+  const currencyRules = {
+    USD: { decimals: 2, symbol: '$' },
+    EUR: { decimals: 2, symbol: '€' },
+    GBP: { decimals: 2, symbol: '£' },
+    CAD: { decimals: 2, symbol: 'C$' },
+    AUD: { decimals: 2, symbol: 'A$' },
+    JPY: { decimals: 0, symbol: '¥' },
+    MXN: { decimals: 2, symbol: '$' }
+  };
+  
+  const rule = currencyRules[currency] || currencyRules.USD;
+  const formatted = Number(amount).toFixed(rule.decimals);
+  
+  return `${rule.symbol}${formatted}`;
+};
+
+// Utility for formatting amounts without currency symbol (for calculations)
+export const formatAmount = (amount, decimals = 2) => {
+  if (amount === null || amount === undefined || isNaN(amount)) {
+    return '0.00';
+  }
+  return Number(amount).toFixed(decimals);
+};
+
 // Microclimate configuration options
 export const MICROCLIMATE_OPTIONS = {
   slope: {

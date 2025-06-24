@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { formatPercentage } from '../config.js';
+import { formatPercentage, formatCurrency } from '../config.js';
 
 const SimulationResults = ({
   simulationResults,
@@ -32,11 +32,11 @@ const SimulationResults = ({
         {/* Key Metrics */}
         <div className={`result-card ${simulationResults.mean > 0 ? 'positive' : simulationResults.mean < 0 ? 'negative' : 'neutral'}`}>
           <div className={`result-value ${simulationResults.mean > 0 ? 'text-positive' : simulationResults.mean < 0 ? 'text-negative' : 'text-neutral'}`}>
-            ${isFinite(simulationResults.mean) ? simulationResults.mean.toFixed(0) : '0'}
+            {formatCurrency(isFinite(simulationResults.mean) ? simulationResults.mean : 0)}
           </div>
           <div className="result-label">Expected Net Return</div>
           <div className="result-confidence">
-            Range: ${isFinite(simulationResults.percentiles?.p10) ? simulationResults.percentiles.p10.toFixed(0) : '0'} - ${isFinite(simulationResults.percentiles?.p90) ? simulationResults.percentiles.p90.toFixed(0) : '0'}
+            Range: {formatCurrency(isFinite(simulationResults.percentiles?.p10) ? simulationResults.percentiles.p10 : 0)} - {formatCurrency(isFinite(simulationResults.percentiles?.p90) ? simulationResults.percentiles.p90 : 0)}
           </div>
         </div>
 
@@ -74,8 +74,8 @@ const SimulationResults = ({
             <div className="result-confidence">
               {simulationResults.rawResults[0].investmentSufficiency.status === 'abundant' && 'Exceeds requirements'}
               {simulationResults.rawResults[0].investmentSufficiency.status === 'adequate' && 'Meets requirements'}
-              {simulationResults.rawResults[0].investmentSufficiency.status === 'marginal' && `$${simulationResults.rawResults[0].investmentSufficiency.gap} shortfall`}
-              {simulationResults.rawResults[0].investmentSufficiency.status === 'insufficient' && `$${simulationResults.rawResults[0].investmentSufficiency.gap} shortfall`}
+              {simulationResults.rawResults[0].investmentSufficiency.status === 'marginal' && `${formatCurrency(simulationResults.rawResults[0].investmentSufficiency.gap)} shortfall`}
+              {simulationResults.rawResults[0].investmentSufficiency.status === 'insufficient' && `${formatCurrency(simulationResults.rawResults[0].investmentSufficiency.gap)} shortfall`}
             </div>
           </div>
         )}
@@ -91,7 +91,7 @@ const SimulationResults = ({
         </div>
 
         <div className="result-card neutral">
-          <div className="result-value">${isFinite(totalInvestment) ? totalInvestment : '0'}</div>
+          <div className="result-value">{formatCurrency(isFinite(totalInvestment) ? totalInvestment : 0)}</div>
           <div className="result-label">Total Investment</div>
           <div className="result-confidence">Annual budget allocation</div>
         </div>
@@ -104,11 +104,11 @@ const SimulationResults = ({
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={simulationResults.returnHistogram}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="x" tickFormatter={(value) => `$${value.toFixed(0)}`} />
+              <XAxis dataKey="x" tickFormatter={(value) => formatCurrency(value)} />
               <YAxis />
               <Tooltip 
                 formatter={(value, name) => [`${value} outcomes`, 'Count']}
-                labelFormatter={(value) => `Net Return: $${value.toFixed(0)}`}
+                labelFormatter={(value) => `Net Return: ${formatCurrency(value)}`}
               />
               <Bar dataKey="value">
                 {simulationResults.returnHistogram.map((entry, index) => (
@@ -144,7 +144,7 @@ const SimulationResults = ({
             <div className="breakdown-header">
               <h4>Investment Breakdown</h4>
               <div className="totals">
-                <span className="actual-total">Your Budget: ${totalInvestment}</span>
+                <span className="actual-total">Your Budget: {formatCurrency(totalInvestment)}</span>
                 <span className="required-total loading-shimmer">
                   <div className="shimmer-text">Required: Calculating...</div>
                 </span>
@@ -182,9 +182,9 @@ const SimulationResults = ({
             <div className="breakdown-header">
               <h4>Investment Breakdown</h4>
               <div className="totals">
-                <span className="actual-total">Your Budget: ${totalInvestment}</span>
+                <span className="actual-total">Your Budget: {formatCurrency(totalInvestment)}</span>
                 <span className="required-total">
-                  Required: ${Math.round(simulationResults.rawResults[0].requiredInvestment.total)}
+                  Required: {formatCurrency(simulationResults.rawResults[0].requiredInvestment.total)}
                 </span>
               </div>
             </div>
@@ -193,7 +193,7 @@ const SimulationResults = ({
               {Object.entries(simulationResults.rawResults[0].requiredInvestment.breakdown).map(([category, required]) => (
                 <div key={category} className="category-row">
                   <span className="category-name">{category}</span>
-                  <span className="required-amount">${Math.round(required)}</span>
+                  <span className="required-amount">{formatCurrency(required)}</span>
                 </div>
               ))}
             </div>
@@ -222,7 +222,7 @@ const SimulationResults = ({
                     </span>
                   </div>
                   <div className="critical-description">{category.description}</div>
-                  <div className="critical-amount">Required: ${Math.round(category.required)}</div>
+                  <div className="critical-amount">Required: {formatCurrency(category.required)}</div>
                 </div>
               ))}
             </div>
