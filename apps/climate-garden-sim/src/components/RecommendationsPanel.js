@@ -135,7 +135,8 @@ const RecommendationsPanel = ({
                     )}
                     {item.tip && (
                       <div className="site-tip">
-                        <strong>{item.category}:</strong> {item.tip}
+                        <div className="tip-category">{item.category}:</div>
+                        <div className="tip-content">{item.tip}</div>
                       </div>
                     )}
                   </div>
