@@ -16,16 +16,21 @@ const ClimateScenarioSelector = ({
 
   if (!climateScenarios) {
     return (
-      <section className="scenario-section">
-        <h2>Climate Scenarios</h2>
+      <section className="card scenario-section">
+        <div className="card-header">
+          <h2 className="card-title">Climate Scenarios</h2>
+        </div>
         <p>Loading climate scenarios...</p>
       </section>
     );
   }
 
   return (
-    <section className="scenario-section">
-      <h2>Climate Scenarios</h2>
+    <section className="card scenario-section">
+      <div className="card-header">
+        <h2 className="card-title">Climate Scenarios</h2>
+        <p className="card-subtitle">Select summer and winter climate conditions for Durham</p>
+      </div>
       <div className="scenario-grid">
         <div className="scenario-column">
           <h3>Summer Heat</h3>

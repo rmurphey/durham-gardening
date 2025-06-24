@@ -13,16 +13,21 @@ const PortfolioManager = ({
 }) => {
   if (!portfolioStrategies) {
     return (
-      <section className="portfolio-section">
-        <h2>Portfolio Strategy</h2>
+      <section className="card portfolio-section">
+        <div className="card-header">
+          <h2 className="card-title">Portfolio Strategy</h2>
+        </div>
         <p>Loading portfolio strategies...</p>
       </section>
     );
   }
 
   return (
-    <section className="portfolio-section">
-      <h2>Portfolio Strategy</h2>
+    <section className="card portfolio-section">
+      <div className="card-header">
+        <h2 className="card-title">Portfolio Strategy</h2>
+        <p className="card-subtitle">Choose your garden diversification approach</p>
+      </div>
       <div className="portfolio-grid">
         {Object.entries(portfolioStrategies).map(([key, strategy]) => (
           <button
@@ -33,10 +38,10 @@ const PortfolioManager = ({
             <strong>{strategy.name}</strong>
             <div className="portfolio-description">{strategy.description}</div>
             <div className="portfolio-allocations">
-              <div>Heat Crops: {strategy.heatSpecialists}%</div>
-              <div>Cool Crops: {strategy.coolSeason}%</div>
-              <div>Herbs: {strategy.perennials}%</div>
-              <div>Experimental: {strategy.experimental}%</div>
+              <div>Heat Crops: <span className="allocation-value">{strategy.heatSpecialists}%</span></div>
+              <div>Cool Crops: <span className="allocation-value">{strategy.coolSeason}%</span></div>
+              <div>Herbs: <span className="allocation-value">{strategy.perennials}%</span></div>
+              <div>Experimental: <span className="allocation-value">{strategy.experimental}%</span></div>
             </div>
           </button>
         ))}

@@ -101,7 +101,14 @@ export const runMonteCarloSimulation = (params, iterations = 1000) => {
   
   // Generate normal distribution samples using correct jStat API
   const generateNormalSamples = (mean, std, count) => {
-    return Array.from({length: count}, () => jStat.normal.sample(mean, std));
+    // Ensure valid parameters to prevent NaN
+    const safeMean = isFinite(mean) ? mean : 100;
+    const safeStd = isFinite(std) && std > 0 ? std : 10;
+    
+    return Array.from({length: count}, () => {
+      const sample = jStat.normal.sample(safeMean, safeStd);
+      return isFinite(sample) ? sample : safeMean;
+    });
   };
 
   const harvestValues = generateNormalSamples(simParams.harvest.mean, simParams.harvest.std, iterations);
@@ -109,7 +116,11 @@ export const runMonteCarloSimulation = (params, iterations = 1000) => {
   
   // Calculate derived metrics
   const netReturns = harvestValues.map((harvest, i) => harvest - investments[i]);
-  const rois = netReturns.map((netReturn, i) => (netReturn / investments[i]) * 100);
+  const rois = netReturns.map((netReturn, i) => {
+    const investment = investments[i];
+    if (investment <= 0) return 0; // Prevent division by zero
+    return (netReturn / investment) * 100;
+  });
   
   // Generate breakdown data (simplified for performance)
   const heatYields = generateNormalSamples(simParams.heatYield.mean, simParams.heatYield.std, iterations);
@@ -268,31 +279,51 @@ export const calculateStatistics = (results) => {
     return { mean: 0, median: 0, std: 0, percentiles: {}, successRate: 0 };
   }
 
-  const netReturns = results.map(r => r.netReturn);
-  const rois = results.map(r => r.roi);
-  const harvestValues = results.map(r => r.harvestValue);
+  // Filter out invalid results and ensure we have valid numbers
+  const validResults = results.filter(r => 
+    isFinite(r.netReturn) && isFinite(r.roi) && isFinite(r.harvestValue)
+  );
+
+  if (validResults.length === 0) {
+    return { mean: 0, median: 0, std: 0, percentiles: {}, successRate: 0 };
+  }
+
+  const netReturns = validResults.map(r => r.netReturn);
+  const rois = validResults.map(r => r.roi);
+  const harvestValues = validResults.map(r => r.harvestValue);
   
+  // Helper function to safely calculate statistics
+  const safeCalculate = (values, func, defaultValue = 0) => {
+    try {
+      const result = func(values);
+      return isFinite(result) ? result : defaultValue;
+    } catch (error) {
+      console.warn('Statistics calculation error:', error);
+      return defaultValue;
+    }
+  };
+
   return {
-    mean: ss.mean(netReturns),
-    median: ss.median(netReturns),
-    std: ss.standardDeviation(netReturns),
+    mean: safeCalculate(netReturns, ss.mean),
+    median: safeCalculate(netReturns, ss.median),
+    std: safeCalculate(netReturns, ss.standardDeviation),
     percentiles: {
-      p10: ss.quantile(netReturns, 0.1),
-      p25: ss.quantile(netReturns, 0.25),
-      p75: ss.quantile(netReturns, 0.75),
-      p90: ss.quantile(netReturns, 0.9)
+      p10: safeCalculate(netReturns, (vals) => ss.quantile(vals, 0.1)),
+      p25: safeCalculate(netReturns, (vals) => ss.quantile(vals, 0.25)),
+      p75: safeCalculate(netReturns, (vals) => ss.quantile(vals, 0.75)),
+      p90: safeCalculate(netReturns, (vals) => ss.quantile(vals, 0.9))
     },
     roi: {
-      mean: ss.mean(rois),
-      median: ss.median(rois),
-      std: ss.standardDeviation(rois)
+      mean: safeCalculate(rois, ss.mean),
+      median: safeCalculate(rois, ss.median),
+      std: safeCalculate(rois, ss.standardDeviation)
     },
     harvestValue: {
-      mean: ss.mean(harvestValues),
-      median: ss.median(harvestValues),
-      std: ss.standardDeviation(harvestValues)
+      mean: safeCalculate(harvestValues, ss.mean),
+      median: safeCalculate(harvestValues, ss.median),
+      std: safeCalculate(harvestValues, ss.standardDeviation)
     },
-    successRate: (netReturns.filter(r => r > 0).length / netReturns.length) * 100
+    successRate: netReturns.filter(r => r > 0).length / netReturns.length * 100
   };
 };
 

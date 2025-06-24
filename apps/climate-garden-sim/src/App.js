@@ -41,7 +41,9 @@ function App() {
     investmentLevel: 3,
     marketMultiplier: 1.0,
     gardenSizeActual: 100,
-    budget: 400
+    budget: 400,
+    heatIntensity: 3, // Durham heat intensity level
+    heatDays: 95 // Extreme heat days per year
   };
   
   const [customInvestment, setCustomInvestment] = useInvestmentConfig();

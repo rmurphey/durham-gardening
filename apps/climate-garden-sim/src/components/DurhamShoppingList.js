@@ -12,9 +12,11 @@ const DurhamShoppingList = ({ portfolio, gardenSize = 100 }) => {
 
   if (!portfolio) {
     return (
-      <section className="shopping-list-section">
-        <h2>🛒 Durham Shopping List</h2>
-        <p>Select a portfolio strategy to generate your Durham-specific shopping list.</p>
+      <section className="card shopping-list-section">
+        <div className="card-header">
+          <h2 className="card-title">🛒 Durham Shopping List</h2>
+          <p className="card-subtitle">Select a portfolio strategy to generate your Durham-specific shopping list.</p>
+        </div>
       </section>
     );
   }
@@ -78,7 +80,8 @@ const DurhamShoppingList = ({ portfolio, gardenSize = 100 }) => {
   const totalCost = shoppingList.reduce((total, crop) => {
     const costStr = crop.shopping?.cost || '$3-4';
     const baseCost = parseFloat(costStr.split('$')[1]?.split('-')[0] || '3');
-    return total + baseCost;
+    const validCost = isFinite(baseCost) ? baseCost : 3;
+    return total + validCost;
   }, 0);
 
   const getCurrentSeasonTips = () => {
@@ -89,10 +92,12 @@ const DurhamShoppingList = ({ portfolio, gardenSize = 100 }) => {
   };
 
   return (
-    <section className="shopping-list-section">
-      <h2>🛒 Durham Garden Shopping List</h2>
+    <section className="card shopping-list-section">
+      <div className="card-header">
+        <h2 className="card-title">🛒 Durham Garden Shopping List</h2>
+      </div>
       
-      <div className="current-season-tip">
+      <div className="current-season-tip bg-primary-light">
         {getCurrentSeasonTips()}
       </div>
 
@@ -129,7 +134,7 @@ const DurhamShoppingList = ({ portfolio, gardenSize = 100 }) => {
           <strong>Crops for {selectedSeason}:</strong> {shoppingList.length}
         </div>
         <div className="summary-stat">
-          <strong>Estimated Cost:</strong> ${totalCost.toFixed(0)}
+          <strong>Estimated Cost:</strong> ${isFinite(totalCost) ? totalCost.toFixed(0) : '0'}
         </div>
       </div>
 
@@ -138,7 +143,7 @@ const DurhamShoppingList = ({ portfolio, gardenSize = 100 }) => {
           <div key={index} className={`shopping-item category-${crop.cropType}`}>
             <div className="item-header">
               <h4 className="crop-name">{crop.name}</h4>
-              <span className="space-allocation">{crop.allocation.toFixed(0)} sq ft</span>
+              <span className="space-allocation">{isFinite(crop.allocation) ? crop.allocation.toFixed(0) : '0'} sq ft</span>
             </div>
 
             <div className="shopping-essentials">

@@ -83,6 +83,16 @@ export const BASE_CLIMATE_SCENARIOS = {
 export const generateLocationSpecificScenarios = (config) => {
   if (!config) return BASE_CLIMATE_SCENARIOS;
 
+  // Ensure required properties have safe defaults
+  const safeConfig = {
+    heatIntensity: 3,
+    hardiness: '7b',
+    ...config
+  };
+
+  // Validate heatIntensity is a number
+  const heatIntensity = isFinite(safeConfig.heatIntensity) ? safeConfig.heatIntensity : 3;
+
   // Import HARDINESS_ZONES from config.js to avoid circular dependency
   const HARDINESS_ZONES = {
     '3a': { min: -40, max: -35 }, '3b': { min: -35, max: -30 },
@@ -101,33 +111,33 @@ export const generateLocationSpecificScenarios = (config) => {
       { 
         id: 'mild', 
         name: 'Adapted Mild Summer', 
-        temp: `${85 + config.heatIntensity * 2}-${95 + config.heatIntensity * 2}°F`, 
+        temp: `${85 + heatIntensity * 2}-${95 + heatIntensity * 2}°F`, 
         duration: 'Jun-Aug', 
-        probability: Math.max(5, 30 - config.heatIntensity * 5), 
+        probability: Math.max(5, 30 - heatIntensity * 5), 
         impact: 'Traditional varieties perform well' 
       },
       { 
         id: 'normal', 
         name: 'Expected Heat Wave', 
-        temp: `${95 + config.heatIntensity * 2}-${105 + config.heatIntensity * 2}°F`, 
-        duration: config.heatIntensity > 3 ? 'May-Sep' : 'Jun-Aug', 
+        temp: `${95 + heatIntensity * 2}-${105 + heatIntensity * 2}°F`, 
+        duration: heatIntensity > 3 ? 'May-Sep' : 'Jun-Aug', 
         probability: 40, 
         impact: 'Heat-adapted varieties needed' 
       },
       { 
         id: 'extreme', 
         name: 'Climate-Shifted Heat', 
-        temp: `${105 + config.heatIntensity * 2}-${115 + config.heatIntensity * 2}°F`, 
-        duration: config.heatIntensity > 4 ? 'Apr-Oct' : 'May-Sep', 
-        probability: Math.min(45, 25 + config.heatIntensity * 5), 
+        temp: `${105 + heatIntensity * 2}-${115 + heatIntensity * 2}°F`, 
+        duration: heatIntensity > 4 ? 'Apr-Oct' : 'May-Sep', 
+        probability: Math.min(45, 25 + heatIntensity * 5), 
         impact: 'Only heat specialists survive' 
       },
       { 
         id: 'catastrophic', 
         name: 'Extreme Event', 
-        temp: `${115 + config.heatIntensity * 2}°F+`, 
-        duration: config.heatIntensity > 4 ? 'Mar-Nov' : 'Apr-Oct', 
-        probability: Math.min(25, config.heatIntensity * 3), 
+        temp: `${115 + heatIntensity * 2}°F+`, 
+        duration: heatIntensity > 4 ? 'Mar-Nov' : 'Apr-Oct', 
+        probability: Math.min(25, heatIntensity * 3), 
         impact: 'Crop failure likely' 
       }
     ],
@@ -135,33 +145,33 @@ export const generateLocationSpecificScenarios = (config) => {
       { 
         id: 'traditional', 
         name: 'Legacy Winter Pattern', 
-        temp: `${HARDINESS_ZONES[config.hardiness].min}-${HARDINESS_ZONES[config.hardiness].max}°F lows`, 
+        temp: `${HARDINESS_ZONES[safeConfig.hardiness].min}-${HARDINESS_ZONES[safeConfig.hardiness].max}°F lows`, 
         duration: 'Dec-Feb', 
-        probability: Math.max(5, parseInt(config.hardiness[0]) < 8 ? 20 : 10), 
+        probability: Math.max(5, parseInt(safeConfig.hardiness[0]) < 8 ? 20 : 10), 
         impact: 'Traditional cold requirements met' 
       },
       { 
         id: 'mild', 
         name: 'Climate-Shifted Winter', 
-        temp: `${HARDINESS_ZONES[config.hardiness].max + 3}-${HARDINESS_ZONES[config.hardiness].max + 13}°F lows`, 
+        temp: `${HARDINESS_ZONES[safeConfig.hardiness].max + 3}-${HARDINESS_ZONES[safeConfig.hardiness].max + 13}°F lows`, 
         duration: 'Dec-Jan', 
-        probability: parseInt(config.hardiness[0]) < 8 ? 40 : 30, 
+        probability: parseInt(safeConfig.hardiness[0]) < 8 ? 40 : 30, 
         impact: 'Reduced chill hours, season extension' 
       },
       { 
         id: 'warm', 
         name: 'Disrupted Winter', 
-        temp: `${HARDINESS_ZONES[config.hardiness].max + 13}-${HARDINESS_ZONES[config.hardiness].max + 23}°F lows`, 
+        temp: `${HARDINESS_ZONES[safeConfig.hardiness].max + 13}-${HARDINESS_ZONES[safeConfig.hardiness].max + 23}°F lows`, 
         duration: 'Dec-Jan', 
-        probability: parseInt(config.hardiness[0]) > 7 ? 45 : 35, 
+        probability: parseInt(safeConfig.hardiness[0]) > 7 ? 45 : 35, 
         impact: 'Insufficient chill hours, pest survival' 
       },
       { 
         id: 'none', 
         name: 'No-Chill Winter', 
-        temp: `${HARDINESS_ZONES[config.hardiness].max + 23}°F+ minimum`, 
+        temp: `${HARDINESS_ZONES[safeConfig.hardiness].max + 23}°F+ minimum`, 
         duration: 'Year-round', 
-        probability: parseInt(config.hardiness[0]) > 9 ? 35 : parseInt(config.hardiness[0]) > 7 ? 15 : 5, 
+        probability: parseInt(safeConfig.hardiness[0]) > 9 ? 35 : parseInt(safeConfig.hardiness[0]) > 7 ? 15 : 5, 
         impact: 'Continuous growing, new pest pressure' 
       }
     ]

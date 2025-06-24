@@ -22,7 +22,10 @@ export const useSimulation = (
   // Calculate total investment from custom inputs
   const calculateTotalInvestment = useCallback(() => {
     if (!customInvestment) return 400; // Default budget
-    return Object.values(customInvestment).reduce((total, amount) => total + amount, 0);
+    return Object.values(customInvestment).reduce((total, amount) => {
+      const numericAmount = parseFloat(amount) || 0;
+      return total + numericAmount;
+    }, 0);
   }, [customInvestment]);
 
   // Main simulation runner

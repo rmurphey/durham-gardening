@@ -17,50 +17,51 @@ const SimulationResults = ({
   }
 
   return (
-    <section className="results-section">
-      <h2>Simulation Results</h2>
+    <section className="card results-section">
+      <div className="card-header">
+        <h2 className="card-title">Simulation Results</h2>
+      </div>
       
       {simulating && (
-        <div className="simulation-spinner">
-          <div className="spinner"></div>
+        <div className="loading">
           <span>Running Monte Carlo simulation...</span>
         </div>
       )}
 
       <div className="results-grid">
         {/* Key Metrics */}
-        <div className="metric-card">
-          <h3>Expected Net Return</h3>
-          <div className="metric-value">${simulationResults.mean?.toFixed(0) || '0'}</div>
-          <div className="metric-range">
-            Range: ${simulationResults.percentiles?.p10?.toFixed(0) || '0'} - ${simulationResults.percentiles?.p90?.toFixed(0) || '0'}
+        <div className="result-card">
+          <div className="result-value">${isFinite(simulationResults.mean) ? simulationResults.mean.toFixed(0) : '0'}</div>
+          <div className="result-label">Expected Net Return</div>
+          <div className="result-confidence">
+            Range: ${isFinite(simulationResults.percentiles?.p10) ? simulationResults.percentiles.p10.toFixed(0) : '0'} - ${isFinite(simulationResults.percentiles?.p90) ? simulationResults.percentiles.p90.toFixed(0) : '0'}
           </div>
         </div>
 
-        <div className="metric-card">
-          <h3>Success Rate</h3>
-          <div className="metric-value">{formatPercentage(simulationResults.successRate / 100)}</div>
-          <div className="metric-desc">Probability of positive return</div>
+        <div className="result-card">
+          <div className="result-value">{isFinite(simulationResults.successRate) ? formatPercentage(simulationResults.successRate / 100) : '0%'}</div>
+          <div className="result-label">Success Rate</div>
+          <div className="result-confidence">Probability of positive return</div>
         </div>
 
-        <div className="metric-card">
-          <h3>ROI</h3>
-          <div className="metric-value">{simulationResults.roi?.mean?.toFixed(1) || '0'}%</div>
-          <div className="metric-range">
-            Median: {simulationResults.roi?.median?.toFixed(1) || '0'}%
+        <div className="result-card">
+          <div className="result-value">{isFinite(simulationResults.roi?.mean) ? simulationResults.roi.mean.toFixed(1) : '0'}%</div>
+          <div className="result-label">ROI</div>
+          <div className="result-confidence">
+            Median: {isFinite(simulationResults.roi?.median) ? simulationResults.roi.median.toFixed(1) : '0'}%
           </div>
         </div>
 
-        <div className="metric-card">
-          <h3>Total Investment</h3>
-          <div className="metric-value">${totalInvestment}</div>
-          <div className="metric-desc">Annual budget allocation</div>
+        <div className="result-card">
+          <div className="result-value">${isFinite(totalInvestment) ? totalInvestment : '0'}</div>
+          <div className="result-label">Total Investment</div>
+          <div className="result-confidence">Annual budget allocation</div>
         </div>
       </div>
 
       {/* Return Distribution Chart */}
       {simulationResults.returnHistogram && (
-        <div className="chart-section">
+        <div className="mt-xl">
           <h3>Return Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={simulationResults.returnHistogram}>
@@ -71,10 +72,10 @@ const SimulationResults = ({
                 formatter={(value, name) => [`${value} outcomes`, 'Count']}
                 labelFormatter={(value) => `Net Return: $${value.toFixed(0)}`}
               />
-              <Bar dataKey="value" fill="#4CAF50" />
+              <Bar dataKey="value" fill="var(--color-primary)" />
             </BarChart>
           </ResponsiveContainer>
-          <p className="chart-description">Distribution of potential net returns from 1,000 simulations</p>
+          <p className="text-tertiary text-center mt-md">Distribution of potential net returns from 1,000 simulations</p>
         </div>
       )}
     </section>

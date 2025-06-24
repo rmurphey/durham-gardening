@@ -70,16 +70,21 @@ const RecommendationsPanel = ({
 
   if (validRecommendations.length === 0) {
     return (
-      <section className="recommendations-section">
-        <h2>Smart Recommendations</h2>
+      <section className="card recommendations-section">
+        <div className="card-header">
+          <h2 className="card-title">Smart Recommendations</h2>
+        </div>
         <p>Loading recommendations...</p>
       </section>
     );
   }
 
   return (
-    <section className="recommendations-section">
-      <h2>Smart Recommendations</h2>
+    <section className="card recommendations-section">
+      <div className="card-header">
+        <h2 className="card-title">Smart Recommendations</h2>
+        <p className="card-subtitle">Durham-specific gardening guidance</p>
+      </div>
       <div className="recommendations-grid">
         {validRecommendations.map((recommendation, index) => (
           <div key={index} className="recommendation-card">
