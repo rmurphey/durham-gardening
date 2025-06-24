@@ -56,6 +56,7 @@
 - **`database/plant_varieties.db`** - SQLite database with plant data, activity templates, and garden management
 - **`database/activity_schema.sql`** - Database schema for garden calendar system
 - **`database/durham_data.sql`** - Durham-specific activity templates and garden configuration
+- **`DATABASE_ARCHITECTURE.md`** - Comprehensive documentation of WebAssembly + SQLite integration
 
 ## State Management
 
@@ -102,6 +103,9 @@
 - Eliminated duplication by centralizing activity data
 - Added structured templates with variety suggestions, costs, and timing
 - Improved calendar specificity (exact varieties, bed assignments, suppliers)
+- Implemented WebAssembly + sql.js for browser SQLite execution
+- Added comprehensive Node.js polyfills for browser compatibility
+- Created detailed documentation of WASM architecture in `DATABASE_ARCHITECTURE.md`
 
 ### ESLint Fixes (2025-06-24)
 - Removed undefined variables from garden calendar service
