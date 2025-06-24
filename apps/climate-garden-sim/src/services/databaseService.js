@@ -1,18 +1,58 @@
 /**
  * Database Service for Garden Calendar
- * Provides abstraction layer for activity template data
- * Note: In a production app, this would connect to a real database
- * For now, using structured data that mirrors the database schema
+ * Provides abstraction layer for SQLite database operations using sql.js
  */
+
+import initSqlJs from 'sql.js';
 
 class DatabaseService {
   constructor() {
-    // Initialize with structured template data
-    // This data structure matches what would come from the SQLite database
-    this.loadDurhamActivityTemplates();
+    this.db = null;
+    this.isInitialized = false;
+    this.initializeDatabase();
   }
 
-  loadDurhamActivityTemplates() {
+  async initializeDatabase() {
+    try {
+      // Initialize sql.js
+      const SQL = await initSqlJs({
+        locateFile: file => `/sql-wasm.wasm`
+      });
+
+      // Load the database file
+      const response = await fetch('/database/plant_varieties.db');
+      if (!response.ok) {
+        throw new Error(`Failed to load database: ${response.status}`);
+      }
+      
+      const buffer = await response.arrayBuffer();
+      this.db = new SQL.Database(new Uint8Array(buffer));
+      this.isInitialized = true;
+      
+      console.log('Successfully connected to SQLite database via sql.js');
+      
+      // Verify we can query the database
+      const result = this.db.exec("SELECT name FROM sqlite_master WHERE type='table'");
+      console.log('Available tables:', result[0]?.values.flat() || []);
+      
+    } catch (error) {
+      console.error('Failed to initialize database:', error);
+      // Fall back to structured data if database loading fails
+      this.loadFallbackData();
+    }
+  }
+
+  async waitForInitialization() {
+    // Wait for database to be initialized
+    while (!this.isInitialized && !this.fallbackData) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+
+  loadFallbackData() {
+    console.log('Loading fallback activity data');
+    this.fallbackData = true;
+    
     // Durham-specific activity templates (extracted from database)
     // This data matches the structure in durham_data.sql
     
@@ -295,10 +335,90 @@ class DatabaseService {
    * @returns {Promise<Array>} Activity templates
    */
   async getActivityTemplates(regionId = 1, month, enabledPlantKeys = []) {
-    return this.activityTemplates.filter(template => 
+    await this.waitForInitialization();
+    
+    if (this.db) {
+      try {
+        const stmt = `
+          SELECT 
+            at.id,
+            p.plant_key,
+            aty.type_key as activity_type,
+            at.month,
+            at.action_template,
+            at.timing_template,
+            at.priority,
+            at.variety_suggestions,
+            at.supplier_preferences,
+            at.estimated_cost_min,
+            at.estimated_cost_max,
+            at.bed_size_requirements,
+            at.conditions
+          FROM activity_templates at
+          JOIN activity_types aty ON at.activity_type_id = aty.id
+          LEFT JOIN plants p ON at.plant_id = p.id
+          WHERE at.region_id = ? AND at.month = ?
+        `;
+        
+        const result = this.db.exec(stmt, [regionId, month]);
+        
+        if (result.length === 0) return [];
+        
+        const columns = result[0].columns;
+        const values = result[0].values;
+        
+        return values.map(row => {
+          const template = {};
+          columns.forEach((col, index) => {
+            template[col] = row[index];
+          });
+          
+          // Parse JSON fields
+          if (template.variety_suggestions) {
+            try {
+              template.variety_suggestions = JSON.parse(template.variety_suggestions);
+            } catch (e) {
+              template.variety_suggestions = [];
+            }
+          }
+          
+          if (template.supplier_preferences) {
+            try {
+              template.supplier_preferences = JSON.parse(template.supplier_preferences);
+            } catch (e) {
+              template.supplier_preferences = [];
+            }
+          }
+          
+          if (template.bed_size_requirements) {
+            try {
+              template.bed_requirements = JSON.parse(template.bed_size_requirements);
+            } catch (e) {
+              template.bed_requirements = {};
+            }
+          }
+          
+          if (template.conditions) {
+            try {
+              template.conditions = JSON.parse(template.conditions);
+            } catch (e) {
+              template.conditions = {};
+            }
+          }
+          
+          return template;
+        });
+        
+      } catch (error) {
+        console.error('Database query failed:', error);
+      }
+    }
+    
+    // Fallback to structured data
+    return this.activityTemplates?.filter(template => 
       template.month === month &&
       (!template.plant_key || enabledPlantKeys.includes(template.plant_key))
-    );
+    ) || [];
   }
 
   /**
@@ -308,7 +428,46 @@ class DatabaseService {
    * @returns {Promise<Array>} Rotation activity templates
    */
   async getRotationTemplates(regionId = 1, month) {
-    return this.rotationTemplates.filter(template => template.month === month);
+    await this.waitForInitialization();
+    
+    if (this.db) {
+      try {
+        const stmt = `
+          SELECT 
+            at.id,
+            aty.type_key as activity_type,
+            at.month,
+            at.action_template,
+            at.timing_template,
+            at.priority,
+            at.bed_size_requirements
+          FROM activity_templates at
+          JOIN activity_types aty ON at.activity_type_id = aty.id
+          WHERE at.region_id = ? AND at.month = ? AND at.plant_id IS NULL AND aty.type_key = 'rotation'
+        `;
+        
+        const result = this.db.exec(stmt, [regionId, month]);
+        
+        if (result.length === 0) return [];
+        
+        const columns = result[0].columns;
+        const values = result[0].values;
+        
+        return values.map(row => {
+          const template = {};
+          columns.forEach((col, index) => {
+            template[col] = row[index];
+          });
+          return template;
+        });
+        
+      } catch (error) {
+        console.error('Rotation query failed:', error);
+      }
+    }
+    
+    // Fallback
+    return this.rotationTemplates?.filter(template => template.month === month) || [];
   }
 
   /**
@@ -318,7 +477,59 @@ class DatabaseService {
    * @returns {Promise<Array>} Succession planting templates
    */
   async getSuccessionTemplates(regionId = 1, month) {
-    return this.successionTemplates.filter(template => template.month === month);
+    await this.waitForInitialization();
+    
+    if (this.db) {
+      try {
+        const stmt = `
+          SELECT 
+            at.id,
+            p.plant_key,
+            aty.type_key as activity_type,
+            at.month,
+            at.action_template,
+            at.timing_template,
+            at.priority,
+            at.variety_suggestions,
+            at.bed_size_requirements
+          FROM activity_templates at
+          JOIN activity_types aty ON at.activity_type_id = aty.id
+          LEFT JOIN plants p ON at.plant_id = p.id
+          WHERE at.region_id = ? AND at.month = ? AND aty.type_key = 'succession'
+        `;
+        
+        const result = this.db.exec(stmt, [regionId, month]);
+        
+        if (result.length === 0) return [];
+        
+        const columns = result[0].columns;
+        const values = result[0].values;
+        
+        return values.map(row => {
+          const template = {};
+          columns.forEach((col, index) => {
+            template[col] = row[index];
+          });
+          
+          // Parse JSON fields
+          if (template.variety_suggestions) {
+            try {
+              template.varieties = JSON.parse(template.variety_suggestions);
+            } catch (e) {
+              template.varieties = [];
+            }
+          }
+          
+          return template;
+        });
+        
+      } catch (error) {
+        console.error('Succession query failed:', error);
+      }
+    }
+    
+    // Fallback
+    return this.successionTemplates?.filter(template => template.month === month) || [];
   }
 
   /**
