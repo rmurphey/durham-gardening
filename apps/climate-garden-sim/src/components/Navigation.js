@@ -44,12 +44,6 @@ const Navigation = ({ activeView, onViewChange, hasShoppingItems, hasTasks }) =>
       label: 'Setup',
       icon: '⚙️',
       description: 'Garden configuration'
-    },
-    {
-      id: 'cards',
-      label: 'Cards Demo',
-      icon: '🃏',
-      description: 'New card system'
     }
   ];
 
@@ -66,12 +60,10 @@ const Navigation = ({ activeView, onViewChange, hasShoppingItems, hasTasks }) =>
             key={item.id}
             className={`nav-item ${activeView === item.id ? 'active' : ''}`}
             onClick={() => onViewChange(item.id)}
+            title={`${item.label} - ${item.description}`}
           >
             <div className="nav-icon">{item.icon}</div>
-            <div className="nav-content">
-              <div className="nav-label">{item.label}</div>
-              <div className="nav-description">{item.description}</div>
-            </div>
+            <div className="nav-label">{item.label}</div>
             {item.badge && (
               <div className={`nav-badge ${typeof item.badge === 'string' ? item.badge : 'count'}`}>
                 {typeof item.badge === 'number' ? item.badge : ''}

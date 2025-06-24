@@ -11,8 +11,11 @@ import App from '../App';
 import DashboardView from '../components/DashboardView';
 import TasksView from '../components/TasksView';
 import ShoppingView from '../components/ShoppingView';
-import SimpleInvestmentPanel from '../components/SimpleInvestmentPanel';
-import GardenTasksPanel from '../components/GardenTasksPanel';
+import ShoppingCardList from '../components/ShoppingCardList';
+import TaskCardList from '../components/TaskCardList';
+import PurchaseCard from '../components/PurchaseCard';
+import TaskCard from '../components/TaskCard';
+import Card from '../components/Card';
 
 import { useShoppingList } from '../hooks/useShoppingList';
 import { useTaskManager } from '../hooks/useTaskManager';
@@ -106,7 +109,7 @@ describe('Interface Validation - Prevent Runtime Prop Errors', () => {
   });
 
   describe('Component Prop Interface Validation', () => {
-    test('SimpleInvestmentPanel receives all required props without errors', () => {
+    test('ShoppingCardList receives all required props without errors', () => {
       const { result: shoppingResult } = renderHook(() => useShoppingList());
       
       const mockRecommendations = [
@@ -122,7 +125,7 @@ describe('Interface Validation - Prevent Runtime Prop Errors', () => {
       // This should not throw any "function is not defined" errors
       expect(() => {
         render(
-          <SimpleInvestmentPanel
+          <ShoppingCardList
             recommendations={mockRecommendations}
             onAddToShoppingList={shoppingResult.current.addToShoppingList}
             onMarkAsOwned={shoppingResult.current.markAsOwned}
@@ -133,7 +136,7 @@ describe('Interface Validation - Prevent Runtime Prop Errors', () => {
       }).not.toThrow();
     });
 
-    test('GardenTasksPanel receives all required props without errors', () => {
+    test('TaskCardList receives all required props without errors', () => {
       const { result: taskResult } = renderHook(() => useTaskManager());
       
       const mockTasks = [
@@ -147,10 +150,52 @@ describe('Interface Validation - Prevent Runtime Prop Errors', () => {
       
       expect(() => {
         render(
-          <GardenTasksPanel
+          <TaskCardList
             tasks={mockTasks}
             onMarkComplete={taskResult.current.markTaskComplete}
             getTaskStatus={taskResult.current.getTaskStatus}
+          />
+        );
+      }).not.toThrow();
+    });
+
+    test('PurchaseCard renders without errors', () => {
+      expect(() => {
+        render(
+          <PurchaseCard
+            id="test-purchase"
+            item="Test Item"
+            price={10}
+            why="Test reason"
+            urgency="medium"
+            onStateChange={() => {}}
+          />
+        );
+      }).not.toThrow();
+    });
+
+    test('TaskCard renders without errors', () => {
+      expect(() => {
+        render(
+          <TaskCard
+            id="test-task"
+            title="Test Task"
+            action="Test action"
+            urgency="medium"
+            onStateChange={() => {}}
+          />
+        );
+      }).not.toThrow();
+    });
+
+    test('Base Card renders without errors', () => {
+      expect(() => {
+        render(
+          <Card
+            id="test-card"
+            title="Test Card"
+            description="Test description"
+            onStateChange={() => {}}
           />
         );
       }).not.toThrow();

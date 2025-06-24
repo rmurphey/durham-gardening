@@ -22,7 +22,6 @@ import Navigation from './components/Navigation.js';
 import DashboardView from './components/DashboardView.js';
 import TasksView from './components/TasksView.js';
 import ShoppingView from './components/ShoppingView.js';
-import CardDemo from './components/CardDemo.js';
 
 // Configuration Components
 import ClimateScenarioSelector from './components/ClimateScenarioSelector.js';
@@ -188,8 +187,6 @@ function App() {
             />
           </div>
         );
-      case 'cards':
-        return <CardDemo />;
       default:
         return <DashboardView shoppingActions={shoppingActions} taskActions={taskActions} monthlyFocus={monthlyFocus} />;
     }

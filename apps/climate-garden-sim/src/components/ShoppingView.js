@@ -5,7 +5,7 @@
 
 import React from 'react';
 import ShoppingListPanel from './ShoppingListPanel';
-import SimpleInvestmentPanel from './SimpleInvestmentPanel';
+import ShoppingCardList from './ShoppingCardList';
 import { generatePureShoppingRecommendations } from '../services/temporalShoppingService';
 
 const ShoppingView = ({ shoppingActions }) => {
@@ -38,10 +38,10 @@ const ShoppingView = ({ shoppingActions }) => {
         <div className="urgent-shopping-section">
           <h3>⚡ Time-Sensitive Purchases</h3>
           <p className="section-description">Buy these items soon to be ready for upcoming planting deadlines</p>
-          <SimpleInvestmentPanel 
+          <ShoppingCardList 
             recommendations={urgentShopping}
             onAddToShoppingList={shoppingActions.addToShoppingList}
-            onMarkAsOwned={shoppingActions.markOwned}
+            onMarkAsOwned={shoppingActions.markAsOwned}
             onRejectItem={shoppingActions.rejectItem}
             getItemStatus={shoppingActions.getItemStatus}
           />
@@ -52,10 +52,10 @@ const ShoppingView = ({ shoppingActions }) => {
         <div className="planned-shopping-section">
           <h3>📅 Future Planning</h3>
           <p className="section-description">Items to consider for upcoming seasons</p>
-          <SimpleInvestmentPanel 
+          <ShoppingCardList 
             recommendations={plannedShopping}
             onAddToShoppingList={shoppingActions.addToShoppingList}
-            onMarkAsOwned={shoppingActions.markOwned}
+            onMarkAsOwned={shoppingActions.markAsOwned}
             onRejectItem={shoppingActions.rejectItem}
             getItemStatus={shoppingActions.getItemStatus}
           />

@@ -775,56 +775,60 @@ body {
 ======================================== */
 .App {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: var(--color-background-light);
 }
 
 .main-navigation {
-  width: 260px;
   background: var(--color-background);
-  border-right: 1px solid var(--color-border);
-  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-md) var(--spacing-lg);
   flex-shrink: 0;
   box-shadow: var(--shadow-sm);
 }
 
 .nav-header {
-  margin-bottom: var(--spacing-xl);
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
 }
 
 .app-title {
-  margin: 0 0 var(--spacing-xs) 0;
+  margin: 0;
   color: var(--color-primary-dark);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
 }
 
 .app-subtitle {
   margin: 0;
   color: var(--color-text-tertiary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .nav-items {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-xs);
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid transparent;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: transparent;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-align: left;
-  width: 100%;
+  text-align: center;
+  white-space: nowrap;
   position: relative;
+  min-width: fit-content;
 }
 
 .nav-item:hover {
@@ -840,33 +844,27 @@ body {
 }
 
 .nav-icon {
-  font-size: 1.2rem;
-  width: 24px;
-  text-align: center;
-}
-
-.nav-content {
-  flex: 1;
+  font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
 .nav-label {
   font-weight: 500;
   color: var(--color-text-primary);
-  margin-bottom: 2px;
-}
-
-.nav-description {
-  font-size: 0.8rem;
-  color: var(--color-text-tertiary);
+  font-size: 0.9rem;
 }
 
 .nav-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
   padding: 2px 6px;
   border-radius: 12px;
   font-size: 0.7rem;
   font-weight: 500;
   min-width: 16px;
   text-align: center;
+  box-shadow: var(--shadow-sm);
 }
 
 .nav-badge.new {
@@ -1074,30 +1072,41 @@ body {
    RESPONSIVE DESIGN
 ======================================== */
 @media (max-width: 768px) {
-  .App {
-    flex-direction: column;
+  .main-navigation {
+    padding: var(--spacing-sm) var(--spacing-md);
   }
   
-  .main-navigation {
-    width: 100%;
-    padding: var(--spacing-md);
+  .nav-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .app-title {
+    font-size: 1.2rem;
+  }
+  
+  .app-subtitle {
+    font-size: 0.8rem;
   }
   
   .nav-items {
-    flex-direction: row;
-    overflow-x: auto;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    padding-bottom: var(--spacing-xs);
   }
   
   .nav-item {
-    flex-direction: column;
-    min-width: 80px;
-    padding: var(--spacing-sm);
-    text-align: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    min-width: fit-content;
   }
   
-  .nav-content {
-    display: none;
+  .nav-label {
+    font-size: 0.8rem;
+  }
+  
+  .main-content {
+    padding: var(--spacing-md);
   }
   
   .priority-grid {
@@ -1663,6 +1672,24 @@ body {
   border: 1px solid var(--color-border-light);
   font-size: 0.85rem;
   overflow-x: auto;
+}
+
+/* Card List Components */
+.shopping-card-list, .task-card-list {
+  width: 100%;
+}
+
+.shopping-card-list__title, .task-card-list__title {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.shopping-card-list__cards, .task-card-list__cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
 /* ========================================

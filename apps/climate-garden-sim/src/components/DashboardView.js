@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import GardenTasksPanel from './GardenTasksPanel';
-import SimpleInvestmentPanel from './SimpleInvestmentPanel';
+import TaskCardList from './TaskCardList';
+import ShoppingCardList from './ShoppingCardList';
 import { generateGardenTasks, generatePureShoppingRecommendations } from '../services/temporalShoppingService';
 
 const DashboardView = ({ 
@@ -65,7 +65,7 @@ const DashboardView = ({
         {urgentTasks.length > 0 && (
           <div className="urgent-section">
             <h3>🔥 Urgent Garden Tasks</h3>
-            <GardenTasksPanel 
+            <TaskCardList 
               tasks={urgentTasks}
               onMarkComplete={taskActions.markTaskComplete}
               getTaskStatus={taskActions.getTaskStatus}
@@ -77,7 +77,7 @@ const DashboardView = ({
         {urgentShopping.length > 0 && (
           <div className="urgent-section">
             <h3>⚡ Time-Sensitive Shopping</h3>
-            <SimpleInvestmentPanel 
+            <ShoppingCardList 
               recommendations={urgentShopping}
               onAddToShoppingList={shoppingActions.addToShoppingList}
               onMarkAsOwned={shoppingActions.markAsOwned}

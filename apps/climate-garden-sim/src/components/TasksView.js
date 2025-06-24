@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import GardenTasksPanel from './GardenTasksPanel';
+import TaskCardList from './TaskCardList';
 import { generateGardenTasks } from '../services/temporalShoppingService';
 
 const TasksView = ({ taskActions }) => {
@@ -28,7 +28,7 @@ const TasksView = ({ taskActions }) => {
       {urgentTasks.length > 0 && (
         <div className="urgent-tasks-section">
           <h3>🔥 Urgent (Next 7 Days)</h3>
-          <GardenTasksPanel 
+          <TaskCardList 
             tasks={urgentTasks}
             onMarkComplete={taskActions.markTaskComplete}
             getTaskStatus={taskActions.getTaskStatus}
@@ -39,7 +39,7 @@ const TasksView = ({ taskActions }) => {
       {upcomingTasks.length > 0 && (
         <div className="upcoming-tasks-section">
           <h3>📅 Upcoming Tasks</h3>
-          <GardenTasksPanel 
+          <TaskCardList 
             tasks={upcomingTasks}
             onMarkComplete={taskActions.markTaskComplete}
             getTaskStatus={taskActions.getTaskStatus}
