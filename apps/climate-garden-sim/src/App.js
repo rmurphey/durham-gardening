@@ -19,6 +19,7 @@ import PortfolioManager from './components/PortfolioManager.js';
 import SimulationResults from './components/SimulationResults.js';
 import GardenCalendar from './components/GardenCalendar.js';
 import RecommendationsPanel from './components/RecommendationsPanel.js';
+import InvestmentConfigurer from './components/InvestmentConfigurer.js';
 import { generateGardenCalendar } from './services/gardenCalendar.js';
 import './index.css';
 
@@ -127,6 +128,11 @@ function App() {
           selectedPortfolio={selectedPortfolio}
           onPortfolioChange={setSelectedPortfolio}
           onCustomPortfolioChange={handleCustomPortfolioChange}
+        />
+
+        <InvestmentConfigurer
+          investmentConfig={customInvestment}
+          onInvestmentChange={setCustomInvestment}
         />
 
         <SimulationResults

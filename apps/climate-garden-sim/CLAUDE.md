@@ -155,3 +155,7 @@ This application demonstrates production-quality architecture with comprehensive
 - Use React architecture best practices. Separate concerns.
 - When modeling weather, consider global warming trends.
 - The development server must always be running; if it is not running, or if it has errors, that is an urgent issue to fix.
+
+## Code Maintenance
+
+- Maintain a memory map of where various functionality exists, rather than having to find it constantly. Store this as a file as necessary. Keep it updated as the codebase changes.
