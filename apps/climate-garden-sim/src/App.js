@@ -18,7 +18,7 @@ import ClimateScenarioSelector from './components/ClimateScenarioSelector.js';
 import PortfolioManager from './components/PortfolioManager.js';
 import SimulationResults from './components/SimulationResults.js';
 import GardenCalendar from './components/GardenCalendar.js';
-import RecommendationsPanel from './components/RecommendationsPanel.js';
+import RecommendationsPanelSimple from './components/RecommendationsPanelSimple.js';
 import InvestmentConfigurer from './components/InvestmentConfigurer.js';
 import ActionDashboard from './components/ActionDashboard.js';
 import { generateDatabaseGardenCalendar } from './services/databaseCalendarService.js';
@@ -172,11 +172,10 @@ function App() {
 
         <GardenCalendar gardenCalendar={gardenCalendar} />
 
-        <RecommendationsPanel
+        <RecommendationsPanelSimple
           monthlyFocus={monthlyFocus}
           weeklyActions={weeklyActions}
           successOutlook={successOutlook}
-          investmentPriority={investmentPriority}
           topCropRecommendations={topCropRecommendations}
           siteSpecificRecommendations={siteSpecificRecommendations}
         />
