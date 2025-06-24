@@ -343,7 +343,7 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
         { step: '2. Choose cold-hardy varieties', details: 'Spinach (Space), arugula (Roquette), lettuce (Winter Density) - cold tolerance', timing: 'Select for Durham winters' },
         { step: '3. Start 4-6 weeks early', details: 'For October transplant to cold frames, start late August/early September', timing: 'Time for cold frame setup' },
         { step: '4. Plan protection', details: 'These will need cold frames or row covers for Durham winter survival', timing: 'Prepare protection systems' }
-      ]
+      ],
       'Plant Heat-Sensitive Crops': [
         { step: '1. Check last frost date', details: 'Durham average: April 15. Wait 2 weeks after for heat-sensitive crops', timing: 'May 1+ for safety' },
         { step: '2. Prepare beds', details: 'Work in 2-4" compost, ensure good drainage. Raised beds work best in Durham clay', timing: '2 weeks before planting' },
