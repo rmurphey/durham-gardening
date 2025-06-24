@@ -120,7 +120,7 @@ class DatabaseService {
         plant_key: 'kale',
         activity_type: 'shopping',
         month: 7,
-        action_template: 'Buy kale seeds for fall planting: {varieties}',
+        action_template: (data) => `Buy kale seeds for fall planting: ${data.varieties}`,
         timing_template: 'Direct sow in 4×5 bed in August, harvest through winter',
         priority: 'medium',
         variety_suggestions: ['Red Russian', 'Winterbor'],
@@ -210,7 +210,7 @@ class DatabaseService {
       }
     ];
 
-    // Rotation templates
+    // Rotation templates - direct text, no placeholders
     this.rotationTemplates = [
       {
         id: 101,
@@ -218,8 +218,7 @@ class DatabaseService {
         month: 3,
         action_template: 'Clear winter debris from 3×15 bed, add 2-3 inches compost',
         timing_template: 'Prepare 3×15 bed for spring plantings (lettuce, kale)',
-        priority: 'high',
-        target_bed: '3×15 Bed'
+        priority: 'high'
       },
       {
         id: 102,
@@ -227,8 +226,7 @@ class DatabaseService {
         month: 4,
         action_template: 'Prepare 4×8 bed for heat crops - add compost, check drainage',
         timing_template: 'Get 4×8 bed ready for peppers, tomatoes in May',
-        priority: 'high',
-        target_bed: '4×8 Bed'
+        priority: 'high'
       },
       {
         id: 103,
@@ -236,8 +234,7 @@ class DatabaseService {
         month: 7,
         action_template: 'Clear bolted lettuce from 3×15 bed, plant heat-tolerant amaranth',
         timing_template: 'Replace failed cool crops with heat specialists',
-        priority: 'high',
-        source_bed: '3×15 Bed'
+        priority: 'high'
       },
       {
         id: 104,
@@ -245,8 +242,7 @@ class DatabaseService {
         month: 8,
         action_template: 'Clear spent spring crops from 4×5 bed, add compost for fall kale',
         timing_template: 'Rotate 4×5 bed from spring crops to fall greens',
-        priority: 'high',
-        target_bed: '4×5 Bed'
+        priority: 'high'
       },
       {
         id: 105,
@@ -254,8 +250,7 @@ class DatabaseService {
         month: 10,
         action_template: 'Harvest final peppers from 4×8 bed, plant garlic cloves',
         timing_template: 'Transition 4×8 bed from summer heat crops to winter garlic',
-        priority: 'high',
-        source_bed: '4×8 Bed'
+        priority: 'high'
       }
     ];
 
@@ -458,6 +453,16 @@ class DatabaseService {
           columns.forEach((col, index) => {
             template[col] = row[index];
           });
+          
+          // Parse bed_size_requirements JSON to extract bed info
+          if (template.bed_size_requirements) {
+            try {
+              template.bed_requirements = JSON.parse(template.bed_size_requirements);
+            } catch (e) {
+              template.bed_requirements = {};
+            }
+          }
+          
           return template;
         });
         
@@ -533,12 +538,12 @@ class DatabaseService {
   }
 
   /**
-   * Generate personalized action text from template
+   * Generate action text from template
    * @param {Object} template - Activity template
-   * @returns {string} Personalized action text
+   * @returns {string} Action text
    */
   generateActionText(template) {
-    // If action_template is a function (new template literal approach)
+    // If action_template is a function (JavaScript template literal)
     if (typeof template.action_template === 'function') {
       const data = {
         varieties: template.variety_suggestions?.length > 0 
@@ -546,61 +551,50 @@ class DatabaseService {
           : 'recommended varieties',
         variety: template.variety_suggestions?.[0] || 'recommended variety',
         supplier: template.supplier_preferences?.[0] || 'preferred supplier',
-        bed: template.bed_requirements?.recommended_bed || 'any available bed',
+        bed: template.bed_requirements?.recommended_bed || template.target_bed || 'any available bed',
         quantity: template.bed_requirements?.quantity || 'appropriate amount'
       };
       
       return template.action_template(data);
     }
 
-    // Legacy string replacement for backwards compatibility
-    let action = template.action_template;
+    // Handle string templates (including from database) - MUST replace ALL placeholders
+    let action = template.action_template || 'Garden activity';
 
-    // Replace template variables with specific values - ALL placeholders MUST be replaced
-    
-    // Handle {varieties} (plural)
-    if (template.variety_suggestions && template.variety_suggestions.length > 0) {
-      const varieties = template.variety_suggestions.slice(0, 2).join(', ');
-      action = action.replace('{varieties}', varieties);
-    } else {
-      action = action.replace('{varieties}', 'recommended varieties');
-    }
+    // Replace ANY placeholders that exist
+    const replacements = {
+      '{varieties}': template.variety_suggestions?.length > 0 
+        ? template.variety_suggestions.slice(0, 2).join(', ')
+        : 'recommended varieties',
+      '{variety}': template.variety_suggestions?.[0] || 'recommended variety',
+      '{supplier}': template.supplier_preferences?.[0] || 'preferred supplier',
+      '{bed}': template.bed_requirements?.recommended_bed || 
+               template.bed_requirements?.target_bed || 
+               template.bed_requirements?.source_bed || 
+               '3×15 bed',
+      '{quantity}': template.bed_requirements?.quantity || 'appropriate amount'
+    };
 
-    // Handle {variety} (singular)
-    if (template.variety_suggestions?.[0]) {
-      action = action.replace('{variety}', template.variety_suggestions[0]);
-    } else {
-      action = action.replace('{variety}', 'recommended variety');
-    }
+    // Replace all placeholders
+    Object.entries(replacements).forEach(([placeholder, replacement]) => {
+      action = action.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), replacement);
+    });
 
-    // Handle {supplier}
-    if (template.supplier_preferences && template.supplier_preferences.length > 0) {
-      action = action.replace('{supplier}', template.supplier_preferences[0]);
-    } else {
-      action = action.replace('{supplier}', 'preferred supplier');
-    }
-
-    // Handle {bed}
-    if (template.bed_requirements?.recommended_bed) {
-      action = action.replace('{bed}', template.bed_requirements.recommended_bed);
-    } else {
-      action = action.replace('{bed}', 'any available bed');
-    }
-
-    // Handle {quantity}
-    if (template.bed_requirements?.quantity) {
-      action = action.replace('{quantity}', template.bed_requirements.quantity);
-    } else {
-      action = action.replace('{quantity}', 'appropriate amount');
-    }
-
-    // Add cost information
-    if (template.estimated_cost_min && template.estimated_cost_max) {
+    // Add cost information for shopping activities
+    if (template.estimated_cost_min && template.estimated_cost_max && template.activity_type === 'shopping') {
       const costRange = `$${template.estimated_cost_min.toFixed(0)}-${template.estimated_cost_max.toFixed(0)}`;
       action = action.includes(' - $') ? action : `${action} - ${costRange}`;
     }
 
     return action;
+  }
+
+  /**
+   * Get all activity templates for testing
+   * @returns {Array} All activity templates
+   */
+  getActivityTemplates() {
+    return this.fallbackTemplates || [];
   }
 
   /**

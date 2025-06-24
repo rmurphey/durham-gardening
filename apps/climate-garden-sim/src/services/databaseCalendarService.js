@@ -73,7 +73,7 @@ export const generateDatabaseGardenCalendar = async (
         activities.push({
           type: template.activity_type,
           crop: 'Bed Management',
-          action: template.action_template,
+          action: databaseService.generateActionText(template),
           timing: template.timing_template || '',
           priority: template.priority || 'medium'
         });
@@ -89,7 +89,7 @@ export const generateDatabaseGardenCalendar = async (
         activities.push({
           type: template.activity_type,
           crop: template.plant_key ? getCropDisplayName(template.plant_key) : 'Succession Planning',
-          action: template.action_template,
+          action: databaseService.generateActionText(template),
           timing: template.timing_template || '',
           priority: template.priority || 'medium'
         });

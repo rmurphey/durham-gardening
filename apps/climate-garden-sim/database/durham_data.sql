@@ -170,7 +170,4 @@ INSERT INTO activity_templates (
  '{"source_bed": "4×8 Bed", "winter_crop": "garlic"}'
 );
 
--- Update data tracking
-INSERT INTO data_updates (update_type, description) VALUES
-('durham_activities', 'Initial Durham garden activity templates loaded'),
-('garden_setup', 'Durham garden beds and infrastructure defined');
+-- Durham activity templates loaded successfully

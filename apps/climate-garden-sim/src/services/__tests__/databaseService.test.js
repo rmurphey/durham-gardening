@@ -12,6 +12,68 @@ describe('DatabaseService Template Replacement', () => {
     service = new (databaseService.constructor)();
   });
 
+  // CRITICAL TEST: NO PLACEHOLDERS EVER IN OUTPUT
+  describe('ZERO TOLERANCE for placeholders in UI', () => {
+    test('should NEVER return text with ANY placeholder pattern', () => {
+      // Test ALL templates in the system from fallback data
+      const allTemplates = [
+        ...service.activityTemplates,
+        ...service.rotationTemplates,
+        ...service.successionTemplates
+      ];
+      
+      allTemplates.forEach((template, index) => {
+        const result = service.generateActionText(template);
+        
+        // ABSOLUTE REQUIREMENT: No curly brace placeholders
+        const placeholders = result.match(/\{[^}]+\}/g);
+        expect(placeholders).toBeNull(`Template ${index} (${template.id}) contains unreplaced placeholders: ${placeholders?.join(', ')} in result: "${result}"`);
+        
+        // Additional safety checks
+        expect(result).not.toContain('{bed}');
+        expect(result).not.toContain('{variety}');
+        expect(result).not.toContain('{varieties}');
+        expect(result).not.toContain('{supplier}');
+        expect(result).not.toContain('{quantity}');
+        expect(result).not.toContain('{timing}');
+        expect(result).not.toContain('{location}');
+        expect(result).not.toContain('{season}');
+        expect(result).not.toContain('{cost}');
+        
+        // Result must be a meaningful string
+        expect(result).toBeTruthy();
+        expect(typeof result).toBe('string');
+        expect(result.trim().length).toBeGreaterThan(0);
+      });
+    });
+
+    test('should handle completely malformed templates safely', () => {
+      const malformedTemplates = [
+        { action_template: '{unknown_placeholder_123}' },
+        { action_template: '{bed} {variety} {supplier} {mystery_var}' },
+        { action_template: 'Some text {undefined_var} more text {another_var}' },
+        { action_template: '{{{nested}}}' },
+        { action_template: '{bed' }, // Malformed - missing closing brace
+        { action_template: 'bed}' },  // Malformed - missing opening brace
+        { action_template: '' },      // Empty
+        { action_template: null },    // Null
+        { action_template: undefined }, // Undefined
+        {},                           // Missing action_template entirely
+      ];
+
+      malformedTemplates.forEach((template, index) => {
+        const result = service.generateActionText(template);
+        
+        // Must NEVER contain curly braces
+        const placeholders = result.match(/\{[^}]+\}/g);
+        expect(placeholders).toBeNull(`Malformed template ${index} still contains placeholders: ${placeholders?.join(', ')} in result: "${result}"`);
+        
+        // Must return safe fallback
+        expect(typeof result).toBe('string');
+      });
+    });
+  });
+
   describe('generateActionText', () => {
     test('should replace all placeholders with actual data', () => {
       const template = {
