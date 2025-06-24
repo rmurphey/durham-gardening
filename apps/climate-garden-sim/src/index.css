@@ -564,6 +564,40 @@ p {
   font-style: italic;
 }
 
+/* Shopping activity styling */
+.activity.activity-shopping {
+  border-left-color: var(--color-warning);
+  background: var(--color-warning-light);
+}
+
+.activity.activity-shopping .activity-action {
+  font-weight: var(--font-weight-medium);
+}
+
+.activity.activity-shopping .activity-crop {
+  color: var(--color-warning-dark);
+}
+
+/* Succession planting styling */
+.activity.activity-succession {
+  border-left-color: var(--color-info);
+  background: var(--color-info-light);
+}
+
+.activity.activity-succession .activity-crop {
+  color: var(--color-info-dark);
+}
+
+/* Crop rotation styling */
+.activity.activity-rotation {
+  border-left-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.activity.activity-rotation .activity-crop {
+  color: var(--color-primary-dark);
+}
+
 /* ========================================
    SHOPPING LIST - ACTION-ORIENTED
 ======================================== */

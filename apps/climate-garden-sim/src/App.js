@@ -19,7 +19,6 @@ import PortfolioManager from './components/PortfolioManager.js';
 import SimulationResults from './components/SimulationResults.js';
 import GardenCalendar from './components/GardenCalendar.js';
 import RecommendationsPanel from './components/RecommendationsPanel.js';
-import DurhamShoppingList from './components/DurhamShoppingList.js';
 import { generateGardenCalendar } from './services/gardenCalendar.js';
 import './index.css';
 
@@ -134,11 +133,6 @@ function App() {
           simulationResults={simulationResults}
           simulating={simulating}
           totalInvestment={totalInvestment}
-        />
-
-        <DurhamShoppingList 
-          portfolio={portfolioStrategies[selectedPortfolio]}
-          gardenSize={locationConfig.gardenSizeActual || 100}
         />
 
         <GardenCalendar gardenCalendar={gardenCalendar} />

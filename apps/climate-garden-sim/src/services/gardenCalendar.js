@@ -10,6 +10,7 @@ import {
   getAlternativePlantingMethod
 } from '../config.js';
 import { getPortfolioStrategies } from '../data/portfolioStrategies.js';
+import { DURHAM_CROPS } from '../config/durhamConfig.js';
 
 /**
  * Get climate zone classification from location
@@ -23,6 +24,270 @@ const getClimateZoneFromLocation = (locationConfig) => {
   if (hardiness <= 5) return 'cold';
   if (hardiness >= 9) return 'subtropical';
   return 'temperate';
+};
+
+/**
+ * Add Durham-specific shopping and preparation activities
+ * @param {Array} activities - Activities array to modify
+ * @param {number} monthNumber - Current month (1-12)
+ * @param {Object} portfolio - Portfolio allocation
+ */
+const addDurhamShoppingActivities = (activities, monthNumber, portfolio) => {
+  Object.entries(portfolio).forEach(([cropType, percentage]) => {
+    if (percentage < 5) return;
+
+    let relevantCrops = {};
+    if (cropType === 'heatSpecialists') {
+      relevantCrops = DURHAM_CROPS.heatLovers;
+    } else if (cropType === 'coolSeason') {
+      relevantCrops = DURHAM_CROPS.coolSeason;
+    } else if (cropType === 'perennials') {
+      relevantCrops = DURHAM_CROPS.perennials;
+    }
+
+    Object.entries(relevantCrops).forEach(([cropKey, crop]) => {
+      const name = crop.name;
+      const seeds = crop.shopping?.seeds || 'seeds';
+      const cost = crop.shopping?.cost || '$3-4';
+
+      // Add shopping activities based on planting timing
+      switch (cropKey) {
+        case 'okra':
+          if (monthNumber === 4) {
+            activities.push({
+              type: 'shopping',
+              crop: 'Okra',
+              action: `Buy okra seeds (${seeds}) - ${cost}`,
+              timing: 'Plant in May when soil warms',
+              priority: 'high'
+            });
+          }
+          break;
+          
+        case 'hotPeppers':
+          if (monthNumber === 2) {
+            activities.push({
+              type: 'shopping',
+              crop: 'Hot Peppers',
+              action: `Buy pepper seeds (${seeds}) - ${cost}`,
+              timing: 'Start indoors in March',
+              priority: 'high'
+            });
+          }
+          break;
+          
+        case 'sweetPotato':
+          if (monthNumber === 4) {
+            activities.push({
+              type: 'shopping',
+              crop: 'Sweet Potato',
+              action: `Order sweet potato slips (${crop.shopping?.slips || '10-15 slips'}) - ${cost}`,
+              timing: 'Plant in mid-May',
+              priority: 'medium'
+            });
+          }
+          break;
+          
+        case 'kale':
+          if (monthNumber === 2) {
+            activities.push({
+              type: 'shopping',
+              crop: 'Kale (Spring)',
+              action: `Buy kale seeds (${seeds}) - ${cost}`,
+              timing: 'Plant mid-February to March',
+              priority: 'medium'
+            });
+          }
+          if (monthNumber === 7) {
+            activities.push({
+              type: 'shopping',
+              crop: 'Kale (Fall)',
+              action: `Buy kale seeds (${seeds}) - ${cost}`,
+              timing: 'Plant August for fall harvest',
+              priority: 'medium'
+            });
+          }
+          break;
+          
+        case 'lettuce':
+          if (monthNumber === 1) {
+            activities.push({
+              type: 'shopping',
+              crop: 'Lettuce',
+              action: `Buy lettuce seeds (${seeds}) - ${cost}`,
+              timing: 'Start succession planting in February',
+              priority: 'low'
+            });
+          }
+          if (monthNumber === 8) {
+            activities.push({
+              type: 'shopping',
+              crop: 'Lettuce (Fall)',
+              action: `Buy lettuce seeds (${seeds}) - ${cost}`,
+              timing: 'Fall succession planting',
+              priority: 'medium'
+            });
+          }
+          break;
+          
+        case 'asparagus':
+          if (monthNumber === 2) {
+            activities.push({
+              type: 'shopping',
+              crop: 'Asparagus',
+              action: `Order asparagus crowns (${crop.shopping?.crowns || '1-year crowns'}) - ${cost}`,
+              timing: 'Plant in March-April',
+              priority: 'low'
+            });
+          }
+          break;
+      }
+    });
+  });
+};
+
+/**
+ * Add succession planting activities for continuous harvest
+ * @param {Array} activities - Activities array to modify
+ * @param {number} monthNumber - Current month (1-12)
+ * @param {Object} portfolio - Portfolio allocation
+ */
+const addSuccessionPlantingActivities = (activities, monthNumber, portfolio) => {
+  // Succession crops and their intervals
+  const successionCrops = {
+    lettuce: {
+      months: [2, 3, 4, 9, 10], // Spring and fall
+      interval: '2 weeks',
+      note: 'For continuous fresh harvest'
+    },
+    kale: {
+      months: [2, 3, 8, 9], // Spring and fall plantings
+      interval: '3 weeks', 
+      note: 'Stagger for steady supply'
+    },
+    hotPeppers: {
+      months: [3, 4], // Start multiple rounds
+      interval: '4 weeks',
+      note: 'Multiple harvests throughout season'
+    }
+  };
+
+  Object.entries(portfolio).forEach(([cropType, percentage]) => {
+    if (percentage < 5) return;
+
+    let relevantCrops = {};
+    if (cropType === 'heatSpecialists') {
+      relevantCrops = DURHAM_CROPS.heatLovers;
+    } else if (cropType === 'coolSeason') {
+      relevantCrops = DURHAM_CROPS.coolSeason;
+    }
+
+    Object.entries(relevantCrops).forEach(([cropKey, crop]) => {
+      const succession = successionCrops[cropKey];
+      if (succession && succession.months.includes(monthNumber)) {
+        activities.push({
+          type: 'succession',
+          crop: crop.name,
+          action: `Succession plant ${crop.name} (every ${succession.interval})`,
+          timing: succession.note,
+          priority: 'medium'
+        });
+      }
+    });
+  });
+};
+
+/**
+ * Add crop rotation activities based on seasonal transitions
+ * @param {Array} activities - Activities array to modify
+ * @param {number} monthNumber - Current month (1-12)
+ * @param {Object} portfolio - Portfolio allocation
+ * @param {number} monthIndex - Month index in calendar (for rotation timing)
+ */
+const addCropRotationActivities = (activities, monthNumber, portfolio, monthIndex) => {
+  // Durham-specific rotation schedule
+  const rotationPlan = {
+    // Spring transition (March-April)
+    spring: {
+      months: [3, 4],
+      actions: [
+        {
+          type: 'rotation',
+          crop: 'Winter Crops',
+          action: 'Remove spent winter greens, prepare beds for summer crops',
+          timing: 'Before soil warms for summer planting',
+          priority: 'high'
+        },
+        {
+          type: 'rotation',
+          crop: 'Soil Health',
+          action: 'Add compost to beds, check soil drainage',
+          timing: 'Durham clay needs amendment before summer',
+          priority: 'high'
+        }
+      ]
+    },
+    // Summer transition (July-August)
+    summer: {
+      months: [7, 8],
+      actions: [
+        {
+          type: 'rotation',
+          crop: 'Spring Crops',
+          action: 'Clear bolted spring crops, plant fall succession',
+          timing: 'Make space for fall plantings',
+          priority: 'high'
+        },
+        {
+          type: 'rotation',
+          crop: 'Bed Preparation',
+          action: 'Mulch heavily for fall crops, plan winter garden',
+          timing: 'Prepare for fall/winter rotation',
+          priority: 'medium'
+        }
+      ]
+    },
+    // Fall transition (October-November)
+    fall: {
+      months: [10, 11],
+      actions: [
+        {
+          type: 'rotation',
+          crop: 'Summer Crops',
+          action: 'Harvest and clear spent summer crops',
+          timing: 'Before first frost preparation',
+          priority: 'high'
+        },
+        {
+          type: 'rotation',
+          crop: 'Winter Garden',
+          action: 'Protect overwintering crops, plan spring rotation',
+          timing: 'Set up winter garden system',
+          priority: 'medium'
+        }
+      ]
+    }
+  };
+
+  // Add appropriate rotation activities
+  Object.values(rotationPlan).forEach(season => {
+    if (season.months.includes(monthNumber)) {
+      season.actions.forEach(action => {
+        activities.push(action);
+      });
+    }
+  });
+
+  // Add specific crop family rotation reminders
+  if (monthNumber === 12) { // December planning
+    activities.push({
+      type: 'rotation',
+      crop: 'Rotation Planning',
+      action: 'Plan next year crop rotation: avoid same families in same beds',
+      timing: 'Durham crop families: nightshades, brassicas, legumes',
+      priority: 'low'
+    });
+  }
 };
 
 /**
@@ -272,6 +537,11 @@ export const generateGardenCalendar = (summerScenario, winterScenario, portfolio
         }
       });
     });
+    
+    // Add Durham-specific shopping, succession, and rotation activities
+    addDurhamShoppingActivities(activities, monthNumber, portfolio);
+    addSuccessionPlantingActivities(activities, monthNumber, portfolio);
+    addCropRotationActivities(activities, monthNumber, portfolio, i);
     
     // Add DURHAM, NC SPECIFIC seasonal activities
     switch (monthNumber) {
