@@ -107,7 +107,12 @@ const RecommendationsPanel = ({
               </div>
             ) : Array.isArray(recommendation.content) ? (
               <div className="recommendation-list">
-                {recommendation.content.map((item, idx) => (
+                {recommendation.content.map((item, idx) => {
+                  // Debug logging for site-specific tips
+                  if (recommendation.title === "Site-Specific Tips") {
+                    console.log("Site tip item:", item);
+                  }
+                  return (
                   <div key={idx} className="recommendation-item">
                     {item.icon && <span className="item-icon">{item.icon}</span>}
                     {item.task && (
@@ -135,12 +140,12 @@ const RecommendationsPanel = ({
                     )}
                     {item.tip && (
                       <div className="site-tip">
-                        <div className="tip-category">{item.category}:</div>
-                        <div className="tip-content">{item.tip}</div>
+                        {item.tip}
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <p>Complex recommendation data available</p>

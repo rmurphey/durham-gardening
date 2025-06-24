@@ -267,6 +267,7 @@ export const generateDurhamSiteRecommendations = () => {
     season: 'all'
   });
 
+  console.log("Generated Durham site recommendations:", recommendations);
   return recommendations;
 };
 
