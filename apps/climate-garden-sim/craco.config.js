@@ -23,12 +23,13 @@ module.exports = {
       // Add Node.js polyfills for sql.js
       webpackConfig.resolve.fallback = {
         ...webpackConfig.resolve.fallback,
-        "path": false,
-        "fs": false,
-        "crypto": false,
-        "stream": false,
-        "util": false,
-        "buffer": false,
+        "path": require.resolve("path-browserify"),
+        "crypto": require.resolve("crypto-browserify"),
+        "stream": require.resolve("stream-browserify"),
+        "util": require.resolve("util"),
+        "buffer": require.resolve("buffer"),
+        "vm": require.resolve("vm-browserify"),
+        "fs": false, // fs cannot be polyfilled in browser
       };
 
       // Ensure .db files are treated as assets

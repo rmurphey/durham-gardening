@@ -12,7 +12,7 @@ import {
 import { generateLocationSpecificScenarios } from './data/climateScenarios.js';
 import { getPortfolioStrategies, createCustomPortfolio, validatePortfolioAllocations } from './data/portfolioStrategies.js';
 import { useSimulation } from './hooks/useSimulation.js';
-import { useClimateSelection, useInvestmentConfig, useUIPreferences } from './hooks/useLocalStorage.js';
+import { useClimateSelection, useInvestmentConfig } from './hooks/useLocalStorage.js';
 import { DURHAM_CONFIG } from './config/durhamConfig.js';
 import ClimateScenarioSelector from './components/ClimateScenarioSelector.js';
 import PortfolioManager from './components/PortfolioManager.js';
@@ -52,7 +52,7 @@ function App() {
   const [customPortfolio, setCustomPortfolio] = useState(null);
   
   // Use simulation hook
-  const { simulationResults, simulating, triggerSimulation, totalInvestment } = useSimulation(
+  const { simulationResults, simulating, totalInvestment } = useSimulation(
     selectedSummer,
     selectedWinter,
     selectedPortfolio,
