@@ -6,8 +6,8 @@
   "framework": "create-react-app",
   "regions": ["iad1"],
   "functions": {
-    "app/api/**/*.js": {
-      "runtime": "nodejs18.x"
+    "api/**/*.js": {
+      "runtime": "edge"
     }
   },
   "headers": [
@@ -52,12 +52,6 @@
       "source": "/garden-planner",
       "destination": "/",
       "permanent": false
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/weather/(.*)",
-      "destination": "/api/weather"
     }
   ]
 }

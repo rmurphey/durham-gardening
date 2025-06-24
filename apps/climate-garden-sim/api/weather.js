@@ -1,10 +1,6 @@
 // Vercel Edge Function for Weather API Proxying
 // This provides API key security and rate limiting across all users
 
-export const config = {
-  runtime: 'edge',
-};
-
 const CACHE_DURATION = 6 * 60 * 60; // 6 hours in seconds
 
 export default async function handler(request) {
@@ -21,7 +17,7 @@ export default async function handler(request) {
 
   // Rate limiting by IP
   const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-  const rateLimitKey = `weather_${clientIP}_${new Date().getHour()}`;
+  const rateLimitKey = `weather_${clientIP}_${new Date().getHours()}`;
   
   try {
     // Check rate limit (would use Vercel KV in production)
