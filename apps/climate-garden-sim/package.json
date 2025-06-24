@@ -28,7 +28,11 @@
     "db:verify": "node scripts/database.js verify",
     "db:update": "node scripts/database.js update",
     "db:status": "node scripts/database.js status",
-    "precommit": "npm run db:verify"
+    "precommit": "npm run db:verify",
+    "vercel": "vercel",
+    "vercel:dev": "vercel dev",
+    "vercel:build": "npm run db:build && npm run build",
+    "deploy": "npm run vercel:build && vercel --prod"
   },
   "eslintConfig": {
     "extends": [
