@@ -14,11 +14,11 @@ const DashboardView = ({
   monthlyFocus 
 }) => {
   // Get only the most urgent items for dashboard
-  const urgentTasks = generateGardenTasks().filter(task => 
+  const urgentTasks = (generateGardenTasks() || []).filter(task => 
     task.urgency === 'urgent' || task.daysUntilPlanting <= 14
   );
   
-  const urgentShopping = generatePureShoppingRecommendations().filter(item => 
+  const urgentShopping = (generatePureShoppingRecommendations() || []).filter(item => 
     item.urgency === 'urgent' || item.daysUntilPlanting <= 30
   );
 
@@ -79,10 +79,10 @@ const DashboardView = ({
             <h3>⚡ Time-Sensitive Shopping</h3>
             <SimpleInvestmentPanel 
               recommendations={urgentShopping}
-              onAddToShoppingList={shoppingActions.addToList}
-              onMarkAsOwned={shoppingActions.markOwned}
+              onAddToShoppingList={shoppingActions.addToShoppingList}
+              onMarkAsOwned={shoppingActions.markAsOwned}
               onRejectItem={shoppingActions.rejectItem}
-              getItemStatus={shoppingActions.getStatus}
+              getItemStatus={shoppingActions.getItemStatus}
             />
           </div>
         )}

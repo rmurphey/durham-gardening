@@ -67,14 +67,15 @@ function checkReactFile(filePath) {
     }
     
     // Check for potential prop interface mismatches
-    if (content.includes('taskActions.')) {
-      const taskActionCalls = content.match(/taskActions\.(\w+)/g) || [];
-      const uniqueCalls = [...new Set(taskActionCalls)];
+    if (content.includes('taskActions.') || content.includes('shoppingActions.')) {
+      const actionCalls = content.match(/(?:task|shopping)Actions\.(\w+)/g) || [];
+      const uniqueCalls = [...new Set(actionCalls)];
       
       // Common interface mismatches we want to catch
       const problematicPatterns = [
         'taskActions.markComplete', // Should be markTaskComplete
-        'taskActions.getStatus'     // Should be getTaskStatus
+        'taskActions.getStatus',    // Should be getTaskStatus
+        'shoppingActions.getStatus' // Should be getItemStatus
       ];
       
       for (const pattern of problematicPatterns) {

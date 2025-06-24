@@ -8,7 +8,7 @@ import GardenTasksPanel from './GardenTasksPanel';
 import { generateGardenTasks } from '../services/temporalShoppingService';
 
 const TasksView = ({ taskActions }) => {
-  const allTasks = generateGardenTasks();
+  const allTasks = generateGardenTasks() || [];
   
   const urgentTasks = allTasks.filter(task => 
     task.urgency === 'urgent' || task.daysUntilPlanting <= 7

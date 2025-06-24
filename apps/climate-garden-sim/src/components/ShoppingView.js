@@ -9,7 +9,7 @@ import SimpleInvestmentPanel from './SimpleInvestmentPanel';
 import { generatePureShoppingRecommendations } from '../services/temporalShoppingService';
 
 const ShoppingView = ({ shoppingActions }) => {
-  const allRecommendations = generatePureShoppingRecommendations();
+  const allRecommendations = generatePureShoppingRecommendations() || [];
   
   const urgentShopping = allRecommendations.filter(item => 
     item.urgency === 'urgent' || item.daysUntilPlanting <= 30
@@ -30,8 +30,8 @@ const ShoppingView = ({ shoppingActions }) => {
       <ShoppingListPanel 
         shoppingList={shoppingActions.shoppingList}
         totalCost={shoppingActions.getTotalCost()}
-        onRemoveItem={shoppingActions.removeFromList}
-        onClearList={shoppingActions.clearList}
+        onRemoveItem={shoppingActions.removeFromShoppingList}
+        onClearList={shoppingActions.clearShoppingList}
       />
 
       {urgentShopping.length > 0 && (
@@ -40,10 +40,10 @@ const ShoppingView = ({ shoppingActions }) => {
           <p className="section-description">Buy these items soon to be ready for upcoming planting deadlines</p>
           <SimpleInvestmentPanel 
             recommendations={urgentShopping}
-            onAddToShoppingList={shoppingActions.addToList}
+            onAddToShoppingList={shoppingActions.addToShoppingList}
             onMarkAsOwned={shoppingActions.markOwned}
             onRejectItem={shoppingActions.rejectItem}
-            getItemStatus={shoppingActions.getStatus}
+            getItemStatus={shoppingActions.getItemStatus}
           />
         </div>
       )}
@@ -54,10 +54,10 @@ const ShoppingView = ({ shoppingActions }) => {
           <p className="section-description">Items to consider for upcoming seasons</p>
           <SimpleInvestmentPanel 
             recommendations={plannedShopping}
-            onAddToShoppingList={shoppingActions.addToList}
+            onAddToShoppingList={shoppingActions.addToShoppingList}
             onMarkAsOwned={shoppingActions.markOwned}
             onRejectItem={shoppingActions.rejectItem}
-            getItemStatus={shoppingActions.getStatus}
+            getItemStatus={shoppingActions.getItemStatus}
           />
         </div>
       )}
