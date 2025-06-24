@@ -63,7 +63,7 @@ class DatabaseService {
         plant_key: 'hot_peppers',
         activity_type: 'shopping',
         month: 2,
-        action_template: 'Order pepper seeds: {varieties} from {supplier}',
+        action_template: (data) => `Order pepper seeds: ${data.varieties || 'recommended varieties'} from ${data.supplier || 'preferred supplier'}`,
         timing_template: 'Start indoors March 1st, need 8-10 weeks before transplant',
         priority: 'medium',
         variety_suggestions: ['Habanero', 'Jalapeño', 'Thai Chili', 'Carolina Reaper'],
@@ -79,7 +79,7 @@ class DatabaseService {
         plant_key: 'sweet_potato',
         activity_type: 'shopping',
         month: 4,
-        action_template: 'Order {quantity} {variety} sweet potato slips from {supplier}',
+        action_template: (data) => `Order ${data.quantity} ${data.variety} sweet potato slips from ${data.supplier}`,
         timing_template: 'Plant in 4×8 bed after soil reaches 65°F (mid-May)',
         priority: 'medium',
         variety_suggestions: ['Beauregard', 'Georgia Jet', 'Centennial'],
@@ -100,7 +100,7 @@ class DatabaseService {
         plant_key: 'kale',
         activity_type: 'shopping',
         month: 2,
-        action_template: 'Buy kale seeds: {varieties} from {supplier}',
+        action_template: (data) => `Buy kale seeds: ${data.varieties} from ${data.supplier}`,
         timing_template: 'Direct sow in 3×15 bed mid-February, 18-inch spacing',
         priority: 'medium',
         variety_suggestions: ['Red Russian', 'Winterbor', 'Lacinato'],
@@ -538,28 +538,60 @@ class DatabaseService {
    * @returns {string} Personalized action text
    */
   generateActionText(template) {
+    // If action_template is a function (new template literal approach)
+    if (typeof template.action_template === 'function') {
+      const data = {
+        varieties: template.variety_suggestions?.length > 0 
+          ? template.variety_suggestions.slice(0, 2).join(', ')
+          : 'recommended varieties',
+        variety: template.variety_suggestions?.[0] || 'recommended variety',
+        supplier: template.supplier_preferences?.[0] || 'preferred supplier',
+        bed: template.bed_requirements?.recommended_bed || 'any available bed',
+        quantity: template.bed_requirements?.quantity || 'appropriate amount'
+      };
+      
+      return template.action_template(data);
+    }
+
+    // Legacy string replacement for backwards compatibility
     let action = template.action_template;
 
-    // Replace template variables with specific values
+    // Replace template variables with specific values - ALL placeholders MUST be replaced
+    
+    // Handle {varieties} (plural)
     if (template.variety_suggestions && template.variety_suggestions.length > 0) {
       const varieties = template.variety_suggestions.slice(0, 2).join(', ');
       action = action.replace('{varieties}', varieties);
+    } else {
+      action = action.replace('{varieties}', 'recommended varieties');
     }
 
-    if (template.supplier_preferences && template.supplier_preferences.length > 0) {
-      action = action.replace('{supplier}', template.supplier_preferences[0]);
-    }
-
-    if (template.bed_requirements?.recommended_bed) {
-      action = action.replace('{bed}', template.bed_requirements.recommended_bed);
-    }
-
-    if (template.bed_requirements?.quantity) {
-      action = action.replace('{quantity}', template.bed_requirements.quantity);
-    }
-
+    // Handle {variety} (singular)
     if (template.variety_suggestions?.[0]) {
       action = action.replace('{variety}', template.variety_suggestions[0]);
+    } else {
+      action = action.replace('{variety}', 'recommended variety');
+    }
+
+    // Handle {supplier}
+    if (template.supplier_preferences && template.supplier_preferences.length > 0) {
+      action = action.replace('{supplier}', template.supplier_preferences[0]);
+    } else {
+      action = action.replace('{supplier}', 'preferred supplier');
+    }
+
+    // Handle {bed}
+    if (template.bed_requirements?.recommended_bed) {
+      action = action.replace('{bed}', template.bed_requirements.recommended_bed);
+    } else {
+      action = action.replace('{bed}', 'any available bed');
+    }
+
+    // Handle {quantity}
+    if (template.bed_requirements?.quantity) {
+      action = action.replace('{quantity}', template.bed_requirements.quantity);
+    } else {
+      action = action.replace('{quantity}', 'appropriate amount');
     }
 
     // Add cost information
