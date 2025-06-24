@@ -17,6 +17,16 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
   const [loading, setLoading] = useState(true);
   const [completedActions, setCompletedActions] = useState(new Set());
   const [expandedActions, setExpandedActions] = useState(new Set());
+  const [expertModeActions, setExpertModeActions] = useState(new Set());
+  
+  // Phase 2: Progressive Disclosure state
+  const [activeFilters, setActiveFilters] = useState({
+    category: 'all',
+    urgency: 'all',
+    completion: 'incomplete'
+  });
+  const [viewMode, setViewMode] = useState('smart'); // 'smart', 'compact', 'detailed'
+  const [showFilters, setShowFilters] = useState(false);
 
   const generateActionItems = useCallback(async () => {
     setLoading(true);
@@ -178,13 +188,83 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
     });
   };
 
+  const toggleExpertMode = (actionId) => {
+    setExpertModeActions(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(actionId)) {
+        newSet.delete(actionId);
+      } else {
+        newSet.add(actionId);
+      }
+      return newSet;
+    });
+  };
+
+  // Phase 2: Smart filtering functions
+  const filterActions = (actionList) => {
+    return actionList.filter(action => {
+      // Category filter
+      if (activeFilters.category !== 'all' && action.category.toLowerCase() !== activeFilters.category) {
+        return false;
+      }
+      
+      // Urgency filter
+      if (activeFilters.urgency !== 'all') {
+        if (activeFilters.urgency === 'high' && action.impact !== 'high') return false;
+        if (activeFilters.urgency === 'medium' && action.impact !== 'medium') return false;
+        if (activeFilters.urgency === 'low' && action.impact !== 'low') return false;
+      }
+      
+      // Completion filter
+      const isCompleted = completedActions.has(action.id);
+      if (activeFilters.completion === 'completed' && !isCompleted) return false;
+      if (activeFilters.completion === 'incomplete' && isCompleted) return false;
+      
+      return true;
+    });
+  };
+
+  // Smart view logic - show most relevant actions by default
+  const getSmartActions = (actionList, maxItems = 3) => {
+    if (viewMode === 'detailed') return actionList;
+    
+    // In smart mode, prioritize incomplete high-impact actions
+    const incomplete = actionList.filter(action => !completedActions.has(action.id));
+    const highImpact = incomplete.filter(action => action.impact === 'high');
+    const mediumImpact = incomplete.filter(action => action.impact === 'medium');
+    
+    const smartList = [...highImpact, ...mediumImpact].slice(0, maxItems);
+    return smartList.length > 0 ? smartList : actionList.slice(0, maxItems);
+  };
+
+  // Quick action handlers
+  const completeAllUrgent = () => {
+    const urgentIds = actions.urgent.map(action => action.id);
+    setCompletedActions(prev => {
+      const newSet = new Set(prev);
+      urgentIds.forEach(id => newSet.add(id));
+      return newSet;
+    });
+  };
+
+  const clearCompleted = () => {
+    setCompletedActions(new Set());
+  };
+
+  const updateFilter = (filterType, value) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+  };
+
   const getSeasonalInstructions = (actionTitle) => {
     const instructionMaps = {
       'Plan Spring Garden Layout': [
-        { step: '1. Review last year\'s notes', details: 'What worked? What failed? Where were pest/disease issues?', timing: 'Before planning new layout' },
-        { step: '2. Plan crop rotation', details: 'Don\'t plant same families in same spots. Tomatoes→greens→legumes→root crops', timing: 'Use garden journal' },
-        { step: '3. Calculate space needs', details: 'Durham beds: 3×15 (45 sq ft), 4×8 (32 sq ft), 4×5 (20 sq ft). Total: 97 sq ft', timing: 'Include succession plantings' },
-        { step: '4. Create planting calendar', details: 'Durham Zone 7b: Last frost ~April 15, first frost ~November 15', timing: 'Schedule by weeks, not months' }
+        { step: '1. Review last year\'s notes', details: 'What worked? What failed? Where were pest/disease issues?', timing: 'Before planning new layout', expert: 'Create digital records with photos, yields, and soil test results for data-driven decisions' },
+        { step: '2. Plan crop rotation', details: 'Don\'t plant same families in same spots. Tomatoes→greens→legumes→root crops', timing: 'Use garden journal', expert: 'Use 4-year rotation cycle. Map plant families: Solanaceae (tomatoes/peppers), Brassicaceae (kale/broccoli), Legumes (beans/peas), Alliums (onions/garlic)' },
+        { step: '3. Calculate space needs', details: 'Durham beds: 3×15 (45 sq ft), 4×8 (32 sq ft), 4×5 (20 sq ft). Total: 97 sq ft', timing: 'Include succession plantings', expert: 'Factor in mature plant sizes: Tomatoes need 4 sq ft, kale 1 sq ft, carrots 0.25 sq ft. Plan vertical growing for beans/peas' },
+        { step: '4. Create planting calendar', details: 'Durham Zone 7b: Last frost ~April 15, first frost ~November 15', timing: 'Schedule by weeks, not months', expert: 'Track soil temperature for precision. Cool crops at 35°F+, warm crops at 60°F+. Use 10-day weather forecasts for optimal timing' }
       ],
       'Order Seeds for Spring': [
         { step: '1. Review portfolio allocation', details: 'Check simulation results: focus on high-performing crop categories from your analysis', timing: 'Use simulation data' },
@@ -401,10 +481,12 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
   const ActionCard = ({ action, priority }) => {
     const isCompleted = completedActions.has(action.id);
     const isExpanded = expandedActions.has(action.id);
+    const isExpertMode = expertModeActions.has(action.id);
     const hasDetails = action.details || action.type === 'seasonal';
+    const isCompactView = viewMode === 'compact';
     
     return (
-      <div className={`action-card ${priority} ${isCompleted ? 'completed' : ''}`}>
+      <div className={`action-card ${priority} ${isCompleted ? 'completed' : ''} ${isCompactView ? 'compact-mode' : ''}`}>
         <div className="action-header">
           <div className="action-title-row">
             <button
@@ -428,16 +510,28 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
           </div>
         </div>
         
-        <p className={`action-description ${isCompleted ? 'completed-text' : ''}`}>
-          {action.description}
-        </p>
+        {!isCompactView && (
+          <p className={`action-description ${isCompleted ? 'completed-text' : ''}`}>
+            {action.description}
+          </p>
+        )}
 
-        {hasDetails && (
+        {hasDetails && !isCompactView && (
           <button 
             className="details-toggle"
             onClick={() => toggleActionExpansion(action.id)}
           >
             {isExpanded ? '↑ Hide details' : '↓ Show details'}
+          </button>
+        )}
+
+        {isCompactView && hasDetails && (
+          <button 
+            className="details-toggle compact"
+            onClick={() => toggleActionExpansion(action.id)}
+            title={action.description}
+          >
+            {isExpanded ? '−' : '+'}
           </button>
         )}
 
@@ -479,7 +573,16 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
         {isExpanded && action.type === 'seasonal' && (
           <div className="action-details">
             <div className="seasonal-details">
-              <h5>Durham, NC Specific Instructions:</h5>
+              <div className="detail-header">
+                <h5>Durham, NC Specific Instructions:</h5>
+                <button 
+                  className={`expert-toggle ${isExpertMode ? 'active' : ''}`}
+                  onClick={() => toggleExpertMode(action.id)}
+                  title="Toggle expert mode details"
+                >
+                  {isExpertMode ? '🎓 Expert Mode' : '👤 Basic Mode'}
+                </button>
+              </div>
               <div className="instruction-list">
                 {getSeasonalInstructions(action.title).map((instruction, index) => (
                   <div key={index} className="instruction-item">
@@ -487,6 +590,12 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
                     <p>{instruction.details}</p>
                     {instruction.timing && (
                       <span className="timing-note">⏰ {instruction.timing}</span>
+                    )}
+                    {isExpertMode && instruction.expert && (
+                      <div className="expert-details">
+                        <span className="expert-label">🎓 Expert:</span>
+                        <p className="expert-text">{instruction.expert}</p>
+                      </div>
                     )}
                   </div>
                 ))}
@@ -532,6 +641,103 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
       <div className="card-header">
         <h2 className="card-title">🎯 Action Dashboard</h2>
         <p className="card-subtitle">Your prioritized garden action items</p>
+        
+        {/* Phase 2: Dashboard Controls */}
+        <div className="dashboard-controls">
+          <div className="view-controls">
+            <button 
+              className={`view-button ${viewMode === 'smart' ? 'active' : ''}`}
+              onClick={() => setViewMode('smart')}
+            >
+              Smart View
+            </button>
+            <button 
+              className={`view-button ${viewMode === 'compact' ? 'active' : ''}`}
+              onClick={() => setViewMode('compact')}
+            >
+              Compact
+            </button>
+            <button 
+              className={`view-button ${viewMode === 'detailed' ? 'active' : ''}`}
+              onClick={() => setViewMode('detailed')}
+            >
+              Detailed
+            </button>
+          </div>
+          
+          <div className="quick-actions">
+            {actions.urgent.length > 0 && (
+              <button 
+                className="quick-action-button urgent"
+                onClick={completeAllUrgent}
+                title="Mark all urgent actions as complete"
+              >
+                Complete All Urgent
+              </button>
+            )}
+            {completedActions.size > 0 && (
+              <button 
+                className="quick-action-button secondary"
+                onClick={clearCompleted}
+                title="Clear all completed actions"
+              >
+                Clear Completed
+              </button>
+            )}
+            <button 
+              className={`filter-toggle ${showFilters ? 'active' : ''}`}
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              Filters {activeFilters.category !== 'all' || activeFilters.urgency !== 'all' || activeFilters.completion !== 'incomplete' ? '(On)' : ''}
+            </button>
+          </div>
+        </div>
+
+        {/* Phase 2: Smart Filters */}
+        {showFilters && (
+          <div className="filter-controls">
+            <div className="filter-group">
+              <label>Category:</label>
+              <select 
+                value={activeFilters.category}
+                onChange={(e) => updateFilter('category', e.target.value)}
+              >
+                <option value="all">All Categories</option>
+                <option value="seasonal">Seasonal</option>
+                <option value="financial">Financial</option>
+                <option value="protection">Protection</option>
+                <option value="resources">Resources</option>
+                <option value="planning">Planning</option>
+                <option value="infrastructure">Infrastructure</option>
+              </select>
+            </div>
+            
+            <div className="filter-group">
+              <label>Impact:</label>
+              <select 
+                value={activeFilters.urgency}
+                onChange={(e) => updateFilter('urgency', e.target.value)}
+              >
+                <option value="all">All Levels</option>
+                <option value="high">High Impact</option>
+                <option value="medium">Medium Impact</option>
+                <option value="low">Low Impact</option>
+              </select>
+            </div>
+            
+            <div className="filter-group">
+              <label>Status:</label>
+              <select 
+                value={activeFilters.completion}
+                onChange={(e) => updateFilter('completion', e.target.value)}
+              >
+                <option value="all">All Tasks</option>
+                <option value="incomplete">Incomplete</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="action-sections">
@@ -539,18 +745,28 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
         <div className="action-section urgent-section">
           <div className="section-header">
             <h3 className="section-title">🚨 Urgent (Next 48 Hours)</h3>
-            <span className="action-count">{actions.urgent.length}</span>
+            <span className="action-count">{filterActions(actions.urgent).length}</span>
           </div>
           
-          {actions.urgent.length === 0 ? (
+          {filterActions(actions.urgent).length === 0 ? (
             <div className="no-actions">
               <span>✅ No urgent actions needed</span>
             </div>
           ) : (
             <div className="action-grid">
-              {actions.urgent.map(action => (
+              {getSmartActions(filterActions(actions.urgent), 5).map(action => (
                 <ActionCard key={action.id} action={action} priority="urgent" />
               ))}
+              {viewMode === 'smart' && filterActions(actions.urgent).length > 5 && (
+                <div className="more-actions">
+                  <button 
+                    className="show-more-btn"
+                    onClick={() => setViewMode('detailed')}
+                  >
+                    Show {filterActions(actions.urgent).length - 5} more urgent actions
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -559,22 +775,25 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
         <div className="action-section month-section">
           <div className="section-header">
             <h3 className="section-title">📅 This Month</h3>
-            <span className="action-count">{actions.thisMonth.length}</span>
+            <span className="action-count">{filterActions(actions.thisMonth).length}</span>
           </div>
           
-          {actions.thisMonth.length === 0 ? (
+          {filterActions(actions.thisMonth).length === 0 ? (
             <div className="no-actions">
               <span>All caught up for this month</span>
             </div>
           ) : (
             <div className="action-grid">
-              {actions.thisMonth.slice(0, 4).map(action => (
+              {getSmartActions(filterActions(actions.thisMonth), 4).map(action => (
                 <ActionCard key={action.id} action={action} priority="month" />
               ))}
-              {actions.thisMonth.length > 4 && (
+              {viewMode === 'smart' && filterActions(actions.thisMonth).length > 4 && (
                 <div className="more-actions">
-                  <button className="show-more-btn">
-                    Show {actions.thisMonth.length - 4} more actions
+                  <button 
+                    className="show-more-btn"
+                    onClick={() => setViewMode('detailed')}
+                  >
+                    Show {filterActions(actions.thisMonth).length - 4} more actions
                   </button>
                 </div>
               )}
@@ -586,21 +805,24 @@ const ActionDashboard = ({ simulationResults, weatherData, gardenConfig }) => {
         <div className="action-section planning-section">
           <div className="section-header">
             <h3 className="section-title">📋 Planning & Preparation</h3>
-            <span className="action-count">{actions.planning.length}</span>
+            <span className="action-count">{filterActions(actions.planning).length}</span>
           </div>
           
-          {actions.planning.length === 0 ? (
+          {filterActions(actions.planning).length === 0 ? (
             <div className="no-actions">
               <span>No planning actions at this time</span>
             </div>
           ) : (
             <div className="action-grid">
-              {actions.planning.slice(0, 2).map(action => (
+              {getSmartActions(filterActions(actions.planning), 2).map(action => (
                 <ActionCard key={action.id} action={action} priority="planning" />
               ))}
-              {actions.planning.length > 2 && (
+              {viewMode === 'smart' && filterActions(actions.planning).length > 2 && (
                 <div className="more-actions">
-                  <button className="show-more-btn">
+                  <button 
+                    className="show-more-btn"
+                    onClick={() => setViewMode('detailed')}
+                  >
                     View all planning items
                   </button>
                 </div>
