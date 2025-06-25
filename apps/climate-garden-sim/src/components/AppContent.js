@@ -29,7 +29,6 @@ import PortfolioManager from './PortfolioManager.js';
 import SimulationResults from './SimulationResults.js';
 import GardenCalendar from './GardenCalendar.js';
 import InvestmentConfigurer from './InvestmentConfigurer.js';
-import ActionDashboard from './ActionDashboard.js';
 import { generateDatabaseGardenCalendar } from '../services/databaseCalendarService.js';
 
 function AppContent() {
@@ -152,11 +151,6 @@ function AppContent() {
               simulationResults={simulationResults}
               simulating={simulating}
               totalInvestment={totalInvestment}
-            />
-            <ActionDashboard
-              simulationResults={simulationResults}
-              weatherData={null}
-              gardenConfig={locationConfig}
             />
           </div>
         );
