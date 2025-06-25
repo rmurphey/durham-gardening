@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { generateSuccessOutlook } from '../config.js';
 import { 
   generateDurhamMonthlyFocus,
@@ -32,8 +33,10 @@ import InvestmentConfigurer from './InvestmentConfigurer.js';
 import { generateDatabaseGardenCalendar } from '../services/databaseCalendarService.js';
 
 function AppContent() {
-  // Navigation state
-  const [activeView, setActiveView] = useState('dashboard');
+  // Navigation state using React Router
+  const navigate = useNavigate();
+  const location = useLocation();
+  const activeView = location.pathname.slice(1) || 'dashboard';
   
   // Use custom hooks for state management
   const {
@@ -125,87 +128,8 @@ function AppContent() {
     loadGardenCalendar();
   }, [selectedSummer, selectedWinter, selectedPortfolio, locationConfig, customPortfolio]);
 
-  const renderView = () => {
-    switch (activeView) {
-      case 'dashboard':
-        return (
-          <DashboardView 
-            shoppingActions={shoppingActions}
-            taskActions={taskActions}
-            monthlyFocus={monthlyFocus}
-            simulationResults={simulationResults}
-            totalInvestment={totalInvestment}
-            onViewChange={setActiveView}
-          />
-        );
-      case 'tasks':
-        return <TasksView taskActions={taskActions} />;
-      case 'shopping':
-        return <ShoppingView shoppingActions={shoppingActions} />;
-      case 'calendar':
-        return <GardenCalendar gardenCalendar={gardenCalendar} />;
-      case 'results':
-        return (
-          <div className="results-view">
-            <SimulationResults 
-              simulationResults={simulationResults}
-              simulating={simulating}
-              totalInvestment={totalInvestment}
-            />
-            
-            <ClimateScenarioSelector
-              climateScenarios={currentClimateScenarios}
-              selectedSummer={selectedSummer}
-              selectedWinter={selectedWinter}
-              onSummerChange={setSelectedSummer}
-              onWinterChange={setSelectedWinter}
-            />
-
-            <PortfolioManager
-              portfolioStrategies={portfolioStrategies}
-              selectedPortfolio={selectedPortfolio}
-              onPortfolioChange={setSelectedPortfolio}
-              onCustomPortfolioChange={handleCustomPortfolioChange}
-            />
-
-            <InvestmentConfigurer
-              investmentConfig={customInvestment}
-              onInvestmentChange={setCustomInvestment}
-            />
-          </div>
-        );
-      case 'config':
-        return (
-          <div className="config-view">
-            <div className="view-header">
-              <h2>⚙️ Garden Configuration</h2>
-              <p className="view-subtitle">Set up your garden parameters and preferences</p>
-            </div>
-            
-            <ClimateScenarioSelector
-              climateScenarios={currentClimateScenarios}
-              selectedSummer={selectedSummer}
-              selectedWinter={selectedWinter}
-              onSummerChange={setSelectedSummer}
-              onWinterChange={setSelectedWinter}
-            />
-
-            <PortfolioManager
-              portfolioStrategies={portfolioStrategies}
-              selectedPortfolio={selectedPortfolio}
-              onPortfolioChange={setSelectedPortfolio}
-              onCustomPortfolioChange={handleCustomPortfolioChange}
-            />
-
-            <InvestmentConfigurer
-              investmentConfig={customInvestment}
-              onInvestmentChange={setCustomInvestment}
-            />
-          </div>
-        );
-      default:
-        return <DashboardView shoppingActions={shoppingActions} taskActions={taskActions} monthlyFocus={monthlyFocus} />;
-    }
+  const handleViewChange = (view) => {
+    navigate(`/${view}`);
   };
 
   return (
@@ -222,14 +146,95 @@ function AppContent() {
 
       <Navigation 
         activeView={activeView}
-        onViewChange={setActiveView}
+        onViewChange={handleViewChange}
         hasShoppingItems={shoppingActions.totalItems}
         hasTasks={taskActions.getCompletedCount ? true : false}
       />
       
       {/* Main Content */}
       <main className="main-content">
-        {renderView()}
+        <Routes>
+          <Route path="/" element={
+            <DashboardView 
+              shoppingActions={shoppingActions}
+              taskActions={taskActions}
+              monthlyFocus={monthlyFocus}
+              simulationResults={simulationResults}
+              totalInvestment={totalInvestment}
+              onViewChange={handleViewChange}
+            />
+          } />
+          <Route path="/dashboard" element={
+            <DashboardView 
+              shoppingActions={shoppingActions}
+              taskActions={taskActions}
+              monthlyFocus={monthlyFocus}
+              simulationResults={simulationResults}
+              totalInvestment={totalInvestment}
+              onViewChange={handleViewChange}
+            />
+          } />
+          <Route path="/tasks" element={<TasksView taskActions={taskActions} />} />
+          <Route path="/shopping" element={<ShoppingView shoppingActions={shoppingActions} />} />
+          <Route path="/calendar" element={<GardenCalendar gardenCalendar={gardenCalendar} />} />
+          <Route path="/results" element={
+            <div className="results-view">
+              <SimulationResults 
+                simulationResults={simulationResults}
+                simulating={simulating}
+                totalInvestment={totalInvestment}
+              />
+              
+              <ClimateScenarioSelector
+                climateScenarios={currentClimateScenarios}
+                selectedSummer={selectedSummer}
+                selectedWinter={selectedWinter}
+                onSummerChange={setSelectedSummer}
+                onWinterChange={setSelectedWinter}
+              />
+
+              <PortfolioManager
+                portfolioStrategies={portfolioStrategies}
+                selectedPortfolio={selectedPortfolio}
+                onPortfolioChange={setSelectedPortfolio}
+                onCustomPortfolioChange={handleCustomPortfolioChange}
+              />
+
+              <InvestmentConfigurer
+                investmentConfig={customInvestment}
+                onInvestmentChange={setCustomInvestment}
+              />
+            </div>
+          } />
+          <Route path="/config" element={
+            <div className="config-view">
+              <div className="view-header">
+                <h2>⚙️ Garden Configuration</h2>
+                <p className="view-subtitle">Set up your garden parameters and preferences</p>
+              </div>
+              
+              <ClimateScenarioSelector
+                climateScenarios={currentClimateScenarios}
+                selectedSummer={selectedSummer}
+                selectedWinter={selectedWinter}
+                onSummerChange={setSelectedSummer}
+                onWinterChange={setSelectedWinter}
+              />
+
+              <PortfolioManager
+                portfolioStrategies={portfolioStrategies}
+                selectedPortfolio={selectedPortfolio}
+                onPortfolioChange={setSelectedPortfolio}
+                onCustomPortfolioChange={handleCustomPortfolioChange}
+              />
+
+              <InvestmentConfigurer
+                investmentConfig={customInvestment}
+                onInvestmentChange={setCustomInvestment}
+              />
+            </div>
+          } />
+        </Routes>
       </main>
     </div>
   );
