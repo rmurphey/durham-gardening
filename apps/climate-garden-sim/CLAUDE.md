@@ -172,3 +172,7 @@ This application demonstrates production-quality architecture with comprehensive
 ## Code Quality Practices
 
 - Add automated tests for changes when appropriate. Delete unused files regularly.
+
+## Naming Conventions
+
+- Always use camelCase for naming JavaScript files, never hyphenated filenames
