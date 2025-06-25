@@ -195,38 +195,50 @@ export const getCriticalTimingWindows = () => {
 };
 
 /**
- * Calculate garden investment performance
+ * Get simulation summary for dashboard display
+ * Connects to actual Monte Carlo simulation results instead of fake ROI
  */
-export const getInvestmentPerformance = (shoppingActions, simulationResults) => {
-  const shoppingList = shoppingActions?.shoppingList || [];
-  const totalSpent = shoppingList.reduce((sum, item) => {
-    return sum + (item.price * (item.quantity || 1));
-  }, 0);
+export const getSimulationSummary = (simulationResults, totalInvestment) => {
+  if (!simulationResults) {
+    return {
+      hasSimulation: false,
+      message: 'Run simulation to see garden outlook',
+      action: 'Configure and run simulation →',
+      confidence: 'No data'
+    };
+  }
+
+  const expectedReturn = simulationResults.mean || 0;
+  const successRate = simulationResults.successRate || 0;
+  const confidenceRange = simulationResults.percentiles || {};
   
-  // Estimate current value generated (simplified calculation)
-  const now = new Date();
-  const month = now.getMonth() + 1;
+  // Calculate risk level based on variance and success rate
+  let riskLevel = 'Low';
+  let riskColor = 'success';
   
-  let estimatedValue = 0;
-  
-  // Durham growing season value estimates
-  if (month >= 4 && month <= 6) {
-    estimatedValue = totalSpent * 1.5; // Spring crops
-  } else if (month >= 7 && month <= 9) {
-    estimatedValue = totalSpent * 2.2; // Summer peak
-  } else if (month >= 10 && month <= 12) {
-    estimatedValue = totalSpent * 1.8; // Fall harvest
-  } else {
-    estimatedValue = totalSpent * 0.3; // Winter planning
+  if (successRate < 50) {
+    riskLevel = 'High';
+    riskColor = 'error';
+  } else if (successRate < 70) {
+    riskLevel = 'Medium';
+    riskColor = 'warning';
   }
   
-  const roi = totalSpent > 0 ? ((estimatedValue - totalSpent) / totalSpent) * 100 : 0;
+  // Format confidence interval
+  const p10 = confidenceRange.p10 || 0;
+  const p90 = confidenceRange.p90 || 0;
+  const confidenceText = `$${Math.round(expectedReturn)} ± $${Math.round(Math.abs(p90 - p10) / 2)}`;
   
   return {
-    totalSpent,
-    estimatedValue,
-    roi,
-    breakEvenMonth: totalSpent > 0 ? Math.ceil(totalSpent / (estimatedValue / 12)) : 0
+    hasSimulation: true,
+    expectedReturn: Math.round(expectedReturn),
+    successRate: Math.round(successRate),
+    riskLevel,
+    riskColor,
+    confidenceText,
+    totalInvestment: totalInvestment || 0,
+    message: expectedReturn > 0 ? 'Positive garden outlook' : 'Consider adjusting strategy',
+    action: 'View detailed analysis →'
   };
 };
 

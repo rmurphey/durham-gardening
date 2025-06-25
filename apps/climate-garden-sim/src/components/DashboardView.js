@@ -4,39 +4,42 @@
  */
 
 import React from 'react';
-import TaskCardList from './TaskCardList';
-import ShoppingCardList from './ShoppingCardList';
 import { generateGardenTasks, generatePureShoppingRecommendations } from '../services/temporalShoppingService';
 import { 
   getDurhamWeatherAlerts, 
   getReadyToHarvest, 
   getCriticalTimingWindows,
-  getInvestmentPerformance,
+  getSimulationSummary,
   getTodaysActionableGuidance 
 } from '../services/dashboardDataService';
+import { 
+  getUrgencyClasses, 
+  getUrgencyDisplay, 
+  getMostUrgent,
+  addUrgencyInfo 
+} from '../utils/urgencyHelpers';
 
 const DashboardView = ({ 
   shoppingActions, 
   taskActions,
   monthlyFocus,
   simulationResults,
+  totalInvestment,
   onViewChange 
 }) => {
   // Get critical data for decision making
   const weatherAlerts = getDurhamWeatherAlerts();
   const readyToHarvest = getReadyToHarvest();
   const criticalWindows = getCriticalTimingWindows();
-  const investmentData = getInvestmentPerformance(shoppingActions, simulationResults);
+  const simulationSummary = getSimulationSummary(simulationResults, totalInvestment);
   const actionableGuidance = getTodaysActionableGuidance();
   
-  // Get urgent items (limited for dashboard focus)
-  const urgentTasks = (generateGardenTasks() || []).filter(task => 
-    task.urgency === 'urgent' || task.daysUntilPlanting <= 7
-  ).slice(0, 3); // Limit to top 3 for dashboard
+  // Get urgent items using the urgency system
+  const allTasks = (generateGardenTasks() || []).map(task => addUrgencyInfo(task));
+  const allShopping = (generatePureShoppingRecommendations() || []).map(item => addUrgencyInfo(item));
   
-  const urgentShopping = (generatePureShoppingRecommendations() || []).filter(item => 
-    item.urgency === 'urgent' || item.daysUntilPlanting <= 14
-  ).slice(0, 3); // Limit to top 3 for dashboard
+  const urgentTasks = getMostUrgent(allTasks, 3);
+  const urgentShopping = getMostUrgent(allShopping, 3);
 
   const getCurrentDate = () => {
     const now = new Date();
@@ -80,17 +83,21 @@ const DashboardView = ({
         {criticalWindows.length > 0 && (
           <div className="critical-timing card">
             <h3>⏰ Critical Timing</h3>
-            {criticalWindows.map((window, index) => (
-              <div key={index} className="timing-window">
-                <div className="timing-header">
-                  <span className="timing-icon">{window.icon}</span>
-                  <strong>{window.title}</strong>
-                  <span className="days-left">{window.daysLeft} days</span>
+            {criticalWindows.map((window, index) => {
+              const urgencyClasses = getUrgencyClasses(window.daysLeft);
+              const urgencyDisplay = getUrgencyDisplay(window.daysLeft);
+              return (
+                <div key={index} className={`timing-window ${urgencyClasses.cardClass}`}>
+                  <div className="timing-header">
+                    <span className="timing-icon">{urgencyDisplay.icon}</span>
+                    <strong>{window.title}</strong>
+                    <span className={urgencyClasses.daysClass}>{urgencyDisplay.shortText}</span>
+                  </div>
+                  <p className="timing-message">{window.message}</p>
+                  <div className="timing-action">✅ {window.action}</div>
                 </div>
-                <p className="timing-message">{window.message}</p>
-                <div className="timing-action">✅ {window.action}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -99,46 +106,68 @@ const DashboardView = ({
           <div className="harvest-ready card">
             <h3>🥬 Ready to Harvest</h3>
             <div className="harvest-list">
-              {readyToHarvest.map((item, index) => (
-                <div key={index} className="harvest-item">
-                  <div className="harvest-main">
-                    <strong>{item.crop}</strong>
-                    {item.variety && <span className="variety"> ({item.variety})</span>}
-                    <span className="harvest-value">{item.value}</span>
+              {readyToHarvest.map((item, index) => {
+                const urgencyClasses = getUrgencyClasses(item.daysReady || 0);
+                const urgencyDisplay = getUrgencyDisplay(item.daysReady || 0);
+                return (
+                  <div key={index} className={`harvest-item ${urgencyClasses.cardClass}`}>
+                    <div className="harvest-main">
+                      <strong>{item.crop}</strong>
+                      {item.variety && <span className="variety"> ({item.variety})</span>}
+                      <span className="harvest-value">{item.value}</span>
+                    </div>
+                    <div className={`harvest-timing ${urgencyClasses.indicatorClass}`}>
+                      {urgencyDisplay.icon} {item.daysReady === 0 ? 'Harvest Today' : `${item.daysReady} days`}
+                    </div>
+                    <div className="harvest-note">{item.note}</div>
                   </div>
-                  {item.daysReady === 0 ? (
-                    <div className="harvest-now">🔴 Harvest Today</div>
-                  ) : (
-                    <div className="harvest-soon">📅 {item.daysReady} days</div>
-                  )}
-                  <div className="harvest-note">{item.note}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
 
-        {/* Investment Performance */}
-        <div className="investment-performance card">
-          <h3>💰 Garden ROI</h3>
-          <div className="performance-stats">
-            <div className="stat-item">
-              <span className="stat-label">Invested:</span>
-              <span className="stat-value">${investmentData.totalSpent.toFixed(2)}</span>
+        {/* Simulation Summary */}
+        <div className="simulation-summary card">
+          <h3>📊 Garden Outlook</h3>
+          {simulationSummary.hasSimulation ? (
+            <div className="simulation-stats">
+              <div className="stat-item">
+                <span className="stat-label">Expected Return:</span>
+                <span className="stat-value">{simulationSummary.confidenceText}</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Success Rate:</span>
+                <span className={`stat-value ${simulationSummary.successRate > 70 ? 'positive' : simulationSummary.successRate < 50 ? 'negative' : 'neutral'}`}>
+                  {simulationSummary.successRate}%
+                </span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Risk Level:</span>
+                <span className={`stat-value text-${simulationSummary.riskColor}`}>
+                  {simulationSummary.riskLevel}
+                </span>
+              </div>
+              <div className="simulation-message">
+                {simulationSummary.message}
+              </div>
+              <button 
+                className="view-analysis-btn"
+                onClick={() => onViewChange('results')}
+              >
+                {simulationSummary.action}
+              </button>
             </div>
-            <div className="stat-item">
-              <span className="stat-label">Est. Value:</span>
-              <span className="stat-value">${investmentData.estimatedValue.toFixed(2)}</span>
+          ) : (
+            <div className="no-simulation">
+              <p>{simulationSummary.message}</p>
+              <button 
+                className="run-simulation-btn"
+                onClick={() => onViewChange('config')}
+              >
+                {simulationSummary.action}
+              </button>
             </div>
-            <div className="stat-item">
-              <span className="stat-label">ROI:</span>
-              <span className={`stat-value ${investmentData.roi > 0 ? 'positive' : 'neutral'}`}>
-                {investmentData.roi > 0 ? '+' : ''}{investmentData.roi.toFixed(1)}%
-              </span>
-            </div>
-          </div>
-          {investmentData.roi > 50 && (
-            <div className="roi-success">🎉 Excellent return on investment!</div>
           )}
         </div>
 
@@ -168,8 +197,8 @@ const DashboardView = ({
             <h3>🔥 Urgent Tasks</h3>
             <div className="task-list-condensed">
               {urgentTasks.map((task, index) => (
-                <div key={index} className="task-item-condensed">
-                  <span className="task-urgency">{task.daysUntilPlanting}d</span>
+                <div key={index} className={`task-item-condensed ${task.urgencyClasses.cardClass}`}>
+                  <span className={task.urgencyClasses.daysClass}>{task.urgencyDisplay.shortText}</span>
                   <span className="task-name">{task.crop} - {task.action}</span>
                   <button 
                     className="task-complete-btn"
@@ -198,8 +227,8 @@ const DashboardView = ({
             <h3>⚡ Critical Shopping</h3>
             <div className="shopping-list-condensed">
               {urgentShopping.slice(0, 3).map((item, index) => (
-                <div key={index} className="shopping-item-condensed">
-                  <span className="shopping-urgency">{item.daysUntilPlanting}d</span>
+                <div key={index} className={`shopping-item-condensed ${item.urgencyClasses.cardClass}`}>
+                  <span className={item.urgencyClasses.daysClass}>{item.urgencyDisplay.shortText}</span>
                   <span className="shopping-name">{item.item}</span>
                   <span className="shopping-price">${item.price}</span>
                   <button 

@@ -25,10 +25,37 @@
   --color-text-tertiary: #6b7c71;
   
   --color-success: #28a745;
+  --color-success-light: #d4edda;
+  --color-success-dark: #1e7e34;
+  
   --color-error: #dc3545;
+  --color-error-light: #f8d7da;
   --color-error-dark: #b02a37;
+  
   --color-warning: #ffc107;
+  --color-warning-light: #fff3cd;
+  --color-warning-dark: #d39e00;
+  
   --color-info: #17a2b8;
+  --color-info-light: #d1ecf1;
+  --color-info-dark: #138496;
+  
+  /* Urgency System Colors */
+  --color-urgent: #dc3545;      /* <7 days - Red */
+  --color-urgent-light: #f8d7da;
+  --color-urgent-dark: #b02a37;
+  
+  --color-high: #fd7e14;        /* 7-14 days - Orange */
+  --color-high-light: #ffe5d0;
+  --color-high-dark: #d63384;
+  
+  --color-medium: #ffc107;      /* 14-30 days - Amber */
+  --color-medium-light: #fff3cd;
+  --color-medium-dark: #d39e00;
+  
+  --color-low: #28a745;         /* >30 days - Green */
+  --color-low-light: #d4edda;
+  --color-low-dark: #1e7e34;
   
   /* Spacing */
   --spacing-xs: 4px;
@@ -6234,5 +6261,188 @@ button:focus,
   .shopping-item-condensed {
     flex-wrap: wrap;
   }
+}
+
+/* ========================================
+   URGENCY SYSTEM - VISUAL TIMING INDICATORS
+======================================== */
+
+/* Base urgency classes for any component */
+.urgency-urgent {
+  border-left: 4px solid var(--color-urgent) !important;
+  background: var(--color-urgent-light) !important;
+}
+
+.urgency-high {
+  border-left: 4px solid var(--color-high) !important;
+  background: var(--color-high-light) !important;
+}
+
+.urgency-medium {
+  border-left: 4px solid var(--color-medium) !important;
+  background: var(--color-medium-light) !important;
+}
+
+.urgency-low {
+  border-left: 4px solid var(--color-low) !important;
+  background: var(--color-low-light) !important;
+}
+
+/* Urgency badges for timing indicators */
+.urgency-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.urgency-badge.urgent {
+  background: var(--color-urgent);
+  color: white;
+}
+
+.urgency-badge.high {
+  background: var(--color-high);
+  color: white;
+}
+
+.urgency-badge.medium {
+  background: var(--color-medium);
+  color: var(--color-medium-dark);
+}
+
+.urgency-badge.low {
+  background: var(--color-low);
+  color: white;
+}
+
+/* Dashboard timing indicators */
+.timing-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-weight: 600;
+}
+
+.timing-indicator.urgent {
+  color: var(--color-urgent-dark);
+}
+
+.timing-indicator.high {
+  color: var(--color-high-dark);
+}
+
+.timing-indicator.medium {
+  color: var(--color-medium-dark);
+}
+
+.timing-indicator.low {
+  color: var(--color-low-dark);
+}
+
+/* Enhanced alert styling with urgency */
+.alert {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  border-left: 4px solid transparent;
+}
+
+.alert.alert-urgent {
+  background: var(--color-urgent-light);
+  border-left-color: var(--color-urgent);
+  color: var(--color-urgent-dark);
+}
+
+.alert.alert-high {
+  background: var(--color-high-light);
+  border-left-color: var(--color-high);
+  color: var(--color-high-dark);
+}
+
+.alert.alert-medium {
+  background: var(--color-medium-light);
+  border-left-color: var(--color-medium);
+  color: var(--color-medium-dark);
+}
+
+.alert.alert-low {
+  background: var(--color-low-light);
+  border-left-color: var(--color-low);
+  color: var(--color-low-dark);
+}
+
+/* Card urgency styling */
+.card.urgent-card {
+  border: 2px solid var(--color-urgent);
+  box-shadow: 0 0 0 3px var(--color-urgent-light);
+}
+
+.card.high-card {
+  border: 2px solid var(--color-high);
+  box-shadow: 0 0 0 3px var(--color-high-light);
+}
+
+/* Task and shopping item urgency */
+.task-item.urgent,
+.shopping-item.urgent {
+  border-left: 4px solid var(--color-urgent);
+  background: var(--color-urgent-light);
+}
+
+.task-item.high,
+.shopping-item.high {
+  border-left: 4px solid var(--color-high);
+  background: var(--color-high-light);
+}
+
+.task-item.medium,
+.shopping-item.medium {
+  border-left: 4px solid var(--color-medium);
+  background: var(--color-medium-light);
+}
+
+.task-item.low,
+.shopping-item.low {
+  border-left: 4px solid var(--color-low);
+  background: var(--color-low-light);
+}
+
+/* Days remaining visual indicator */
+.days-remaining {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 24px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.days-remaining.urgent {
+  background: var(--color-urgent);
+  color: white;
+}
+
+.days-remaining.high {
+  background: var(--color-high);
+  color: white;
+}
+
+.days-remaining.medium {
+  background: var(--color-medium);
+  color: var(--color-medium-dark);
+}
+
+.days-remaining.low {
+  background: var(--color-low);
+  color: white;
 }
 
