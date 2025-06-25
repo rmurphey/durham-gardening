@@ -27,7 +27,7 @@ export const getDurhamWeatherAlerts = () => {
       urgency: 'high'
     });
     
-    if (dayOfYear >= 180 && dayOfYear <= 220) { // Late June to early August
+    if (dayOfYear >= 181 && dayOfYear <= 220) { // July 1st to early August
       alerts.push({
         type: 'clay-soil',
         icon: '🏔️',

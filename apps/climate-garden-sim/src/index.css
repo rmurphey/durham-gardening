@@ -829,6 +829,8 @@ body {
   white-space: nowrap;
   position: relative;
   min-width: fit-content;
+  text-decoration: none;
+  color: var(--color-text-primary);
 }
 
 .nav-item:hover {
