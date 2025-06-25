@@ -34,8 +34,15 @@ export const generateDatabaseGardenCalendar = async (
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  // Get enabled crops from portfolio (simplified for now)
-  const enabledCrops = ['hot_peppers', 'sweet_potato', 'kale', 'lettuce', 'spinach'];
+  // Get enabled crops from portfolio - expanded to include indoor start crops
+  const enabledCrops = [
+    // Original crops
+    'hot_peppers', 'sweet_potato', 'kale', 'lettuce', 'spinach',
+    // New indoor start crops
+    'tomatoes', 'sweet_peppers', 'eggplant', 'basil',
+    // Additional herbs and quick crops
+    'oregano', 'thyme', 'mint', 'arugula', 'radishes'
+  ];
 
   // Generate calendar for next 12 months
   for (let i = 0; i < 12; i++) {
