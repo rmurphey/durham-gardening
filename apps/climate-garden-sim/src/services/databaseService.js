@@ -861,6 +861,87 @@ class DatabaseService {
       { id: 4, name: 'Containers', length: 2, width: 2, area: 4 }
     ];
   }
+
+  /**
+   * Get all activity types from database
+   * @returns {Promise<Array>} Activity types
+   */
+  async getActivityTypes() {
+    await this.waitForInitialization();
+    
+    if (this.db) {
+      try {
+        const stmt = 'SELECT * FROM activity_types WHERE type_key = ?';
+        const result = this.db.exec(stmt, ['indoor-starting']);
+        
+        if (result.length === 0) return [];
+        
+        const columns = result[0].columns;
+        const values = result[0].values;
+        
+        return values.map(row => {
+          const activityType = {};
+          columns.forEach((col, index) => {
+            activityType[col] = row[index];
+          });
+          return activityType;
+        });
+        
+      } catch (error) {
+        console.error('Activity types query failed:', error);
+        throw error;
+      }
+    }
+    
+    return [];
+  }
+
+  /**
+   * Get activity templates by activity type
+   * @param {string} activityType - Activity type key
+   * @returns {Promise<Array>} Activity templates
+   */
+  async getActivityTemplatesByType(activityType) {
+    await this.waitForInitialization();
+    
+    if (this.db) {
+      try {
+        const stmt = `
+          SELECT 
+            at.id,
+            at.activity_type_id,
+            aty.type_key as activity_type,
+            at.action_template,
+            at.timing_template,
+            at.priority
+          FROM activity_templates at
+          JOIN activity_types aty ON at.activity_type_id = aty.id
+          WHERE aty.type_key = ?
+        `;
+        
+        const result = this.db.exec(stmt, [activityType]);
+        
+        if (result.length === 0) return [];
+        
+        const columns = result[0].columns;
+        const values = result[0].values;
+        
+        return values.map(row => {
+          const template = {};
+          columns.forEach((col, index) => {
+            template[col] = row[index];
+          });
+          return template;
+        });
+        
+      } catch (error) {
+        console.error('Activity templates by type query failed:', error);
+        throw error;
+      }
+    }
+    
+    return [];
+  }
 }
 
 // Export singleton instance

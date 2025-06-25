@@ -168,3 +168,7 @@ This application demonstrates production-quality architecture with comprehensive
 ## Other instructions
 
 - 
+
+## Code Quality Practices
+
+- Add automated tests for changes when appropriate. Delete unused files regularly.
