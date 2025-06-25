@@ -152,6 +152,26 @@ function AppContent() {
               simulating={simulating}
               totalInvestment={totalInvestment}
             />
+            
+            <ClimateScenarioSelector
+              climateScenarios={currentClimateScenarios}
+              selectedSummer={selectedSummer}
+              selectedWinter={selectedWinter}
+              onSummerChange={setSelectedSummer}
+              onWinterChange={setSelectedWinter}
+            />
+
+            <PortfolioManager
+              portfolioStrategies={portfolioStrategies}
+              selectedPortfolio={selectedPortfolio}
+              onPortfolioChange={setSelectedPortfolio}
+              onCustomPortfolioChange={handleCustomPortfolioChange}
+            />
+
+            <InvestmentConfigurer
+              investmentConfig={customInvestment}
+              onInvestmentChange={setCustomInvestment}
+            />
           </div>
         );
       case 'config':
