@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { generateGardenTasks, generatePureShoppingRecommendations } from '../services/temporalShoppingService';
+import GardenCalendar from './GardenCalendar.js';
 import { 
   getDurhamWeatherAlerts, 
   getReadyToHarvest, 
@@ -21,11 +22,11 @@ import {
 
 const DashboardView = ({ 
   shoppingActions, 
-  taskActions,
   monthlyFocus,
   simulationResults,
   totalInvestment,
-  onViewChange 
+  onViewChange,
+  gardenCalendar = []
 }) => {
   // Get critical data for decision making
   const weatherAlerts = getDurhamWeatherAlerts();
@@ -34,11 +35,8 @@ const DashboardView = ({
   const simulationSummary = getSimulationSummary(simulationResults, totalInvestment);
   const actionableGuidance = getTodaysActionableGuidance();
   
-  // Get urgent items using the urgency system
-  const allTasks = (generateGardenTasks() || []).map(task => addUrgencyInfo(task));
+  // Get urgent shopping items using the urgency system
   const allShopping = (generatePureShoppingRecommendations() || []).map(item => addUrgencyInfo(item));
-  
-  const urgentTasks = getMostUrgent(allTasks, 3);
   const urgentShopping = getMostUrgent(allShopping, 3);
 
   const getCurrentDate = () => {
@@ -191,35 +189,11 @@ const DashboardView = ({
           </div>
         )}
 
-        {/* Urgent Tasks (Condensed) */}
-        {urgentTasks.length > 0 && (
-          <div className="urgent-tasks card">
-            <h3>🔥 Urgent Tasks</h3>
-            <div className="task-list-condensed">
-              {urgentTasks.map((task, index) => (
-                <div key={index} className={`task-item-condensed ${task.urgencyClasses.cardClass}`}>
-                  <span className={task.urgencyClasses.daysClass}>{task.urgencyDisplay.shortText}</span>
-                  <span className="task-name">{task.crop} - {task.action}</span>
-                  <button 
-                    className="task-complete-btn"
-                    onClick={() => taskActions.markTaskComplete(task.id)}
-                    disabled={taskActions.getTaskStatus(task.id) === 'completed'}
-                  >
-                    {taskActions.getTaskStatus(task.id) === 'completed' ? '✓' : '○'}
-                  </button>
-                </div>
-              ))}
-            </div>
-            {urgentTasks.length > 0 && (
-              <button 
-                className="view-all-tasks"
-                onClick={() => onViewChange('tasks')}
-              >
-                View All Tasks ({urgentTasks.length > 3 ? '3+' : urgentTasks.length})
-              </button>
-            )}
-          </div>
-        )}
+        {/* Garden Calendar - Integrated Task Management */}
+        <div className="garden-calendar-dashboard card">
+          <h3>📅 Garden Calendar & Tasks</h3>
+          <GardenCalendar gardenCalendar={gardenCalendar} />
+        </div>
 
         {/* Critical Shopping (Condensed) */}
         {urgentShopping.length > 0 && (

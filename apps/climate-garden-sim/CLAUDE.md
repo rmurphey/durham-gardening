@@ -172,6 +172,7 @@ This application demonstrates production-quality architecture with comprehensive
 ## Code Quality Practices
 
 - Add automated tests for changes when appropriate. Delete unused files regularly.
+- Consider writing tests before writing code
 
 ## Naming Conventions
 

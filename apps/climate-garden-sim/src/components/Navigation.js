@@ -11,13 +11,7 @@ const Navigation = ({ activeView, onViewChange, hasShoppingItems, hasTasks }) =>
       id: 'dashboard',
       label: 'Dashboard',
       icon: '🎯',
-      description: 'Today\'s priorities'
-    },
-    {
-      id: 'calendar',
-      label: 'Garden Calendar',
-      icon: '📅',
-      description: 'Tasks & planting timeline',
+      description: 'Today\'s priorities & calendar',
       badge: hasTasks ? 'new' : null
     },
     {

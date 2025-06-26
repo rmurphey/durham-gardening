@@ -15,7 +15,7 @@ import { getPortfolioStrategies, createCustomPortfolio, validatePortfolioAllocat
 import { useSimulation } from '../hooks/useSimulation.js';
 import { useClimateSelection, useInvestmentConfig } from '../hooks/useLocalStorage.js';
 import { useShoppingList } from '../hooks/useShoppingList.js';
-import { useTaskManager } from '../hooks/useTaskManager.js';
+import { useCalendarTaskManager } from '../hooks/useCalendarTaskManager.js';
 import { DURHAM_CONFIG } from '../config/durhamConfig.js';
 
 // Navigation and Views
@@ -49,7 +49,7 @@ function AppContent() {
 
   // Shopping and task management
   const shoppingActions = useShoppingList();
-  const taskActions = useTaskManager();
+  const calendarTaskManager = useCalendarTaskManager();
 
   // Durham-only configuration - memoize to prevent useEffect re-runs
   const locationConfig = useMemo(() => ({
@@ -147,7 +147,7 @@ function AppContent() {
         activeView={activeView}
         onViewChange={handleViewChange}
         hasShoppingItems={shoppingActions.totalItems}
-        hasTasks={taskActions.getCompletedCount ? true : false}
+        hasTasks={calendarTaskManager.getUrgentPendingCount(gardenCalendar.flatMap(month => month.activities)) > 0}
       />
       
       {/* Main Content */}
@@ -156,26 +156,26 @@ function AppContent() {
           <Route path="/" element={
             <DashboardView 
               shoppingActions={shoppingActions}
-              taskActions={taskActions}
               monthlyFocus={monthlyFocus}
               simulationResults={simulationResults}
               totalInvestment={totalInvestment}
               onViewChange={handleViewChange}
+              gardenCalendar={gardenCalendar}
             />
           } />
           <Route path="/dashboard" element={
             <DashboardView 
               shoppingActions={shoppingActions}
-              taskActions={taskActions}
               monthlyFocus={monthlyFocus}
               simulationResults={simulationResults}
               totalInvestment={totalInvestment}
               onViewChange={handleViewChange}
+              gardenCalendar={gardenCalendar}
             />
           } />
-          <Route path="/tasks" element={<Navigate to="/calendar" replace />} />
+          <Route path="/tasks" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/calendar" element={<Navigate to="/dashboard" replace />} />
           <Route path="/shopping" element={<ShoppingView shoppingActions={shoppingActions} />} />
-          <Route path="/calendar" element={<GardenCalendar gardenCalendar={gardenCalendar} />} />
           <Route path="/results" element={
             <div className="results-view">
               <SimulationResults 

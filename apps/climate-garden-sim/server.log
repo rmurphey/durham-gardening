@@ -485,3 +485,1365 @@ src/services/databaseService.js
   Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
 
 webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseCalendarService.js
+  Line 205:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseCalendarService.js
+  Line 209:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseCalendarService.js
+  Line 209:3:  Expected a default case  default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/GardenCalendar.js
+  Line 7:10:  'useCalendarTaskManager' is defined but never used  no-unused-vars
+  Line 8:10:  'formatTimeUntilNext' is defined but never used     no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/GardenCalendar.js
+  Line 7:10:  'useCalendarTaskManager' is defined but never used  no-unused-vars
+  Line 8:10:  'formatTimeUntilNext' is defined but never used     no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/GardenCalendar.js
+  Line 8:10:  'formatTimeUntilNext' is defined but never used                  no-unused-vars
+  Line 17:9:  'handleActivityComplete' is assigned a value but never used      no-unused-vars
+  Line 21:9:  'handleActivityDismiss' is assigned a value but never used       no-unused-vars
+  Line 25:9:  'handleActivityUndoComplete' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/GardenCalendar.js
+  Line 8:10:  'formatTimeUntilNext' is defined but never used                  no-unused-vars
+  Line 17:9:  'handleActivityComplete' is assigned a value but never used      no-unused-vars
+  Line 21:9:  'handleActivityDismiss' is assigned a value but never used       no-unused-vars
+  Line 25:9:  'handleActivityUndoComplete' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/GardenCalendar.js
+  Line 56:22:  'ActivityCard' is not defined  react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/GardenCalendar.js
+  Line 8:10:   'formatTimeUntilNext' is defined but never used   no-unused-vars
+  Line 50:25:  'isCompleted' is assigned a value but never used  no-unused-vars
+  Line 89:10:  'getCategoryIcon' is defined but never used       no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+ERROR in [eslint] 
+src/components/GardenCalendar.js
+  Line 56:22:  'ActivityCard' is not defined  react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/GardenCalendar.js
+  Line 50:25:  'isCompleted' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/GardenCalendar.js
+  Line 50:25:  'isCompleted' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/GardenCalendar.js
+Syntax error: Identifier 'ActivityCard' has already been declared. (190:6) (190:6)
+WARNING in [eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+ERROR in ./src/components/GardenCalendar.js
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/src/components/GardenCalendar.js: Identifier 'ActivityCard' has already been declared. (190:6)
+
+  188 |
+  189 | // ActivityCard component for interactive task management
+> 190 | const ActivityCard = ({ activity, state, onComplete, onDismiss, onUndoComplete, taskManager }) => {
+      |       ^
+  191 |   const isCompleted = state === 'completed';
+  192 |   const isRecurring = activity.taskType === 'recurring';
+  193 |   const canDismiss = activity.canDismiss && !isRecurring;
+    at constructor (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:363:19)
+    at FlowParserMixin.raise (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:6609:19)
+    at FlowScopeHandler.checkRedeclarationInScope (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:1626:19)
+    at FlowScopeHandler.declareName (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:1592:12)
+    at FlowScopeHandler.declareName (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:1693:11)
+    at FlowParserMixin.declareNameFromIdentifier (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:7538:16)
+    at FlowParserMixin.checkIdentifier (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:7534:12)
+    at FlowParserMixin.checkLVal (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:7475:12)
+    at FlowParserMixin.parseVarId (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13327:10)
+    at FlowParserMixin.parseVarId (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:3486:11)
+    at FlowParserMixin.parseVar (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13302:12)
+    at FlowParserMixin.parseVarStatement (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13149:10)
+    at FlowParserMixin.parseStatementContent (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12770:23)
+    at FlowParserMixin.parseStatementLike (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12685:17)
+    at FlowParserMixin.parseStatementLike (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:2928:24)
+    at FlowParserMixin.parseModuleItem (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12662:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13235:36)
+    at FlowParserMixin.parseBlockBody (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13228:10)
+    at FlowParserMixin.parseProgram (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12541:10)
+    at FlowParserMixin.parseTopLevel (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12531:25)
+    at FlowParserMixin.parseTopLevel (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:3697:28)
+    at FlowParserMixin.parse (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:14410:10)
+    at parse (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:14444:38)
+    at parser (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/core/lib/parser/index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/core/lib/transformation/index.js:22:50)
+    at run.next (<anonymous>)
+    at transform (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/core/lib/transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/gensync/index.js:261:32)
+    at /Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/gensync/index.js:273:13
+    at async.call.result.err.err (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/gensync/index.js:223:11)
+
+ERROR in [eslint] 
+src/components/GardenCalendar.js
+  Line 190:6:  Parsing error: Identifier 'ActivityCard' has already been declared. (190:6)
+
+webpack compiled with 2 errors and 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/GardenCalendar.js
+Syntax error: Identifier 'ActivityCard' has already been declared. (189:6) (189:6)
+WARNING in [eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+ERROR in ./src/components/GardenCalendar.js
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/src/components/GardenCalendar.js: Identifier 'ActivityCard' has already been declared. (189:6)
+
+  187 |
+  188 | // ActivityCard component for interactive task management
+> 189 | const ActivityCard = ({ activity, state, onComplete, onDismiss, onUndoComplete, taskManager }) => {
+      |       ^
+  190 |   const isCompleted = state === 'completed';
+  191 |   const isRecurring = activity.taskType === 'recurring';
+  192 |   const canDismiss = activity.canDismiss && !isRecurring;
+    at constructor (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:363:19)
+    at FlowParserMixin.raise (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:6609:19)
+    at FlowScopeHandler.checkRedeclarationInScope (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:1626:19)
+    at FlowScopeHandler.declareName (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:1592:12)
+    at FlowScopeHandler.declareName (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:1693:11)
+    at FlowParserMixin.declareNameFromIdentifier (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:7538:16)
+    at FlowParserMixin.checkIdentifier (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:7534:12)
+    at FlowParserMixin.checkLVal (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:7475:12)
+    at FlowParserMixin.parseVarId (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13327:10)
+    at FlowParserMixin.parseVarId (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:3486:11)
+    at FlowParserMixin.parseVar (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13302:12)
+    at FlowParserMixin.parseVarStatement (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13149:10)
+    at FlowParserMixin.parseStatementContent (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12770:23)
+    at FlowParserMixin.parseStatementLike (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12685:17)
+    at FlowParserMixin.parseStatementLike (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:2928:24)
+    at FlowParserMixin.parseModuleItem (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12662:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13235:36)
+    at FlowParserMixin.parseBlockBody (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:13228:10)
+    at FlowParserMixin.parseProgram (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12541:10)
+    at FlowParserMixin.parseTopLevel (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:12531:25)
+    at FlowParserMixin.parseTopLevel (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:3697:28)
+    at FlowParserMixin.parse (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:14410:10)
+    at parse (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/parser/lib/index.js:14444:38)
+    at parser (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/core/lib/parser/index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/core/lib/transformation/index.js:22:50)
+    at run.next (<anonymous>)
+    at transform (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/@babel/core/lib/transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/gensync/index.js:261:32)
+    at /Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/gensync/index.js:273:13
+    at async.call.result.err.err (/Users/rmurphey/personal/claude/shopping/apps/climate-garden-sim/node_modules/gensync/index.js:223:11)
+
+ERROR in [eslint] 
+src/components/GardenCalendar.js
+  Line 189:6:  Parsing error: Identifier 'ActivityCard' has already been declared. (189:6)
+
+webpack compiled with 2 errors and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+webpack compiled with 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/AppContent.js
+  Line 114:32:  'generateDatabaseGardenCalendar' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 33:10:  'generateUnifiedCalendar' is defined but never used               no-unused-vars
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+ERROR in [eslint] 
+src/components/AppContent.js
+  Line 114:32:  'generateDatabaseGardenCalendar' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 2:25:   'Navigate' is defined but never used                              no-unused-vars
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 2:25:   'Navigate' is defined but never used                              no-unused-vars
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 24:8:   'TasksView' is defined but never used                             no-unused-vars
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 24:8:   'TasksView' is defined but never used                             no-unused-vars
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 24:8:   'TasksView' is defined but never used                             no-unused-vars
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 24:8:   'TasksView' is defined but never used                             no-unused-vars
+  Line 99:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 100:9:  'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 103:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 104:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 105:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/GardenCalendar.js
+  Line 6:17:  'useEffect' is defined but never used                     no-unused-vars
+  Line 6:28:  'useRef' is defined but never used                        no-unused-vars
+  Line 6:36:  'useState' is defined but never used                      no-unused-vars
+  Line 9:10:  'RecurringTaskScheduler' is defined but never used        no-unused-vars
+  Line 9:34:  'createTaskNotificationSystem' is defined but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/GardenCalendar.js
+  Line 6:17:  'useEffect' is defined but never used                     no-unused-vars
+  Line 6:28:  'useRef' is defined but never used                        no-unused-vars
+  Line 6:36:  'useState' is defined but never used                      no-unused-vars
+  Line 9:10:  'RecurringTaskScheduler' is defined but never used        no-unused-vars
+  Line 9:34:  'createTaskNotificationSystem' is defined but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/AppContent.js
+  Line 52:23:  'useTaskManager' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 18:10:  'useCalendarTaskManager' is defined but never used                no-unused-vars
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+ERROR in [eslint] 
+src/components/AppContent.js
+  Line 52:23:  'useTaskManager' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/AppContent.js
+  Line 150:19:  'taskActions' is not defined  no-undef
+  Line 159:28:  'taskActions' is not defined  no-undef
+  Line 169:28:  'taskActions' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 52:9:   'calendarTaskManager' is assigned a value but never used          no-unused-vars
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+ERROR in [eslint] 
+src/components/AppContent.js
+  Line 150:19:  'taskActions' is not defined  no-undef
+  Line 159:28:  'taskActions' is not defined  no-undef
+  Line 169:28:  'taskActions' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/AppContent.js
+  Line 159:28:  'taskActions' is not defined  no-undef
+  Line 169:28:  'taskActions' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+ERROR in [eslint] 
+src/components/AppContent.js
+  Line 159:28:  'taskActions' is not defined  no-undef
+  Line 169:28:  'taskActions' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/DashboardView.js
+  Line 204:36:  'taskActions' is not defined  no-undef
+  Line 205:31:  'taskActions' is not defined  no-undef
+  Line 207:22:  'taskActions' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+ERROR in [eslint] 
+src/components/DashboardView.js
+  Line 204:36:  'taskActions' is not defined  no-undef
+  Line 205:31:  'taskActions' is not defined  no-undef
+  Line 207:22:  'taskActions' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/components/DashboardView.js
+  Line 205:36:  'taskActions' is not defined  no-undef
+  Line 206:31:  'taskActions' is not defined  no-undef
+  Line 208:22:  'taskActions' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 8:8:  'GardenCalendar' is defined but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+ERROR in [eslint] 
+src/components/DashboardView.js
+  Line 205:36:  'taskActions' is not defined  no-undef
+  Line 206:31:  'taskActions' is not defined  no-undef
+  Line 208:22:  'taskActions' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 42:9:  'urgentTasks' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 42:9:  'urgentTasks' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 42:9:  'urgentTasks' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 42:9:  'urgentTasks' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 42:9:  'urgentTasks' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 42:9:  'urgentTasks' is assigned a value but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 7:10:  'generateGardenTasks' is defined but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 7:10:  'generateGardenTasks' is defined but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 30:8:   'GardenCalendar' is defined but never used                        no-unused-vars
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 7:10:  'generateGardenTasks' is defined but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 30:8:   'GardenCalendar' is defined but never used                        no-unused-vars
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 7:10:  'generateGardenTasks' is defined but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 30:8:   'GardenCalendar' is defined but never used                        no-unused-vars
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 7:10:  'generateGardenTasks' is defined but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 30:8:   'GardenCalendar' is defined but never used                        no-unused-vars
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 7:10:  'generateGardenTasks' is defined but never used  no-unused-vars
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/AppContent.js
+  Line 30:8:   'GardenCalendar' is defined but never used                        no-unused-vars
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 7:10:  'generateGardenTasks' is defined but never used  no-unused-vars
+
+src/services/dashboardDataService.js
+  Line 6:10:   'DURHAM_CROPS' is defined but never used  no-unused-vars
+  Line 91:3:   Expected a default case                   default-case
+  Line 283:3:  Expected a default case                   default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/AppContent.js
+  Line 30:8:   'GardenCalendar' is defined but never used                        no-unused-vars
+  Line 98:9:   'weeklyActions' is assigned a value but never used                no-unused-vars
+  Line 99:9:   'successOutlook' is assigned a value but never used               no-unused-vars
+  Line 102:9:  'investmentPriority' is assigned a value but never used           no-unused-vars
+  Line 103:9:  'topCropRecommendations' is assigned a value but never used       no-unused-vars
+  Line 104:9:  'siteSpecificRecommendations' is assigned a value but never used  no-unused-vars
+
+src/components/DashboardView.js
+  Line 7:10:  'generateGardenTasks' is defined but never used  no-unused-vars
+
+src/services/dashboardDataService.js
+  Line 6:10:   'DURHAM_CROPS' is defined but never used  no-unused-vars
+  Line 91:3:   Expected a default case                   default-case
+  Line 283:3:  Expected a default case                   default-case
+
+src/services/databaseService.js
+  Line 1026:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+src/services/unifiedCalendarService.js
+  Line 8:10:  'shouldShowCropActivity' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
