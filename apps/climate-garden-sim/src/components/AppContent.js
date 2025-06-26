@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { generateSuccessOutlook } from '../config.js';
 import { 
   generateDurhamMonthlyFocus,
@@ -21,7 +21,6 @@ import { DURHAM_CONFIG } from '../config/durhamConfig.js';
 // Navigation and Views
 import Navigation from './Navigation.js';
 import DashboardView from './DashboardView.js';
-import TasksView from './TasksView.js';
 import ShoppingView from './ShoppingView.js';
 
 // Configuration Components
@@ -174,7 +173,7 @@ function AppContent() {
               onViewChange={handleViewChange}
             />
           } />
-          <Route path="/tasks" element={<TasksView taskActions={taskActions} />} />
+          <Route path="/tasks" element={<Navigate to="/calendar" replace />} />
           <Route path="/shopping" element={<ShoppingView shoppingActions={shoppingActions} />} />
           <Route path="/calendar" element={<GardenCalendar gardenCalendar={gardenCalendar} />} />
           <Route path="/results" element={

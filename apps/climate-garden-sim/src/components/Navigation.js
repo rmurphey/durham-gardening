@@ -14,10 +14,10 @@ const Navigation = ({ activeView, onViewChange, hasShoppingItems, hasTasks }) =>
       description: 'Today\'s priorities'
     },
     {
-      id: 'tasks',
-      label: 'Garden Tasks',
-      icon: '📋',
-      description: 'Time-sensitive actions',
+      id: 'calendar',
+      label: 'Garden Calendar',
+      icon: '📅',
+      description: 'Tasks & planting timeline',
       badge: hasTasks ? 'new' : null
     },
     {
@@ -26,12 +26,6 @@ const Navigation = ({ activeView, onViewChange, hasShoppingItems, hasTasks }) =>
       icon: '🛒',
       description: 'Purchase planning',
       badge: hasShoppingItems ? hasShoppingItems : null
-    },
-    {
-      id: 'calendar',
-      label: 'Calendar',
-      icon: '📅',
-      description: 'Planting timeline'
     },
     {
       id: 'results',
