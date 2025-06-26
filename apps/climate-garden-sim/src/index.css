@@ -2831,6 +2831,24 @@ p {
   }
 }
 
+/* Urgent tasks notification banner */
+.urgent-tasks-banner {
+  background: var(--color-urgent-light);
+  border: 1px solid var(--color-urgent);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  color: var(--color-urgent-dark);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  animation: pulse-urgent 2s infinite;
+}
+
+@keyframes pulse-urgent {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
 /* ========================================
    SHOPPING LIST - ACTION-ORIENTED
 ======================================== */

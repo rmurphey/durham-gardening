@@ -3,9 +3,10 @@
  * Displays month-by-month garden planning calendar with task management
  */
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useCalendarTaskManager } from '../hooks/useCalendarTaskManager.js';
 import { formatTimeUntilNext } from '../hooks/useCalendarTaskManager.js';
+import { RecurringTaskScheduler, createTaskNotificationSystem } from '../utils/recurringTaskScheduler.js';
 
 // Helper function to get category icons for activities
 function getCategoryIcon(activityType) {
@@ -117,6 +118,57 @@ const ActivityCard = ({ activity, state, onComplete, onDismiss, onUndoComplete, 
 
 const GardenCalendar = ({ gardenCalendar }) => {
   const taskManager = useCalendarTaskManager();
+  const schedulerRef = useRef(null);
+  const notificationSystemRef = useRef(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  // Initialize notification system and scheduler
+  useEffect(() => {
+    if (!notificationSystemRef.current) {
+      notificationSystemRef.current = createTaskNotificationSystem();
+      
+      // Set up notification callbacks
+      notificationSystemRef.current.setNotificationCallback((count, message) => {
+        console.log(`🔔 ${message}`);
+        // Trigger a re-render to show newly available tasks
+        setRefreshTrigger(prev => prev + 1);
+      });
+    }
+
+    if (!schedulerRef.current && taskManager) {
+      schedulerRef.current = new RecurringTaskScheduler(
+        taskManager,
+        (count) => {
+          if (notificationSystemRef.current) {
+            notificationSystemRef.current.notifyTasksAvailable(count);
+          }
+        }
+      );
+      schedulerRef.current.start();
+    }
+
+    return () => {
+      if (schedulerRef.current) {
+        schedulerRef.current.stop();
+      }
+    };
+  }, [taskManager]);
+
+  // Schedule recurring tasks when they're completed
+  useEffect(() => {
+    if (!schedulerRef.current || !gardenCalendar) return;
+
+    gardenCalendar.forEach(monthData => {
+      monthData.activities.forEach(activity => {
+        if (activity.taskType === 'recurring') {
+          const completedData = taskManager.taskStates.completedActivities[activity.id];
+          if (completedData && completedData.nextDue) {
+            schedulerRef.current.scheduleRecurringTask(activity.id, completedData.nextDue);
+          }
+        }
+      });
+    });
+  }, [gardenCalendar, taskManager.taskStates, refreshTrigger]);
 
   if (!gardenCalendar || gardenCalendar.length === 0) {
     return null;
@@ -134,11 +186,24 @@ const GardenCalendar = ({ gardenCalendar }) => {
     taskManager.markActivityIncomplete(activity.id);
   };
 
+  // Count urgent pending tasks for notification
+  const urgentPendingTasks = gardenCalendar.reduce((count, month) => {
+    return count + month.activities.filter(activity => 
+      activity.urgency === 'urgent' && 
+      taskManager.getActivityState(activity.id, activity) === 'pending'
+    ).length;
+  }, 0);
+
   return (
     <section className="card garden-calendar">
       <div className="card-header">
         <h2 className="card-title">Garden Calendar</h2>
         <p className="card-subtitle calendar-subtitle">Month-by-month Durham garden planning</p>
+        {urgentPendingTasks > 0 && (
+          <div className="urgent-tasks-banner">
+            🚨 {urgentPendingTasks} urgent task{urgentPendingTasks > 1 ? 's' : ''} need{urgentPendingTasks === 1 ? 's' : ''} attention
+          </div>
+        )}
       </div>
       
       <div className="calendar-grid">
