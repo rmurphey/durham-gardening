@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { generateGardenTasks, generatePureShoppingRecommendations } from '../services/temporalShoppingService';
 import GardenCalendar from './GardenCalendar.js';
 import ForecastWidget from './ForecastWidget.js';
+import CompactSettingsPanel from './CompactSettingsPanel.js';
 import { 
   getDurhamWeatherAlerts, 
   getReadyToHarvest, 
@@ -27,7 +28,20 @@ const DashboardView = ({
   simulationResults,
   totalInvestment,
   onViewChange,
-  gardenCalendar = []
+  gardenCalendar = [],
+  // Settings props
+  climateScenarios,
+  selectedSummer,
+  selectedWinter,
+  onSummerChange,
+  onWinterChange,
+  portfolioStrategies,
+  selectedPortfolio,
+  onPortfolioChange,
+  onCustomPortfolioChange,
+  investmentConfig,
+  onInvestmentChange,
+  isReadOnly = false
 }) => {
   // Weather impact state for simulation adjustments
   const [weatherImpact, setWeatherImpact] = useState(null);
@@ -79,6 +93,22 @@ const DashboardView = ({
           </div>
         ))}
       </div>
+
+      {/* Compact Settings Panel */}
+      <CompactSettingsPanel
+        climateScenarios={climateScenarios}
+        selectedSummer={selectedSummer}
+        selectedWinter={selectedWinter}
+        onSummerChange={onSummerChange}
+        onWinterChange={onWinterChange}
+        portfolioStrategies={portfolioStrategies}
+        selectedPortfolio={selectedPortfolio}
+        onPortfolioChange={onPortfolioChange}
+        onCustomPortfolioChange={onCustomPortfolioChange}
+        investmentConfig={investmentConfig}
+        onInvestmentChange={onInvestmentChange}
+        disabled={isReadOnly}
+      />
 
       <div className="dashboard-grid">
         {/* Critical Timing Windows */}
@@ -155,7 +185,7 @@ const DashboardView = ({
               </div>
               <button 
                 className="view-analysis-btn"
-                onClick={() => onViewChange('results')}
+                onClick={() => onViewChange('analysis')}
               >
                 {simulationSummary.action}
               </button>
@@ -165,7 +195,7 @@ const DashboardView = ({
               <p>{simulationSummary.message}</p>
               <button 
                 className="run-simulation-btn"
-                onClick={() => onViewChange('config')}
+                onClick={() => onViewChange('analysis')}
               >
                 {simulationSummary.action}
               </button>

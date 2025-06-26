@@ -30,11 +30,9 @@ import DashboardView from './DashboardView.js';
 import ShoppingView from './ShoppingView.js';
 
 // Configuration Components
-import ClimateScenarioSelector from './ClimateScenarioSelector.js';
-import PortfolioManager from './PortfolioManager.js';
 import SimulationResults from './SimulationResults.js';
 import GardenCalendar from './GardenCalendar.js';
-import InvestmentConfigurer from './InvestmentConfigurer.js';
+import CompactSettingsPanel from './CompactSettingsPanel.js';
 import { generateUnifiedCalendar } from '../services/unifiedCalendarService.js';
 
 /**
@@ -342,6 +340,18 @@ function GardenAppContent() {
               gardenId={gardenId}
               gardenData={gardenData}
               isReadOnly={isReadOnly}
+              // Settings props
+              climateScenarios={currentClimateScenarios}
+              selectedSummer={selectedSummer}
+              selectedWinter={selectedWinter}
+              onSummerChange={setSelectedSummer}
+              onWinterChange={setSelectedWinter}
+              portfolioStrategies={portfolioStrategies}
+              selectedPortfolio={selectedPortfolio}
+              onPortfolioChange={setSelectedPortfolio}
+              onCustomPortfolioChange={handleCustomPortfolioChange}
+              investmentConfig={customInvestment}
+              onInvestmentChange={setCustomInvestment}
             />
           } />
           
@@ -354,72 +364,30 @@ function GardenAppContent() {
           
           <Route path="/analysis" element={
             <div className="results-view">
+              <CompactSettingsPanel
+                climateScenarios={currentClimateScenarios}
+                selectedSummer={selectedSummer}
+                selectedWinter={selectedWinter}
+                onSummerChange={setSelectedSummer}
+                onWinterChange={setSelectedWinter}
+                portfolioStrategies={portfolioStrategies}
+                selectedPortfolio={selectedPortfolio}
+                onPortfolioChange={setSelectedPortfolio}
+                onCustomPortfolioChange={handleCustomPortfolioChange}
+                investmentConfig={customInvestment}
+                onInvestmentChange={setCustomInvestment}
+                disabled={isReadOnly}
+              />
+              
               <SimulationResults 
                 simulationResults={simulationResults}
                 simulating={simulating}
                 totalInvestment={totalInvestment}
                 isReadOnly={isReadOnly}
               />
-              
-              {!isReadOnly && (
-                <>
-                  <ClimateScenarioSelector
-                    climateScenarios={currentClimateScenarios}
-                    selectedSummer={selectedSummer}
-                    selectedWinter={selectedWinter}
-                    onSummerChange={setSelectedSummer}
-                    onWinterChange={setSelectedWinter}
-                  />
-
-                  <PortfolioManager
-                    portfolioStrategies={portfolioStrategies}
-                    selectedPortfolio={selectedPortfolio}
-                    onPortfolioChange={setSelectedPortfolio}
-                    onCustomPortfolioChange={handleCustomPortfolioChange}
-                  />
-
-                  <InvestmentConfigurer
-                    investmentConfig={customInvestment}
-                    onInvestmentChange={setCustomInvestment}
-                  />
-                </>
-              )}
             </div>
           } />
           
-          <Route path="/config" element={
-            <div className="config-view">
-              <div className="view-header">
-                <h2>⚙️ Garden Configuration</h2>
-                <p className="view-subtitle">
-                  {isReadOnly ? 'Viewing garden parameters (read-only)' : 'Set up your garden parameters and preferences'}
-                </p>
-              </div>
-              
-              <ClimateScenarioSelector
-                climateScenarios={currentClimateScenarios}
-                selectedSummer={selectedSummer}
-                selectedWinter={selectedWinter}
-                onSummerChange={isReadOnly ? () => {} : setSelectedSummer}
-                onWinterChange={isReadOnly ? () => {} : setSelectedWinter}
-                disabled={isReadOnly}
-              />
-
-              <PortfolioManager
-                portfolioStrategies={portfolioStrategies}
-                selectedPortfolio={selectedPortfolio}
-                onPortfolioChange={isReadOnly ? () => {} : setSelectedPortfolio}
-                onCustomPortfolioChange={isReadOnly ? () => {} : handleCustomPortfolioChange}
-                disabled={isReadOnly}
-              />
-
-              <InvestmentConfigurer
-                investmentConfig={customInvestment}
-                onInvestmentChange={isReadOnly ? () => {} : setCustomInvestment}
-                disabled={isReadOnly}
-              />
-            </div>
-          } />
         </Routes>
       </main>
     </div>

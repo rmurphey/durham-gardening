@@ -26,11 +26,9 @@ import GardenAppContent from './GardenAppContent.js';
 import DefaultGardenRedirect from './DefaultGardenRedirect.js';
 
 // Configuration Components
-import ClimateScenarioSelector from './ClimateScenarioSelector.js';
-import PortfolioManager from './PortfolioManager.js';
 import SimulationResults from './SimulationResults.js';
 import GardenCalendar from './GardenCalendar.js';
-import InvestmentConfigurer from './InvestmentConfigurer.js';
+import CompactSettingsPanel from './CompactSettingsPanel.js';
 import { generateUnifiedCalendar } from '../services/unifiedCalendarService.js';
 
 function AppContent() {
@@ -164,66 +162,46 @@ function AppContent() {
               totalInvestment={totalInvestment}
               onViewChange={handleViewChange}
               gardenCalendar={gardenCalendar}
+              // Settings props
+              climateScenarios={currentClimateScenarios}
+              selectedSummer={selectedSummer}
+              selectedWinter={selectedWinter}
+              onSummerChange={setSelectedSummer}
+              onWinterChange={setSelectedWinter}
+              portfolioStrategies={portfolioStrategies}
+              selectedPortfolio={selectedPortfolio}
+              onPortfolioChange={setSelectedPortfolio}
+              onCustomPortfolioChange={handleCustomPortfolioChange}
+              investmentConfig={customInvestment}
+              onInvestmentChange={setCustomInvestment}
+              isReadOnly={false}
             />
           } />
           <Route path="/garden/:id/*" element={<GardenAppContent />} />
           <Route path="/tasks" element={<Navigate to="/dashboard" replace />} />
           <Route path="/calendar" element={<Navigate to="/dashboard" replace />} />
           <Route path="/shopping" element={<ShoppingView shoppingActions={shoppingActions} />} />
-          <Route path="/results" element={
+          <Route path="/analysis" element={
             <div className="results-view">
+              <CompactSettingsPanel
+                climateScenarios={currentClimateScenarios}
+                selectedSummer={selectedSummer}
+                selectedWinter={selectedWinter}
+                onSummerChange={setSelectedSummer}
+                onWinterChange={setSelectedWinter}
+                portfolioStrategies={portfolioStrategies}
+                selectedPortfolio={selectedPortfolio}
+                onPortfolioChange={setSelectedPortfolio}
+                onCustomPortfolioChange={handleCustomPortfolioChange}
+                investmentConfig={customInvestment}
+                onInvestmentChange={setCustomInvestment}
+                disabled={false}
+              />
+              
               <SimulationResults 
                 simulationResults={simulationResults}
                 simulating={simulating}
                 totalInvestment={totalInvestment}
-              />
-              
-              <ClimateScenarioSelector
-                climateScenarios={currentClimateScenarios}
-                selectedSummer={selectedSummer}
-                selectedWinter={selectedWinter}
-                onSummerChange={setSelectedSummer}
-                onWinterChange={setSelectedWinter}
-              />
-
-              <PortfolioManager
-                portfolioStrategies={portfolioStrategies}
-                selectedPortfolio={selectedPortfolio}
-                onPortfolioChange={setSelectedPortfolio}
-                onCustomPortfolioChange={handleCustomPortfolioChange}
-              />
-
-              <InvestmentConfigurer
-                investmentConfig={customInvestment}
-                onInvestmentChange={setCustomInvestment}
-              />
-            </div>
-          } />
-          <Route path="/config" element={
-            <div className="config-view">
-              <div className="view-header">
-                <h2>⚙️ Garden Configuration</h2>
-                <p className="view-subtitle">Set up your garden parameters and preferences</p>
-              </div>
-              
-              <ClimateScenarioSelector
-                climateScenarios={currentClimateScenarios}
-                selectedSummer={selectedSummer}
-                selectedWinter={selectedWinter}
-                onSummerChange={setSelectedSummer}
-                onWinterChange={setSelectedWinter}
-              />
-
-              <PortfolioManager
-                portfolioStrategies={portfolioStrategies}
-                selectedPortfolio={selectedPortfolio}
-                onPortfolioChange={setSelectedPortfolio}
-                onCustomPortfolioChange={handleCustomPortfolioChange}
-              />
-
-              <InvestmentConfigurer
-                investmentConfig={customInvestment}
-                onInvestmentChange={setCustomInvestment}
               />
             </div>
           } />

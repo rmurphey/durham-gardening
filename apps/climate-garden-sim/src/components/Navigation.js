@@ -22,24 +22,18 @@ const Navigation = ({
       badge: hasTasks ? 'new' : null
     },
     {
+      id: 'analysis',
+      label: 'Simulation',
+      icon: '📊',
+      description: 'Monte Carlo analysis & settings'
+    },
+    {
       id: 'shopping',
       label: 'Shopping',
       icon: '🛒',
       description: isReadOnly ? 'View shopping plan' : 'Purchase planning',
       badge: hasShoppingItems ? hasShoppingItems : null,
       disabled: isReadOnly && !hasShoppingItems
-    },
-    {
-      id: 'analysis',
-      label: 'Analysis',
-      icon: '📊',
-      description: 'Simulation results'
-    },
-    {
-      id: 'config',
-      label: 'Setup',
-      icon: '⚙️',
-      description: isReadOnly ? 'View configuration' : 'Garden configuration'
     }
   ];
 
