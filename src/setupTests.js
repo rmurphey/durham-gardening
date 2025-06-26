@@ -24,3 +24,14 @@ afterAll(() => {
 
 // Mock fetch for testing
 global.fetch = jest.fn();
+
+// Mock sql.js to prevent WASM loading issues in tests
+jest.mock('sql.js', () => ({
+  __esModule: true,
+  default: jest.fn(() => Promise.resolve({
+    Database: jest.fn(() => ({
+      exec: jest.fn(() => []),
+      close: jest.fn()
+    }))
+  }))
+}));
