@@ -1,14 +1,14 @@
 /**
  * GardenRoute Component
- * Handles garden-specific routing and cloud data loading
+ * Handles garden-specific dashboard with cloud sync functionality
  */
 
 import React from 'react';
-import AppContent from './AppContent.js';
+import DashboardView from './DashboardView.js';
 import useCloudSync from '../hooks/useCloudSync.js';
 
 /**
- * Component that wraps AppContent with cloud sync functionality for specific gardens
+ * Component that provides garden-specific dashboard with cloud sync
  */
 const GardenRoute = () => {
   const {
@@ -31,7 +31,7 @@ const GardenRoute = () => {
           <div className="spinner"></div>
         </div>
         <h2>Loading Garden...</h2>
-        <p>Initializing your garden data</p>
+        <p>Initializing your garden data for ID: {gardenId}</p>
       </div>
     );
   }
@@ -55,7 +55,7 @@ const GardenRoute = () => {
             </button>
             <button 
               className="error-home-btn"
-              onClick={() => window.location.href = '/'}
+              onClick={() => window.location.href = '/dashboard'}
             >
               Go to Dashboard
             </button>
@@ -96,12 +96,26 @@ const GardenRoute = () => {
         </div>
       )}
 
-      {/* Main App Content */}
-      <AppContent 
-        gardenId={gardenId}
-        initialGardenData={gardenData}
-        onGardenDataChange={saveGardenData}
-      />
+      {/* Garden-specific Dashboard */}
+      <div className="garden-dashboard">
+        <div className="garden-header">
+          <h2>🌱 Garden: {gardenId?.slice(0, 8)}...</h2>
+          <p>Cloud-synced garden planning</p>
+        </div>
+        
+        <DashboardView 
+          gardenId={gardenId}
+          gardenData={gardenData}
+          onGardenDataChange={saveGardenData}
+          // For now, use default props - we'll integrate with cloud data later
+          shoppingActions={{ totalItems: 0 }}
+          monthlyFocus={null}
+          simulationResults={null}
+          totalInvestment={0}
+          onViewChange={() => {}} // Navigation handled differently for garden routes
+          gardenCalendar={[]}
+        />
+      </div>
     </div>
   );
 };

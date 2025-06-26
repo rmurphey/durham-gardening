@@ -22,6 +22,7 @@ import { DURHAM_CONFIG } from '../config/durhamConfig.js';
 import Navigation from './Navigation.js';
 import DashboardView from './DashboardView.js';
 import ShoppingView from './ShoppingView.js';
+import GardenAppContent from './GardenAppContent.js';
 
 // Configuration Components
 import ClimateScenarioSelector from './ClimateScenarioSelector.js';
@@ -173,6 +174,7 @@ function AppContent() {
               gardenCalendar={gardenCalendar}
             />
           } />
+          <Route path="/garden/:id/*" element={<GardenAppContent />} />
           <Route path="/tasks" element={<Navigate to="/dashboard" replace />} />
           <Route path="/calendar" element={<Navigate to="/dashboard" replace />} />
           <Route path="/shopping" element={<ShoppingView shoppingActions={shoppingActions} />} />
