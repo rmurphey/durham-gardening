@@ -276,4 +276,34 @@ describe('ShoppingSuggestionModal', () => {
     expect(screen.getByText('Basic item')).toBeInTheDocument();
     expect(screen.getByText('Price varies')).toBeInTheDocument();
   });
+
+  test('should close modal when ESC key is pressed', () => {
+    render(<ShoppingSuggestionModal {...defaultProps} />);
+    
+    // Simulate ESC key press
+    fireEvent.keyDown(document, { key: 'Escape' });
+    
+    expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
+  });
+
+  test('should not close modal when other keys are pressed', () => {
+    render(<ShoppingSuggestionModal {...defaultProps} />);
+    
+    // Simulate other key presses
+    fireEvent.keyDown(document, { key: 'Enter' });
+    fireEvent.keyDown(document, { key: 'Space' });
+    fireEvent.keyDown(document, { key: 'Tab' });
+    
+    expect(defaultProps.onClose).not.toHaveBeenCalled();
+  });
+
+  test('should not add event listener when modal is closed', () => {
+    const addEventListenerSpy = jest.spyOn(document, 'addEventListener');
+    
+    render(<ShoppingSuggestionModal {...defaultProps} isOpen={false} />);
+    
+    expect(addEventListenerSpy).not.toHaveBeenCalledWith('keydown', expect.any(Function));
+    
+    addEventListenerSpy.mockRestore();
+  });
 });

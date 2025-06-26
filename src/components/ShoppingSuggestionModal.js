@@ -3,7 +3,7 @@
  * Shows relevant shopping suggestions after completing calendar activities
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ShoppingSuggestionModal = ({ 
   isOpen, 
@@ -15,6 +15,22 @@ const ShoppingSuggestionModal = ({
 }) => {
   const [selectedSuggestions, setSelectedSuggestions] = useState(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen || suggestions.length === 0) {
     return null;

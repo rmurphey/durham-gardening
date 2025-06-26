@@ -1,10 +1,9 @@
 # TODOs for Claude Code
 
-## I should be able to say "yes, I will do this thing" on the calendar, and it should offer to generate a shopping item.
-
 ## consider how to make the app usable for more zip codes
 
-- Use the zip code 27707 for Durham for now
+- Use the zip code 27707 for Durham for now.
+- Plan how to add the zip codes 27513 and 14845.
 
 ## Make the setup a collapsible part of the dashboard, and eliminate the setup page
 
@@ -101,6 +100,16 @@ Right now, the application is based entirely on browser storage. What would it t
 - ✅ Fixed all ESLint warnings related to modularization work - dev server now compiles with minimal warnings
 - ✅ Resolved SQL.js WASM loading issue in test environment with proper mock setup
 - ✅ Analyzed remaining modularization opportunities and determined current architecture is well-structured for maintainability
+
+## ✅ COMPLETED: Calendar-shopping integration with intelligent activity-based suggestions (2025-06-26)
+
+- ✅ Created smart activity filtering system that only triggers shopping suggestions for relevant activities (shopping, infrastructure, indoor-starting)
+- ✅ Built contextual shopping recommendation engine that maps activity types to relevant items (irrigation→drip systems, indoor-starting→seed kits)
+- ✅ Implemented interactive ShoppingSuggestionModal with checkbox selection, pricing display, and urgency indicators
+- ✅ Integrated seamlessly with existing shopping list state management and localStorage persistence
+- ✅ Added comprehensive test coverage for both service logic and UI component interactions
+- ✅ Created professional modal design with mobile-responsive layout and suggestion reasoning
+- ✅ Enhanced user experience: complete calendar activity → get targeted suggestions → add to persistent shopping list
 
 ## ✅ COMPLETED: Fix summary stats layout and add metric units (2025-06-26)
 
