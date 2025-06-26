@@ -51,6 +51,9 @@ export const generateDatabaseGardenCalendar = async (
     const month = months[monthIndex];
     const activities = [];
 
+    console.log(`Generating calendar for ${month} (month ${monthNumber})`);
+    console.log(`Enabled crops:`, enabledCrops);
+
     try {
       // Get activities from database templates
       const [activityTemplates, rotationTemplates, successionTemplates] = await Promise.all([
@@ -59,20 +62,35 @@ export const generateDatabaseGardenCalendar = async (
         databaseService.getSuccessionTemplates(1, monthNumber)
       ]);
 
+      console.log(`${month} - Found ${activityTemplates.length} activity templates, ${rotationTemplates.length} rotation templates, ${successionTemplates.length} succession templates`);
+
       // Process activity templates
       activityTemplates.forEach(template => {
+        // Debug logging for indoor start activities
+        if (template.activity_type === 'indoor-starting') {
+          console.log(`Processing indoor start template:`, template);
+        }
+        
         // Check if this crop activity should be shown based on garden status
         if (template.plant_key && !shouldShowCropActivity(template.plant_key, template.activity_type)) {
+          console.log(`Filtered out activity: ${template.plant_key} ${template.activity_type}`);
           return;
         }
 
-        activities.push({
+        const activity = {
           type: template.activity_type,
           crop: template.plant_key ? getCropDisplayName(template.plant_key) : 'General',
           action: databaseService.generateActionText(template),
           timing: databaseService.generateTimingText(template),
           priority: template.priority || 'medium'
-        });
+        };
+        
+        // Debug logging for indoor start activities
+        if (template.activity_type === 'indoor-starting') {
+          console.log(`Added indoor start activity:`, activity);
+        }
+        
+        activities.push(activity);
       });
 
       // Process rotation templates  
@@ -122,15 +140,16 @@ export const generateDatabaseGardenCalendar = async (
     activities.sort((a, b) => {
       const priorityOrder = { high: 1, medium: 2, low: 3 };
       const typeOrder = { 
-        'shopping': 1,
-        'direct-sow': 2, 
-        'transplant': 3,
-        'succession': 4,
-        'harvest': 5, 
-        'care': 6,
-        'rotation': 7,
-        'infrastructure': 8,
-        'planning': 9
+        'indoor-starting': 1,
+        'shopping': 2,
+        'direct-sow': 3, 
+        'transplant': 4,
+        'succession': 5,
+        'harvest': 6, 
+        'care': 7,
+        'rotation': 8,
+        'infrastructure': 9,
+        'planning': 10
       };
       
       if (a.priority !== b.priority) {

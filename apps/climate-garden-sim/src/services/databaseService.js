@@ -24,7 +24,7 @@ class DatabaseService {
       });
 
       // Load the database file with cache-busting
-      const cacheBuster = forceReload ? Date.now() : 'v1';
+      const cacheBuster = forceReload ? Date.now() : 'v3';
       console.log(`Loading database with cache buster: ${cacheBuster}`);
       
       const response = await fetch(`/database/plant_varieties.db?v=${cacheBuster}`, {
@@ -373,9 +373,12 @@ class DatabaseService {
   async getActivityTemplates(regionId = 1, month, enabledPlantKeys = []) {
     await this.waitForInitialization();
     
+    console.log(`getActivityTemplates called: regionId=${regionId}, month=${month}, enabledPlantKeys=`, enabledPlantKeys);
+    
     if (this.db) {
+      console.log('Using database for activity templates');
       try {
-        const stmt = `
+        let stmt = `
           SELECT 
             at.id,
             p.plant_key,
@@ -396,9 +399,38 @@ class DatabaseService {
           WHERE at.region_id = ? AND at.month = ?
         `;
         
-        const result = this.db.exec(stmt, [regionId, month]);
+        let params = [regionId, month];
         
-        if (result.length === 0) return [];
+        // Add plant key filtering if enabled crops are specified
+        if (enabledPlantKeys && enabledPlantKeys.length > 0) {
+          const placeholders = enabledPlantKeys.map(() => '?').join(',');
+          stmt += ` AND (p.plant_key IS NULL OR p.plant_key IN (${placeholders}))`;
+          params.push(...enabledPlantKeys);
+        }
+        
+        console.log(`Executing query:`, stmt);
+        console.log(`With params:`, params);
+        const result = this.db.exec(stmt, params);
+        console.log(`Query returned ${result.length} result sets with ${result[0]?.values?.length || 0} rows`);
+        
+        // Debug: Check if indoor start templates exist for this month
+        if (month === 2 || month === 3) {
+          const debugStmt = `
+            SELECT COUNT(*) as count, aty.type_key
+            FROM activity_templates at
+            JOIN activity_types aty ON at.activity_type_id = aty.id
+            WHERE at.month = ? AND aty.type_key = 'indoor-starting'
+          `;
+          const debugResult = this.db.exec(debugStmt, [month]);
+          if (debugResult.length > 0) {
+            console.log(`DEBUG: Month ${month} has ${debugResult[0].values[0][0]} indoor-starting templates`);
+          }
+        }
+        
+        if (result.length === 0) {
+          console.log(`No activity templates found for month ${month}`);
+          return [];
+        }
         
         const columns = result[0].columns;
         const values = result[0].values;
@@ -451,10 +483,13 @@ class DatabaseService {
     }
     
     // Fallback to structured data
-    return this.activityTemplates?.filter(template => 
+    console.log('Using fallback data for activity templates');
+    const fallbackResults = this.activityTemplates?.filter(template => 
       template.month === month &&
       (!template.plant_key || enabledPlantKeys.includes(template.plant_key))
     ) || [];
+    console.log(`Fallback returned ${fallbackResults.length} templates for month ${month}`);
+    return fallbackResults;
   }
 
   /**
@@ -642,11 +677,20 @@ class DatabaseService {
           ? JSON.parse(template.bed_size_requirements) 
           : template.bed_size_requirements;
         
-        bedName = bedReqs.source_bed || bedReqs.target_bed || bedReqs.recommended_bed;
+        bedName = bedReqs.source_bed || bedReqs.target_bed || bedReqs.recommended_bed || bedReqs.transplant_to;
         
       } catch (e) {
         console.error('❌ JSON PARSE FAILED for timing bed_size_requirements:', template.bed_size_requirements, e);
       }
+    }
+    
+    // Normalize bed names from database format to display format
+    if (bedName) {
+      bedName = bedName
+        .replace('4x8_bed', '4×8 Bed')
+        .replace('3x15_bed', '3×15 Bed') 
+        .replace('4x5_bed', '4×5 Bed')
+        .replace('containers', 'Containers');
     }
     
     // FINAL FALLBACK: If we still don't have a bed name, something is wrong
@@ -757,7 +801,7 @@ class DatabaseService {
           ? JSON.parse(template.bed_size_requirements) 
           : template.bed_size_requirements;
         
-        bedName = bedReqs.source_bed || bedReqs.target_bed || bedReqs.recommended_bed;
+        bedName = bedReqs.source_bed || bedReqs.target_bed || bedReqs.recommended_bed || bedReqs.transplant_to;
         
         // CRITICAL DEBUG: Log ALL parsing attempts
         console.log('🔍 BED PARSING DEBUG:', {
@@ -772,6 +816,15 @@ class DatabaseService {
       } catch (e) {
         console.error('❌ JSON PARSE FAILED for bed_size_requirements:', template.bed_size_requirements, e);
       }
+    }
+    
+    // Normalize bed names from database format to display format
+    if (bedName) {
+      bedName = bedName
+        .replace('4x8_bed', '4×8 Bed')
+        .replace('3x15_bed', '3×15 Bed') 
+        .replace('4x5_bed', '4×5 Bed')
+        .replace('containers', 'Containers');
     }
     
     // FINAL FALLBACK: If we still don't have a bed name, something is wrong
@@ -840,13 +893,6 @@ class DatabaseService {
     return this.validateNoPlaceholders(action);
   }
 
-  /**
-   * Get all activity templates for testing
-   * @returns {Array} All activity templates
-   */
-  getActivityTemplates() {
-    return this.fallbackTemplates || [];
-  }
 
   /**
    * Get garden beds for a specific garden

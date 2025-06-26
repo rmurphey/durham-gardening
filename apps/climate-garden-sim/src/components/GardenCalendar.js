@@ -80,8 +80,8 @@ function getCategoryIcon(activityType) {
     'shopping': '🛒',
     'succession': '🔄',
     'rotation': '🔄',
-    'indoor-starting': '🌰', // Seed/indoor start icon
-    'seed-starting': '🌰'    // Alternative naming
+    'indoor-starting': '🌱', // Seedling icon for indoor starts
+    'seed-starting': '🌱'    // Alternative naming
   };
   return <span className="activity-icon">{icons[activityType] || '📝'}</span>;
 }

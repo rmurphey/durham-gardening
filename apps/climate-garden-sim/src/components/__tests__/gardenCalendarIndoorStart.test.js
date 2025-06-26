@@ -100,11 +100,11 @@ describe('GardenCalendar Indoor Start Activities', () => {
     test('should render indoor start icons', () => {
       const { container } = render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
       
-      // Look for seed/indoor start icons (🌰)
+      // Look for seedling/indoor start icons (🌱)
       const indoorStartIcons = container.querySelectorAll('.activity-icon');
       expect(indoorStartIcons.length).toBeGreaterThan(0);
       
-      // Check that indoor start activities have the seed icon
+      // Check that indoor start activities have the seedling icon
       const indoorStartActivities = container.querySelectorAll('.activity.activity-indoor-starting');
       const seedStartActivities = container.querySelectorAll('.activity.activity-seed-starting');
       

@@ -126,7 +126,7 @@ export const shouldShowCropActivity = (cropKey, activityType) => {
   }
   
   // Show planting/shopping activities only for crops we want but don't have
-  if (['shopping', 'direct-sow', 'transplant'].includes(activityType)) {
+  if (['shopping', 'direct-sow', 'transplant', 'indoor-starting'].includes(activityType)) {
     const isGrowing = status.growing.some(crop => 
       normalizedKey.includes(crop.toLowerCase())
     );
