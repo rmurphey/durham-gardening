@@ -14,7 +14,6 @@
 
 ## Is there further modularization/componentization we should do?
 
-## The app isn't loading the weather
 
 ## I should be able to say "yes, I will do this thing" on the calendar, and it should offer to generate a shopping item.
 
@@ -71,4 +70,14 @@ Right now, the application is based entirely on browser storage. What would it t
 - ✅ Simplified navigation to just Dashboard + Shopping
 - ✅ Created single-page garden planning experience
 - ✅ Cleaned up unused imports and navigation buttons
+
+## ✅ COMPLETED: Fix weather loading in local development
+
+- ✅ Identified root cause: API routes don't work with npm run dev
+- ✅ Fixed NWS API data parsing by removing incorrect .data property access
+- ✅ Added proper fallback handling with generateFallbackDay function
+- ✅ Enhanced fallback indicators in ForecastWidget for better user feedback
+- ✅ Updated CLAUDE.md with requirement to use vercel dev for local development
+- ✅ Weather widget now displays real 10-day forecasts from National Weather Service
+- ✅ Documented proper development workflow for API route support
 
