@@ -147,6 +147,12 @@ function transformForGardenPlanning(weatherData) {
         lowTemp: findLowTemp(dayHourlyData, period),
         avgTemp: null, // Will calculate from hourly data
         
+        // Weather comfort indices
+        humidity: findAverageHumidity(dayHourlyData),
+        heatIndex: null, // Will calculate
+        windChill: null, // Will calculate
+        apparentTemp: null // Will calculate
+        
         // Precipitation (affects irrigation planning)
         precipChance: period.probabilityOfPrecipitation?.value || 0,
         precipAmount: estimatePrecipAmount(period),
@@ -171,6 +177,11 @@ function transformForGardenPlanning(weatherData) {
       if (dailyForecast.lowTemp !== null) {
         dailyForecast.avgTemp = (dailyForecast.highTemp + dailyForecast.lowTemp) / 2;
         dailyForecast.growingDegreeDays = Math.max(0, dailyForecast.avgTemp - 50);
+        
+        // Calculate comfort indices
+        dailyForecast.heatIndex = calculateHeatIndex(dailyForecast.highTemp, dailyForecast.humidity);
+        dailyForecast.windChill = calculateWindChill(dailyForecast.lowTemp, dailyForecast.windSpeed);
+        dailyForecast.apparentTemp = getApparentTemperature(dailyForecast.avgTemp, dailyForecast.humidity, dailyForecast.windSpeed);
       }
       
       dailyForecasts.push(dailyForecast);
@@ -471,6 +482,10 @@ function generateFallbackForecast(zipCode) {
       detailedForecast: 'Fallback data based on seasonal averages',
       windSpeed: '5 to 10 mph',
       windDirection: 'Variable',
+      humidity: 55,
+      heatIndex: Math.round(highTemp),
+      windChill: Math.round(lowTemp),
+      apparentTemp: Math.round(avgTemp),
       gardenConditions: ['Average'],
       recommendedActions: ['Normal garden care'],
       fallback: true

@@ -3202,6 +3202,15 @@ p {
   color: var(--color-text-secondary);
 }
 
+.feels-like {
+  font-size: var(--font-size-xs);
+  color: var(--color-accent);
+  margin-left: var(--spacing-xs);
+  font-weight: 500;
+  display: block;
+  margin-top: 2px;
+}
+
 .day-conditions {
   text-align: center;
   margin-bottom: var(--spacing-sm);
@@ -3310,6 +3319,38 @@ p {
   font-size: var(--font-size-base);
 }
 
+/* New improved grid layout */
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.impact-stat {
+  text-align: center;
+  padding: var(--spacing-sm);
+  background: var(--color-background);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-light);
+}
+
+.impact-stat .impact-value {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.impact-stat .impact-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Legacy fallback styles */
 .impact-factors {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3334,10 +3375,21 @@ p {
 }
 
 .risk-factors {
+  border-top: 1px solid var(--color-border-light);
+  padding-top: var(--spacing-sm);
+}
+
+.risk-header {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.risk-tags {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-xs);
-  align-items: center;
 }
 
 .risk-factors strong {

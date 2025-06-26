@@ -199,6 +199,11 @@ const ForecastWidget = ({ onSimulationImpact }) => {
             <div className="day-temps">
               <span className="high-temp">{Math.round(day.highTemp)}°</span>
               <span className="low-temp">{Math.round(day.lowTemp)}°</span>
+              {day.apparentTemp && Math.abs(day.apparentTemp - day.highTemp) > 3 && (
+                <span className="feels-like" title={`Feels like ${Math.round(day.apparentTemp)}°`}>
+                  🌡️{Math.round(day.apparentTemp)}°
+                </span>
+              )}
             </div>
             
             {/* Compact conditions row */}
@@ -248,25 +253,31 @@ const ForecastWidget = ({ onSimulationImpact }) => {
       {/* Simulation Impact Summary */}
       {simulationFactors && (
         <div className="simulation-impact">
-          <h4>Garden Planning Impact</h4>
-          <div className="impact-factors">
-            <div className="impact-item">
-              <span className="impact-label">Temperature Stability:</span>
-              <span className="impact-value">{formatProbability(simulationFactors.temperatureStability)}%</span>
+          <h4>🌱 Garden Planning Impact</h4>
+          <div className="impact-grid">
+            <div className="impact-stat">
+              <div className="impact-value">{formatProbability(simulationFactors.temperatureStability)}%</div>
+              <div className="impact-label">Temperature Stability</div>
             </div>
-            <div className="impact-item">
-              <span className="impact-label">Moisture Index:</span>
-              <span className="impact-value">{formatProbability(simulationFactors.moistureIndex)}%</span>
+            <div className="impact-stat">
+              <div className="impact-value">{formatProbability(simulationFactors.moistureIndex)}%</div>
+              <div className="impact-label">Moisture Index</div>
+            </div>
+            <div className="impact-stat">
+              <div className="impact-value">{formatProbability(simulationFactors.growthPotential)}%</div>
+              <div className="impact-label">Growth Potential</div>
             </div>
           </div>
           
           {Object.entries(simulationFactors.riskFactors).some(([_, risk]) => risk) && (
             <div className="risk-factors">
-              <strong>Risk Factors:</strong>
-              {simulationFactors.riskFactors.frost && <span className="risk-tag frost">Frost</span>}
-              {simulationFactors.riskFactors.heat && <span className="risk-tag heat">Heat Stress</span>}
-              {simulationFactors.riskFactors.drought && <span className="risk-tag drought">Drought</span>}
-              {simulationFactors.riskFactors.excess_moisture && <span className="risk-tag moisture">Excess Moisture</span>}
+              <div className="risk-header">⚠️ Active Risks</div>
+              <div className="risk-tags">
+                {simulationFactors.riskFactors.frost && <span className="risk-tag frost">❄️ Frost</span>}
+                {simulationFactors.riskFactors.heat && <span className="risk-tag heat">🔥 Heat Stress</span>}
+                {simulationFactors.riskFactors.drought && <span className="risk-tag drought">🌵 Drought</span>}
+                {simulationFactors.riskFactors.excess_moisture && <span className="risk-tag moisture">💧 Excess Moisture</span>}
+              </div>
             </div>
           )}
         </div>
