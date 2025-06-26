@@ -3,8 +3,8 @@
  * Critical decision-making information for Durham garden management
  */
 
-import React, { useState } from 'react';
-import { generateGardenTasks, generatePureShoppingRecommendations } from '../services/temporalShoppingService';
+import React from 'react';
+import { generatePureShoppingRecommendations } from '../services/temporalShoppingService';
 import GardenCalendar from './GardenCalendar.js';
 import ForecastWidget from './ForecastWidget.js';
 import CompactSettingsPanel from './CompactSettingsPanel.js';
@@ -48,8 +48,6 @@ const DashboardView = ({
   isReadOnly = false,
   simulating = false
 }) => {
-  // Weather impact state for simulation adjustments
-  const [weatherImpact, setWeatherImpact] = useState(null);
 
   // Get critical data for decision making
   const weatherAlerts = getLocationWeatherAlerts(locationConfig);
@@ -252,7 +250,7 @@ const DashboardView = ({
       </div>
 
       {/* Weather Forecast */}
-      <ForecastWidget onSimulationImpact={setWeatherImpact} locationConfig={locationConfig} />
+      <ForecastWidget locationConfig={locationConfig} />
 
       {/* Simulation Results */}
       <SimulationResults 

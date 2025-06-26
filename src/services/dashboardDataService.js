@@ -3,7 +3,7 @@
  * Provides critical, actionable information for Durham garden dashboard
  */
 
-import { DURHAM_CROPS } from '../config/durhamConfig.js';
+// Location-aware dashboard data service - no longer needs Durham-specific imports
 
 /**
  * Get current weather impact and location-specific alerts
@@ -15,8 +15,6 @@ export const getLocationWeatherAlerts = (locationConfig = {}) => {
   
   const alerts = [];
   const locationName = locationConfig.name || 'your location';
-  const hardiness = locationConfig.hardiness || '7b';
-  const hardinessNumber = parseInt(hardiness) || 7;
   
   // Seasonal alerts based on location climate patterns
   if (month >= 6 && month <= 8) {
@@ -137,6 +135,9 @@ export const getReadyToHarvest = () => {
         { crop: 'Kale', variety: 'Red Russian', daysReady: 0, value: '$8/lb', note: 'Cold-sweetened leaves' },
         { crop: 'Spinach', variety: 'Bloomsdale', daysReady: 0, value: '$12/lb', note: 'Peak cold-weather growth' }
       );
+      break;
+    default:
+      // No specific harvest recommendations for this month
       break;
   }
   
@@ -327,6 +328,9 @@ export const getTodaysActionableGuidance = () => {
           'Extend harvest with row covers'
         ]
       });
+      break;
+    default:
+      // No specific seasonal guidance for this month
       break;
   }
   

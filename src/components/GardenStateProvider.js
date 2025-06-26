@@ -7,11 +7,11 @@ import React, { createContext, useContext, useState, useMemo } from 'react';
 import { generateSuccessOutlook } from '../config.js';
 import { 
   generateLocationMonthlyFocus,
-  generateDurhamWeeklyActions,
-  generateDurhamTopCrops,
-  generateDurhamSiteRecommendations,
-  generateDurhamInvestmentPriority
-} from '../services/durhamRecommendations.js';
+  generateLocationWeeklyActions,
+  generateLocationTopCrops,
+  generateLocationSiteRecommendations,
+  generateLocationInvestmentPriority
+} from '../services/locationRecommendations.js';
 import { generateLocationSpecificScenarios } from '../data/climateScenarios.js';
 import { getPortfolioStrategies, createCustomPortfolio, validatePortfolioAllocations } from '../data/portfolioStrategies.js';
 import { useSimulation } from '../hooks/useSimulation.js';
@@ -75,13 +75,13 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
   // Generate location-aware recommendations
   const recommendations = useMemo(() => {
     const monthlyFocus = generateLocationMonthlyFocus(portfolioStrategies[selectedPortfolio], simulationResults, locationConfig);
-    const weeklyActions = generateDurhamWeeklyActions(portfolioStrategies[selectedPortfolio]);
+    const weeklyActions = generateLocationWeeklyActions(portfolioStrategies[selectedPortfolio]);
     const successOutlook = simulationResults ? 
       generateSuccessOutlook(simulationResults, locationConfig)?.message || 'Analyzing garden potential...' : 
       'Run simulation to see success outlook';
-    const investmentPriority = generateDurhamInvestmentPriority(customInvestment, locationConfig);
-    const topCropRecommendations = generateDurhamTopCrops(portfolioStrategies[selectedPortfolio], locationConfig);
-    const siteSpecificRecommendations = generateDurhamSiteRecommendations(locationConfig);
+    const investmentPriority = generateLocationInvestmentPriority(customInvestment, locationConfig);
+    const topCropRecommendations = generateLocationTopCrops(portfolioStrategies[selectedPortfolio], locationConfig);
+    const siteSpecificRecommendations = generateLocationSiteRecommendations(locationConfig);
 
     return {
       monthlyFocus,

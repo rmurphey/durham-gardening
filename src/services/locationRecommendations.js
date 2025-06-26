@@ -1,6 +1,6 @@
 /**
- * Durham-Specific Smart Recommendations
- * Actionable gardening advice for Durham, NC conditions
+ * Location-Aware Smart Recommendations
+ * Actionable gardening advice for any US location with hardiness zone support
  */
 
 import { DURHAM_CROPS } from '../config/durhamConfig.js';
@@ -134,9 +134,9 @@ export const generateLocationMonthlyFocus = (portfolio, simulationResults, locat
 };
 
 /**
- * Generate weekly actions for Durham
+ * Generate weekly actions for location
  */
-export const generateDurhamWeeklyActions = (portfolio) => {
+export const generateLocationWeeklyActions = (portfolio) => {
   const currentMonth = new Date().getMonth() + 1;
   const actions = [];
 
@@ -190,9 +190,9 @@ export const generateDurhamWeeklyActions = (portfolio) => {
 };
 
 /**
- * Generate top crop recommendations for Durham
+ * Generate top crop recommendations for location
  */
-export const generateDurhamTopCrops = (portfolio, locationConfig = {}) => {
+export const generateLocationTopCrops = (portfolio, locationConfig = {}) => {
   const currentMonth = new Date().getMonth() + 1;
   const hardiness = locationConfig.hardiness || '7b';
   const recommendations = [];
@@ -228,7 +228,7 @@ export const generateDurhamTopCrops = (portfolio, locationConfig = {}) => {
 /**
  * Generate location-specific site recommendations
  */
-export const generateDurhamSiteRecommendations = (locationConfig = {}) => {
+export const generateLocationSiteRecommendations = (locationConfig = {}) => {
   const currentMonth = new Date().getMonth() + 1;
   const locationName = locationConfig.name || 'your location';
   const hardiness = locationConfig.hardiness || '7b';
@@ -296,7 +296,7 @@ export const generateDurhamSiteRecommendations = (locationConfig = {}) => {
     season: 'all'
   });
 
-  console.log("Generated Durham site recommendations:", recommendations);
+  console.log("Generated location site recommendations:", recommendations);
   return recommendations;
 };
 
@@ -304,7 +304,7 @@ export const generateDurhamSiteRecommendations = (locationConfig = {}) => {
  * Generate specific, actionable investment recommendations for location
  * Only recommends items that have immediate value based on current date
  */
-export const generateDurhamInvestmentPriority = (customInvestment, locationConfig = {}) => {
+export const generateLocationInvestmentPriority = (customInvestment, locationConfig = {}) => {
   const recommendations = [];
   const currentMonth = new Date().getMonth() + 1;
   const locationName = locationConfig.name || 'your location';
