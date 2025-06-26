@@ -260,7 +260,11 @@ const DashboardView = ({
 
       {/* Garden Calendar - Full Width */}
       <div className="garden-calendar-dashboard">
-        <GardenCalendar gardenCalendar={gardenCalendar} />
+        <GardenCalendar 
+          gardenCalendar={gardenCalendar}
+          onAddToShoppingList={shoppingActions.addToShoppingList}
+          existingShoppingItems={shoppingActions.shoppingList}
+        />
       </div>
     </div>
   );

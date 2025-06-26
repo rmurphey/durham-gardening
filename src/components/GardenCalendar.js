@@ -7,6 +7,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useCalendarTaskManager } from '../hooks/useCalendarTaskManager.js';
 import { formatTimeUntilNext } from '../hooks/useCalendarTaskManager.js';
 import { RecurringTaskScheduler, createTaskNotificationSystem } from '../utils/recurringTaskScheduler.js';
+import { generateShoppingSuggestionsForActivity, formatSuggestionForShoppingList } from '../services/activityShoppingSuggestionService.js';
+import ShoppingSuggestionModal from './ShoppingSuggestionModal.js';
 
 // Helper function to get category icons for activities
 function getCategoryIcon(activityType) {
@@ -124,11 +126,16 @@ const ActivityCard = ({ activity, state, onComplete, onDismiss, onUndoComplete, 
   );
 };
 
-const GardenCalendar = ({ gardenCalendar }) => {
+const GardenCalendar = ({ gardenCalendar, onAddToShoppingList, existingShoppingItems = [] }) => {
   const taskManager = useCalendarTaskManager();
   const schedulerRef = useRef(null);
   const notificationSystemRef = useRef(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [shoppingSuggestionModal, setShoppingSuggestionModal] = useState({
+    isOpen: false,
+    activity: null,
+    suggestions: []
+  });
 
   // Initialize notification system and scheduler
   useEffect(() => {
@@ -182,8 +189,20 @@ const GardenCalendar = ({ gardenCalendar }) => {
     return null;
   }
 
-  const handleActivityComplete = (activity) => {
+  const handleActivityComplete = async (activity) => {
+    // Mark activity as completed first
     taskManager.markActivityComplete(activity.id, activity);
+    
+    // Generate shopping suggestions if applicable
+    const suggestions = generateShoppingSuggestionsForActivity(activity, existingShoppingItems);
+    
+    if (suggestions.length > 0) {
+      setShoppingSuggestionModal({
+        isOpen: true,
+        activity,
+        suggestions
+      });
+    }
   };
 
   const handleActivityDismiss = (activity) => {
@@ -192,6 +211,30 @@ const GardenCalendar = ({ gardenCalendar }) => {
 
   const handleActivityUndoComplete = (activity) => {
     taskManager.markActivityIncomplete(activity.id);
+  };
+
+  const handleCloseSuggestionModal = () => {
+    setShoppingSuggestionModal({
+      isOpen: false,
+      activity: null,
+      suggestions: []
+    });
+  };
+
+  const handleAddSuggestionToShoppingList = async (suggestion) => {
+    if (onAddToShoppingList) {
+      const formattedSuggestion = formatSuggestionForShoppingList(suggestion);
+      await onAddToShoppingList(formattedSuggestion);
+    }
+  };
+
+  const handleAddAllSuggestionsToShoppingList = async (suggestions) => {
+    if (onAddToShoppingList) {
+      for (const suggestion of suggestions) {
+        const formattedSuggestion = formatSuggestionForShoppingList(suggestion);
+        await onAddToShoppingList(formattedSuggestion);
+      }
+    }
   };
 
   // Count urgent pending tasks for notification
@@ -269,6 +312,16 @@ const GardenCalendar = ({ gardenCalendar }) => {
           );
         })}
       </div>
+      
+      {/* Shopping Suggestion Modal */}
+      <ShoppingSuggestionModal
+        isOpen={shoppingSuggestionModal.isOpen}
+        onClose={handleCloseSuggestionModal}
+        suggestions={shoppingSuggestionModal.suggestions}
+        activity={shoppingSuggestionModal.activity}
+        onAddToShoppingList={handleAddSuggestionToShoppingList}
+        onAddAllToShoppingList={handleAddAllSuggestionsToShoppingList}
+      />
     </section>
   );
 };

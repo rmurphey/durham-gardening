@@ -172,6 +172,10 @@ This application demonstrates production-quality architecture with comprehensive
 - No number should appear in the UI that has more than two decimal places
 - NEVER RUN THE DEV SERVER IN A WAY THAT LOCKS UP THE CLAUDE CODE INTERFACE
 
+## Claude Cost Tracking
+
+- Keep a running total of the Claude Code cost of the project.
+
 ## Other instructions
 
 - 
