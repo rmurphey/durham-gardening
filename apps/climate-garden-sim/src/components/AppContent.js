@@ -30,7 +30,7 @@ import PortfolioManager from './PortfolioManager.js';
 import SimulationResults from './SimulationResults.js';
 import GardenCalendar from './GardenCalendar.js';
 import InvestmentConfigurer from './InvestmentConfigurer.js';
-import { generateDatabaseGardenCalendar } from '../services/databaseCalendarService.js';
+import { generateUnifiedCalendar } from '../services/unifiedCalendarService.js';
 
 function AppContent() {
   // Navigation state using React Router
@@ -111,7 +111,7 @@ function AppContent() {
   useEffect(() => {
     const loadGardenCalendar = async () => {
       try {
-        const calendar = await generateDatabaseGardenCalendar(
+        const calendar = await generateUnifiedCalendar(
           selectedSummer, 
           selectedWinter, 
           selectedPortfolio, 

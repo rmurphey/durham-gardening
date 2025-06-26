@@ -96,11 +96,12 @@ export const generateUnifiedCalendar = async (
 };
 
 /**
- * Generate unique activity ID based on content and timing
+ * Generate unique activity ID using crypto.randomUUID()
  */
 function generateActivityId(activity, monthNumber) {
-  const content = `${activity.type}-${activity.crop}-${activity.action}`.replace(/[^a-zA-Z0-9]/g, '-');
-  return `${monthNumber}-${content}-${Date.now() % 10000}`;
+  // Use browser's crypto.randomUUID() for true uniqueness
+  const uuid = crypto.randomUUID();
+  return `activity-${uuid}`;
 }
 
 /**

@@ -2646,6 +2646,192 @@ p {
 }
 
 /* ========================================
+   INTERACTIVE TASK MANAGEMENT STYLES
+======================================== */
+
+/* Activity header layout for task controls */
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xs);
+}
+
+.activity-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.activity-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-left: var(--spacing-sm);
+}
+
+/* Activity buttons */
+.activity-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activity-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.complete-btn {
+  background: var(--color-success-light);
+  border-color: var(--color-success);
+  color: var(--color-success-dark);
+}
+
+.complete-btn:hover {
+  background: var(--color-success);
+  color: var(--color-background);
+}
+
+.dismiss-btn {
+  background: var(--color-error-light);
+  border-color: var(--color-error);
+  color: var(--color-error-dark);
+}
+
+.dismiss-btn:hover {
+  background: var(--color-error);
+  color: var(--color-background);
+}
+
+.undo-btn {
+  background: var(--color-info-light);
+  border-color: var(--color-info);
+  color: var(--color-info-dark);
+  font-size: var(--font-size-xs);
+}
+
+.undo-btn:hover {
+  background: var(--color-info);
+  color: var(--color-background);
+}
+
+/* Activity completed state */
+.activity-completed {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+}
+
+.completed-indicator {
+  color: var(--color-success-dark);
+  font-weight: var(--font-weight-medium);
+}
+
+.next-due {
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+/* Activity frequency indicator */
+.activity-frequency {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-xs);
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  text-transform: capitalize;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Activity consequences warning */
+.activity-consequences {
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-xs);
+  background: var(--color-warning-light);
+  border-left: 3px solid var(--color-warning);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-warning-dark);
+}
+
+/* Activity states */
+.activity.state-completed {
+  opacity: 0.7;
+  background: var(--color-success-light);
+  border-left-color: var(--color-success);
+}
+
+.activity.state-completed .activity-action {
+  text-decoration: line-through;
+  color: var(--color-text-tertiary);
+}
+
+.activity.state-pending.priority-urgent,
+.activity.state-pending.priority-critical {
+  border-left-width: 6px;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
+}
+
+/* Urgent task styling */
+.activity.activity-urgent-task {
+  border-left-color: var(--color-urgent);
+  background: var(--color-urgent-light);
+  border-left-width: 6px;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+}
+
+.activity.activity-urgent-task .activity-crop {
+  color: var(--color-urgent-dark);
+  font-weight: var(--font-weight-semibold);
+}
+
+.activity.activity-urgent-task .activity-action {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-urgent-dark);
+}
+
+/* Mobile responsiveness for task management */
+@media (max-width: 768px) {
+  .activity-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-xs);
+  }
+  
+  .activity-controls {
+    justify-content: flex-end;
+    margin-left: 0;
+  }
+  
+  .activity-btn {
+    min-width: 32px;
+    height: 32px;
+    font-size: var(--font-size-base);
+  }
+  
+  .activity-completed {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+  
+  .next-due {
+    flex: 1 0 100%;
+  }
+}
+
+/* ========================================
    SHOPPING LIST - ACTION-ORIENTED
 ======================================== */
 .shopping-list-section {
