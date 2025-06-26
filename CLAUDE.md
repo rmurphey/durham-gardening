@@ -2,101 +2,185 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository Overview
+## Project Overview
 
-This is a personal garden management system for a Durham, NC garden (Zone 7) containing detailed documentation for:
-- Monthly garden calendar with planting and care schedules
-- Individual plant care guides for specific varieties
-- Detailed planting schedule organized by bed location and timing
-- Space management for succession planting and seasonal transitions
+A React-based climate-aware garden planning application with Monte Carlo simulation, SQLite database integration, and comprehensive crop recommendations for US/Canadian regions.
 
-## Content Structure
+## Key Commands
 
-- **garden_calendar.md**: Monthly overview of all planting, care, and harvest tasks
-- **planting_schedule.md**: Detailed table showing what to plant when and where
-- **plant_care_guides/**: Individual care guides for each crop variety
-- **Legacy files**: Original seed ordering documentation (for reference)
+### Development
+```bash
+npm run dev:vercel # Start development server with API routes (RECOMMENDED for weather)
+npm run dev        # Start React-only development server (API routes won't work)
+npm start          # Start basic development server  
+npm run build      # Create production build
+npm test           # Run React test suite
+npm run test:db    # Run database-specific tests
+```
 
-## Working with This Repository
+### IMPORTANT: Local Development Setup
+**Use `npm run dev:vercel` for full local development** to ensure weather forecast API routes work properly. The weather widget requires Vercel's serverless function support. Use `npm run dev` for React-only development without weather functionality.
 
-When editing or adding content:
-- Maintain consistent markdown formatting across all files
-- Keep seasonal timing information relevant to Zone 7 growing conditions
-- Use clear, actionable tables and checklists for garden tasks
-- Update space calculations when changing plant spacing or bed assignments
-- Focus on practical garden management over theoretical information
+### Database Operations
+```bash
+npm run db:build   # Build database from SQL source files
+npm run db:test    # Run comprehensive database integrity tests
+npm run db:verify  # Quick database integrity check (used in precommit)
+npm run db:update  # Full rebuild and test cycle
+npm run db:status  # Check database data freshness
+```
 
-## Code Development Principles
+### Utilities
+```bash
+./restart.sh       # Kill existing server and start fresh (development)
+```
 
-- Prepare a commit with every substantial change
-- Every commit that includes functional files should include associated tests
-- Aim to minimize complex if/else statements by using more elegant code structures
-- The database is the source of truth. It should always build. Automation should prevent commits if it doesn't build. It should always have the most recent data. There is a simple npm script to update the database
+## Architecture Overview
 
-## Garden Management Focus
+### Data Architecture (Dual-System)
+- **React App Data**: Static crop data in `src/config.js` for performance
+- **SQLite Database**: Comprehensive plant database at `database/plant_varieties.db` with 18 varieties, 79 growing tips, 56 companion relationships
+- **Key Difference**: Database stores planting months as JSON strings (`"[4,5,6]"`) while app expects JavaScript arrays (`[4,5,6]`)
 
-- **Monthly planning**: What to plant, when, and where in specific beds
-- **Space optimization**: Succession planting and intercropping in limited space
-- **Fresh eating priority**: Varieties and harvest timing for immediate consumption
-- **Seasonal transitions**: Moving from summer to winter crops efficiently
-- **Container mobility**: Using moveable containers to optimize growing conditions
+### Core Components Structure
+```
+src/
+├── App.js          # Main application with simulation logic
+├── config.js       # Consolidated configuration, crop database, helpers
+├── index.css       # Complete styling with responsive design
+└── index.js        # React app entry point
 
-This repository serves as a complete garden management system for year-round growing in Durham, NC.
+database/
+├── plant_varieties.db        # SQLite database (132KB, production-ready)
+├── create_plant_database.sql # Database schema
+├── populate_data.sql         # Core plant data
+└── build_database.sh         # Database build script
+```
 
-## Project overview
+### Statistical Engine
+- **Monte Carlo Simulation**: 5,000 iterations using jStat library
+- **Weather Modeling**: Poisson distribution for climate events
+- **Harvest Variability**: Normal distribution with real-world yield ranges
+- **Libraries**: jStat for statistics, simple-statistics for calculations, Recharts for visualization
 
-This project is for a garden in Durham, North Carolina. In addition to a variety of shaded and unshaded areas in the yard, the garden includes:
+### Configuration System
+- **Static Data**: `GLOBAL_CROP_DATABASE` in config.js with 15+ crop varieties
+- **Climate Scenarios**: Summer/winter climate combinations with probability weights
+- **Regional Presets**: Durham NC, Phoenix AZ, Minneapolis MN, Seattle WA, Miami FL
+- **Portfolio Strategies**: Conservative, Aggressive, Hedge, plus custom allocations
 
-- **3×15 Bed**: Long bed (45 sq ft)
-- **4×8 Bed**: Medium bed (32 sq ft)
-- **4×5 Bed**: Small bed (20 sq ft)
-- **Containers**: Individual pots (15-20 sq ft total)
+## Development Patterns
 
-## Gardening Preferences & Constraints
+### State Management
+- React hooks-based state management (no Redux)
+- localStorage for configuration persistence
+- Debounced simulations for performance optimization
 
-- **Budget**: No significant constraints on seed purchases
-- **Storage**: Limited cold/dark storage space - prioritize varieties for fresh eating and short-term storage
-- **Seed suppliers**: Primary preference for True Leaf Market (proven success), open to other suppliers when needed
-- **Time availability**: Daily maintenance possible, larger projects scheduled for weekends
-- **Focus**: Emphasize fresh harvest varieties over long-storage crops due to storage limitations
-- **Irrigation**: Backyard sprinkler system with basic automation covers all garden beds and containers
-- **Budget Realism**: Our budget isn't actually unlimited. We can make practical expenditures, and we are happy to make long-term investments, but we also don't need heroics. Plants die.
+### Data Flow
+1. User configures location, climate scenarios, portfolio strategy
+2. App generates Monte Carlo simulation (5,000 iterations)
+3. Results displayed as charts, garden calendar, risk analysis
+4. Configuration persisted to localStorage
 
-## Sun Exposure
+### Database Integration Notes
+Database exists but app currently uses static data. Future integration requires:
+- JSON parsing of database month arrays: `JSON.parse('[4,5,6]')` → `[4,5,6]`
+- Client-side SQLite querying or API layer
+- Error handling for data format mismatches (see `isPlantingSeasonValid` function)
 
-- **Main garden beds**: All three beds (3×15, 4×8, 4×5) receive ~6 hours of good sun daily - suitable for most vegetables
-- **Front yard**: Significantly shaded by trees with some morning sun areas - contains existing plantings (ferns, hydrangea, jacob's ladder, other ornamentals) with limited space for edibles
-- **Container placement**: Can be moved to optimize sun exposure as needed
+## Critical Functions
 
-## Sustainability Practices
+### Core Simulation Logic (`src/App.js`)
+- `runSimulation()`: Main Monte Carlo simulation engine
+- `generateGardenCalendar()`: Creates 12-month planting/harvest schedule
+- Climate scenario selection and portfolio optimization
 
-- **Compost**: We have ready access to compost
-- We can get a 40lb compost bag for $10 whenever we want
+### Configuration Helpers (`src/config.js`)
+- `isPlantingSeasonValid()`: Handles both array and JSON string formats
+- `getClimateAdaptedCrops()`: Returns crops suitable for climate conditions
+- `getMicroclimateAdjustedRecommendations()`: Site-specific adaptations
 
-## Climate Adaptation
+### Database Management (`scripts/database.js`)
+- `DatabaseCLI`: Command-line interface for database operations
+- `DatabaseManager`: Core database operations and validation
+- Automated quality assurance with pre-commit hooks
 
-- Let's assume extended heat waves are the new average, and adjust long-term plans accordingly. Winters, too, should be expected to tend to be warmer than normal. Don't plant things that may not survive a heat wave, and don't assume plants won't overwinter, because they might.
+## Quality Assurance
 
-## Economic Goals
+### Database Integrity
+- Pre-commit hook runs `npm run db:verify` to prevent broken database commits
+- Comprehensive testing suite validates data completeness and accuracy
+- Database must always build successfully (source of truth principle)
 
-- Our overall goal is for this garden to produce more dollar value than the dollar value we input to it. Assume our manual labor is free as long as it can fit easily within the obligations of full-time employment. 
-- I don't care if the garden is profitable, this is more about not wanting to spend unnecessarily.
-- I'm happy to invest in things like drip irrigation that have perennial value and reduce ongoing effort/costs.
-- Avoid short-term/low-value spending and heroic measures to save failing plants.
-- Focus on infrastructure that builds a low-maintenance, high-productivity system over time.
+### Code Standards
+- Functional programming patterns preferred over mutation
+- Performance-optimized with debounced operations
+- Mobile-responsive design throughout
+- Decision-focused interface (only show actionable data)
 
-## Currency and Financial Considerations
+## Development Workflow
 
-- The UI should show currency to appropriate decimal precision depending on the currency. For example, USD should have two-digit decimal precision, whereas JPY generally requires zero decimal precision for common transactions.
+1. **Database Changes**: Edit SQL files in `database/`, run `npm run db:update`
+2. **App Changes**: Edit React components, use `npm run dev` for auto-restart
+3. **Pre-commit**: Database verification runs automatically
+4. **Testing**: Run both React tests (`npm test`) and database tests (`npm run test:db`)
 
-## Design Principles
+## Integration Points
 
-- The interfaces in this project meet the needs of the task, and nothing more. If data doesn't impact a decision, it is not shown.
+### Current Data Flow
+React App (static data) → User Interface → Monte Carlo Simulation → Results
 
-## Interaction Guidelines
+### Future Database Integration
+SQLite Database → API/Query Layer → React App → Simulation → Results
 
-- It is OK to ask about the task to be performed if it helps inform the solution
+### Key Integration Challenges
+- Format conversion: JSON strings ↔ JavaScript arrays
+- Performance: Database queries vs. static data lookup
+- Error handling: Missing or malformed database data
 
-## Data Sourcing
+## Architecture Decisions
 
-- We trust NOAA data and other government-provided data
+### Why Dual Data Systems
+- **Performance**: Static data provides instant access for simulations
+- **Completeness**: Database contains comprehensive plant data and growing tips
+- **Flexibility**: Database supports multi-language, regional variations
+- **Development Speed**: Static data simplifies React development
+
+### Technology Choices
+- **React 18**: Modern hooks, fast refresh for development
+- **jStat**: Professional statistical computing for Monte Carlo simulation
+- **SQLite**: Embedded database, no server dependencies
+- **Recharts**: React-native charting library for data visualization
+
+This application demonstrates production-quality architecture with comprehensive statistical modeling, automated quality assurance, and dual-data systems for optimal performance and maintainability.
+
+## Implementation Notes
+
+- Use React architecture best practices. Separate concerns.
+- When modeling weather, consider global warming trends.
+- The development server must always be running; if it is not running, or if it has errors, that is an urgent issue to fix.
+
+## Code Maintenance
+
+- Maintain a memory map of where various functionality exists, rather than having to find it constantly. Store this as a file as necessary. Keep it updated as the codebase changes. Definitely update it before each commit.
+
+## Claude Memories
+
+- If you say the dev server is running, it is only because you've received a 200 response, and the page has content.
+- don't tell me that i'm right. if i'm right, execute on my feedback. no extra words necessary.
+- Always use the current date when storing or comparing dates
+- No number should appear in the UI that has more than two decimal places
+- NEVER RUN THE DEV SERVER IN A WAY THAT LOCKS UP THE CLAUDE CODE INTERFACE
+
+## Other instructions
+
+- 
+
+## Code Quality Practices
+
+- Add automated tests for changes when appropriate. Delete unused files regularly.
+- Consider writing tests before writing code
+
+## Naming Conventions
+
+- Always use camelCase for naming JavaScript files, never hyphenated filenames
