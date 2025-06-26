@@ -168,6 +168,9 @@ This application demonstrates production-quality architecture with comprehensive
 
 - If you say the dev server is running, it is only because you've received a 200 response, and the page has content.
 - don't tell me that i'm right. if i'm right, execute on my feedback. no extra words necessary.
+- Always use the current date when storing or comparing dates
+- No number should appear in the UI that has more than two decimal places
+- NEVER RUN THE DEV SERVER IN A WAY THAT LOCKS UP THE CLAUDE CODE INTERFACE
 
 ## Other instructions
 
