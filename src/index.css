@@ -7904,3 +7904,192 @@ button:focus,
   }
 }
 
+/* ========================================
+   WELCOME SCREEN STYLES
+======================================== */
+
+.welcome-screen {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-background-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+}
+
+.welcome-content {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+}
+
+.welcome-header h1 {
+  font-size: 3rem;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+  font-weight: var(--font-weight-bold);
+}
+
+.welcome-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.6;
+}
+
+.welcome-features {
+  margin: var(--spacing-xl) 0;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.feature-item {
+  background: white;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.feature-item h3 {
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.feature-item p {
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.welcome-actions {
+  margin: var(--spacing-xl) 0;
+}
+
+.create-garden-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: var(--spacing-md);
+}
+
+.create-garden-btn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.welcome-note {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.welcome-location {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-primary);
+}
+
+.location-info strong {
+  color: var(--color-primary-dark);
+  display: block;
+  margin-bottom: var(--spacing-sm);
+}
+
+.location-info p {
+  color: var(--color-text-secondary);
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+/* ========================================
+   GARDEN ACTION BUTTONS
+======================================== */
+.new-garden-btn,
+.fork-garden-btn,
+.share-garden-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.new-garden-btn:hover,
+.fork-garden-btn:hover,
+.share-garden-btn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.share-garden-btn {
+  background: var(--color-info);
+}
+
+.share-garden-btn:hover {
+  background: var(--color-info-dark);
+}
+
+/* Mobile responsiveness for welcome screen */
+@media (max-width: 768px) {
+  .welcome-screen {
+    padding: var(--spacing-lg);
+  }
+  
+  .welcome-header h1 {
+    font-size: 2rem;
+  }
+  
+  .welcome-subtitle {
+    font-size: var(--font-size-md);
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .feature-item {
+    padding: var(--spacing-lg);
+  }
+  
+  .create-garden-btn {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-md);
+  }
+}
+

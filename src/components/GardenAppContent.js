@@ -284,6 +284,17 @@ function GardenAppContent() {
               </div>
             )}
             
+            {/* New Garden button for owned gardens */}
+            {!isReadOnly && (
+              <button 
+                className="new-garden-btn"
+                onClick={handleForkGarden}
+                title="Create a new garden"
+              >
+                ➕ New Garden
+              </button>
+            )}
+            
             {/* Fork button for read-only gardens */}
             {isReadOnly && (
               <button 
