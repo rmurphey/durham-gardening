@@ -90,6 +90,11 @@ const ForecastWidget = ({ onSimulationImpact }) => {
             ⚠️ Using fallback data - {error}
           </div>
         )}
+        {forecastData.fallback && (
+          <div className="forecast-warning">
+            ⚠️ Using historical weather averages - real forecast data unavailable
+          </div>
+        )}
       </div>
 
       {/* Garden Alerts */}

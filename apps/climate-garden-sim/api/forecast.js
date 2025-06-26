@@ -118,7 +118,7 @@ function transformForGardenPlanning(weatherData) {
   const { forecast, hourly } = weatherData;
   
   // Extract 10-day forecast data (extend with patterns if needed)
-  const periods = forecast.data?.properties?.periods || [];
+  const periods = forecast?.properties?.periods || [];
   const hourlyPeriods = hourly?.properties?.periods || [];
   
   const dailyForecasts = [];
@@ -177,11 +177,24 @@ function transformForGardenPlanning(weatherData) {
     }
   });
   
-  // Extend to 10 days using pattern projection if needed
-  while (dailyForecasts.length < 10) {
-    const lastDay = dailyForecasts[dailyForecasts.length - 1];
-    const extendedDay = projectForecastDay(lastDay, dailyForecasts.length);
-    dailyForecasts.push(extendedDay);
+  // If no forecast data available, generate fallback data
+  if (dailyForecasts.length === 0) {
+    console.warn('No forecast data available, generating fallback data');
+    // Generate 10 days of fallback data starting from today
+    for (let i = 0; i < 10; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      
+      const fallbackDay = generateFallbackDay(date, i);
+      dailyForecasts.push(fallbackDay);
+    }
+  } else {
+    // Extend to 10 days using pattern projection if needed
+    while (dailyForecasts.length < 10) {
+      const lastDay = dailyForecasts[dailyForecasts.length - 1];
+      const extendedDay = projectForecastDay(lastDay, dailyForecasts.length);
+      dailyForecasts.push(extendedDay);
+    }
   }
   
   // Calculate summary statistics for simulation
@@ -273,6 +286,37 @@ function generateDailyRecommendations(period) {
   }
   
   return recommendations;
+}
+
+function generateFallbackDay(date, dayIndex) {
+  // Historical averages for Durham, NC in late June
+  const baseHighTemp = 88;
+  const baseLowTemp = 68;
+  const variation = (Math.random() - 0.5) * 10; // ±5°F daily variation
+  
+  const highTemp = Math.round(baseHighTemp + variation);
+  const lowTemp = Math.round(baseLowTemp + variation);
+  const avgTemp = (highTemp + lowTemp) / 2;
+  
+  return {
+    date: date.toISOString().split('T')[0],
+    dayOfWeek: date.toLocaleDateString('en-US', { weekday: 'long' }),
+    highTemp,
+    lowTemp,
+    avgTemp,
+    precipChance: Math.round(Math.random() * 60), // 0-60% chance
+    precipAmount: Math.random() * 0.3, // 0-0.3 inches
+    growingDegreeDays: Math.max(0, avgTemp - 50),
+    frostRisk: false,
+    heatStress: highTemp > 90,
+    shortForecast: 'Historical average',
+    detailedForecast: 'Fallback data based on seasonal averages',
+    windSpeed: '5 to 10 mph',
+    windDirection: 'Variable',
+    gardenConditions: ['Average'],
+    recommendedActions: ['Normal garden care'],
+    fallback: true
+  };
 }
 
 function projectForecastDay(lastDay, dayIndex) {
