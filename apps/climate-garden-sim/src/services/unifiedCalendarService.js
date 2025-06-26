@@ -6,6 +6,7 @@
 import { generateDatabaseGardenCalendar } from './databaseCalendarService.js';
 import { generateGardenTasks } from './temporalShoppingService.js';
 import { shouldShowCropActivity } from '../config/gardenStatus.js';
+import { getUrgencyLevel } from '../utils/urgencyHelpers.js';
 
 /**
  * Generate unified calendar with embedded task functionality
@@ -56,6 +57,9 @@ export const generateUnifiedCalendar = async (
       // Determine if this is a task-type activity
       const isTaskActivity = isActivityTaskType(activity);
       
+      // Calculate due date first
+      const dueDate = calculateDueDate(monthData.monthNumber);
+      
       // Add task metadata
       const enhancedActivity = {
         ...activity,
@@ -64,12 +68,12 @@ export const generateUnifiedCalendar = async (
         // Task management fields
         taskType: determineTaskType(activity),
         frequency: determineFrequency(activity),
-        urgency: determineUrgency(activity),
+        urgency: determineUrgency(activity, dueDate),
         consequences: generateConsequences(activity),
         state: 'pending', // Will be updated by task manager
         completedAt: null,
         nextDueDate: null,
-        originalDueDate: calculateDueDate(monthData.monthNumber),
+        originalDueDate: dueDate,
         
         // Enhanced metadata
         isTaskActivity,
@@ -158,23 +162,16 @@ function determineFrequency(activity) {
 }
 
 /**
- * Determine urgency level based on activity type and priority
+ * Determine urgency level based on timing, not activity type
+ * Only tasks needed within 7 days should be marked as urgent
  */
-function determineUrgency(activity) {
-  // Use existing priority if available
-  if (activity.priority === 'critical') return 'urgent';
-  if (activity.priority === 'high') return 'urgent';
-  if (activity.priority === 'medium') return 'high';
-  if (activity.priority === 'low') return 'medium';
+function determineUrgency(activity, dueDate) {
+  // Calculate days until due date
+  const now = new Date();
+  const daysUntil = Math.ceil((dueDate - now.getTime()) / (1000 * 60 * 60 * 24));
   
-  // Determine urgency by activity type
-  const urgentTypes = ['indoor-starting', 'transplant'];
-  if (urgentTypes.includes(activity.type)) return 'urgent';
-  
-  const highTypes = ['direct-sow', 'harvest', 'shopping'];
-  if (highTypes.includes(activity.type)) return 'high';
-  
-  return 'medium';
+  // Use date-based urgency calculation (7-day window for urgent)
+  return getUrgencyLevel(daysUntil);
 }
 
 /**
