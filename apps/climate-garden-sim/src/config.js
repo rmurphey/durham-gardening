@@ -572,8 +572,8 @@ export const formatPercentage = (decimal) => {
     return Math.round(percentage * 100) / 100;
   }
   
-  // Otherwise use up to 3 decimal places
-  return Math.round(percentage * 1000) / 1000;
+  // Otherwise use up to 2 decimal places
+  return Math.round(percentage * 100) / 100;
 };
 
 // Alternative function for probabilities that are already percentages (not decimals)
@@ -598,8 +598,8 @@ export const formatProbability = (percentage) => {
     return Math.round(percentage * 100) / 100;
   }
   
-  // Otherwise use up to 3 decimal places
-  return Math.round(percentage * 1000) / 1000;
+  // Otherwise use up to 2 decimal places
+  return Math.round(percentage * 100) / 100;
 };
 
 // Currency formatting utility with proper decimal precision

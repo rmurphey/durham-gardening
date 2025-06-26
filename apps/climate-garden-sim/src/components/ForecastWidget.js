@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { formatProbability } from '../config.js';
 
 const ForecastWidget = ({ onSimulationImpact }) => {
   const [forecastData, setForecastData] = useState(null);
@@ -161,7 +162,7 @@ const ForecastWidget = ({ onSimulationImpact }) => {
         <div className="summary-stats">
           <div className="stat-item">
             <span className="stat-label">Avg Temp</span>
-            <span className="stat-value">{summary.avgTemp}°F</span>
+            <span className="stat-value">{Math.round(summary.avgTemp)}°F</span>
           </div>
           <div className="stat-item">
             <span className="stat-label">Total Rain</span>
@@ -174,7 +175,7 @@ const ForecastWidget = ({ onSimulationImpact }) => {
           <div className="stat-item">
             <span className="stat-label">Growth Potential</span>
             <span className={`stat-value potential-${getGrowthPotentialClass(simulationFactors.growthPotential)}`}>
-              {simulationFactors.growthPotential}%
+              {formatProbability(simulationFactors.growthPotential)}%
             </span>
           </div>
         </div>
@@ -196,14 +197,14 @@ const ForecastWidget = ({ onSimulationImpact }) => {
             </div>
             
             <div className="day-temps">
-              <span className="high-temp">{day.highTemp}°</span>
-              <span className="low-temp">{day.lowTemp}°</span>
+              <span className="high-temp">{Math.round(day.highTemp)}°</span>
+              <span className="low-temp">{Math.round(day.lowTemp)}°</span>
             </div>
             
             {/* Compact conditions row */}
             <div className="day-conditions-compact">
               {day.precipChance > 20 && (
-                <span className="precip-compact">💧{day.precipChance}%</span>
+                <span className="precip-compact">💧{formatProbability(day.precipChance)}%</span>
               )}
               {day.frostRisk && <span className="risk-indicator">❄️</span>}
               {day.heatStress && <span className="risk-indicator">🔥</span>}
@@ -251,11 +252,11 @@ const ForecastWidget = ({ onSimulationImpact }) => {
           <div className="impact-factors">
             <div className="impact-item">
               <span className="impact-label">Temperature Stability:</span>
-              <span className="impact-value">{simulationFactors.temperatureStability}%</span>
+              <span className="impact-value">{formatProbability(simulationFactors.temperatureStability)}%</span>
             </div>
             <div className="impact-item">
               <span className="impact-label">Moisture Index:</span>
-              <span className="impact-value">{simulationFactors.moistureIndex}%</span>
+              <span className="impact-value">{formatProbability(simulationFactors.moistureIndex)}%</span>
             </div>
           </div>
           

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { formatPercentage, formatCurrency } from '../config.js';
+import { formatPercentage, formatCurrency, formatProbability } from '../config.js';
 
 const SimulationResults = ({
   simulationResults,
@@ -105,7 +105,7 @@ const SimulationResults = ({
               simulationResults.rawResults[0].investmentSufficiency.level === 'good' ? 'text-neutral' :
               simulationResults.rawResults[0].investmentSufficiency.level === 'caution' ? 'text-warning' : 'text-negative'
             }`}>
-              {(simulationResults.rawResults[0].investmentSufficiency.ratio * 100).toFixed(0)}%
+              {formatProbability(simulationResults.rawResults[0].investmentSufficiency.ratio * 100)}%
             </div>
             <div className="result-label">Investment Sufficiency</div>
             <div className="result-confidence">
@@ -119,11 +119,11 @@ const SimulationResults = ({
 
         <div className={`result-card ${simulationResults.roi?.mean > 0 ? 'positive' : simulationResults.roi?.mean < 0 ? 'negative' : 'neutral'}`}>
           <div className={`result-value ${simulationResults.roi?.mean > 0 ? 'text-positive' : simulationResults.roi?.mean < 0 ? 'text-negative' : 'text-neutral'}`}>
-            {isFinite(simulationResults.roi?.mean) ? simulationResults.roi.mean.toFixed(1) : '0'}%
+            {isFinite(simulationResults.roi?.mean) ? formatProbability(simulationResults.roi.mean) : '0'}%
           </div>
           <div className="result-label">ROI</div>
           <div className="result-confidence">
-            Median: {isFinite(simulationResults.roi?.median) ? simulationResults.roi.median.toFixed(1) : '0'}%
+            Median: {isFinite(simulationResults.roi?.median) ? formatProbability(simulationResults.roi.median) : '0'}%
           </div>
         </div>
 

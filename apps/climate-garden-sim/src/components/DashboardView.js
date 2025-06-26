@@ -16,6 +16,7 @@ import {
   getSimulationSummary,
   getTodaysActionableGuidance 
 } from '../services/dashboardDataService';
+import { formatProbability } from '../config.js';
 import { 
   getUrgencyClasses, 
   getUrgencyDisplay, 
@@ -173,7 +174,7 @@ const DashboardView = ({
               <div className="stat-item">
                 <span className="stat-label">Success Rate:</span>
                 <span className={`stat-value ${simulationSummary.successRate > 70 ? 'positive' : simulationSummary.successRate < 50 ? 'negative' : 'neutral'}`}>
-                  {simulationSummary.successRate}%
+                  {formatProbability(simulationSummary.successRate)}%
                 </span>
               </div>
               <div className="stat-item">
