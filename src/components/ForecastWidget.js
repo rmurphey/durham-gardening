@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { formatProbability, formatTemperature, formatPrecipitation } from '../config.js';
 
-const ForecastWidget = ({ onSimulationImpact }) => {
+const ForecastWidget = ({ onSimulationImpact, locationConfig }) => {
   const [forecastData, setForecastData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,14 +53,16 @@ const ForecastWidget = ({ onSimulationImpact }) => {
 
   useEffect(() => {
     fetchForecastData();
-  }, []);
+  }, [locationConfig?.zipCode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchForecastData = async (forceRefresh = false) => {
     try {
       setLoading(true);
       setError(null);
       
-      const url = forceRefresh ? '/api/forecast?zipCode=27707&refresh=true' : '/api/forecast?zipCode=27707';
+      // Use zipCode from locationConfig, fallback to 27707
+      const zipCode = locationConfig?.zipCode || '27707';
+      const url = forceRefresh ? `/api/forecast?zipCode=${zipCode}&refresh=true` : `/api/forecast?zipCode=${zipCode}`;
       const response = await fetch(url);
       const result = await response.json();
       

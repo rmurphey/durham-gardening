@@ -31,6 +31,7 @@ const DashboardView = ({
   totalInvestment,
   onViewChange,
   gardenCalendar = [],
+  locationConfig,
   // Settings props
   climateScenarios,
   selectedSummer,
@@ -248,7 +249,7 @@ const DashboardView = ({
       </div>
 
       {/* Weather Forecast */}
-      <ForecastWidget onSimulationImpact={setWeatherImpact} />
+      <ForecastWidget onSimulationImpact={setWeatherImpact} locationConfig={locationConfig} />
 
       {/* Simulation Results */}
       <SimulationResults 

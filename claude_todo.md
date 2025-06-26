@@ -1,13 +1,19 @@
 # TODOs for Claude Code
 
-## consider how to make the app usable for more zip codes
+## consider how to make the app usable for more locations
 
-- Use the zip code 27707 for Durham for now.
-- Plan how to add the zip codes 27513 and 14845.
+- Use the zip code 27707 as the default.
+- Plan how to let users geolocate themselves.
+- Support locations in the continental US.
 
-## Make the setup a collapsible part of the dashboard, and eliminate the setup page
+## Get more valuable information above the fold. 
 
-## Percents should ALWAYS be shown ONLY to 0 decimal point precision.
+- Right now I see "Durham Garden" or some variation at least six times above the fold, and almost no useful information.
+
+## Metrics display
+
+- Percents should ALWAYS be shown ONLY to 0 decimal point precision.
+- Temperatures should be shown in Fahrenheit.
 
 ## Is `NODE_ENV` set properly for dev vs production?
 

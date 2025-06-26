@@ -4,6 +4,7 @@
 // Default configuration values
 export const DEFAULT_LOCATION_CONFIG = {
   name: 'Durham, NC',
+  zipCode: '27707',
   hardiness: '7b',
   lat: 35.994,
   lon: -78.8986,
@@ -63,6 +64,7 @@ export const DEFAULT_SIMULATION_CONFIG = {
 export const REGION_PRESETS = {
   'durham-nc': {
     name: 'Durham, NC',
+    zipCode: '27707',
     hardiness: '7b',
     lat: 35.994,
     lon: -78.8986,
@@ -72,6 +74,7 @@ export const REGION_PRESETS = {
   },
   'phoenix-az': {
     name: 'Phoenix, AZ', 
+    zipCode: '85001',
     hardiness: '9b',
     lat: 33.4484,
     lon: -112.0740,
@@ -81,6 +84,7 @@ export const REGION_PRESETS = {
   },
   'minneapolis-mn': {
     name: 'Minneapolis, MN',
+    zipCode: '55401',
     hardiness: '4b',
     lat: 44.9778,
     lon: -93.2650,
@@ -90,6 +94,7 @@ export const REGION_PRESETS = {
   },
   'seattle-wa': {
     name: 'Seattle, WA',
+    zipCode: '98101',
     hardiness: '9a',
     lat: 47.6062,
     lon: -122.3321,
@@ -99,6 +104,7 @@ export const REGION_PRESETS = {
   },
   'miami-fl': {
     name: 'Miami, FL',
+    zipCode: '33101',
     hardiness: '10b',
     lat: 25.7617,
     lon: -80.1918,

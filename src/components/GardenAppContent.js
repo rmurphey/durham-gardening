@@ -229,6 +229,7 @@ function GardenAppContentInner() {
               gardenId={gardenId}
               gardenData={gardenData}
               isReadOnly={isReadOnly}
+              locationConfig={locationConfig}
               // Settings props
               climateScenarios={currentClimateScenarios}
               selectedSummer={selectedSummer}

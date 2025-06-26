@@ -6,6 +6,7 @@
 // Durham garden configuration - fixed location
 export const DURHAM_CONFIG = {
   name: 'Durham, NC',
+  zipCode: '27707',
   hardiness: '7b',
   lat: 35.994,
   lon: -78.8986,
