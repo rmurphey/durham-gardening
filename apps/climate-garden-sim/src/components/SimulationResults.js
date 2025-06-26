@@ -28,8 +28,45 @@ const SimulationResults = ({
         </div>
       )}
 
+      {/* Return Distribution Chart */}
+      {simulationResults.returnHistogram && (
+        <div className="mt-xl">
+          <h3>Return Distribution</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={simulationResults.returnHistogram}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="x" tickFormatter={(value) => formatCurrency(value)} />
+              <YAxis />
+              <Tooltip 
+                formatter={(value, name) => [`${value} outcomes`, 'Count']}
+                labelFormatter={(value) => `Net Return: ${formatCurrency(value)}`}
+              />
+              <Bar dataKey="value">
+                {simulationResults.returnHistogram.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={entry.x < 0 ? 'var(--color-error)' : 'var(--color-primary)'} 
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          <div className="chart-legend">
+            <div className="legend-item">
+              <div className="legend-color positive"></div>
+              <span>Profitable outcomes</span>
+            </div>
+            <div className="legend-item">
+              <div className="legend-color negative"></div>
+              <span>Loss outcomes</span>
+            </div>
+          </div>
+          <p className="text-tertiary text-center mt-md">Distribution of potential net returns from 1,000 simulations</p>
+        </div>
+      )}
+
+      {/* Key Metrics */}
       <div className="results-grid">
-        {/* Key Metrics */}
         <div className={`result-card ${simulationResults.mean > 0 ? 'positive' : simulationResults.mean < 0 ? 'negative' : 'neutral'}`}>
           <div className={`result-value ${simulationResults.mean > 0 ? 'text-positive' : simulationResults.mean < 0 ? 'text-negative' : 'text-neutral'}`}>
             {formatCurrency(isFinite(simulationResults.mean) ? simulationResults.mean : 0)}
@@ -96,43 +133,6 @@ const SimulationResults = ({
           <div className="result-confidence">Annual budget allocation</div>
         </div>
       </div>
-
-      {/* Return Distribution Chart */}
-      {simulationResults.returnHistogram && (
-        <div className="mt-xl">
-          <h3>Return Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={simulationResults.returnHistogram}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="x" tickFormatter={(value) => formatCurrency(value)} />
-              <YAxis />
-              <Tooltip 
-                formatter={(value, name) => [`${value} outcomes`, 'Count']}
-                labelFormatter={(value) => `Net Return: ${formatCurrency(value)}`}
-              />
-              <Bar dataKey="value">
-                {simulationResults.returnHistogram.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={entry.x < 0 ? 'var(--color-error)' : 'var(--color-primary)'} 
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-          <div className="chart-legend">
-            <div className="legend-item">
-              <div className="legend-color positive"></div>
-              <span>Profitable outcomes</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color negative"></div>
-              <span>Loss outcomes</span>
-            </div>
-          </div>
-          <p className="text-tertiary text-center mt-md">Distribution of potential net returns from 1,000 simulations</p>
-        </div>
-      )}
 
     </section>
   );
