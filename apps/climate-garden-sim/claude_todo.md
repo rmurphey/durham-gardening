@@ -37,3 +37,5 @@ Right now, the application is based entirely on browser storage. What would it t
 
 ## Does the CSS need to be refactored into modules, or is it fine as is?
 
+## Eliminate duplicate / unnecessary CSS
+
