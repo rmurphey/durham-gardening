@@ -9,8 +9,7 @@ const Navigation = ({
   activeView, 
   onViewChange, 
   hasShoppingItems, 
-  hasTasks, 
-  gardenMode = false, 
+  hasTasks,
   isReadOnly = false 
 }) => {
   const navItems = [
@@ -32,18 +31,7 @@ const Navigation = ({
   ];
 
   return (
-    <nav className="main-navigation">
-      <div className="nav-header">
-        <h1 className="app-title">GardenSim</h1>
-        <p className="app-subtitle">
-          {gardenMode ? (
-            isReadOnly ? 'Viewing shared garden' : 'Your garden'
-          ) : (
-            'Climate-aware planning'
-          )}
-        </p>
-      </div>
-      
+    <nav className="main-navigation">      
       <div className="nav-items">
         {navItems.map(item => (
           <button

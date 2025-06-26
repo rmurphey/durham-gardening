@@ -1,5 +1,5 @@
 /**
- * Durham Garden Planner - Modern Design System
+ * GardenSim - Modern Design System
  * Clean, professional garden planning interface
  */
 
@@ -1883,8 +1883,54 @@ p {
 .app-subtitle {
   color: var(--color-text-tertiary);
   font-size: var(--font-size-base);
-  font-style: italic;
   margin-bottom: 0;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  font-style: italic;
+  margin-bottom: var(--spacing-sm);
+}
+
+.location-name {
+  color: var(--color-text-secondary);
+}
+
+.current-temp {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-primary-light);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.header-quick-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+.urgent-tasks {
+  background: var(--color-urgent-light);
+  color: var(--color-urgent-dark);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.ready-harvest {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 /* ========================================

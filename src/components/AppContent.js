@@ -5,13 +5,13 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import Navigation from './Navigation.js';
 import DashboardView from './DashboardView.js';
 import ShoppingView from './ShoppingView.js';
-import GardenAppContent from './GardenAppContent.js';
 import DefaultGardenRedirect from './DefaultGardenRedirect.js';
 import AppHeader from './AppHeader.js';
 import GardenStateProvider, { useGardenAppState } from './GardenStateProvider.js';
 
 // Configuration Components
 import { generateUnifiedCalendar } from '../services/unifiedCalendarService.js';
+import { getCriticalTimingWindows, getReadyToHarvest } from '../services/dashboardDataService.js';
 
 function AppContentInner() {
   // Navigation state using React Router
@@ -69,10 +69,21 @@ function AppContentInner() {
     navigate(`/${view}`);
   };
 
+  // Calculate valuable header information
+  const criticalWindows = getCriticalTimingWindows(gardenCalendar, simulationResults);
+  const readyToHarvest = getReadyToHarvest(gardenCalendar, simulationResults);
+  const urgentTasksCount = criticalWindows.length;
+  const readyToHarvestCount = readyToHarvest.length;
+
   return (
     <div className="App">
       {/* Header */}
-      <AppHeader />
+      <AppHeader 
+        locationConfig={locationConfig}
+        urgentTasksCount={urgentTasksCount}
+        readyToHarvestCount={readyToHarvestCount}
+        simulationResults={simulationResults}
+      />
 
       <Navigation 
         activeView={activeView}
@@ -109,7 +120,7 @@ function AppContentInner() {
               simulating={simulating}
             />
           } />
-          <Route path="/garden/:id/*" element={<GardenAppContent />} />
+          <Route path="/garden/:id/*" element={<Navigate to="/dashboard" replace />} />
           <Route path="/tasks" element={<Navigate to="/dashboard" replace />} />
           <Route path="/calendar" element={<Navigate to="/dashboard" replace />} />
           <Route path="/shopping" element={<ShoppingView shoppingActions={shoppingActions} />} />

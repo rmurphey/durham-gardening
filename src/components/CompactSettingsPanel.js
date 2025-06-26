@@ -35,7 +35,7 @@ const CompactSettingsPanel = ({
   const currentSummerName = climateScenarios.summer?.find(s => s.id === selectedSummer)?.name || 'Unknown';
   const currentWinterName = climateScenarios.winter?.find(w => w.id === selectedWinter)?.name || 'Unknown';
   const currentPortfolioName = portfolioStrategies[selectedPortfolio]?.name || 'Unknown';
-  const currentLocationName = locationConfig?.name || 'Durham, NC';
+  const currentLocationName = locationConfig?.name || 'Not Set';
   const totalInvestment = investmentConfig ? Object.values(investmentConfig).reduce((sum, val) => sum + (val || 0), 0) : 0;
 
   const handlePortfolioChange = (portfolioId) => {

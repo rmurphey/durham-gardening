@@ -1,6 +1,6 @@
 /**
  * Dashboard View Component
- * Critical decision-making information for Durham garden management
+ * Critical decision-making information for climate-aware garden management
  */
 
 import React from 'react';
@@ -60,30 +60,9 @@ const DashboardView = ({
   const allShopping = (generatePureShoppingRecommendations() || []).map(item => addUrgencyInfo(item));
   const urgentShopping = getMostUrgent(allShopping, 3);
 
-  const getCurrentDate = () => {
-    const now = new Date();
-    return now.toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  };
-
-  const getTimeOfDayIcon = () => {
-    const hour = new Date().getHours();
-    if (hour >= 6 && hour < 12) return '🌅';
-    if (hour >= 12 && hour < 17) return '☀️';
-    if (hour >= 17 && hour < 20) return '🌆';
-    return '🌙';
-  };
 
   return (
     <div className="dashboard-view">
-      <div className="dashboard-header">
-        <h2>{getTimeOfDayIcon()} Garden Dashboard</h2>
-        <p className="current-date">{getCurrentDate()}</p>
-      </div>
 
       <div className="critical-alerts">
         {weatherAlerts.map((alert, index) => (

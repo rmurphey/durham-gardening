@@ -360,8 +360,8 @@ export const GLOBAL_CROP_DATABASE = {
       drought: 'excellent', heat: 'excellent', humidity: 'excellent',
       // Durham-specific details
       varieties: {
-        'Clemson Spineless': 'Classic variety, very reliable in Durham heat',
-        'Red Burgundy': 'Beautiful red pods, excellent for Durham gardens',
+        'Clemson Spineless': 'Classic variety, very reliable in hot climates',
+        'Red Burgundy': 'Beautiful red pods, excellent heat tolerance',
         'Hill Country Heirloom Red': 'Heat-loving Texas variety, perfect for NC summers'
       },
       durhamPlanting: {
@@ -386,10 +386,10 @@ export const GLOBAL_CROP_DATABASE = {
       drought: 'good', heat: 'excellent', humidity: 'good',
       // Durham-specific details
       varieties: {
-        'Carolina Reaper': 'NC original, extremely hot, thrives in Durham',
-        'Fish Pepper': 'Heirloom variety, excellent for Durham heat and humidity',
+        'Carolina Reaper': 'NC original, extremely hot, thrives in heat and humidity',
+        'Fish Pepper': 'Heirloom variety, excellent for hot humid climates',
         'Tabasco': 'Commercial variety, very productive in NC summers',
-        'Hungarian Hot Wax': 'Mild heat, excellent fresh eating, Durham favorite'
+        'Hungarian Hot Wax': 'Mild heat, excellent fresh eating'
       },
       durhamPlanting: {
         soilTemp: '65°F minimum for transplants',
@@ -437,10 +437,10 @@ export const GLOBAL_CROP_DATABASE = {
       drought: 'fair', heat: 'poor', humidity: 'good',
       // Durham-specific details
       varieties: {
-        'Winterbor': 'Very cold hardy, excellent for Durham winters',
+        'Winterbor': 'Very cold hardy, excellent for mild winters',
         'Red Russian': 'Beautiful purple stems, mild flavor, heat tolerant',
         'Lacinato (Dinosaur)': 'Heat tolerant, good for spring and fall',
-        'White Russian': 'Mild flavor, good for Durham spring/fall'
+        'White Russian': 'Mild flavor, good for spring/fall growing'
       },
       durhamPlanting: {
         soilTemp: '45-75°F optimal',
