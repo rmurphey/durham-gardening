@@ -16,7 +16,9 @@
   },
   "scripts": {
     "start": "FAST_REFRESH=true craco start",
-    "dev": "nodemon --exec 'FAST_REFRESH=true craco start' --watch src --watch public --ext js,jsx,ts,tsx,css,html",
+    "dev": "npm run dev:react",
+    "dev:vercel": "vercel dev",
+    "dev:react": "nodemon --exec 'FAST_REFRESH=true craco start' --watch src --watch public --ext js,jsx,ts,tsx,css,html",
     "dev:quiet": "ESLINT_NO_DEV_ERRORS=true FAST_REFRESH=true nodemon --exec 'craco start' --watch src --watch public --ext js,jsx,ts,tsx,css,html --ignore 'src/**/*.test.js'",
     "dev:bg": "nohup npm run dev > /tmp/dev-server.log 2>&1 &",
     "build": "craco build",

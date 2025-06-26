@@ -10,7 +10,7 @@ A React-based climate-aware garden planning application with Monte Carlo simulat
 
 ### Development
 ```bash
-vercel dev         # Start development server with API routes (REQUIRED for weather data)
+npm run dev:vercel # Start development server with API routes (RECOMMENDED for weather)
 npm run dev        # Start React-only development server (API routes won't work)
 npm start          # Start basic development server  
 npm run build      # Create production build
@@ -19,7 +19,7 @@ npm run test:db    # Run database-specific tests
 ```
 
 ### IMPORTANT: Local Development Setup
-**Always use `vercel dev` for local development** to ensure weather forecast API routes work properly. The weather widget requires Vercel's serverless function support which is only available through `vercel dev`, not `npm run dev`.
+**Use `npm run dev:vercel` for full local development** to ensure weather forecast API routes work properly. The weather widget requires Vercel's serverless function support. Use `npm run dev` for React-only development without weather functionality.
 
 ### Database Operations
 ```bash
