@@ -106,6 +106,16 @@ function AppHeader({
         {/* Garden actions - only show in garden context */}
         {isGardenContext && (
           <div className="garden-actions">
+            {/* Garden ID display */}
+            <div className="garden-id-display">
+              <span className="garden-id">Garden: {gardenId?.slice(0, 8)}...</span>
+              {isReadOnly ? (
+                <span className="garden-readonly">👁️ Read-Only</span>
+              ) : (
+                <span className="garden-owned">✏️ Your Garden</span>
+              )}
+            </div>
+            
             {/* Sync status */}
             {(isSyncing || lastSyncTime) && (
               <div className={`sync-status ${isSyncing ? 'syncing' : 'synced'}`}>
@@ -125,29 +135,29 @@ function AppHeader({
             {/* New Garden button for owned gardens */}
             {!isReadOnly && onForkGarden && (
               <button 
-                className="new-garden-btn"
+                className="header-garden-btn new-garden-btn"
                 onClick={onForkGarden}
                 title="Create a new garden"
               >
-                ➕ New Garden
+                ➕ New
               </button>
             )}
             
             {/* Fork button for read-only gardens */}
             {isReadOnly && onForkGarden && (
               <button 
-                className="fork-garden-btn"
+                className="header-garden-btn fork-garden-btn"
                 onClick={onForkGarden}
                 title="Create your own copy of this garden"
               >
-                🍴 Fork Garden
+                🍴 Fork
               </button>
             )}
             
             {/* Share button for owned gardens */}
             {!isReadOnly && shareableUrl && (
               <button 
-                className="share-garden-btn"
+                className="header-garden-btn share-garden-btn"
                 onClick={handleShareClick}
                 title="Copy sharing link"
               >

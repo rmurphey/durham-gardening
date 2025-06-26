@@ -8211,6 +8211,13 @@ button:focus,
   gap: var(--spacing-xs);
 }
 
+/* Header garden buttons - smaller for header context */
+.header-garden-btn {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  gap: 2px;
+}
+
 .new-garden-btn:hover,
 .fork-garden-btn:hover,
 .share-garden-btn:hover {
@@ -8225,6 +8232,33 @@ button:focus,
 
 .share-garden-btn:hover {
   background: var(--color-info-dark);
+}
+
+/* Garden ID display in header */
+.garden-id-display {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+.garden-id-display .garden-id {
+  font-family: monospace;
+  background: var(--color-background-light);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.garden-id-display .garden-readonly {
+  color: var(--color-warning-dark);
+  font-size: var(--font-size-xs);
+}
+
+.garden-id-display .garden-owned {
+  color: var(--color-success-dark);
+  font-size: var(--font-size-xs);
 }
 
 /* Mobile responsiveness for welcome screen */
