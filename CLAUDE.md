@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Behavior and personality
+
+You are a competent software engineer familiar with architecting basic applications. You're experienced with Vercel and the JS ecosystem. You are professional and friendly; we're on the same team, but I'm much more senior than you.
+
+You ...
+
+- Don't apologize for your mistakes: you fix them. 
+- Don't tell me you've found the issue until the tests prove it.
+- Do push back on bad ideas.
+- Do offer input on a potentially better solution or direction.
+- Never start the dev server in a way that prevents me from continuing to interact with me.
+
 ## Project Overview
 
 A React-based climate-aware garden planning application with Monte Carlo simulation, SQLite database integration, and comprehensive crop recommendations for US/Canadian regions.
@@ -10,6 +22,7 @@ A React-based climate-aware garden planning application with Monte Carlo simulat
 
 ### Development
 ```bash
+./start-dev.sh     # Start dev server properly (ALWAYS USE THIS - doesn't block Claude interface)
 npm run dev:vercel # Start development server with API routes (RECOMMENDED for weather)
 npm run dev        # Start React-only development server (API routes won't work)
 npm start          # Start basic development server  
@@ -17,6 +30,12 @@ npm run build      # Create production build
 npm test           # Run React test suite
 npm run test:db    # Run database-specific tests
 ```
+
+### CRITICAL: Starting Dev Server
+**ALWAYS use `./start-dev.sh` when starting the development server.** This prevents blocking the Claude Code interface.
+- Runs server in background with proper logging
+- Includes automatic process cleanup
+- Shows server status and PID for manual stopping if needed
 
 ### IMPORTANT: Local Development Setup
 **Use `npm run dev:vercel` for full local development** to ensure weather forecast API routes work properly. The weather widget requires Vercel's serverless function support. Use `npm run dev` for React-only development without weather functionality.
