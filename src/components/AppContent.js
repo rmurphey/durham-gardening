@@ -5,7 +5,6 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import Navigation from './Navigation.js';
 import DashboardView from './DashboardView.js';
 import ShoppingView from './ShoppingView.js';
-import GardenAppContent from './GardenAppContent.js';
 import DefaultGardenRedirect from './DefaultGardenRedirect.js';
 import AppHeader from './AppHeader.js';
 import GardenStateProvider, { useGardenAppState } from './GardenStateProvider.js';
@@ -154,7 +153,6 @@ function AppContentInner() {
               simulating={simulating}
             />
           } />
-          <Route path="/garden/:id/*" element={<GardenAppContent />} />
           <Route path="/tasks" element={<Navigate to="/dashboard" replace />} />
           <Route path="/calendar" element={<Navigate to="/dashboard" replace />} />
           <Route path="/shopping" element={<ShoppingView shoppingActions={shoppingActions} />} />
