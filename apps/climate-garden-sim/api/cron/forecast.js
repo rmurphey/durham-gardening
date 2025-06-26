@@ -1,6 +1,8 @@
 // Vercel Cron Function for Forecast Data Updates
 // Runs every 6 hours to fetch and cache fresh weather forecast data
 
+import { put } from '@vercel/blob';
+
 export default async function handler(req, res) {
   // Verify this is a cron request (Vercel adds this header)
   if (req.headers['user-agent'] !== 'Vercel Cron' && process.env.NODE_ENV === 'production') {
@@ -54,15 +56,18 @@ async function updateForecastForLocation(zipCode, lat, lon) {
     // Transform data for garden planning
     const gardenForecast = transformForGardenPlanning(forecastData);
     
-    // Store in Vercel KV if available
-    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
-      await storeInKV(`forecast:${zipCode}`, {
+    // Store in Vercel Blob if available
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      await put(`forecast-${zipCode}.json`, JSON.stringify({
         ...gardenForecast,
         timestamp: new Date().toISOString(),
         fromCache: false
+      }), {
+        access: 'public',
+        contentType: 'application/json'
       });
       
-      console.log(`💾 Stored forecast data for ${zipCode} in KV storage`);
+      console.log(`💾 Stored forecast data for ${zipCode} in Blob storage`);
     }
     
     return {
@@ -139,27 +144,7 @@ async function fetchNWSForecast(lat, lon) {
   };
 }
 
-async function storeInKV(key, data) {
-  const kvUrl = `${process.env.KV_REST_API_URL}/set/${key}`;
-  
-  const response = await fetch(kvUrl, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.KV_REST_API_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      value: JSON.stringify(data),
-      ex: 21600 // Expire in 6 hours (in seconds)
-    })
-  });
-
-  if (!response.ok) {
-    throw new Error(`KV storage failed: ${response.status} ${response.statusText}`);
-  }
-
-  return await response.json();
-}
+// KV function removed - now using Blob storage
 
 function transformForGardenPlanning(weatherData) {
   const { forecast, hourly } = weatherData;

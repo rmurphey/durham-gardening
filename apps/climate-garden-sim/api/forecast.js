@@ -1,6 +1,8 @@
 // Vercel API for Garden Forecast Data
 // Provides 10-day forecast data optimized for garden planning and simulation
 
+import { put, list } from '@vercel/blob';
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -15,21 +17,15 @@ export default async function handler(req, res) {
     // In development, allow bypassing KV with query param
     const forceRefresh = req.query.refresh === 'true';
     
-    if (process.env.KV_REST_API_URL && !forceRefresh) {
+    if (process.env.BLOB_READ_WRITE_TOKEN && !forceRefresh) {
       try {
-        const kvResponse = await fetch(
-          `${process.env.KV_REST_API_URL}/get/forecast:${zipCode}`,
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
-            },
-          }
-        );
+        // Try to get cached forecast from blob storage
+        const { blobs } = await list({ prefix: `forecast-${zipCode}` });
         
-        if (kvResponse.ok) {
-          const kvData = await kvResponse.json();
-          if (kvData.result) {
-            forecastData = JSON.parse(kvData.result);
+        if (blobs.length > 0) {
+          const response = await fetch(blobs[0].url);
+          if (response.ok) {
+            forecastData = await response.json();
             
             // Check if data is fresh (less than 6 hours old)
             const dataAge = Date.now() - new Date(forecastData.timestamp).getTime();
@@ -40,14 +36,26 @@ export default async function handler(req, res) {
             }
           }
         }
-      } catch (kvError) {
-        console.log('KV fetch failed, will fetch fresh data:', kvError.message);
+      } catch (blobError) {
+        console.log('Blob fetch failed, will fetch fresh data:', blobError.message);
       }
     }
 
-    // If no fresh data in KV, fetch from NWS
+    // If no fresh data, fetch from NWS
     if (!forecastData) {
       forecastData = await fetchFreshForecastData(zipCode);
+      
+      // Store fresh data in blob storage for caching
+      if (process.env.BLOB_READ_WRITE_TOKEN && forecastData) {
+        try {
+          await put(`forecast-${zipCode}.json`, JSON.stringify(forecastData), {
+            access: 'public',
+            contentType: 'application/json'
+          });
+        } catch (storeError) {
+          console.log('Failed to cache forecast data:', storeError.message);
+        }
+      }
     }
 
     // Transform data for garden planning
