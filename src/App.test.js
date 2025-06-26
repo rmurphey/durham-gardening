@@ -24,7 +24,7 @@ describe('App Component', () => {
     render(<App />);
     
     // Basic smoke test - check that the app title renders
-    expect(screen.getByText(/Durham Garden Planner/i)).toBeInTheDocument();
+    expect(screen.getByText(/GardenSim/i)).toBeInTheDocument();
   });
 
   test('has all required imports and components', () => {

@@ -90,8 +90,8 @@ describe('Routing Integration Tests', () => {
     test('renders dashboard at root path', () => {
       renderWithRouter(['/']);
       
-      expect(screen.getByText(/Durham Garden Dashboard/)).toBeInTheDocument();
-      expect(screen.getByText('Durham Garden')).toBeInTheDocument();
+      expect(screen.getByText(/Garden Dashboard/)).toBeInTheDocument();
+      expect(screen.getByText('GardenSim')).toBeInTheDocument();
     });
 
     test('renders tasks view at /tasks', () => {
@@ -233,7 +233,7 @@ describe('Routing Integration Tests', () => {
       
       // Should show dashboard content (indicating redirect worked)
       await waitFor(() => {
-        expect(screen.getByText(/Durham Garden Dashboard/)).toBeInTheDocument();
+        expect(screen.getByText(/Garden Dashboard/)).toBeInTheDocument();
       });
     });
   });
@@ -243,7 +243,7 @@ describe('Routing Integration Tests', () => {
       renderWithRouter(['/nonexistent-route']);
       
       // Should still render the app structure (Navigation component)
-      expect(screen.getByText('Durham Garden')).toBeInTheDocument();
+      expect(screen.getByText('GardenSim')).toBeInTheDocument();
       
       // The AppContent component handles unknown routes in its renderView method
       // It should render the dashboard as default or a 404 component
@@ -255,7 +255,7 @@ describe('Routing Integration Tests', () => {
       const { rerender } = renderWithRouter(['/']);
       
       // Should show navigation on dashboard
-      expect(screen.getByText('Durham Garden')).toBeInTheDocument();
+      expect(screen.getByText('GardenSim')).toBeInTheDocument();
       
       // Navigate to tasks
       rerender(
@@ -265,7 +265,7 @@ describe('Routing Integration Tests', () => {
       );
       
       // Navigation should still be present
-      expect(screen.getByText('Durham Garden')).toBeInTheDocument();
+      expect(screen.getByText('GardenSim')).toBeInTheDocument();
       expect(screen.getByText('📋 Garden Tasks')).toBeInTheDocument();
     });
 

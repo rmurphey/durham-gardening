@@ -6,16 +6,19 @@
 import { DURHAM_CROPS } from '../config/durhamConfig.js';
 
 /**
- * Get current weather impact and Durham-specific alerts
+ * Get current weather impact and location-specific alerts
  */
-export const getDurhamWeatherAlerts = () => {
+export const getLocationWeatherAlerts = (locationConfig = {}) => {
   const now = new Date();
   const month = now.getMonth() + 1;
   const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
   
   const alerts = [];
+  const locationName = locationConfig.name || 'your location';
+  const hardiness = locationConfig.hardiness || '7b';
+  const hardinessNumber = parseInt(hardiness) || 7;
   
-  // Seasonal alerts based on Durham climate patterns
+  // Seasonal alerts based on location climate patterns
   if (month >= 6 && month <= 8) {
     // Summer heat alerts
     alerts.push({
@@ -27,12 +30,13 @@ export const getDurhamWeatherAlerts = () => {
       urgency: 'high'
     });
     
-    if (dayOfYear >= 181 && dayOfYear <= 220) { // July 1st to early August
+    // Only show clay soil alerts if we know it's relevant to the location
+    if (dayOfYear >= 181 && dayOfYear <= 220 && locationName.toLowerCase().includes('nc')) {
       alerts.push({
-        type: 'clay-soil',
+        type: 'soil-caution',
         icon: '🏔️',
-        title: 'Clay Soil Alert',
-        message: 'Avoid working wet clay soil. Wait 24hrs after rain before garden work.',
+        title: 'Soil Work Caution',
+        message: 'Avoid working wet soil. Wait 24hrs after rain before garden work.',
         action: 'Check soil squeeze test',
         urgency: 'medium'
       });
@@ -77,6 +81,9 @@ export const getDurhamWeatherAlerts = () => {
   
   return alerts;
 };
+
+// Backward compatibility export for tests
+export const getDurhamWeatherAlerts = () => getLocationWeatherAlerts({ name: 'Durham, NC', hardiness: '7b' });
 
 /**
  * Get crops ready to harvest now based on Durham calendar

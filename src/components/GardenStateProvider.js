@@ -15,10 +15,9 @@ import {
 import { generateLocationSpecificScenarios } from '../data/climateScenarios.js';
 import { getPortfolioStrategies, createCustomPortfolio, validatePortfolioAllocations } from '../data/portfolioStrategies.js';
 import { useSimulation } from '../hooks/useSimulation.js';
-import { useClimateSelection, useInvestmentConfig } from '../hooks/useLocalStorage.js';
+import { useClimateSelection, useInvestmentConfig, useLocationConfig } from '../hooks/useLocalStorage.js';
 import { useShoppingList } from '../hooks/useShoppingList.js';
 import { useCalendarTaskManager } from '../hooks/useCalendarTaskManager.js';
-import { DURHAM_CONFIG } from '../config/durhamConfig.js';
 
 const GardenStateContext = createContext();
 
@@ -37,17 +36,8 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
   const shoppingActions = useShoppingList();
   const calendarTaskManager = useCalendarTaskManager();
 
-  // Durham-only configuration - memoized to prevent useEffect re-runs
-  const locationConfig = useMemo(() => ({
-    ...DURHAM_CONFIG,
-    gardenSize: 2,
-    investmentLevel: 3,
-    marketMultiplier: 1.0,
-    gardenSizeActual: 100,
-    budget: 400,
-    heatIntensity: 3,
-    heatDays: 95
-  }), []);
+  // Dynamic location configuration with localStorage persistence
+  const [locationConfig, setLocationConfig] = useLocationConfig();
   
   const [customInvestment, setCustomInvestment] = useInvestmentConfig();
   const [customPortfolio, setCustomPortfolio] = useState(null);
@@ -118,6 +108,7 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
     
     // Configuration
     locationConfig,
+    setLocationConfig,
     customInvestment,
     setCustomInvestment,
     customPortfolio,

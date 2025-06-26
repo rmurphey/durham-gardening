@@ -34,7 +34,7 @@ const Navigation = ({
   return (
     <nav className="main-navigation">
       <div className="nav-header">
-        <h1 className="app-title">Durham Garden</h1>
+        <h1 className="app-title">GardenSim</h1>
         <p className="app-subtitle">
           {gardenMode ? (
             isReadOnly ? 'Viewing shared garden' : 'Your garden'

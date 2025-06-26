@@ -10,17 +10,26 @@
 
 - Right now I see "Durham Garden" or some variation at least six times above the fold, and almost no useful information.
 
-## There should be no more mention of KV storage
+## If a user's location is outside the continental US ...
 
-- We switched to blob storage. It sucks, but it's free.
-- Are there free KV options you should consider?
+- Let them know the app can't support their garden.
+- Offer to set up a garden in Durham, NC.
 
-## Metrics display
+## Cleanup: Metrics display
 
 - Percents should ALWAYS be shown ONLY to 0 decimal point precision.
 - Temperatures should be shown in Fahrenheit.
 
+## Cleanup: There should be no more mention of KV storage
+
+- We switched to blob storage. It sucks, but it's free.
+- Are there free KV options you should consider?
+
 ## Is `NODE_ENV` set properly for dev vs production?
+
+- The app UI shows a test-related "toast" when tests pass. This should only happen in local development, not in production. 
+- Vercel should provide basic env data.
+- If you need additional env data, let's discuss!
 
 ## when I click "share" there should be some kind of feedback
 

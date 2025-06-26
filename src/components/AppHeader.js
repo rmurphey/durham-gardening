@@ -30,7 +30,7 @@ function AppHeader({
     <header className="header">
       <div className="header-content">
         <div className="header-main">
-          <h1 className="app-title">🌱 Durham Garden Planner</h1>
+          <h1 className="app-title">🌱 GardenSim</h1>
           <p className="app-subtitle">
             {isGardenContext ? (
               isReadOnly ? (
@@ -39,7 +39,7 @@ function AppHeader({
                 <>Your Garden: {gardenId?.slice(0, 8)}...</>
               )
             ) : (
-              'Heat-adapted gardening for Durham, North Carolina (Zone 7b)'
+              'Climate-aware garden planning for your location'
             )}
           </p>
         </div>

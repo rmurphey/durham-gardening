@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { formatCurrency } from '../config.js';
+import { formatCurrency, REGION_PRESETS } from '../config.js';
 
 const CompactSettingsPanel = ({ 
   climateScenarios,
@@ -18,14 +18,24 @@ const CompactSettingsPanel = ({
   onCustomPortfolioChange,
   investmentConfig,
   onInvestmentChange,
+  locationConfig,
+  onLocationChange,
   disabled = false
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showLocationSetup, setShowLocationSetup] = useState(false);
+  const [locationSetupConfig, setLocationSetupConfig] = useState({
+    name: locationConfig?.name || '',
+    lat: locationConfig?.lat || '',
+    lon: locationConfig?.lon || '',
+    hardiness: locationConfig?.hardiness || '7b'
+  });
 
   // Get display names for current selections
   const currentSummerName = climateScenarios.summer?.find(s => s.id === selectedSummer)?.name || 'Unknown';
   const currentWinterName = climateScenarios.winter?.find(w => w.id === selectedWinter)?.name || 'Unknown';
   const currentPortfolioName = portfolioStrategies[selectedPortfolio]?.name || 'Unknown';
+  const currentLocationName = locationConfig?.name || 'Durham, NC';
   const totalInvestment = investmentConfig ? Object.values(investmentConfig).reduce((sum, val) => sum + (val || 0), 0) : 0;
 
   const handlePortfolioChange = (portfolioId) => {
@@ -45,6 +55,70 @@ const CompactSettingsPanel = ({
     }
   };
 
+  const handleGeolocation = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by this browser.');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setLocationSetupConfig(prev => ({
+          ...prev,
+          lat: parseFloat(latitude.toFixed(4)),
+          lon: parseFloat(longitude.toFixed(4)),
+          name: prev.name || `Location ${latitude.toFixed(2)}, ${longitude.toFixed(2)}`
+        }));
+      },
+      (error) => {
+        let errorMessage = 'Unable to get your location. ';
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage += 'Location access was denied.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage += 'Location information unavailable.';
+            break;
+          case error.TIMEOUT:
+            errorMessage += 'Location request timed out.';
+            break;
+          default:
+            errorMessage += 'An unknown error occurred.';
+            break;
+        }
+        alert(errorMessage);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000
+      }
+    );
+  };
+
+  const handlePresetSelect = (presetKey) => {
+    const preset = REGION_PRESETS[presetKey];
+    if (preset) {
+      setLocationSetupConfig({
+        name: preset.name,
+        lat: preset.lat,
+        lon: preset.lon,
+        hardiness: preset.hardiness
+      });
+    }
+  };
+
+  const handleSaveLocation = () => {
+    if (onLocationChange && locationSetupConfig.lat && locationSetupConfig.lon) {
+      onLocationChange({
+        ...locationSetupConfig,
+        zipCode: locationConfig?.zipCode // Preserve existing zipCode if any
+      });
+      setShowLocationSetup(false);
+    }
+  };
+
   return (
     <div className="compact-settings-panel">
       <button 
@@ -56,7 +130,7 @@ const CompactSettingsPanel = ({
         <span className="settings-icon">⚙️</span>
         <span className="settings-summary">
           <span className="current-selection">
-            {currentSummerName} + {currentWinterName} • {currentPortfolioName}
+            📍 {currentLocationName} • {currentSummerName} + {currentWinterName} • {currentPortfolioName}
             {investmentConfig && ` • ${formatCurrency(totalInvestment)}`}
           </span>
           {!disabled && (
@@ -72,6 +146,115 @@ const CompactSettingsPanel = ({
 
       {isExpanded && (
         <div className="settings-content">
+          {/* Location Settings */}
+          <div className="setting-group">
+            <h4 className="setting-title">📍 Garden Location</h4>
+            
+            {!showLocationSetup ? (
+              <div className="setting-row">
+                <div className="setting-item">
+                  <label className="setting-label">Current:</label>
+                  <span className="setting-value">{currentLocationName}</span>
+                </div>
+                <button 
+                  className="button small location-change-btn"
+                  onClick={() => setShowLocationSetup(true)}
+                  disabled={disabled}
+                >
+                  📍 Change Location
+                </button>
+              </div>
+            ) : (
+              <div className="location-setup">
+                {/* Regional Presets */}
+                <div className="setting-row">
+                  <div className="setting-item full-width">
+                    <label className="setting-label">Quick Presets:</label>
+                    <select 
+                      className="setting-select"
+                      onChange={(e) => e.target.value && handlePresetSelect(e.target.value)}
+                      disabled={disabled}
+                      value=""
+                    >
+                      <option value="">Choose a preset...</option>
+                      {Object.entries(REGION_PRESETS).map(([key, preset]) => (
+                        <option key={key} value={key}>{preset.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Manual Location Input */}
+                <div className="setting-row">
+                  <div className="setting-item">
+                    <label className="setting-label">Location Name:</label>
+                    <input
+                      type="text"
+                      className="setting-input"
+                      value={locationSetupConfig.name}
+                      onChange={(e) => setLocationSetupConfig(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="e.g., My Garden"
+                      disabled={disabled}
+                    />
+                  </div>
+                </div>
+
+                {/* Coordinates */}
+                <div className="setting-row">
+                  <div className="setting-item coordinate-group">
+                    <label className="setting-label">Coordinates:</label>
+                    <div className="coordinate-inputs">
+                      <input
+                        type="number"
+                        placeholder="Latitude"
+                        value={locationSetupConfig.lat}
+                        onChange={(e) => setLocationSetupConfig(prev => ({ ...prev, lat: parseFloat(e.target.value) || '' }))}
+                        step="0.0001"
+                        disabled={disabled}
+                      />
+                      <input
+                        type="number"
+                        placeholder="Longitude"
+                        value={locationSetupConfig.lon}
+                        onChange={(e) => setLocationSetupConfig(prev => ({ ...prev, lon: parseFloat(e.target.value) || '' }))}
+                        step="0.0001"
+                        disabled={disabled}
+                      />
+                      <button
+                        type="button"
+                        className="button small geolocation-btn"
+                        onClick={handleGeolocation}
+                        disabled={disabled}
+                      >
+                        📍 Use My Location
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="setting-row">
+                  <div className="setting-actions">
+                    <button
+                      className="button small"
+                      onClick={() => setShowLocationSetup(false)}
+                      disabled={disabled}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="button small primary"
+                      onClick={handleSaveLocation}
+                      disabled={disabled || !locationSetupConfig.lat || !locationSetupConfig.lon}
+                    >
+                      Save Location
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Climate Scenarios */}
           <div className="setting-group">
             <h4 className="setting-title">🌡️ Climate Scenarios</h4>

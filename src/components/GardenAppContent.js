@@ -87,6 +87,7 @@ function GardenAppContentInner() {
     shoppingActions,
     calendarTaskManager,
     locationConfig,
+    setLocationConfig,
     customInvestment,
     setCustomInvestment,
     handleCustomPortfolioChange,
@@ -242,6 +243,7 @@ function GardenAppContentInner() {
               onCustomPortfolioChange={handleCustomPortfolioChange}
               investmentConfig={customInvestment}
               onInvestmentChange={setCustomInvestment}
+              onLocationChange={setLocationConfig}
               simulating={simulating}
             />
           } />

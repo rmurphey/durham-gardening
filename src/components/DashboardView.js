@@ -10,7 +10,7 @@ import ForecastWidget from './ForecastWidget.js';
 import CompactSettingsPanel from './CompactSettingsPanel.js';
 import SimulationResults from './SimulationResults.js';
 import { 
-  getDurhamWeatherAlerts, 
+  getLocationWeatherAlerts, 
   getReadyToHarvest, 
   getCriticalTimingWindows,
   getSimulationSummary,
@@ -32,6 +32,7 @@ const DashboardView = ({
   onViewChange,
   gardenCalendar = [],
   locationConfig,
+  onLocationChange,
   // Settings props
   climateScenarios,
   selectedSummer,
@@ -51,7 +52,7 @@ const DashboardView = ({
   const [weatherImpact, setWeatherImpact] = useState(null);
 
   // Get critical data for decision making
-  const weatherAlerts = getDurhamWeatherAlerts();
+  const weatherAlerts = getLocationWeatherAlerts(locationConfig);
   const readyToHarvest = getReadyToHarvest();
   const criticalWindows = getCriticalTimingWindows();
   const simulationSummary = getSimulationSummary(simulationResults, totalInvestment);
@@ -82,7 +83,7 @@ const DashboardView = ({
   return (
     <div className="dashboard-view">
       <div className="dashboard-header">
-        <h2>{getTimeOfDayIcon()} Durham Garden Dashboard</h2>
+        <h2>{getTimeOfDayIcon()} Garden Dashboard</h2>
         <p className="current-date">{getCurrentDate()}</p>
       </div>
 
@@ -111,6 +112,8 @@ const DashboardView = ({
         onCustomPortfolioChange={onCustomPortfolioChange}
         investmentConfig={investmentConfig}
         onInvestmentChange={onInvestmentChange}
+        locationConfig={locationConfig}
+        onLocationChange={onLocationChange}
         disabled={isReadOnly}
       />
 
