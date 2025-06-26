@@ -79,7 +79,9 @@ function getCategoryIcon(activityType) {
     'planning': '📋',
     'shopping': '🛒',
     'succession': '🔄',
-    'rotation': '🔄'
+    'rotation': '🔄',
+    'indoor-starting': '🌰', // Seed/indoor start icon
+    'seed-starting': '🌰'    // Alternative naming
   };
   return <span className="activity-icon">{icons[activityType] || '📝'}</span>;
 }

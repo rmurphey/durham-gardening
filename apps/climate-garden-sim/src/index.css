@@ -2577,6 +2577,74 @@ p {
   color: var(--color-primary-dark);
 }
 
+/* Indoor starting styling */
+.activity.activity-indoor-starting {
+  border-left-color: #8B4513; /* Brown for soil/seeds */
+  background: #F5F5DC; /* Beige background */
+}
+
+.activity.activity-indoor-starting .activity-crop {
+  color: #654321; /* Dark brown for text */
+  font-weight: var(--font-weight-semibold);
+}
+
+.activity.activity-indoor-starting .activity-action {
+  font-weight: var(--font-weight-medium);
+  color: #5D4037; /* Medium brown for action text */
+}
+
+.activity.activity-indoor-starting .activity-timing {
+  color: #8D6E63; /* Light brown for timing */
+  font-style: italic;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Seed starting alternative naming */
+.activity.activity-seed-starting {
+  border-left-color: #8B4513;
+  background: #F5F5DC;
+}
+
+.activity.activity-seed-starting .activity-crop {
+  color: #654321;
+  font-weight: var(--font-weight-semibold);
+}
+
+/* High priority indoor start activities */
+.activity.activity-indoor-starting.priority-high {
+  border-left-color: #D2691E; /* Orange-brown for urgency */
+  background: #FDF5E6; /* Warm cream background */
+  box-shadow: 0 2px 4px rgba(210, 105, 30, 0.15);
+}
+
+.activity.activity-indoor-starting.priority-critical {
+  border-left-color: #B22222; /* Fire brick for critical timing */
+  background: #FFF8DC; /* Cornsilk background */
+  box-shadow: 0 2px 4px rgba(178, 34, 34, 0.2);
+}
+
+/* Mobile responsiveness for indoor start activities */
+@media (max-width: 768px) {
+  .activity.activity-indoor-starting {
+    padding: var(--spacing-sm);
+    margin: var(--spacing-xs) 0;
+  }
+  
+  .activity.activity-indoor-starting .activity-crop {
+    font-size: var(--font-size-sm);
+  }
+  
+  .activity.activity-indoor-starting .activity-action {
+    font-size: var(--font-size-xs);
+    line-height: 1.4;
+  }
+  
+  .activity.activity-indoor-starting .activity-timing {
+    font-size: var(--font-size-xs);
+    margin-top: var(--spacing-xs);
+  }
+}
+
 /* ========================================
    SHOPPING LIST - ACTION-ORIENTED
 ======================================== */
