@@ -45,6 +45,33 @@ const BasicLocationForm = ({
         </div>
         
         <div className="config-item">
+          <label>Coordinates:</label>
+          <div className="coordinate-inputs">
+            <input
+              type="number"
+              placeholder="Latitude"
+              value={customConfig.lat}
+              onChange={(e) => handleConfigUpdate({ lat: parseFloat(e.target.value) || '' })}
+              step="0.0001"
+            />
+            <input
+              type="number"
+              placeholder="Longitude" 
+              value={customConfig.lon}
+              onChange={(e) => handleConfigUpdate({ lon: parseFloat(e.target.value) || '' })}
+              step="0.0001"
+            />
+            <button
+              type="button"
+              className="button small geolocation-btn"
+              onClick={() => handleConfigUpdate({ requestGeolocation: true })}
+            >
+              📍 Use My Location
+            </button>
+          </div>
+        </div>
+        
+        <div className="config-item">
           <label>Hardiness Zone:</label>
           <select
             value={customConfig.hardiness}

@@ -3,7 +3,7 @@
  * Orchestrates location configuration through extracted sub-components
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   REGION_PRESETS,
   getScaleValue,
@@ -62,6 +62,64 @@ const LocationSetup = ({ onConfigUpdate, onComplete }) => {
       enableFrostDates: true
     }
   );
+
+  // Handle geolocation requests
+  useEffect(() => {
+    if (customConfig.requestGeolocation) {
+      handleGeolocationRequest();
+      // Clear the request flag
+      setCustomConfig(prev => ({ ...prev, requestGeolocation: false }));
+    }
+  }, [customConfig.requestGeolocation]);
+
+  const handleGeolocationRequest = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by this browser.');
+      return;
+    }
+
+    setCustomConfig(prev => ({ ...prev, name: prev.name || 'Getting location...' }));
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCustomConfig(prev => ({
+          ...prev,
+          lat: parseFloat(latitude.toFixed(4)),
+          lon: parseFloat(longitude.toFixed(4)),
+          name: prev.name === 'Getting location...' ? `Location ${latitude.toFixed(2)}, ${longitude.toFixed(2)}` : prev.name
+        }));
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        let errorMessage = 'Unable to get your location. ';
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage += 'Location access was denied. Please enter coordinates manually.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage += 'Location information unavailable.';
+            break;
+          case error.TIMEOUT:
+            errorMessage += 'Location request timed out.';
+            break;
+          default:
+            errorMessage += 'An unknown error occurred.';
+            break;
+        }
+        alert(errorMessage);
+        setCustomConfig(prev => ({ 
+          ...prev, 
+          name: prev.name === 'Getting location...' ? '' : prev.name 
+        }));
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000 // 5 minutes
+      }
+    );
+  };
 
   const getHeatDaysFromIntensity = (intensity) => 
     getScaleValue(HEAT_INTENSITY_SCALE, intensity) || 100;

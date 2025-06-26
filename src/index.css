@@ -8392,3 +8392,38 @@ button:focus,
   }
 }
 
+/* ========================================
+   LOCATION SETUP - COORDINATE INPUTS
+======================================== */
+.coordinate-inputs {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.coordinate-inputs input {
+  flex: 1;
+  min-width: 120px;
+}
+
+.geolocation-btn {
+  white-space: nowrap;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  transition: background-color 0.2s ease;
+}
+
+.geolocation-btn:hover {
+  background: var(--color-primary-dark);
+}
+
+.geolocation-btn:active {
+  transform: translateY(1px);
+}
+

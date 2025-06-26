@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { zipCode = '27707' } = req.query; // Durham, NC default
+  const { zipCode = '27707', lat, lon } = req.query; // Durham, NC default
   
   try {
     // Get forecast data from KV storage first
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 
     // If no fresh data, fetch from NWS
     if (!forecastData) {
-      forecastData = await fetchFreshForecastData(zipCode);
+      forecastData = await fetchFreshForecastData(zipCode, lat, lon);
       
       // Store fresh data in blob storage for caching
       if (process.env.BLOB_READ_WRITE_TOKEN && forecastData) {
@@ -84,13 +84,13 @@ export default async function handler(req, res) {
   }
 }
 
-async function fetchFreshForecastData(zipCode) {
-  // Durham, NC coordinates for 27707
-  const lat = '35.9940';
-  const lon = '-78.8986';
+async function fetchFreshForecastData(zipCode, lat, lon) {
+  // Use provided coordinates or default to Durham, NC coordinates for 27707
+  const latitude = lat || '35.9940';
+  const longitude = lon || '-78.8986';
   
   // Get NWS grid coordinates
-  const pointsResponse = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+  const pointsResponse = await fetch(`https://api.weather.gov/points/${latitude},${longitude}`);
   if (!pointsResponse.ok) throw new Error('NWS points API failed');
   
   const pointsData = await pointsResponse.json();

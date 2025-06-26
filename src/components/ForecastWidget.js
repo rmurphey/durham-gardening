@@ -53,16 +53,29 @@ const ForecastWidget = ({ onSimulationImpact, locationConfig }) => {
 
   useEffect(() => {
     fetchForecastData();
-  }, [locationConfig?.zipCode]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [locationConfig?.zipCode, locationConfig?.lat, locationConfig?.lon]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchForecastData = async (forceRefresh = false) => {
     try {
       setLoading(true);
       setError(null);
       
-      // Use zipCode from locationConfig, fallback to 27707
+      // Use coordinates if available, otherwise fallback to zipCode
       const zipCode = locationConfig?.zipCode || '27707';
-      const url = forceRefresh ? `/api/forecast?zipCode=${zipCode}&refresh=true` : `/api/forecast?zipCode=${zipCode}`;
+      const { lat, lon } = locationConfig || {};
+      
+      let url;
+      if (lat && lon) {
+        // Use coordinates for more precise weather data
+        url = forceRefresh 
+          ? `/api/forecast?lat=${lat}&lon=${lon}&refresh=true`
+          : `/api/forecast?lat=${lat}&lon=${lon}`;
+      } else {
+        // Fallback to ZIP code
+        url = forceRefresh 
+          ? `/api/forecast?zipCode=${zipCode}&refresh=true` 
+          : `/api/forecast?zipCode=${zipCode}`;
+      }
       const response = await fetch(url);
       const result = await response.json();
       

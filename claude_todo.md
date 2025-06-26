@@ -10,6 +10,11 @@
 
 - Right now I see "Durham Garden" or some variation at least six times above the fold, and almost no useful information.
 
+## There should be no more mention of KV storage
+
+- We switched to blob storage. It sucks, but it's free.
+- Are there free KV options you should consider?
+
 ## Metrics display
 
 - Percents should ALWAYS be shown ONLY to 0 decimal point precision.
