@@ -229,6 +229,106 @@ function findLowTemp(hourlyData, dailyPeriod) {
   return temps.length > 0 ? Math.min(...temps) : dailyPeriod.temperature - 18;
 }
 
+function findAverageHumidity(hourlyData) {
+  if (!hourlyData.length) {
+    return 50; // Default moderate humidity
+  }
+  
+  const humidities = hourlyData
+    .map(h => h.relativeHumidity?.value)
+    .filter(h => h != null);
+  
+  if (humidities.length === 0) {
+    return 50; // Default moderate humidity
+  }
+  
+  return Math.round(humidities.reduce((sum, h) => sum + h, 0) / humidities.length);
+}
+
+// Calculate heat index using simplified formula
+// Only valid for temperatures >= 80°F and humidity >= 40%
+function calculateHeatIndex(tempF, humidity) {
+  if (!tempF || !humidity || tempF < 80 || humidity < 40) {
+    return tempF; // Return actual temperature if conditions don't warrant heat index
+  }
+  
+  // Simplified heat index formula
+  const T = tempF;
+  const RH = humidity;
+  
+  let HI = 0.5 * (T + 61.0 + ((T - 68.0) * 1.2) + (RH * 0.094));
+  
+  // If initial calculation shows heat index >= 80, use more complex formula
+  if (HI >= 80) {
+    const c1 = -42.379;
+    const c2 = 2.04901523;
+    const c3 = 10.14333127;
+    const c4 = -0.22475541;
+    const c5 = -0.00683783;
+    const c6 = -0.05481717;
+    const c7 = 0.00122874;
+    const c8 = 0.00085282;
+    const c9 = -0.00000199;
+    
+    HI = c1 + (c2 * T) + (c3 * RH) + (c4 * T * RH) + (c5 * T * T) + 
+         (c6 * RH * RH) + (c7 * T * T * RH) + (c8 * T * RH * RH) + 
+         (c9 * T * T * RH * RH);
+  }
+  
+  return Math.round(HI);
+}
+
+// Calculate wind chill using NWS formula
+// Only valid for temperatures <= 50°F and wind speeds > 3 mph
+function calculateWindChill(tempF, windSpeedStr) {
+  if (!tempF || !windSpeedStr || tempF > 50) {
+    return tempF; // Return actual temperature if conditions don't warrant wind chill
+  }
+  
+  // Extract wind speed number from string (e.g., "10 to 15 mph" -> 12.5)
+  const windMatch = windSpeedStr.match(/(\d+)(?:\s*to\s*(\d+))?/);
+  if (!windMatch) {
+    return tempF;
+  }
+  
+  let windSpeed;
+  if (windMatch[2]) {
+    // Range like "10 to 15 mph"
+    windSpeed = (parseInt(windMatch[1]) + parseInt(windMatch[2])) / 2;
+  } else {
+    // Single value like "10 mph"
+    windSpeed = parseInt(windMatch[1]);
+  }
+  
+  if (windSpeed <= 3) {
+    return tempF; // Wind chill not applicable at low wind speeds
+  }
+  
+  // NWS Wind Chill Formula
+  const windChill = 35.74 + (0.6215 * tempF) - (35.75 * Math.pow(windSpeed, 0.16)) + 
+                   (0.4275 * tempF * Math.pow(windSpeed, 0.16));
+  
+  return Math.round(windChill);
+}
+
+// Get apparent temperature (feels like temperature)
+function getApparentTemperature(tempF, humidity, windSpeedStr) {
+  if (!tempF) return tempF;
+  
+  // Use heat index for hot weather
+  if (tempF >= 80 && humidity >= 40) {
+    return calculateHeatIndex(tempF, humidity);
+  }
+  
+  // Use wind chill for cold weather
+  if (tempF <= 50 && windSpeedStr) {
+    return calculateWindChill(tempF, windSpeedStr);
+  }
+  
+  // For moderate temperatures, return actual temperature
+  return tempF;
+}
+
 function estimatePrecipAmount(period) {
   const precipChance = period.probabilityOfPrecipitation?.value || 0;
   const forecast = (period.shortForecast || '').toLowerCase();
