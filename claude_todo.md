@@ -31,6 +31,8 @@
 - Vercel should provide basic env data.
 - If you need additional env data, let's discuss!
 
+## Let users choose their location on a map
+
 ## when I click "share" there should be some kind of feedback
 
 # evergreen todos
