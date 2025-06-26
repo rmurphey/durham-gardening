@@ -7,11 +7,9 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import useCloudSync from '../hooks/useCloudSync.js';
 
-// Navigation and Views
-import Navigation from './Navigation.js';
+// Views
 import DashboardView from './DashboardView.js';
 import ShoppingView from './ShoppingView.js';
-import AppHeader from './AppHeader.js';
 import GardenStateProvider, { useGardenAppState } from './GardenStateProvider.js';
 
 // Configuration Components
@@ -193,28 +191,48 @@ function GardenAppContentInner() {
   }
 
   return (
-    <div className="App">
-      {/* Header with garden context */}
-      <AppHeader 
-        gardenId={gardenId}
-        isReadOnly={isReadOnly}
-        isSyncing={isSyncing}
-        lastSyncTime={lastSyncTime}
-        shareableUrl={shareableUrl}
-        onForkGarden={handleForkGarden}
-      />
-
-      <Navigation 
-        activeView={activeView}
-        onViewChange={handleViewChange}
-        hasShoppingItems={shoppingActions.totalItems}
-        hasTasks={calendarTaskManager.getUrgentPendingCount(gardenCalendar.flatMap(month => month.activities)) > 0}
-        gardenMode={true}
-        isReadOnly={isReadOnly}
-      />
+    <div className="garden-content">
+      {/* Garden-specific content only - header/nav handled by parent AppContent */}
+      <div className="garden-info">
+        <div className="garden-status">
+          <span className="garden-id">Garden: {gardenId?.slice(0, 8)}...</span>
+          {isReadOnly ? (
+            <span className="garden-readonly">👁️ Read-Only</span>
+          ) : (
+            <span className="garden-owned">✏️ Your Garden</span>
+          )}
+        </div>
+        
+        {/* Garden actions */}
+        <div className="garden-actions">
+          {!isReadOnly && (
+            <button 
+              className="fork-garden-btn"
+              onClick={handleForkGarden}
+              title="Create a new copy of this garden"
+            >
+              🍴 Fork Garden
+            </button>
+          )}
+          
+          {shareableUrl && (
+            <button 
+              className="share-garden-btn"
+              onClick={() => {
+                if (navigator.clipboard) {
+                  navigator.clipboard.writeText(shareableUrl);
+                }
+              }}
+              title="Copy sharing link"
+            >
+              📋 Share
+            </button>
+          )}
+        </div>
+      </div>
       
-      {/* Main Content */}
-      <main className="main-content">
+      {/* Garden Main Content */}
+      <main className="garden-main-content">
         <Routes>
           {/* Default route redirects to dashboard */}
           <Route path="/" element={<Navigate to="dashboard" replace />} />

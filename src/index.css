@@ -1933,6 +1933,139 @@ p {
   font-weight: var(--font-weight-medium);
 }
 
+.garden-management {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--spacing-md);
+}
+
+.create-garden-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.create-garden-btn:hover {
+  background: var(--color-primary-dark);
+}
+
+.garden-quick-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--spacing-md);
+}
+
+.quick-start-btn {
+  background: var(--color-warning);
+  color: var(--color-warning-dark);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.quick-start-btn:hover {
+  background: var(--color-warning-dark);
+  color: white;
+}
+
+.garden-content {
+  padding: var(--spacing-lg);
+}
+
+.garden-info {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.garden-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.garden-id {
+  font-family: monospace;
+  background: var(--color-background-light);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.garden-readonly {
+  color: var(--color-warning-dark);
+  font-size: var(--font-size-sm);
+}
+
+.garden-owned {
+  color: var(--color-success-dark);
+  font-size: var(--font-size-sm);
+}
+
+.garden-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.fork-garden-btn, .share-garden-btn {
+  background: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  transition: all 0.2s ease;
+}
+
+.fork-garden-btn:hover, .share-garden-btn:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.location-saved-feedback {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--color-success);
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10%, 90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+.settings-saved-feedback {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--color-success);
+  text-align: center;
+  animation: fadeInOut 2s ease-in-out;
+}
+
 /* ========================================
    CARD COMPONENT SYSTEM
 ======================================== */

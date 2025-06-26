@@ -18,7 +18,9 @@ function AppHeader({
   urgentTasksCount = 0,
   readyToHarvestCount = 0,
   todaysTemperature = null,
-  simulationResults = null
+  simulationResults = null,
+  // Garden management functions
+  onCreateGarden = null
 }) {
   const isGardenContext = !!gardenId;
 
@@ -74,6 +76,32 @@ function AppHeader({
             )}
           </div>
         </div>
+        
+        {/* Garden management - only show in standard app context */}
+        {!isGardenContext && onCreateGarden && (
+          <div className="garden-management">
+            <button 
+              className="create-garden-btn"
+              onClick={onCreateGarden}
+              title="Create a new shareable garden"
+            >
+              ➕ New Garden
+            </button>
+          </div>
+        )}
+        
+        {/* Quick navigation for garden context */}
+        {isGardenContext && (
+          <div className="garden-quick-nav">
+            <button 
+              className="quick-start-btn"
+              onClick={() => window.location.href = '/dashboard'}
+              title="Go to quick start dashboard"
+            >
+              ⚡ Quick Start
+            </button>
+          </div>
+        )}
         
         {/* Garden actions - only show in garden context */}
         {isGardenContext && (

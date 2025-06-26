@@ -24,6 +24,8 @@ const CompactSettingsPanel = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showLocationSetup, setShowLocationSetup] = useState(false);
+  const [showLocationSaved, setShowLocationSaved] = useState(false);
+  const [showSettingsSaved, setShowSettingsSaved] = useState(false);
   const [locationSetupConfig, setLocationSetupConfig] = useState({
     name: locationConfig?.name || '',
     lat: locationConfig?.lat || '',
@@ -37,6 +39,25 @@ const CompactSettingsPanel = ({
   const currentPortfolioName = portfolioStrategies[selectedPortfolio]?.name || 'Unknown';
   const currentLocationName = locationConfig?.name || 'Not Set';
   const totalInvestment = investmentConfig ? Object.values(investmentConfig).reduce((sum, val) => sum + (val || 0), 0) : 0;
+
+  // Helper function to show settings saved feedback
+  const showSettingsSavedFeedback = () => {
+    setShowSettingsSaved(true);
+    setTimeout(() => {
+      setShowSettingsSaved(false);
+    }, 2000); // Shorter duration for general settings
+  };
+
+  // Wrapped handlers with feedback
+  const handleSummerChange = (value) => {
+    onSummerChange(value);
+    showSettingsSavedFeedback();
+  };
+
+  const handleWinterChange = (value) => {
+    onWinterChange(value);
+    showSettingsSavedFeedback();
+  };
 
   const handlePortfolioChange = (portfolioId) => {
     onPortfolioChange(portfolioId);
@@ -53,6 +74,9 @@ const CompactSettingsPanel = ({
       };
       onCustomPortfolioChange(defaultAllocations);
     }
+    
+    // Show feedback
+    showSettingsSavedFeedback();
   };
 
   const handleGeolocation = () => {
@@ -116,6 +140,12 @@ const CompactSettingsPanel = ({
         zipCode: locationConfig?.zipCode // Preserve existing zipCode if any
       });
       setShowLocationSetup(false);
+      
+      // Show success feedback
+      setShowLocationSaved(true);
+      setTimeout(() => {
+        setShowLocationSaved(false);
+      }, 3000); // Hide after 3 seconds
     }
   };
 
@@ -146,9 +176,19 @@ const CompactSettingsPanel = ({
 
       {isExpanded && (
         <div className="settings-content">
+          {showSettingsSaved && (
+            <div className="settings-saved-feedback">
+              ✅ Settings saved!
+            </div>
+          )}
           {/* Location Settings */}
           <div className="setting-group">
             <h4 className="setting-title">📍 Garden Location</h4>
+            {showLocationSaved && (
+              <div className="location-saved-feedback">
+                ✅ Location saved successfully!
+              </div>
+            )}
             
             {!showLocationSetup ? (
               <div className="setting-row">
@@ -264,7 +304,7 @@ const CompactSettingsPanel = ({
                 <select 
                   className="setting-select"
                   value={selectedSummer}
-                  onChange={(e) => onSummerChange(e.target.value)}
+                  onChange={(e) => handleSummerChange(e.target.value)}
                   disabled={disabled}
                 >
                   {climateScenarios.summer?.map(scenario => (
@@ -280,7 +320,7 @@ const CompactSettingsPanel = ({
                 <select 
                   className="setting-select"
                   value={selectedWinter}
-                  onChange={(e) => onWinterChange(e.target.value)}
+                  onChange={(e) => handleWinterChange(e.target.value)}
                   disabled={disabled}
                 >
                   {climateScenarios.winter?.map(scenario => (

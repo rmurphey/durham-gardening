@@ -5,6 +5,7 @@
 
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { generateGardenId } from '../utils/gardenId.js';
 
 
 /**
@@ -13,9 +14,30 @@ import { useNavigate } from 'react-router-dom';
 const DefaultGardenRedirect = () => {
   const navigate = useNavigate();
 
-  // Auto-redirect to standard dashboard
+  // Check if user has existing gardens and redirect appropriately
   useEffect(() => {
-    navigate('/dashboard', { replace: true });
+    try {
+      const myGardens = JSON.parse(localStorage.getItem('myGardens') || '[]');
+      
+      if (myGardens.length > 0) {
+        // User has gardens - redirect to their default garden
+        const defaultGardenId = localStorage.getItem('defaultGardenId') || myGardens[0];
+        navigate(`/garden/${defaultGardenId}/dashboard`, { replace: true });
+      } else {
+        // No existing gardens - create new one and redirect
+        const newGardenId = generateGardenId();
+        
+        // Mark as owned and default
+        localStorage.setItem('defaultGardenId', newGardenId);
+        localStorage.setItem('myGardens', JSON.stringify([newGardenId]));
+        
+        navigate(`/garden/${newGardenId}/dashboard`, { replace: true });
+      }
+    } catch (error) {
+      console.error('Error handling garden redirect:', error);
+      // Fallback to standard dashboard
+      navigate('/dashboard', { replace: true });
+    }
   }, [navigate]);
 
   // Show loading while redirecting

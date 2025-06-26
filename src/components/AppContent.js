@@ -5,6 +5,7 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import Navigation from './Navigation.js';
 import DashboardView from './DashboardView.js';
 import ShoppingView from './ShoppingView.js';
+import GardenAppContent from './GardenAppContent.js';
 import DefaultGardenRedirect from './DefaultGardenRedirect.js';
 import AppHeader from './AppHeader.js';
 import GardenStateProvider, { useGardenAppState } from './GardenStateProvider.js';
@@ -12,6 +13,7 @@ import GardenStateProvider, { useGardenAppState } from './GardenStateProvider.js
 // Configuration Components
 import { generateUnifiedCalendar } from '../services/unifiedCalendarService.js';
 import { getCriticalTimingWindows, getReadyToHarvest } from '../services/dashboardDataService.js';
+import { generateGardenId } from '../utils/gardenId.js';
 
 function AppContentInner() {
   // Navigation state using React Router
@@ -69,6 +71,36 @@ function AppContentInner() {
     navigate(`/${view}`);
   };
 
+  // Garden management functions
+  const handleCreateGarden = () => {
+    try {
+      const newGardenId = generateGardenId();
+      
+      // Mark as owned
+      const myGardens = JSON.parse(localStorage.getItem('myGardens') || '[]');
+      if (!myGardens.includes(newGardenId)) {
+        myGardens.push(newGardenId);
+        localStorage.setItem('myGardens', JSON.stringify(myGardens));
+      }
+      
+      // Set as default
+      localStorage.setItem('defaultGardenId', newGardenId);
+      
+      // Navigate to garden dashboard
+      navigate(`/garden/${newGardenId}/dashboard`);
+    } catch (error) {
+      console.error('Failed to create garden:', error);
+    }
+  };
+
+  const handleShareGarden = () => {
+    // For now, just copy current URL
+    if (navigator.clipboard && window.location.href) {
+      navigator.clipboard.writeText(window.location.href);
+      // Could add toast notification here
+    }
+  };
+
   // Calculate valuable header information
   const criticalWindows = getCriticalTimingWindows(gardenCalendar, simulationResults);
   const readyToHarvest = getReadyToHarvest(gardenCalendar, simulationResults);
@@ -83,6 +115,8 @@ function AppContentInner() {
         urgentTasksCount={urgentTasksCount}
         readyToHarvestCount={readyToHarvestCount}
         simulationResults={simulationResults}
+        onCreateGarden={handleCreateGarden}
+        onShareGarden={handleShareGarden}
       />
 
       <Navigation 
@@ -120,7 +154,7 @@ function AppContentInner() {
               simulating={simulating}
             />
           } />
-          <Route path="/garden/:id/*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/garden/:id/*" element={<GardenAppContent />} />
           <Route path="/tasks" element={<Navigate to="/dashboard" replace />} />
           <Route path="/calendar" element={<Navigate to="/dashboard" replace />} />
           <Route path="/shopping" element={<ShoppingView shoppingActions={shoppingActions} />} />
