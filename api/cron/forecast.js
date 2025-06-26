@@ -1,5 +1,5 @@
 // Vercel Cron Function for Forecast Data Updates
-// Runs every 6 hours to fetch and cache fresh weather forecast data
+// Runs daily at 6 AM to fetch and cache fresh weather forecast data
 
 import { put } from '@vercel/blob';
 
