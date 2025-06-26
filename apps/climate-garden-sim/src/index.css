@@ -3091,6 +3091,76 @@ p {
   box-shadow: var(--shadow-md);
 }
 
+/* Compact forecast layout */
+.forecast-day.compact {
+  padding: var(--spacing-sm);
+  min-height: unset;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-xs);
+}
+
+.forecast-day.compact .day-header {
+  margin-bottom: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.forecast-day.compact .day-name {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.forecast-day.compact .day-date {
+  font-size: 10px;
+}
+
+.day-weather-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.forecast-day.compact .day-temps {
+  margin: 0;
+  justify-content: center;
+  gap: 4px;
+}
+
+.forecast-day.compact .high-temp {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.forecast-day.compact .low-temp {
+  font-size: var(--font-size-xs);
+}
+
+.day-conditions-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  min-height: 14px;
+}
+
+.precip-compact,
+.gdd-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+.risk-indicator {
+  font-size: 12px;
+  line-height: 1;
+}
+
 .day-header {
   display: flex;
   justify-content: space-between;

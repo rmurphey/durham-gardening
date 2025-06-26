@@ -11,6 +11,45 @@ const ForecastWidget = ({ onSimulationImpact }) => {
   const [error, setError] = useState(null);
   const [expandedView, setExpandedView] = useState(false);
 
+  const getWeatherEmoji = (forecast, precipChance) => {
+    const f = forecast.toLowerCase();
+    
+    // Thunderstorms
+    if (f.includes('thunderstorm') || f.includes('storm')) return '⛈️';
+    
+    // Rain conditions
+    if (f.includes('rain') || f.includes('shower')) {
+      if (f.includes('heavy')) return '🌧️';
+      if (f.includes('light') || f.includes('slight')) return '🌦️';
+      return '🌧️';
+    }
+    
+    // Snow conditions
+    if (f.includes('snow') || f.includes('flurr')) return '🌨️';
+    if (f.includes('sleet') || f.includes('freezing')) return '🌨️';
+    
+    // Cloud conditions
+    if (f.includes('overcast') || f.includes('cloudy')) return '☁️';
+    if (f.includes('partly') && (f.includes('cloud') || f.includes('sun'))) return '⛅';
+    
+    // Clear conditions
+    if (f.includes('sunny') || f.includes('clear')) return '☀️';
+    if (f.includes('fair')) return '🌤️';
+    
+    // Fog/haze
+    if (f.includes('fog') || f.includes('haze') || f.includes('mist')) return '🌫️';
+    
+    // Wind
+    if (f.includes('wind')) return '💨';
+    
+    // Fallback based on precipitation chance
+    if (precipChance > 60) return '🌧️';
+    if (precipChance > 30) return '🌦️';
+    if (precipChance > 10) return '⛅';
+    
+    return '☀️'; // Default sunny
+  };
+
   useEffect(() => {
     fetchForecastData();
   }, []);
@@ -144,49 +183,34 @@ const ForecastWidget = ({ onSimulationImpact }) => {
       {/* Daily Forecasts */}
       <div className="forecast-days">
         {displayedForecasts.map((day, index) => (
-          <div key={day.date} className={`forecast-day ${index === 0 ? 'today' : ''} ${day.projected ? 'projected' : ''}`}>
+          <div key={day.date} className={`forecast-day compact ${index === 0 ? 'today' : ''} ${day.projected ? 'projected' : ''}`}>
             <div className="day-header">
               <span className="day-name">
-                {index === 0 ? 'Today' : index === 1 ? 'Tomorrow' : day.dayOfWeek.slice(0, 3)}
+                {index === 0 ? 'Today' : index === 1 ? 'Tmrw' : day.dayOfWeek.slice(0, 3)}
               </span>
               <span className="day-date">{formatDate(day.date)}</span>
             </div>
             
+            <div className="day-weather-icon">
+              {getWeatherEmoji(day.shortForecast, day.precipChance)}
+            </div>
+            
             <div className="day-temps">
               <span className="high-temp">{day.highTemp}°</span>
-              <span className="temp-separator">/</span>
               <span className="low-temp">{day.lowTemp}°</span>
             </div>
             
-            <div className="day-conditions">
-              <div className="day-weather">{day.shortForecast}</div>
+            {/* Compact conditions row */}
+            <div className="day-conditions-compact">
               {day.precipChance > 20 && (
-                <div className="day-precip">
-                  💧 {day.precipChance}%
-                  {day.precipAmount > 0 && ` (${day.precipAmount}")`}
-                </div>
+                <span className="precip-compact">💧{day.precipChance}%</span>
+              )}
+              {day.frostRisk && <span className="risk-indicator">❄️</span>}
+              {day.heatStress && <span className="risk-indicator">🔥</span>}
+              {day.growingDegreeDays > 5 && (
+                <span className="gdd-compact">🌱{Math.round(day.growingDegreeDays)}</span>
               )}
             </div>
-            
-            {/* Garden-specific indicators */}
-            <div className="day-garden-info">
-              {day.frostRisk && <span className="garden-indicator frost">❄️ Frost Risk</span>}
-              {day.heatStress && <span className="garden-indicator heat">🔥 Heat Stress</span>}
-              {day.growingDegreeDays > 0 && (
-                <span className="garden-indicator gdd">🌱 {day.growingDegreeDays} GDD</span>
-              )}
-            </div>
-
-            {/* Recommendations for today/tomorrow */}
-            {index < 2 && day.recommendedActions && day.recommendedActions.length > 0 && (
-              <div className="day-recommendations">
-                {day.recommendedActions.slice(0, 2).map((action, actionIndex) => (
-                  <div key={actionIndex} className="recommendation">
-                    ✓ {action}
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         ))}
       </div>
@@ -262,5 +286,6 @@ function getGrowthPotentialClass(potential) {
   if (potential >= 40) return 'fair';
   return 'poor';
 }
+
 
 export default ForecastWidget;
