@@ -3,9 +3,10 @@
  * Critical decision-making information for Durham garden management
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { generateGardenTasks, generatePureShoppingRecommendations } from '../services/temporalShoppingService';
 import GardenCalendar from './GardenCalendar.js';
+import ForecastWidget from './ForecastWidget.js';
 import { 
   getDurhamWeatherAlerts, 
   getReadyToHarvest, 
@@ -28,6 +29,9 @@ const DashboardView = ({
   onViewChange,
   gardenCalendar = []
 }) => {
+  // Weather impact state for simulation adjustments
+  const [weatherImpact, setWeatherImpact] = useState(null);
+
   // Get critical data for decision making
   const weatherAlerts = getDurhamWeatherAlerts();
   const readyToHarvest = getReadyToHarvest();
@@ -220,6 +224,9 @@ const DashboardView = ({
           </div>
         )}
       </div>
+
+      {/* Weather Forecast */}
+      <ForecastWidget onSimulationImpact={setWeatherImpact} />
 
       {/* Garden Calendar - Full Width */}
       <div className="garden-calendar-dashboard">

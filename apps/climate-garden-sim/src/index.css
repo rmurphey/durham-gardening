@@ -2922,6 +2922,395 @@ p {
   }
 }
 
+/* ========================================
+   FORECAST WIDGET
+======================================== */
+.forecast-widget {
+  margin-bottom: var(--spacing-lg);
+}
+
+.forecast-header {
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.forecast-location {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.forecast-warning {
+  background: var(--color-warning-light);
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-warning-dark);
+  margin-top: var(--spacing-xs);
+}
+
+.forecast-loading, .forecast-error {
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+
+.forecast-loading h3, .forecast-error h3 {
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-primary);
+}
+
+.forecast-retry-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.forecast-retry-btn:hover {
+  background: var(--color-primary-dark);
+}
+
+/* Forecast Alerts */
+.forecast-alerts {
+  margin-bottom: var(--spacing-md);
+}
+
+.forecast-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-xs);
+  border-left: 4px solid;
+}
+
+.forecast-alert.alert-high {
+  background: var(--color-error-light);
+  border-left-color: var(--color-error);
+}
+
+.forecast-alert.alert-medium {
+  background: var(--color-warning-light);
+  border-left-color: var(--color-warning);
+}
+
+.forecast-alert.alert-low {
+  background: var(--color-info-light);
+  border-left-color: var(--color-info);
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-days {
+  font-weight: normal;
+  color: var(--color-text-secondary);
+}
+
+.alert-recommendation {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+/* Summary Stats */
+.forecast-summary {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-background-light);
+  border-radius: var(--radius-md);
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+}
+
+.stat-value {
+  display: block;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.stat-value.potential-excellent { color: var(--color-success-dark); }
+.stat-value.potential-good { color: var(--color-info-dark); }
+.stat-value.potential-fair { color: var(--color-warning-dark); }
+.stat-value.potential-poor { color: var(--color-error-dark); }
+
+/* Daily Forecasts */
+.forecast-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.forecast-day {
+  background: var(--color-background-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  transition: all 0.2s ease;
+}
+
+.forecast-day.today {
+  border-color: var(--color-primary);
+  border-width: 2px;
+  background: var(--color-primary-pale);
+}
+
+.forecast-day.projected {
+  opacity: 0.8;
+  background: var(--color-background-light);
+}
+
+.forecast-day:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.day-name {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.day-date {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.day-temps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-sm);
+  gap: var(--spacing-xs);
+}
+
+.high-temp {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.temp-separator {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-lg);
+}
+
+.low-temp {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}
+
+.day-conditions {
+  text-align: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.day-weather {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.day-precip {
+  font-size: var(--font-size-xs);
+  color: var(--color-info-dark);
+}
+
+/* Garden Indicators */
+.day-garden-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+  justify-content: center;
+}
+
+.garden-indicator {
+  font-size: var(--font-size-xs);
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.garden-indicator.frost {
+  background: var(--color-info-light);
+  color: var(--color-info-dark);
+}
+
+.garden-indicator.heat {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.garden-indicator.gdd {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+/* Recommendations */
+.day-recommendations {
+  border-top: 1px solid var(--color-border-light);
+  padding-top: var(--spacing-sm);
+}
+
+.recommendation {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+  line-height: 1.3;
+}
+
+.recommendation:last-child {
+  margin-bottom: 0;
+}
+
+/* Actions */
+.forecast-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.forecast-toggle-btn, .forecast-refresh-btn {
+  background: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.forecast-toggle-btn:hover, .forecast-refresh-btn:hover {
+  background: var(--color-background-dark);
+  border-color: var(--color-primary);
+}
+
+.forecast-refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Simulation Impact */
+.simulation-impact {
+  background: var(--color-background-light);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  border-left: 4px solid var(--color-primary);
+}
+
+.simulation-impact h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+}
+
+.impact-factors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.impact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.impact-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.impact-value {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.risk-factors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.risk-factors strong {
+  font-size: var(--font-size-sm);
+  margin-right: var(--spacing-sm);
+}
+
+.risk-tag {
+  font-size: var(--font-size-xs);
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.risk-tag.frost { background: var(--color-info-light); color: var(--color-info-dark); }
+.risk-tag.heat { background: var(--color-warning-light); color: var(--color-warning-dark); }
+.risk-tag.drought { background: var(--color-error-light); color: var(--color-error-dark); }
+.risk-tag.moisture { background: var(--color-primary-light); color: var(--color-primary-dark); }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .forecast-days {
+    grid-template-columns: 1fr;
+  }
+  
+  .summary-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .impact-factors {
+    grid-template-columns: 1fr;
+  }
+  
+  .forecast-actions {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .forecast-toggle-btn, .forecast-refresh-btn {
+    width: 100%;
+  }
+}
+
 /* Urgent tasks notification banner */
 .urgent-tasks-banner {
   background: var(--color-urgent-light);

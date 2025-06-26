@@ -1,19 +1,14 @@
 # TODOs for Claude Code
 
-## ✅ COMPLETED: Combine Garden Tasks and Calendar
+## ✅ COMPLETED: Incorporate current weather and forecast data async
 
-- ✅ Replace Garden Tasks with the Calendar, and incorporate task information into the calendar
-- ✅ For non-recurring calendar items, let me dismiss the item once it's done.
-- ✅ For recurring calendar items (like watering), let me mark them as done so you'll remind me when to do them again.
-- ✅ This involves refreshing the interface async without user input!
-
-## ✅ COMPLETED: Move the calendar to the dashboard
-
-## Incorporate current weather and forecast data async
-
-## Plan a system that allows for cross-session persistence
-
-Right now, the application is based entirely on browser storage. What would it take to add authenticated users (via some existing SSO provider e.g. Google or Github)?
+- ✅ Created forecast API route with 10-day weather data from National Weather Service
+- ✅ Built Vercel cron function to update forecast every 6 hours
+- ✅ Added forecast data storage in Vercel KV for caching
+- ✅ Created ForecastWidget component with garden-specific alerts and recommendations
+- ✅ Integrated forecast display on dashboard with simulation impact factors
+- ✅ Added growing degree days, frost risk, and heat stress calculations
+- ✅ Built garden planning recommendations based on weather conditions
 
 ## Rethink settings
 
@@ -23,9 +18,26 @@ Right now, the application is based entirely on browser storage. What would it t
 
 ## I should be able to say "yes, I will do this thing" on the calendar, and it should offer to generate a shopping item.
 
-## Is there an easy-ish way to make sure only the garden creator can edit the garden?
+## consider how to make the app usable for more zip codes
 
+- Use the zip code 27707 for Durham for now
 
+## Make the setup a collapsible part of the dashboard, and eliminate the setup page
+
+## Is `NODE_ENV` set properly for dev vs production?
+
+## ✅ COMPLETED: Combine Garden Tasks and Calendar
+
+- ✅ Replace Garden Tasks with the Calendar, and incorporate task information into the calendar
+- ✅ For non-recurring calendar items, let me dismiss the item once it's done.
+- ✅ For recurring calendar items (like watering), let me mark them as done so you'll remind me when to do them again.
+- ✅ This involves refreshing the interface async without user input!
+
+## ✅ COMPLETED: Move the calendar to the dashboard
+
+## COMPLETED: Plan a system that allows for cross-session persistence
+
+Right now, the application is based entirely on browser storage. What would it take to add authenticated users (via some existing SSO provider e.g. Google or Github)?
 
 # evergreen todos
 
