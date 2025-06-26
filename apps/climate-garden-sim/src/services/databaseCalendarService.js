@@ -41,7 +41,13 @@ export const generateDatabaseGardenCalendar = async (
     // New indoor start crops
     'tomatoes', 'sweet_peppers', 'eggplant', 'basil',
     // Additional herbs and quick crops
-    'oregano', 'thyme', 'mint', 'arugula', 'radishes'
+    'oregano', 'thyme', 'mint', 'arugula', 'radishes',
+    // Microgreen varieties
+    'microgreen_peas', 'microgreen_radish', 'microgreen_broccoli',
+    // Sprouting varieties
+    'mung_beans', 'alfalfa_sprouts', 'broccoli_sprouts',
+    // Hydroponic suitable crops
+    'hydroponic_lettuce', 'hydroponic_herbs', 'hydroponic_greens'
   ];
 
   // Generate calendar for next 12 months
@@ -141,15 +147,19 @@ export const generateDatabaseGardenCalendar = async (
       const priorityOrder = { high: 1, medium: 2, low: 3 };
       const typeOrder = { 
         'indoor-starting': 1,
-        'shopping': 2,
-        'direct-sow': 3, 
-        'transplant': 4,
-        'succession': 5,
-        'harvest': 6, 
-        'care': 7,
-        'rotation': 8,
-        'infrastructure': 9,
-        'planning': 10
+        'aerogarden': 2,
+        'microgreen': 3,
+        'sprouting': 4,
+        'screen-porch': 5,
+        'shopping': 6,
+        'direct-sow': 7, 
+        'transplant': 8,
+        'succession': 9,
+        'harvest': 10, 
+        'care': 11,
+        'rotation': 12,
+        'infrastructure': 13,
+        'planning': 14
       };
       
       if (a.priority !== b.priority) {
@@ -184,7 +194,25 @@ function getCropDisplayName(cropKey) {
     'amaranth': 'Amaranth',
     'malabar_spinach': 'Malabar Spinach',
     'cabbage': 'Cabbage',
-    'carrots': 'Carrots'
+    'carrots': 'Carrots',
+    'tomatoes': 'Tomatoes',
+    'sweet_peppers': 'Sweet Peppers',
+    'eggplant': 'Eggplant',
+    'basil': 'Basil',
+    'oregano': 'Oregano',
+    'thyme': 'Thyme',
+    'mint': 'Mint',
+    'arugula': 'Arugula',
+    'radishes': 'Radishes',
+    'microgreen_peas': 'Pea Microgreens',
+    'microgreen_radish': 'Radish Microgreens',
+    'microgreen_broccoli': 'Broccoli Microgreens',
+    'mung_beans': 'Mung Bean Sprouts',
+    'alfalfa_sprouts': 'Alfalfa Sprouts',
+    'broccoli_sprouts': 'Broccoli Sprouts',
+    'hydroponic_lettuce': 'Hydroponic Lettuce',
+    'hydroponic_herbs': 'Hydroponic Herbs',
+    'hydroponic_greens': 'Hydroponic Greens'
   };
   
   return displayNames[cropKey] || cropKey.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -306,6 +334,9 @@ function addMaintenanceTasks(activities, monthNumber, summerScenario, winterScen
         { type: 'maintenance', crop: 'Planning', action: 'Plan next year\'s garden improvements', timing: 'Year-end planning', priority: 'medium' },
         { type: 'maintenance', crop: 'Tool Maintenance', action: 'Clean and store garden tools for winter', timing: 'Winter storage', priority: 'medium' }
       );
+      break;
+    default:
+      // No specific maintenance tasks for this month
       break;
   }
   

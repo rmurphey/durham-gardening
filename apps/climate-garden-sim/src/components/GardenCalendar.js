@@ -81,7 +81,11 @@ function getCategoryIcon(activityType) {
     'succession': '🔄',
     'rotation': '🔄',
     'indoor-starting': '🌱', // Seedling icon for indoor starts
-    'seed-starting': '🌱'    // Alternative naming
+    'seed-starting': '🌱',   // Alternative naming
+    'aerogarden': '💧',      // Hydroponic growing system
+    'microgreen': '🌿',      // Quick-growing microgreens
+    'sprouting': '🫘',       // Sprouting seeds/beans
+    'screen-porch': '🏠'     // Protected growing space
   };
   return <span className="activity-icon">{icons[activityType] || '📝'}</span>;
 }
