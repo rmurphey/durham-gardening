@@ -189,12 +189,6 @@ const DashboardView = ({
           </div>
         )}
 
-        {/* Garden Calendar - Integrated Task Management */}
-        <div className="garden-calendar-dashboard card">
-          <h3>📅 Garden Calendar & Tasks</h3>
-          <GardenCalendar gardenCalendar={gardenCalendar} />
-        </div>
-
         {/* Critical Shopping (Condensed) */}
         {urgentShopping.length > 0 && (
           <div className="urgent-shopping card">
@@ -225,6 +219,11 @@ const DashboardView = ({
             )}
           </div>
         )}
+      </div>
+
+      {/* Garden Calendar - Full Width */}
+      <div className="garden-calendar-dashboard">
+        <GardenCalendar gardenCalendar={gardenCalendar} />
       </div>
     </div>
   );

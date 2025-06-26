@@ -2433,11 +2433,35 @@ p {
   margin-bottom: var(--spacing-xl);
 }
 
+/* Dashboard-specific calendar styling */
+.garden-calendar-dashboard {
+  margin-bottom: 0;
+}
+
 .calendar-subtitle {
   color: var(--color-text-tertiary);
   font-style: italic;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
   text-align: center;
+}
+
+.activity-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: var(--color-background-light);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-light);
+}
+
+.legend-item {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  padding: 2px var(--spacing-xs);
 }
 
 .calendar-grid {
@@ -2506,13 +2530,33 @@ p {
   padding: var(--spacing-md);
   margin: var(--spacing-sm) 0;
   box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .activity-header {
   display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.activity-header-row {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-xs);
+  width: 100%;
+}
+
+.activity-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
 }
 
 .activity-crop {
@@ -2524,11 +2568,28 @@ p {
 .activity-priority {
   font-size: var(--font-size-xs);
   padding: 2px var(--spacing-sm);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   text-transform: uppercase;
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-error);
+  color: white;
+  border: 1px solid var(--color-error-dark);
+}
+
+.activity-frequency {
+  font-size: var(--font-size-xs);
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
   font-weight: var(--font-weight-medium);
-  background: var(--color-primary);
-  color: var(--color-background);
+  background: var(--color-info-light);
+  color: var(--color-info-dark);
+  border: 1px solid var(--color-info);
+}
+
+.next-due {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-style: italic;
 }
 
 .activity-action {
@@ -2662,13 +2723,22 @@ p {
   align-items: center;
   gap: var(--spacing-sm);
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .activity-controls {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  margin-left: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.activity-tags {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
 }
 
 /* Activity buttons */
@@ -2802,17 +2872,28 @@ p {
   color: var(--color-urgent-dark);
 }
 
+.activity-completed {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.completed-indicator {
+  color: var(--color-success-dark);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-xs);
+}
+
 /* Mobile responsiveness for task management */
 @media (max-width: 768px) {
-  .activity-header {
+  .activity-header-row {
     flex-direction: column;
     align-items: stretch;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
   }
   
   .activity-controls {
     justify-content: flex-end;
-    margin-left: 0;
   }
   
   .activity-btn {
@@ -2828,6 +2909,16 @@ p {
   
   .next-due {
     flex: 1 0 100%;
+  }
+  
+  .activity-legend {
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+  }
+  
+  .legend-item {
+    font-size: 0.65rem;
+    padding: 1px var(--spacing-xs);
   }
 }
 
@@ -3411,6 +3502,7 @@ p {
   .calendar-grid {
     grid-template-columns: 1fr;
   }
+  
   
   .recommendations-grid {
     grid-template-columns: 1fr;

@@ -46,57 +46,65 @@ const ActivityCard = ({ activity, state, onComplete, onDismiss, onUndoComplete, 
   return (
     <div className={`activity activity-${activity.type} priority-${activity.priority || 'medium'} state-${state}`}>
       <div className="activity-header">
-        <div className="activity-header-left">
-          <span className="activity-crop">{activity.crop}</span>
-          {getCategoryIcon(activity.type)}
-          {(activity.urgency === 'urgent' || activity.priority === 'critical') && (
-            <span className={`activity-priority priority-${activity.urgency || activity.priority}`}>
-              {activity.urgency === 'urgent' || activity.priority === 'critical' ? 'urgent' : 'high'}
-            </span>
-          )}
-          {isRecurring && (
-            <span className="activity-frequency">
-              {activity.frequency}
-            </span>
-          )}
+        <div className="activity-header-row">
+          <div className="activity-header-left">
+            <span className="activity-crop">{activity.crop}</span>
+            {getCategoryIcon(activity.type)}
+          </div>
+          
+          <div className="activity-controls">
+            {!isCompleted && (
+              <>
+                <button 
+                  className="activity-btn complete-btn"
+                  onClick={onComplete}
+                  title={isRecurring ? `Mark as done (will remind ${activity.frequency})` : "Mark as completed"}
+                >
+                  ✓
+                </button>
+                {canDismiss && (
+                  <button 
+                    className="activity-btn dismiss-btn"
+                    onClick={onDismiss}
+                    title="Dismiss this task"
+                  >
+                    ✕
+                  </button>
+                )}
+              </>
+            )}
+            
+            {isCompleted && (
+              <div className="activity-completed">
+                <span className="completed-indicator">✓ Done</span>
+                <button 
+                  className="activity-btn undo-btn"
+                  onClick={onUndoComplete}
+                  title="Mark as not done"
+                >
+                  ↺
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         
-        <div className="activity-controls">
-          {!isCompleted && (
-            <>
-              <button 
-                className="activity-btn complete-btn"
-                onClick={onComplete}
-                title={isRecurring ? `Mark as done (will remind ${activity.frequency})` : "Mark as completed"}
-              >
-                ✓
-              </button>
-              {canDismiss && (
-                <button 
-                  className="activity-btn dismiss-btn"
-                  onClick={onDismiss}
-                  title="Dismiss this task"
-                >
-                  ✕
-                </button>
-              )}
-            </>
-          )}
+        <div className="activity-meta-row">
+          <div className="activity-tags">
+            {(activity.urgency === 'urgent' || activity.priority === 'critical') && (
+              <span className={`activity-priority priority-${activity.urgency || activity.priority}`}>
+                {activity.urgency === 'urgent' || activity.priority === 'critical' ? 'URGENT' : 'HIGH'}
+              </span>
+            )}
+            {isRecurring && (
+              <span className="activity-frequency">
+                {activity.frequency}
+              </span>
+            )}
+          </div>
           
-          {isCompleted && (
-            <div className="activity-completed">
-              <span className="completed-indicator">✓ Done</span>
-              {isRecurring && timeUntilNext && (
-                <span className="next-due">Next: {timeUntilNext}</span>
-              )}
-              <button 
-                className="activity-btn undo-btn"
-                onClick={onUndoComplete}
-                title="Mark as not done"
-              >
-                ↺
-              </button>
-            </div>
+          {isCompleted && isRecurring && timeUntilNext && (
+            <span className="next-due">Next: {timeUntilNext}</span>
           )}
         </div>
       </div>
@@ -199,6 +207,21 @@ const GardenCalendar = ({ gardenCalendar }) => {
       <div className="card-header">
         <h2 className="card-title">Garden Calendar</h2>
         <p className="card-subtitle calendar-subtitle">Month-by-month Durham garden planning</p>
+        
+        {/* Activity Icon Legend */}
+        <div className="activity-legend">
+          <span className="legend-item">🌱 Seeds/Starts</span>
+          <span className="legend-item">🌿 Transplant</span>
+          <span className="legend-item">🥬 Harvest</span>
+          <span className="legend-item">💚 Care</span>
+          <span className="legend-item">🔧 Maintenance</span>
+          <span className="legend-item">🛒 Shopping</span>
+          <span className="legend-item">🔄 Succession</span>
+          <span className="legend-item">🏗️ Infrastructure</span>
+          <span className="legend-item">💧 Hydroponic</span>
+          <span className="legend-item">🏠 Protected</span>
+        </div>
+        
         {urgentPendingTasks > 0 && (
           <div className="urgent-tasks-banner">
             🚨 {urgentPendingTasks} urgent task{urgentPendingTasks > 1 ? 's' : ''} need{urgentPendingTasks === 1 ? 's' : ''} attention
