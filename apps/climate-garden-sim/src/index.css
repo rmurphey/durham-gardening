@@ -1939,18 +1939,22 @@ p {
   margin-bottom: var(--spacing-lg);
 }
 
-.summary-stats {
+/* Legacy investment summary - override unified system for flexbox layout */
+.investment-summary .summary-stats {
   display: flex;
   gap: var(--spacing-lg);
   flex-wrap: wrap;
 }
 
-.stat-item {
+.investment-summary .stat-item {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+  border: none;
+  background: none;
+  padding: 0;
 }
 
-.stat-item strong {
+.investment-summary .stat-item strong {
   color: var(--color-text-primary);
   font-size: var(--font-size-base);
 }
@@ -3020,7 +3024,11 @@ p {
   margin-top: var(--spacing-xs);
 }
 
-/* Summary Stats */
+/* ========================================
+   UNIFIED SUMMARY STATS SYSTEM
+======================================== */
+
+/* Base container styles */
 .forecast-summary {
   margin-bottom: var(--spacing-md);
   padding: var(--spacing-md);
@@ -3028,30 +3036,60 @@ p {
   border-radius: var(--radius-md);
 }
 
+/* Unified summary stats grid */
 .summary-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-lg);
 }
 
+/* Individual stat item */
 .stat-item {
   text-align: center;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+  border: 1px solid var(--color-border-light);
+  transition: all 0.2s ease;
 }
 
+.stat-item:hover {
+  border-color: var(--color-primary-light);
+  transform: translateY(-1px);
+}
+
+/* Stat labels - small, uppercase, secondary color */
 .stat-label {
   display: block;
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-xs);
   text-transform: uppercase;
-  font-weight: var(--font-weight-medium);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
+/* Stat values - large, prominent, primary color */
 .stat-value {
   display: block;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
   color: var(--color-text-primary);
+  line-height: 1.1;
+}
+
+/* Metric/Imperial value styling */
+.stat-value .metric-primary {
+  color: var(--color-primary);
+}
+
+.stat-value .imperial-secondary {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  margin-top: 2px;
 }
 
 .stat-value.potential-excellent { color: var(--color-success-dark); }
@@ -3417,6 +3455,15 @@ p {
   
   .summary-stats {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+  
+  .stat-item {
+    padding: var(--spacing-xs);
+  }
+  
+  .stat-value {
+    font-size: var(--font-size-lg);
   }
   
   .impact-factors {
@@ -6419,7 +6466,8 @@ button:focus,
   margin-bottom: var(--spacing-lg);
 }
 
-.summary-stats {
+/* Annual summary - override unified system for flexbox layout */
+.annual-summary .summary-stats {
   display: flex;
   gap: var(--spacing-lg);
   margin-top: var(--spacing-md);
@@ -7000,7 +7048,8 @@ button:focus,
     grid-template-columns: 1fr;
   }
   
-  .summary-stats {
+  /* Annual summary mobile override */
+  .annual-summary .summary-stats {
     flex-direction: column;
     gap: var(--spacing-sm);
   }

@@ -633,6 +633,80 @@ export const formatAmount = (amount, decimals = 2) => {
   return Number(amount).toFixed(decimals);
 };
 
+// Temperature formatting utility with metric preference
+export const formatTemperature = (tempF, options = {}) => {
+  if (tempF === null || tempF === undefined || isNaN(tempF)) {
+    return '—';
+  }
+  
+  const {
+    unit = 'metric', // 'metric' (Celsius) or 'imperial' (Fahrenheit)
+    precision = 0,   // decimal places
+    showUnit = true  // include unit symbol
+  } = options;
+  
+  let temp, symbol;
+  
+  if (unit === 'metric') {
+    // Convert Fahrenheit to Celsius: (F - 32) × 5/9
+    temp = (tempF - 32) * 5 / 9;
+    symbol = '°C';
+  } else {
+    temp = tempF;
+    symbol = '°F';
+  }
+  
+  const formatted = Number(temp).toFixed(precision);
+  return showUnit ? `${formatted}${symbol}` : formatted;
+};
+
+// Precipitation formatting utility with metric preference
+export const formatPrecipitation = (inches, options = {}) => {
+  if (inches === null || inches === undefined || isNaN(inches)) {
+    return '—';
+  }
+  
+  const {
+    unit = 'metric',    // 'metric' (mm) or 'imperial' (inches)
+    precision = 1,      // decimal places
+    showUnit = true     // include unit symbol
+  } = options;
+  
+  let precip, symbol, finalPrecision;
+  
+  if (unit === 'metric') {
+    // Convert inches to millimeters: inches × 25.4
+    precip = inches * 25.4;
+    symbol = 'mm';
+    
+    // Use whole numbers for values >= 10mm
+    finalPrecision = precip >= 10 ? 0 : precision;
+  } else {
+    precip = inches;
+    symbol = '"';
+    finalPrecision = precision;
+  }
+  
+  const formatted = Number(precip).toFixed(finalPrecision);
+  return showUnit ? `${formatted}${symbol}` : formatted;
+};
+
+// Utility to format temperature ranges
+export const formatTemperatureRange = (lowF, highF, options = {}) => {
+  const low = formatTemperature(lowF, { ...options, showUnit: false });
+  const high = formatTemperature(highF, { ...options, showUnit: false });
+  const unit = options.unit === 'imperial' ? '°F' : '°C';
+  
+  return `${low}°–${high}${unit}`;
+};
+
+// Default unit preferences
+export const DEFAULT_UNIT_PREFERENCES = {
+  temperature: 'metric',    // 'metric' (Celsius) or 'imperial' (Fahrenheit)
+  precipitation: 'metric',  // 'metric' (mm) or 'imperial' (inches)
+  showUnits: true
+};
+
 // Microclimate configuration options
 export const MICROCLIMATE_OPTIONS = {
   slope: {

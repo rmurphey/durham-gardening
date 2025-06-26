@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { formatProbability } from '../config.js';
+import { formatProbability, formatTemperature, formatPrecipitation } from '../config.js';
 
 const ForecastWidget = ({ onSimulationImpact }) => {
   const [forecastData, setForecastData] = useState(null);
@@ -161,12 +161,18 @@ const ForecastWidget = ({ onSimulationImpact }) => {
       <div className="forecast-summary">
         <div className="summary-stats">
           <div className="stat-item">
-            <span className="stat-label">Avg Temp</span>
-            <span className="stat-value">{Math.round(summary.avgTemp)}°F</span>
+            <span className="stat-label">Average Temperature</span>
+            <span className="stat-value">
+              <span className="metric-primary">{formatTemperature(summary.avgTemp)}</span>
+              <span className="imperial-secondary">({formatTemperature(summary.avgTemp, { unit: 'imperial' })})</span>
+            </span>
           </div>
           <div className="stat-item">
-            <span className="stat-label">Total Rain</span>
-            <span className="stat-value">{summary.totalPrecip}"</span>
+            <span className="stat-label">Total Precipitation</span>
+            <span className="stat-value">
+              <span className="metric-primary">{formatPrecipitation(summary.totalPrecip)}</span>
+              <span className="imperial-secondary">({formatPrecipitation(summary.totalPrecip, { unit: 'imperial' })})</span>
+            </span>
           </div>
           <div className="stat-item">
             <span className="stat-label">Growing Days</span>
