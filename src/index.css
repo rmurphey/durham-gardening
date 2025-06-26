@@ -1859,40 +1859,44 @@ p {
    HEADER COMPONENT
 ======================================== */
 .header {
-  background: var(--color-background);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-xl);
-  margin-bottom: var(--spacing-xl);
-  box-shadow: var(--shadow-sm);
-  text-align: center;
-  border: 1px solid var(--color-border);
+  padding: var(--spacing-sm) 0;
+  margin-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .header-content {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.header-main {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
 .app-title {
   color: var(--color-text-primary);
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-sm);
+  margin: 0;
 }
 
 .app-subtitle {
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-base);
-  margin-bottom: 0;
+  font-size: var(--font-size-sm);
+  margin: 0;
 }
 
 .location-info {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--spacing-md);
-  font-style: italic;
-  margin-bottom: var(--spacing-sm);
+  gap: var(--spacing-sm);
+  font-style: normal;
 }
 
 .location-name {
@@ -1911,9 +1915,7 @@ p {
 .header-quick-stats {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--spacing-lg);
-  margin-top: var(--spacing-sm);
+  gap: var(--spacing-sm);
   font-size: var(--font-size-sm);
 }
 
@@ -1933,49 +1935,31 @@ p {
   font-weight: var(--font-weight-medium);
 }
 
-.garden-management {
+.garden-management, .garden-quick-nav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-top: var(--spacing-md);
+  gap: var(--spacing-xs);
 }
 
-.create-garden-btn {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  padding: var(--spacing-sm) var(--spacing-md);
+.create-garden-btn, .quick-start-btn {
+  background: var(--color-background-light);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .create-garden-btn:hover {
-  background: var(--color-primary-dark);
-}
-
-.garden-quick-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: var(--spacing-md);
-}
-
-.quick-start-btn {
-  background: var(--color-warning);
-  color: var(--color-warning-dark);
-  border: none;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-sm);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
 }
 
 .quick-start-btn:hover {
-  background: var(--color-warning-dark);
-  color: white;
+  background: var(--color-warning-light);
+  border-color: var(--color-warning);
 }
 
 .garden-content {
