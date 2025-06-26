@@ -23,6 +23,7 @@ import Navigation from './Navigation.js';
 import DashboardView from './DashboardView.js';
 import ShoppingView from './ShoppingView.js';
 import GardenAppContent from './GardenAppContent.js';
+import DefaultGardenRedirect from './DefaultGardenRedirect.js';
 
 // Configuration Components
 import ClimateScenarioSelector from './ClimateScenarioSelector.js';
@@ -154,16 +155,7 @@ function AppContent() {
       {/* Main Content */}
       <main className="main-content">
         <Routes>
-          <Route path="/" element={
-            <DashboardView 
-              shoppingActions={shoppingActions}
-              monthlyFocus={monthlyFocus}
-              simulationResults={simulationResults}
-              totalInvestment={totalInvestment}
-              onViewChange={handleViewChange}
-              gardenCalendar={gardenCalendar}
-            />
-          } />
+          <Route path="/" element={<DefaultGardenRedirect />} />
           <Route path="/dashboard" element={
             <DashboardView 
               shoppingActions={shoppingActions}
