@@ -91,13 +91,28 @@ jest.mock('../../hooks/useShoppingList', () => ({
   }))
 }));
 
-jest.mock('../../hooks/useTaskManager', () => ({
-  useTaskManager: jest.fn(() => ({
+jest.mock('../../hooks/useCalendarTaskManager', () => ({
+  useCalendarTaskManager: jest.fn(() => ({
     getTaskCount: () => 0,
     getCompletedCount: () => 0,
+    getUrgentPendingCount: () => 0,
     markTaskComplete: jest.fn(),
     getTaskStatus: jest.fn(() => 'pending')
   }))
+}));
+
+// Mock additional dependencies needed by GardenStateProvider
+jest.mock('../../config/durhamConfig', () => ({
+  DURHAM_CONFIG: {
+    location: 'Durham, NC',
+    zone: '7b'
+  }
+}));
+
+jest.mock('../../services/unifiedCalendarService', () => ({
+  generateUnifiedCalendar: jest.fn(() => Promise.resolve([
+    { month: 'January', activities: [] }
+  ]))
 }));
 
 describe('AppContent Component', () => {
@@ -194,10 +209,11 @@ describe('AppContent Component', () => {
       });
 
       // Mock task manager with incomplete tasks
-      const mockUseTaskManager = require('../../hooks/useTaskManager').useTaskManager;
-      mockUseTaskManager.mockReturnValue({
+      const mockUseCalendarTaskManager = require('../../hooks/useCalendarTaskManager').useCalendarTaskManager;
+      mockUseCalendarTaskManager.mockReturnValue({
         getTaskCount: () => 10,
         getCompletedCount: () => 3,
+        getUrgentPendingCount: () => 7,
         markTaskComplete: jest.fn(),
         getTaskStatus: jest.fn(() => 'pending')
       });
@@ -277,12 +293,12 @@ describe('AppContent Component', () => {
 
     test('uses shopping and task hooks correctly', () => {
       const mockUseShoppingList = require('../../hooks/useShoppingList').useShoppingList;
-      const mockUseTaskManager = require('../../hooks/useTaskManager').useTaskManager;
+      const mockUseCalendarTaskManager = require('../../hooks/useCalendarTaskManager').useCalendarTaskManager;
       
       renderWithRouter(['/']);
       
       expect(mockUseShoppingList).toHaveBeenCalled();
-      expect(mockUseTaskManager).toHaveBeenCalled();
+      expect(mockUseCalendarTaskManager).toHaveBeenCalled();
     });
   });
 
