@@ -18,14 +18,8 @@ const Navigation = ({
       id: 'dashboard',
       label: 'Dashboard',
       icon: '🎯',
-      description: 'Today\'s priorities & calendar',
+      description: 'Garden planning & simulation',
       badge: hasTasks ? 'new' : null
-    },
-    {
-      id: 'analysis',
-      label: 'Simulation',
-      icon: '📊',
-      description: 'Monte Carlo analysis & settings'
     },
     {
       id: 'shopping',

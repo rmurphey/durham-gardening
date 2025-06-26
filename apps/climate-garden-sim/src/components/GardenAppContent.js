@@ -30,9 +30,7 @@ import DashboardView from './DashboardView.js';
 import ShoppingView from './ShoppingView.js';
 
 // Configuration Components
-import SimulationResults from './SimulationResults.js';
 import GardenCalendar from './GardenCalendar.js';
-import CompactSettingsPanel from './CompactSettingsPanel.js';
 import { generateUnifiedCalendar } from '../services/unifiedCalendarService.js';
 
 /**
@@ -352,6 +350,7 @@ function GardenAppContent() {
               onCustomPortfolioChange={handleCustomPortfolioChange}
               investmentConfig={customInvestment}
               onInvestmentChange={setCustomInvestment}
+              simulating={simulating}
             />
           } />
           
@@ -362,31 +361,6 @@ function GardenAppContent() {
             />
           } />
           
-          <Route path="/analysis" element={
-            <div className="results-view">
-              <CompactSettingsPanel
-                climateScenarios={currentClimateScenarios}
-                selectedSummer={selectedSummer}
-                selectedWinter={selectedWinter}
-                onSummerChange={setSelectedSummer}
-                onWinterChange={setSelectedWinter}
-                portfolioStrategies={portfolioStrategies}
-                selectedPortfolio={selectedPortfolio}
-                onPortfolioChange={setSelectedPortfolio}
-                onCustomPortfolioChange={handleCustomPortfolioChange}
-                investmentConfig={customInvestment}
-                onInvestmentChange={setCustomInvestment}
-                disabled={isReadOnly}
-              />
-              
-              <SimulationResults 
-                simulationResults={simulationResults}
-                simulating={simulating}
-                totalInvestment={totalInvestment}
-                isReadOnly={isReadOnly}
-              />
-            </div>
-          } />
           
         </Routes>
       </main>

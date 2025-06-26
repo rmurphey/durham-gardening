@@ -8,6 +8,7 @@ import { generateGardenTasks, generatePureShoppingRecommendations } from '../ser
 import GardenCalendar from './GardenCalendar.js';
 import ForecastWidget from './ForecastWidget.js';
 import CompactSettingsPanel from './CompactSettingsPanel.js';
+import SimulationResults from './SimulationResults.js';
 import { 
   getDurhamWeatherAlerts, 
   getReadyToHarvest, 
@@ -41,7 +42,8 @@ const DashboardView = ({
   onCustomPortfolioChange,
   investmentConfig,
   onInvestmentChange,
-  isReadOnly = false
+  isReadOnly = false,
+  simulating = false
 }) => {
   // Weather impact state for simulation adjustments
   const [weatherImpact, setWeatherImpact] = useState(null);
@@ -183,22 +185,11 @@ const DashboardView = ({
               <div className="simulation-message">
                 {simulationSummary.message}
               </div>
-              <button 
-                className="view-analysis-btn"
-                onClick={() => onViewChange('analysis')}
-              >
-                {simulationSummary.action}
-              </button>
             </div>
           ) : (
             <div className="no-simulation">
               <p>{simulationSummary.message}</p>
-              <button 
-                className="run-simulation-btn"
-                onClick={() => onViewChange('analysis')}
-              >
-                {simulationSummary.action}
-              </button>
+              <p className="simulation-note">Configure settings above to run simulation</p>
             </div>
           )}
         </div>
@@ -257,6 +248,14 @@ const DashboardView = ({
 
       {/* Weather Forecast */}
       <ForecastWidget onSimulationImpact={setWeatherImpact} />
+
+      {/* Simulation Results */}
+      <SimulationResults 
+        simulationResults={simulationResults}
+        simulating={simulating}
+        totalInvestment={totalInvestment}
+        isReadOnly={isReadOnly}
+      />
 
       {/* Garden Calendar - Full Width */}
       <div className="garden-calendar-dashboard">

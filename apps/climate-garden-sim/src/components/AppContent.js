@@ -26,9 +26,7 @@ import GardenAppContent from './GardenAppContent.js';
 import DefaultGardenRedirect from './DefaultGardenRedirect.js';
 
 // Configuration Components
-import SimulationResults from './SimulationResults.js';
 import GardenCalendar from './GardenCalendar.js';
-import CompactSettingsPanel from './CompactSettingsPanel.js';
 import { generateUnifiedCalendar } from '../services/unifiedCalendarService.js';
 
 function AppContent() {
@@ -175,36 +173,13 @@ function AppContent() {
               investmentConfig={customInvestment}
               onInvestmentChange={setCustomInvestment}
               isReadOnly={false}
+              simulating={simulating}
             />
           } />
           <Route path="/garden/:id/*" element={<GardenAppContent />} />
           <Route path="/tasks" element={<Navigate to="/dashboard" replace />} />
           <Route path="/calendar" element={<Navigate to="/dashboard" replace />} />
           <Route path="/shopping" element={<ShoppingView shoppingActions={shoppingActions} />} />
-          <Route path="/analysis" element={
-            <div className="results-view">
-              <CompactSettingsPanel
-                climateScenarios={currentClimateScenarios}
-                selectedSummer={selectedSummer}
-                selectedWinter={selectedWinter}
-                onSummerChange={setSelectedSummer}
-                onWinterChange={setSelectedWinter}
-                portfolioStrategies={portfolioStrategies}
-                selectedPortfolio={selectedPortfolio}
-                onPortfolioChange={setSelectedPortfolio}
-                onCustomPortfolioChange={handleCustomPortfolioChange}
-                investmentConfig={customInvestment}
-                onInvestmentChange={setCustomInvestment}
-                disabled={false}
-              />
-              
-              <SimulationResults 
-                simulationResults={simulationResults}
-                simulating={simulating}
-                totalInvestment={totalInvestment}
-              />
-            </div>
-          } />
         </Routes>
       </main>
     </div>
