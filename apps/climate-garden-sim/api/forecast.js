@@ -151,7 +151,7 @@ function transformForGardenPlanning(weatherData) {
         humidity: findAverageHumidity(dayHourlyData),
         heatIndex: null, // Will calculate
         windChill: null, // Will calculate
-        apparentTemp: null // Will calculate
+        apparentTemp: null, // Will calculate
         
         // Precipitation (affects irrigation planning)
         precipChance: period.probabilityOfPrecipitation?.value || 0,
