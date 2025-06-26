@@ -7,26 +7,31 @@ import { DURHAM_CROPS } from '../config/durhamConfig.js';
 // import { DURHAM_CALENDAR } from '../config/durhamConfig.js'; // Available for future calendar integration
 
 /**
- * Generate this month's focus for Durham gardening
+ * Generate this month's focus for location-specific gardening
  */
-export const generateDurhamMonthlyFocus = (portfolio, simulationResults) => {
+export const generateLocationMonthlyFocus = (portfolio, simulationResults, locationConfig = {}) => {
   const currentMonth = new Date().getMonth() + 1;
   const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 
                      'July', 'August', 'September', 'October', 'November', 'December'];
   const monthName = monthNames[currentMonth];
+  
+  // Get location information
+  const locationName = locationConfig.name || 'your location';
+  const hardiness = locationConfig.hardiness || '7b';
+  const hardinessNumber = parseInt(hardiness) || 7;
 
   // Get base calendar activities for this month
   // Note: monthlyActivities could be used for automated activity suggestions
   // const monthlyActivities = DURHAM_CALENDAR[monthName.toLowerCase()] || {};
   
-  let focus = `**${monthName} Focus for Durham Gardens:**\n\n`;
+  let focus = `**${monthName} Focus for ${locationName}:**\n\n`;
 
   switch (currentMonth) {
     case 1: // January
       focus += "🌱 **Planning Season**\n";
       focus += "- Order heat-tolerant seeds while selection is best\n";
       focus += "- Plan bed rotations and new plantings\n";
-      focus += "- Harvest any remaining kale and winter greens\n";
+      focus += hardinessNumber >= 7 ? "- Harvest any remaining kale and winter greens\n" : "- Plan for earlier spring planting (warmer zone)\n";
       break;
 
     case 2: // February  
@@ -46,7 +51,7 @@ export const generateDurhamMonthlyFocus = (portfolio, simulationResults) => {
     case 4: // April
       focus += "☀️ **Transition Month**\n";
       focus += "- Last chance for cool crops before heat\n";
-      focus += "- Transplant warm-season crops after soil warms\n";
+      focus += hardinessNumber >= 8 ? "- Transplant warm-season crops (warmer zone allows earlier planting)\n" : "- Transplant warm-season crops after soil warms\n";
       focus += "- Install shade cloth framework\n";
       break;
 
@@ -107,7 +112,7 @@ export const generateDurhamMonthlyFocus = (portfolio, simulationResults) => {
       break;
     
     default:
-      focus += "🌱 **Year-Round Durham Gardening**\n";
+      focus += `🌱 **Year-Round Gardening (Zone ${hardiness})**\n`;
       focus += "- Monitor soil moisture and weather conditions\n";
       focus += "- Continue succession plantings appropriate for season\n";
       focus += "- Maintain garden infrastructure and tools\n";
@@ -119,7 +124,7 @@ export const generateDurhamMonthlyFocus = (portfolio, simulationResults) => {
     focus += "\n**Your Portfolio Focus:**\n";
     Object.entries(portfolio).forEach(([cropType, percentage]) => {
       if (percentage >= 15) {
-        const advice = getPortfolioAdvice(cropType, currentMonth);
+        const advice = getPortfolioAdvice(cropType, currentMonth, hardiness);
         if (advice) focus += `- ${advice}\n`;
       }
     });
@@ -187,8 +192,9 @@ export const generateDurhamWeeklyActions = (portfolio) => {
 /**
  * Generate top crop recommendations for Durham
  */
-export const generateDurhamTopCrops = (portfolio) => {
+export const generateDurhamTopCrops = (portfolio, locationConfig = {}) => {
   const currentMonth = new Date().getMonth() + 1;
+  const hardiness = locationConfig.hardiness || '7b';
   const recommendations = [];
 
   // Get seasonal recommendations
@@ -200,9 +206,9 @@ export const generateDurhamTopCrops = (portfolio) => {
       recommendations.push({
         crop: crop.name,
         confidence: 'high',
-        reason: getSeasonalReason(cropKey, currentMonth),
+        reason: getSeasonalReason(cropKey, currentMonth, hardiness),
         varieties: Object.keys(crop.varieties || {}).slice(0, 2),
-        timing: crop.planting?.timing || 'Check Durham calendar'
+        timing: crop.planting?.timing || `Check Zone ${hardiness} calendar`
       });
     }
   });
@@ -220,23 +226,40 @@ export const generateDurhamTopCrops = (portfolio) => {
 };
 
 /**
- * Generate Durham-specific site recommendations
+ * Generate location-specific site recommendations
  */
-export const generateDurhamSiteRecommendations = () => {
+export const generateDurhamSiteRecommendations = (locationConfig = {}) => {
   const currentMonth = new Date().getMonth() + 1;
+  const locationName = locationConfig.name || 'your location';
+  const hardiness = locationConfig.hardiness || '7b';
+  const hardinessNumber = parseInt(hardiness) || 7;
   const recommendations = [];
 
-  // Year-round Durham tips
-  recommendations.push({
-    category: 'Clay Soil Management',
-    tip: 'Never work Durham clay soil when wet - wait until it crumbles',
-    priority: 'high',
-    season: 'all'
-  });
+  // Climate-aware soil management
+  if (locationName.toLowerCase().includes('nc') || locationName.toLowerCase().includes('clay')) {
+    recommendations.push({
+      category: 'Clay Soil Management',
+      tip: `Never work ${locationName} clay soil when wet - wait until it crumbles`,
+      priority: 'high',
+      season: 'all'
+    });
+  } else {
+    recommendations.push({
+      category: 'Soil Management',
+      tip: `Adapt soil work timing to your local ${locationName} conditions`,
+      priority: 'medium',
+      season: 'all'
+    });
+  }
 
+  // Heat protection based on hardiness zone
+  const shadeRecommendation = hardinessNumber >= 8 ? 
+    '40% shade cloth recommended for extremely hot climates' : 
+    '30% shade cloth is essential for summer success';
+  
   recommendations.push({
     category: 'Heat Protection',
-    tip: '30% shade cloth is essential for Durham summer success',
+    tip: `${shadeRecommendation} in Zone ${hardiness}`,
     priority: 'high',
     season: 'summer'
   });
@@ -252,17 +275,23 @@ export const generateDurhamSiteRecommendations = () => {
   }
 
   if (currentMonth >= 11 || currentMonth <= 2) {
+    const winterTip = hardinessNumber >= 8 ? 
+      `Extended growing season in Zone ${hardiness} allows more diverse winter crops` :
+      hardinessNumber <= 6 ?
+      `Zone ${hardiness} requires more winter protection - use cold frames and row covers` :
+      `Kale and hardy greens can overwinter in Zone ${hardiness} with minimal protection`;
+    
     recommendations.push({
       category: 'Winter Growing',
-      tip: 'Kale and hardy greens can overwinter in Durham with minimal protection',
+      tip: winterTip,
       priority: 'medium',
       season: 'winter'
     });
   }
 
   recommendations.push({
-    category: 'Durham Climate',
-    tip: 'Plan for extended heat waves - backup shade and extra water capacity',
+    category: 'Climate Planning',
+    tip: `Plan for Zone ${hardiness} extremes - backup shade and extra water capacity`,
     priority: 'medium',
     season: 'all'
   });
@@ -272,15 +301,15 @@ export const generateDurhamSiteRecommendations = () => {
 };
 
 /**
- * Generate specific, actionable investment recommendations for Durham
+ * Generate specific, actionable investment recommendations for location
  * Only recommends items that have immediate value based on current date
  */
-export const generateDurhamInvestmentPriority = (customInvestment) => {
+export const generateDurhamInvestmentPriority = (customInvestment, locationConfig = {}) => {
   const recommendations = [];
   const currentMonth = new Date().getMonth() + 1;
-  const currentDate = new Date();
-  const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 
-                     'July', 'August', 'September', 'October', 'November', 'December'];
+  const locationName = locationConfig.name || 'your location';
+  const hardiness = locationConfig.hardiness || '7b';
+  const hardinessNumber = parseInt(hardiness) || 7;
 
   // December (Month 12) - Planning season, order for spring
   if (currentMonth === 12) {
@@ -290,8 +319,8 @@ export const generateDurhamInvestmentPriority = (customInvestment) => {
       price: 45.00,
       category: 'Planning',
       urgency: 'medium',
-      timing: 'Order now for best selection, plant in February-March',
-      why: 'Get first pick of heat-tolerant varieties before they sell out',
+      timing: hardinessNumber >= 8 ? 'Order now for best selection, plant in January-February' : 'Order now for best selection, plant in February-March',
+      why: `Get first pick of heat-tolerant varieties for Zone ${hardiness} before they sell out`,
       where: 'True Leaf Market, Southern Exposure',
       quantity: 1,
       specifications: 'Okra, amaranth, heat-tolerant lettuce, and pepper seeds'
@@ -319,8 +348,8 @@ export const generateDurhamInvestmentPriority = (customInvestment) => {
       price: 67.00,
       category: 'Seed Starting',
       urgency: 'high',
-      timing: 'Set up now for February pepper/tomato starts',
-      why: 'Essential for starting warm-season crops indoors before last frost',
+      timing: hardinessNumber >= 8 ? 'Set up now for January starts (warmer zone)' : 'Set up now for February pepper/tomato starts',
+      why: `Essential for starting warm-season crops indoors before last frost in Zone ${hardiness}`,
       where: 'Amazon or local nursery',
       quantity: 1,
       specifications: 'Seed trays, heat mat, dome covers, seed starting soil'
@@ -362,7 +391,7 @@ export const generateDurhamInvestmentPriority = (customInvestment) => {
       category: 'Soil Amendment',
       urgency: 'medium',
       timing: 'Order for March delivery when clay soil is workable',
-      why: 'Durham clay needs amendment before spring planting',
+      why: `${locationName} soil needs amendment before spring planting`,
       where: 'Local nursery or landscape supply',
       quantity: 1,
       specifications: 'Aged compost, delivered when soil conditions allow working'
@@ -535,18 +564,20 @@ export const generateDurhamInvestmentPriority = (customInvestment) => {
 };
 
 // Helper functions
-function getPortfolioAdvice(cropType, month) {
+function getPortfolioAdvice(cropType, month, hardiness = '7b') {
+  const hardinessNumber = parseInt(hardiness) || 7;
+  
   switch (cropType) {
     case 'heatSpecialists':
-      if (month >= 5 && month <= 7) return 'Perfect time for heat-loving crops';
-      if (month === 3 || month === 4) return 'Start heat crops indoors';
+      if (month >= 5 && month <= 7) return `Perfect time for heat-loving crops (Zone ${hardiness})`;
+      if (month === 3 || month === 4) return hardinessNumber >= 7 ? 'Start heat crops indoors' : 'Wait for warmer weather to start heat crops';
       break;
     case 'coolSeason':
-      if (month >= 2 && month <= 4) return 'Prime cool season planting time';
-      if (month >= 8 && month <= 9) return 'Fall cool crops can be planted now';
+      if (month >= 2 && month <= 4) return `Prime cool season planting time (Zone ${hardiness})`;
+      if (month >= 8 && month <= 9) return hardinessNumber <= 7 ? 'Fall cool crops can be planted now' : 'Extended growing season for cool crops';
       break;
     case 'perennials':
-      if (month === 3 || month === 4) return 'Spring care for established perennials';
+      if (month === 3 || month === 4) return `Spring care for established perennials (Zone ${hardiness})`;
       break;
     
     default:
@@ -593,11 +624,11 @@ function isCropInSeason(cropKey, month) {
   return true; // Perennials
 }
 
-function getSeasonalReason(cropKey, month) {
+function getSeasonalReason(cropKey, month, hardiness = '7b') {
   if (isCropInSeason(cropKey, month)) {
-    return `Perfect timing for Durham Zone 7b`;
+    return `Perfect timing for Zone ${hardiness}`;
   }
-  return `Check Durham calendar for best timing`;
+  return `Check local calendar for Zone ${hardiness} timing`;
 }
 
 function getPortfolioRelevance(cropName, portfolio) {

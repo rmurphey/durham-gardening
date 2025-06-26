@@ -6,7 +6,7 @@
 import React, { createContext, useContext, useState, useMemo } from 'react';
 import { generateSuccessOutlook } from '../config.js';
 import { 
-  generateDurhamMonthlyFocus,
+  generateLocationMonthlyFocus,
   generateDurhamWeeklyActions,
   generateDurhamTopCrops,
   generateDurhamSiteRecommendations,
@@ -72,16 +72,16 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
     }
   };
 
-  // Generate Durham-specific recommendations
+  // Generate location-aware recommendations
   const recommendations = useMemo(() => {
-    const monthlyFocus = generateDurhamMonthlyFocus(portfolioStrategies[selectedPortfolio], simulationResults);
+    const monthlyFocus = generateLocationMonthlyFocus(portfolioStrategies[selectedPortfolio], simulationResults, locationConfig);
     const weeklyActions = generateDurhamWeeklyActions(portfolioStrategies[selectedPortfolio]);
     const successOutlook = simulationResults ? 
       generateSuccessOutlook(simulationResults, locationConfig)?.message || 'Analyzing garden potential...' : 
       'Run simulation to see success outlook';
-    const investmentPriority = generateDurhamInvestmentPriority(customInvestment);
-    const topCropRecommendations = generateDurhamTopCrops(portfolioStrategies[selectedPortfolio]);
-    const siteSpecificRecommendations = generateDurhamSiteRecommendations();
+    const investmentPriority = generateDurhamInvestmentPriority(customInvestment, locationConfig);
+    const topCropRecommendations = generateDurhamTopCrops(portfolioStrategies[selectedPortfolio], locationConfig);
+    const siteSpecificRecommendations = generateDurhamSiteRecommendations(locationConfig);
 
     return {
       monthlyFocus,
