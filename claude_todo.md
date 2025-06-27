@@ -14,21 +14,15 @@
 - ✅ Preserved accurate development history showing the evolution
 - ✅ Added context notes about storage layer decisions
 
-## IN PROGRESS: Investigation: Is `NODE_ENV` set properly for dev vs production?
 
-- The app UI shows a test-related "toast" when tests pass. This should only happen in local development, not in production. 
-- Vercel should provide basic env data.
-- If you need additional env data, let's discuss!
+## IN PROGRESS: Feature: Let users choose their location on a map
 
-**Investigation Notes:**
+**Plan:**
 - Started: 2025-06-27
-- FINDING: Vercel project has NO environment variables set (`vercel env ls` returns empty)
-- NODE_ENV should be automatically set by Vercel to 'production' in production builds
-- Current code has NODE_ENV checks in weatherConfig.js and ForecastWidget.js
-- Comments in code suggest toast notifications planned but not implemented yet
-- Need to verify if Vercel is auto-setting NODE_ENV or if we need to set it manually
-
-## Feature: Let users choose their location on a map
+- Add interactive map component to location setup
+- Integrate with existing location validation and geolocation system
+- Support continental US region restrictions
+- Maintain existing fallback options and coordinate entry
 
 ## Fix: when I click "share" there should be some kind of feedback
 
@@ -172,3 +166,12 @@ Right now, the application is based entirely on browser storage. What would it t
 - ✅ Offers Durham, NC fallback location with user confirmation dialog
 - ✅ Gracefully handles API failures by allowing location entry anyway
 - ✅ Integrated seamlessly with existing location setup workflow
+
+## ✅ COMPLETED: Investigation: Is `NODE_ENV` set properly for dev vs production? (2025-06-27)
+
+- ✅ Investigated Vercel environment configuration (no custom env vars needed)
+- ✅ **FOUND AND FIXED the test toast issue!** Located in `src/services/databaseService.js:1062-1077`
+- ✅ Added `process.env.NODE_ENV !== 'production'` checks to both success and failure toast notifications
+- ✅ Test toasts (✅ ZERO TOLERANCE: ALL TESTS PASSED) now only appear in development
+- ✅ Verified Vercel automatically sets NODE_ENV=production during builds
+- ✅ Current environment detection now working properly with toast fix applied

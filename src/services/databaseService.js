@@ -1058,8 +1058,8 @@ if (typeof window !== 'undefined') {
       
       if (failedTests === 0) {
         console.log('🎉 ALL TESTS PASSED! Zero tolerance placeholder prevention is working!');
-        // Add visual indicator to page
-        if (document.body) {
+        // Add visual indicator to page (development only)
+        if (process.env.NODE_ENV !== 'production' && document.body) {
           const indicator = document.createElement('div');
           indicator.style.cssText = 'position:fixed;top:10px;right:10px;background:green;color:white;padding:10px;border-radius:5px;z-index:9999;font-family:monospace;';
           indicator.textContent = '✅ ZERO TOLERANCE: ALL TESTS PASSED';
@@ -1068,8 +1068,8 @@ if (typeof window !== 'undefined') {
         }
       } else {
         console.error('🚨 TESTS FAILED! Placeholders were found in the UI output!');
-        // Add visual error indicator to page
-        if (document.body) {
+        // Add visual error indicator to page (development only)
+        if (process.env.NODE_ENV !== 'production' && document.body) {
           const indicator = document.createElement('div');
           indicator.style.cssText = 'position:fixed;top:10px;right:10px;background:red;color:white;padding:10px;border-radius:5px;z-index:9999;font-family:monospace;';
           indicator.textContent = `❌ PLACEHOLDERS FOUND! ${failedTests}/${totalTests} failed`;
