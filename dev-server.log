@@ -224,3 +224,20 @@ src/services/databaseService.js
 [39m[22m
 
 webpack compiled with [1m[33m1 warning[39m[22m
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/services/databaseService.js
+  Line 1305:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src/services/databaseService.js
+  Line 1305:30:  Function declared in a loop contains unsafe references to variable(s) 'totalTests', 'failedTests', 'failedTests'  no-loop-func
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m

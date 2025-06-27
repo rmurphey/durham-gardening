@@ -1,14 +1,14 @@
 # TODOs for Claude Code
 
-## clearly document sql schema
 
-## move completed todos to the end of this file
+## the simulation should incorporate updated weather data
+
+## make a plan for more species coverage
+
+- Reasonable varieties and recommendations for continental US
+- Limit research costs 
 
 # evergreen todos
-
-## Rename repo from durham-gardening to garden-sim
-
-## Rename directory from shopping to garden-sim
 
 ## Does the design system need any updates?
 
@@ -30,6 +30,11 @@
 ---
 
 # KEY LEARNINGS & ARCHITECTURAL DECISIONS
+
+## Database Schema Documentation (2025-06-27)
+**Learning:** Well-structured database architecture but massive content gap - 22 varieties vs. 100+ needed for continental US coverage
+**Pattern Established:** Comprehensive schema documentation reveals both technical strengths and data limitations that constrain application utility
+**Architecture:** Complex relational design with vendors, regions, growing tips, companion plants - technically sound but under-populated
 
 ## Database Integration (2025-06-27)
 **Learning:** Database contains only 22 plant varieties - insufficient for continental US coverage (needs 100+ varieties across more categories)
