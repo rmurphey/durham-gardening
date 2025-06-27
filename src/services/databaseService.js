@@ -95,7 +95,7 @@ class DatabaseService {
     this.fallbackData = true;
     
     // Durham-specific activity templates (extracted from database)
-    // This data matches the structure in durham_data.sql
+    // This data matches the structure in garden_data.sql
     
     this.activityTemplates = [
       // Hot peppers shopping (February)
@@ -1293,6 +1293,111 @@ class DatabaseService {
       console.warn(`Failed to get varieties for ${plantKey}:`, error);
       return this.getStaticPlantVarieties(plantKey);
     }
+  }
+
+  /**
+   * Get all crops from database in format compatible with GLOBAL_CROP_DATABASE
+   * @returns {Object} Crops organized by category (heatTolerant, coolSeason, perennials)
+   */
+  async getAllCropsFromDatabase() {
+    if (!this.isInitialized) {
+      console.log('Database not initialized, using static fallback');
+      return this.getStaticCropDatabase();
+    }
+
+    try {
+      const query = `
+        SELECT 
+          p.plant_key,
+          pn.common_name,
+          p.min_zone,
+          p.max_zone,
+          p.min_temp,
+          p.max_temp,
+          p.planting_months,
+          p.harvest_start_month,
+          p.harvest_duration,
+          p.drought_tolerance,
+          p.heat_tolerance,
+          p.humidity_tolerance,
+          p.days_to_maturity,
+          p.plant_type,
+          p.optimal_temp_min,
+          p.optimal_temp_max
+        FROM plants p
+        JOIN plant_names pn ON p.id = pn.plant_id
+        WHERE pn.language = 'en'
+        ORDER BY p.plant_key
+      `;
+
+      const result = this.db.exec(query);
+      if (!result.length) return this.getStaticCropDatabase();
+
+      const crops = {
+        heatTolerant: {},
+        coolSeason: {},
+        perennials: {}
+      };
+
+      result[0].values.forEach(row => {
+        const [
+          plantKey, commonName, minZone, maxZone, minTemp, maxTemp,
+          plantingMonths, harvestStart, harvestDuration, drought, heat, humidity,
+          daysToMaturity, plantType, optimalTempMin, optimalTempMax
+        ] = row;
+
+        // Parse planting months from JSON string
+        let plantingMonthsArray = [];
+        try {
+          plantingMonthsArray = JSON.parse(plantingMonths || '[]');
+        } catch (e) {
+          console.warn(`Failed to parse planting months for ${plantKey}:`, plantingMonths);
+          plantingMonthsArray = [];
+        }
+
+        // Determine category based on heat tolerance
+        let category = 'coolSeason';
+        if (heat === 'excellent' || heat === 'good') {
+          category = 'heatTolerant';
+        } else if (plantType === 'perennial' || plantType === 'herb') {
+          category = 'perennials';
+        }
+
+        crops[category][plantKey] = {
+          name: { en: commonName },
+          zones: `${minZone}-${maxZone}`,
+          minTemp: minTemp,
+          maxTemp: maxTemp,
+          optimalTemp: [optimalTempMin || 15, optimalTempMax || 25],
+          plantingMonths: { temperate: plantingMonthsArray },
+          harvestStart: harvestStart || 2,
+          harvestDuration: harvestDuration || 2,
+          transplantWeeks: 0,
+          drought: drought || 'moderate',
+          heat: heat || 'moderate',
+          humidity: humidity || 'moderate',
+          daysToMaturity: daysToMaturity || 60,
+          dataSource: 'database'
+        };
+      });
+
+      console.log(`Loaded ${Object.keys(crops.heatTolerant).length + Object.keys(crops.coolSeason).length + Object.keys(crops.perennials).length} crops from database`);
+      return crops;
+
+    } catch (error) {
+      console.error('Error loading crops from database:', error);
+      return this.getStaticCropDatabase();
+    }
+  }
+
+  /**
+   * Get static crop database as fallback
+   * @returns {Object} Static crop data
+   */
+  getStaticCropDatabase() {
+    console.log('Using static crop database fallback');
+    const { GLOBAL_CROP_DATABASE } = require('../config.js');
+    return GLOBAL_CROP_DATABASE;
   }
 
   /**

@@ -12,7 +12,7 @@ The Durham Garden Planner uses a SQLite database with WebAssembly (WASM) to run 
 - **Purpose**: Central data store for garden activities, plant information, and regional templates
 - **Location**: Static file served alongside the application
 - **Schema**: Defined in `database/activity_schema.sql`
-- **Data**: Populated with Durham-specific templates in `database/durham_data.sql`
+- **Data**: Populated with zone 7b temperate climate templates in `database/garden_data.sql`
 
 ### 2. sql.js Library
 - **What it is**: SQLite compiled to WebAssembly for browser execution
@@ -155,7 +155,7 @@ Calendar Display ← Component State ← Service Response ← Query Results ↵
 
 ### Adding New Data
 1. Update schema in `database/activity_schema.sql` if needed
-2. Add data to `database/durham_data.sql`
+2. Add data to `database/garden_data.sql`
 3. Rebuild database with `npm run db:build`
 4. Test queries in `src/services/databaseService.js`
 

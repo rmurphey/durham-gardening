@@ -4,7 +4,7 @@
  * Now pulls data from SQLite database instead of hardcoded JS data
  */
 
-import { GLOBAL_CROP_DATABASE } from '../config.js';
+import { cropDataService } from './cropDataService.js';
 
 // Database service for seed ordering information
 class SeedOrderingDatabaseService {
@@ -223,7 +223,7 @@ export const generateAnnualSeedPlan = async (portfolioStrategy, gardenConfig) =>
  * Generate seed requirements for a crop category (now async for database queries)
  */
 const generateCategorySeeds = async (category, allocation, sizeMultiplier, plan) => {
-  const categorySeeds = getCategorySeeds(category);
+  const categorySeeds = await getCategorySeeds(category);
   
   for (const crop of categorySeeds) {
     const seedRequirement = await calculateSeedRequirements(crop, allocation, sizeMultiplier);
@@ -234,7 +234,7 @@ const generateCategorySeeds = async (category, allocation, sizeMultiplier, plan)
 /**
  * Get seeds for a specific category
  */
-const getCategorySeeds = (category) => {
+const getCategorySeeds = async (category) => {
   const categoryMap = {
     heatSpecialists: 'heatTolerant',
     coolSeason: 'coolSeason', 
@@ -243,16 +243,23 @@ const getCategorySeeds = (category) => {
   };
 
   const databaseCategory = categoryMap[category];
-  if (!databaseCategory || !GLOBAL_CROP_DATABASE[databaseCategory]) {
+  if (!databaseCategory) {
     return [];
   }
 
-  // Convert the category object to an array of crops with keys
-  const categoryData = GLOBAL_CROP_DATABASE[databaseCategory];
-  return Object.entries(categoryData).map(([key, cropData]) => ({
-    key,
-    ...cropData
-  }));
+  try {
+    // Get crops from database service
+    const categoryData = await cropDataService.getCropsByCategory(databaseCategory);
+    
+    // Convert the category object to an array of crops with keys
+    return Object.entries(categoryData).map(([key, cropData]) => ({
+      key,
+      ...cropData
+    }));
+  } catch (error) {
+    console.error(`Failed to get seeds for category ${category}:`, error);
+    return [];
+  }
 };
 
 /**

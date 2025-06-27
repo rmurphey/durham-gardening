@@ -3,8 +3,8 @@
  * Simple inline form for adding plantings to the garden log
  */
 
-import React, { useState } from 'react';
-import { GLOBAL_CROP_DATABASE } from '../config.js';
+import React, { useState, useEffect } from 'react';
+import { cropDataService } from '../services/cropDataService.js';
 
 function AddPlantingForm({ cropKey = '', onAddPlanting, onCancel }) {
   const [formData, setFormData] = useState({
@@ -18,15 +18,35 @@ function AddPlantingForm({ cropKey = '', onAddPlanting, onCancel }) {
   });
 
   const [errors, setErrors] = useState([]);
+  const [allCrops, setAllCrops] = useState([]);
+  const [isLoadingCrops, setIsLoadingCrops] = useState(true);
 
-  // Get all available crops from the database
-  const allCrops = Object.entries(GLOBAL_CROP_DATABASE).flatMap(([category, crops]) =>
-    Object.entries(crops).map(([key, crop]) => ({
-      key,
-      name: crop.name?.en || key,
-      category
-    }))
-  );
+  // Load crops from database on component mount
+  useEffect(() => {
+    const loadCrops = async () => {
+      try {
+        setIsLoadingCrops(true);
+        const cropDatabase = await cropDataService.getCropDatabase();
+        
+        const crops = Object.entries(cropDatabase).flatMap(([category, crops]) =>
+          Object.entries(crops).map(([key, crop]) => ({
+            key,
+            name: crop.name?.en || key,
+            category
+          }))
+        );
+        
+        setAllCrops(crops);
+      } catch (error) {
+        console.error('Failed to load crops:', error);
+        setErrors(['Failed to load crop database']);
+      } finally {
+        setIsLoadingCrops(false);
+      }
+    };
+
+    loadCrops();
+  }, []);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -116,8 +136,11 @@ function AddPlantingForm({ cropKey = '', onAddPlanting, onCancel }) {
             value={formData.crop}
             onChange={(e) => handleInputChange('crop', e.target.value)}
             required
+            disabled={isLoadingCrops}
           >
-            <option value="">Select a crop...</option>
+            <option value="">
+              {isLoadingCrops ? 'Loading crops...' : 'Select a crop...'}
+            </option>
             {allCrops.map(crop => (
               <option key={crop.key} value={crop.key}>
                 {crop.name} ({crop.category})

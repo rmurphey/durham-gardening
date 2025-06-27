@@ -73,7 +73,7 @@ class DatabaseManager {
         'add_growing_tips.sql',
         'add_companion_plants.sql',
         'activity_schema.sql',
-        'durham_data.sql',
+        'garden_data.sql',
         'update_data.sql'
       ];
 

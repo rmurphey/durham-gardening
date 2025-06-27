@@ -8,16 +8,17 @@ import {
   getDaysSincePlanting,
   PLANTING_STATUS 
 } from './gardenLog.js';
-import { GLOBAL_CROP_DATABASE } from '../config.js';
+import { cropDataService } from './cropDataService.js';
 
 /**
  * Get real harvest readiness based on actual plantings and weather
  */
-export const getActualHarvestReadiness = (gardenLog, forecastData = null) => {
+export const getActualHarvestReadiness = async (gardenLog, forecastData = null) => {
   const readyToHarvest = [];
   const almostReady = [];
   
-  gardenLog.plantings.forEach(planting => {
+  // Process plantings sequentially to handle async crop data lookup
+  for (const planting of gardenLog.plantings) {
     if (planting.status === PLANTING_STATUS.READY) {
       // Already marked as ready by user
       readyToHarvest.push({
@@ -25,15 +26,15 @@ export const getActualHarvestReadiness = (gardenLog, forecastData = null) => {
         readyStatus: 'user-confirmed',
         daysReady: getDaysSinceStatusChange(planting, PLANTING_STATUS.READY) || 0
       });
-      return;
+      continue;
     }
 
     // Find crop data
-    const cropData = findCropInDatabase(planting.crop);
-    if (!cropData || !planting.plantedDate) return;
+    const cropData = await findCropInDatabase(planting.crop);
+    if (!cropData || !planting.plantedDate) continue;
 
     const estimatedReady = estimateHarvestDate(planting, cropData);
-    if (!estimatedReady) return;
+    if (!estimatedReady) continue;
 
     const today = new Date();
     const daysUntilReady = Math.ceil((estimatedReady - today) / (1000 * 60 * 60 * 24));
@@ -60,7 +61,7 @@ export const getActualHarvestReadiness = (gardenLog, forecastData = null) => {
         note: weatherAdjustment.note
       });
     }
-  });
+  }
 
   return { readyToHarvest, almostReady };
 };
@@ -68,16 +69,17 @@ export const getActualHarvestReadiness = (gardenLog, forecastData = null) => {
 /**
  * Generate weather-aware urgent tasks based on actual plantings
  */
-export const getActualUrgentTasks = (gardenLog, forecastData = null, locationConfig = {}) => {
+export const getActualUrgentTasks = async (gardenLog, forecastData = null, locationConfig = {}) => {
   const urgentTasks = [];
   // today variable available but not used in current implementation
 
   // Check forecast for upcoming weather events
   const weatherThreats = analyzeWeatherThreats(forecastData);
 
-  gardenLog.plantings.forEach(planting => {
-    const cropData = findCropInDatabase(planting.crop);
-    if (!cropData) return;
+  // Process plantings sequentially to handle async crop data lookup
+  for (const planting of gardenLog.plantings) {
+    const cropData = await findCropInDatabase(planting.crop);
+    if (!cropData) continue;
 
     const daysSincePlanting = getDaysSincePlanting(planting);
     const plantingAge = daysSincePlanting || 0;
@@ -105,7 +107,7 @@ export const getActualUrgentTasks = (gardenLog, forecastData = null, locationCon
     // Harvest timing tasks
     const harvestTasks = getHarvestTimingTasks(planting, cropData, forecastData);
     urgentTasks.push(...harvestTasks);
-  });
+  }
 
   // Sort by urgency and deadline
   return urgentTasks.sort((a, b) => {
@@ -333,15 +335,15 @@ const getHarvestTimingTasks = (planting, cropData, forecastData) => {
 };
 
 /**
- * Find crop data in the global database
+ * Find crop data in the database
  */
-const findCropInDatabase = (cropKey) => {
-  for (const category of Object.values(GLOBAL_CROP_DATABASE)) {
-    if (category[cropKey]) {
-      return category[cropKey];
-    }
+const findCropInDatabase = async (cropKey) => {
+  try {
+    return await cropDataService.getCrop(cropKey);
+  } catch (error) {
+    console.error(`Failed to find crop ${cropKey}:`, error);
+    return null;
   }
-  return null;
 };
 
 /**

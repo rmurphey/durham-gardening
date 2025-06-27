@@ -44,7 +44,6 @@ Started with simple Durham garden recommendations, evolved into a comprehensive 
 - Multiple sessions due to occasional instability
 
 ### What Surprised Me
-- Cost much lower than expected (~$400-600 vs initial $1000+ fears)
 - Complexity accumulated faster than utility
 - Manual maintenance vs automated maintenance psychological difference
 - AI can implement philosophical concepts systematically
