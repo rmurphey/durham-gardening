@@ -246,7 +246,7 @@ const getHeatWaveRecommendations = ({ currentMonth, beds, locationConfig, suppli
       price: 67.00,
       category: 'Heat Wave Prep',
       urgency: 'high',
-      timing: 'Install before peak summer',
+      timing: 'Deploy before peak summer',
       why: `Redundant watering essential for ${locationConfig.location.name} summer survival`,
       where: localSupplier,
       quantity: 1,
