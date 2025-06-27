@@ -1,108 +1,58 @@
 # GardenSim Development Log
 
-A developer's journal chronicling the experience of building a garden planning application. This log captures the collaborative process between human intuition and AI assistance, documenting the journey from concept to working application.
+A $400-600 learning experiment about AI-assisted development patterns.
 
-## Genesis (Early Sessions)
+## Project Evolution
+**Durham garden planner** → **Continental US garden planning app** → **GardenSim with Monte Carlo simulation**
 
-I had used Claude Code to ask questions about rapu, but I hadn't used it to build anything.
+Started with personal garden recommendations, evolved into comprehensive garden planning application with weather integration, SQLite database, and statistical modeling.
 
-In the meantime, I have a garden.
+## Key Learnings
 
-I started just by asking Claude Code to make some recommendations for my garden based on my location and what I had already planted. The results of that are in the `archive` directory. The logs are not preserved. The output convinced me that this problem was app-able.
+### AI Development Patterns
+- **Complexity Accumulation**: AI adds sophistication faster than utility. Each "solution" creates new layers rather than simplifying foundations. Requires increasing human guidance as complexity grows.
+- **Phantom Dependencies**: AI rapid development creates tests/mocks referencing refactored-away services. Unlike manual development, AI evolves architecture without updating all references.
+- **Velocity vs Architecture**: AI's high development speed makes traditional practices (tests, modularization, type annotations) MORE critical, not less. Speed without constraints leads to architectural drift.
 
-The logs aren't preserved for anything, but the commits are pretty good. Eventually I also set up a todo file, and a command for interacting with it.
+### Maintenance Insights  
+- **Automation Enables Gardening**: Maintenance friction determines if it happens. AI transforms "tedious manual work" into "quick automated task" - psychological difference drives action.
+- **AST > String Replacement**: String-based refactoring is fragile and error-prone. AST-aware transformations essential for reliable code changes.
+- **Infrastructure Lag**: App identity evolves faster than naming (directory: `shopping`, repo: `durham-gardening`, app: `GardenSim`). Accept debt rather than disrupt workflow.
 
-Claude is really bad at starting a dev server while still allowing me to interact with Claude. wtf. I yelled at it so many times but I think it's finally fixed.
+### Architectural Decisions
+- **Triple Data System**: Static data (performance) + Garden log (reality) + SQLite database (completeness)
+- **Functional Focus**: Preferred deep functionality (statistical modeling, weather integration) over surface polish
+- **User Value > Code Purity**: 15 minutes UX improvement beats 60 minutes internal cleanup users never see
 
-## Focus and Scope Evolution
+### Technical Debt Categories
+- **Phantom dependencies** from rapid AI refactoring
+- **Naming debt** from evolving app identity
+- **Service layer sprawl** from adding features without consolidation
+- **Error handling cascades** from patching vs fixing root issues
 
-I started the app with the goal of getting something running in my browser for my very specific location. I explored supporting more locations early on, but decided to focus on other functionality instead. 
+## Development Experience
 
-We spent a lot of time on getting the core functionality working for Durham, and there are probably still things to improve. A huge gap is that the app doesn't know what I've already planted. The app also doesn't have near-perfect data about the sunlight my garden gets.
+### What Worked
+- AI excellent at guided cleanup and modularization
+- Command organization iteration (docs → separate tools → unified interface)
+- Habitat preservation philosophical shift implemented systematically
+- Garden log bridged theoretical recommendations with planting reality
 
-## Technical Architecture Decisions
+### What Required Guidance  
+- Architectural thinking and broader context
+- When to use SQLite vs hard-coding
+- Geographic expansion data model implications
+- Major feature prioritization decisions
 
-I had to help Claude think through when to use sqlite and when to hard-code things. Helpfully, Claude wrote me a wasm wrapper for sqlite. (Was this actually helpful or good? I haven't actually looked into it.)
+### Workflow Patterns
+- Multiple sessions due to AI instability costs
+- Dev server management challenging (blocking Claude interface)
+- Commit messages as technical documentation
+- Manual intervention for architectural decisions
 
-At some point it became clear that the app was the thing, not the notes I had assembled. Claude did a pretty successful lift and shift, but left out some config files and such (ironically, Claude command files). I was able to talk it through recovering them, but its first inclination seemed to be to guess what those files might have contained.
-
-## Persistence and Sharing Features
-
-Eventually, to make the app something I would want to show someone, I added the ability to create a garden and the ability to store data about the garden that would persist across sessions, browsers, and devices. I thought Vercel had a free KV store (or rather, Claude said it did), but I had to switch to Blob storage to keep it easy and free.
-
-## Geographic Expansion
-
-Once I was happy with the functionality, I asked Claude to make it work for the continental US. Claude needed some help thinking through all the aspects of this, for example, did the DB have all the info it needed, and did Durham-specific recommendations need to be abstracted? It did a decent job of adding the functionality, but it really didn't take into consideration the broader app context without help. For example, it didn't figure out on its own that the crop db needed to include growth-zone-specific data.
-
-## Session Management and Costs
-
-I've done this across several Claude sessions, because sometimes Claude would get wonky and mad and flash things at me for 20 minutes at a time and I couldn't stop it. Indeed I think sometimes it was spending money without actually giving me any value. That means I don't have a good total cost, but I think it's < $300 — someone with Claude admin can tell me for sure.
-
-## Code Quality and Maintenance
-
-Claude has needed a lot of encouragement to modularize things. The app started out as a 3KLOC single file. Claude is pretty good at cleanup tasks.
-
-I asked Claude to fix some "cosmetic" things in the repo that maybe I wouldn't have prioritized ever. The cost was so trivial and I knew the changes would make the repo more accessible.
-
-
-## Major Philosophical Shift: Habitat Preservation (June 2025)
-
-https://www.reddit.com/r/Austin/comments/1lk9a1f/its_not_just_another_bad_year_hill_country_is_in/
-
-The project took a significant turn when external context (habitat collapse concerns) prompted a fundamental rethinking of the application's purpose. Instead of focusing on *habitat propagation* (adding, installing, enhancing), the app now emphasizes *habitat preservation* (supporting, maintaining, working with existing systems).
-
-This shift affects the entire recommendation system:
-- Language changed from intervention to stewardship
-- Monthly guidance moved from "install" to "support" 
-- Crop recommendations emphasize working with natural conditions
-- Companion planting focuses on supporting existing beneficial relationships
-
-**Implementation Status:** ✅ Complete - Successfully updated all recommendation systems
-
-**Reflection (June 2025):** The philosophical shift came from a single Reddit post about Hill Country habitat collapse that deeply resonated as someone who loves Austin. It's remarkable how one piece of external context can fundamentally change an entire application's purpose. Claude demonstrated the ability to systematically translate a philosophical concept into practical code changes - updating language from "install/build/add" to "support/deploy/provide" across multiple service files while maintaining all functionality. The shift felt meaningful rather than cosmetic.
-
-**Development Prioritization Decision (June 2025):** When evaluating evergreen cleanup tasks vs regular todos, chose to prioritize high-impact user-facing improvements over internal code organization. Reasoning: CSS cleanup provides minimal user value (~8000 line CSS file has no performance impact when cached/gzipped), while share button feedback and metrics display precision directly improve user experience. This represents a shift toward user value over code purity - choosing 15 minutes of UX improvement over 60 minutes of internal cleanup that users never see.
-
-**Metrics Display Cleanup (June 2025):** Completed high-impact formatting improvements. All percentage displays now show whole numbers, temperatures default to Fahrenheit. [9a7d68c]
-
-**Garden Log System Implementation (June 2025):** Built comprehensive garden state tracking system that bridges theoretical recommendations with actual planting reality. Key components: garden log service for planting lifecycle management, weather-aware urgent task generation, garden state service with 10-day forecast integration, persistence layer with localStorage, and honest recommendations that exclude already-planted crops. The system fundamentally shifts the app from theoretical garden planning to actual garden management, addressing the core user feedback about recommendations not reflecting garden reality. [af3fe16]
-
-**Code Quality Crisis and AST Realization (June 2025):** Hit a wall with fragile string-based refactoring that caused basic parameter mismatch errors - the kind an IDE would never make. This highlighted how brittle the testing methodology was when it relied on string replacement instead of understanding code structure. The solution was implementing AST-aware refactoring standards using jscodeshift, adding runtime parameter validation, and establishing JSDoc type annotations. Key insight: methodology for testing was very fragile, AST transformations are essential for reliable code changes. Now mandated AST-based refactoring in CLAUDE.md with tooling examples. [580a584]
-
-**Technical Debt Accumulation During AI-Assisted Feature Evolution (June 2025):** When running tests before git sync, discovered obsolete `durhamRecommendations` service mock that no longer matched codebase reality. The app had evolved from Durham-specific to continental US support, but test infrastructure wasn't updated accordingly. **Critical Learning:** AI-assisted rapid development creates "phantom dependencies" - tests and mocks that reference services that were refactored away or renamed during feature expansion. Unlike traditional development where developers manually track dependencies, AI can quickly evolve architecture without updating all references. Solution requires systematic dependency auditing during major feature changes, not just functional testing. This represents a new category of technical debt unique to AI-assisted development workflows. [3bbfcbe]
-
-**Infrastructure Naming Debt in AI-Assisted Development (June 2025):** Discovered directory name (`shopping`) doesn't match repo name (`durham-gardening`), both of which are outdated since app evolved to `GardenSim` with continental US support. **Key Learning:** AI-assisted development can evolve app identity and purpose faster than infrastructure naming gets updated. Project started Durham-specific → became shopping-focused → evolved to comprehensive garden planning → branded as GardenSim, but underlying infrastructure (repo name, directory name, internal references) lag behind functional evolution. Unlike traditional development where naming changes are deliberate, AI-assisted evolution can outpace infrastructure maintenance. Decision: Accept naming debt rather than disrupt workflow, but document for future reference.
-
-**Command Organization Evolution in AI-Assisted Workflows (June 2025):** Rapidly iterated through command organization patterns: documentation in CLAUDE.md → separate `/next-todo` and `/ideas` commands → unified `/next` command with prioritization logic. **Learning:** Fast iteration on tooling organization is possible when development overhead is low. The unified command consolidates multiple data sources (todos + ideas) with prioritization criteria (urgency, impact, cost, learning value). Evolution: scattered documentation → purpose-built tools → consolidated interface. This demonstrates how low-friction development environments enable rapid tooling experimentation. [3bbf03a]
-
-**Project Neutrality on AI Development (June 2025):** Established that this project maintains a neutral stance on AI codegen and AI-assisted development. The goal is to develop independent opinions through direct experience without machine influence on the evaluation process. Documentation should focus on observable workflow patterns, technical outcomes, and development process changes rather than promoting or dismissing AI capabilities. This learning experiment aims to generate unbiased insights about development tooling effectiveness through practical usage. [35e4be7]
-
-**Deep vs Surface Functionality Focus (June 2025):** Session reflection revealed strong preference for deep functionality over surface-level features or cosmetic improvements. Project direction emphasizes substantial technical implementation - statistical modeling, database integration, weather-responsive systems - rather than UI polish or appearance enhancements. Key insight: when fundamentally out of depth on technical implementation, AI assistance enables exploration of complex functionality that would otherwise be prohibitive. The learning experiment tests how far technical depth can be pushed with AI collaboration when starting from limited domain expertise.
-
-**Complexity Accumulation and Guidance Escalation (June 2025):** The longer this development continues, the more guidance I need to provide. This isn't a complex app, but we're already hitting complexity limits. What started as straightforward garden planning has accumulated layers of abstraction, error handling, and service interdependencies that require increasing human oversight. The pattern: each AI-generated "solution" adds another layer rather than addressing root architectural issues. Monte Carlo calendar generation, multi-layered error handling, defensive programming across components - complexity is growing faster than utility. **Critical insight:** AI-assisted development can rapidly sophisticate a codebase beyond its core problem scope, requiring escalating human guidance to maintain coherent architecture.
-
-**Mitigation Through Traditional Engineering Practices:** Good tests and modularization could significantly mitigate complexity accumulation in AI-assisted development. **Tests as guardrails:** Comprehensive test coverage would catch parameter mismatches (like locationConfig.coordinates vs lat/lon) before they become runtime cascades, prevent phantom dependencies during rapid refactoring, and enforce function contracts that make breaking changes visible immediately. **Modularization as constraint:** Clear module boundaries would prevent service layer sprawl, make dependencies explicit, and enable safe refactoring of individual components without system-wide effects. **Key realization:** AI's high development velocity makes traditional engineering practices MORE critical, not less - the faster you can add code, the more important it becomes to have automated checks and clear boundaries. Without these constraints, AI assistance enables rapid sophistication that outpaces architectural coherence.
-
-**Automation Enables Code Gardening (June 2025):** After systematic cleanup of 20+ ESLint warnings and unused functions, clear insight emerged: I'm much more likely to do code gardening when it's simple and automated. Manual cleanup is tedious and error-prone, but AI-assisted cleanup with tools like ESLint becomes approachable. **Key insight:** The friction of maintenance determines whether it happens at all. With AI assistance, code cleanup transforms from "tedious manual work I'll do later" to "quick automated task I can do now." This suggests that AI development workflows should emphasize automated tooling (linters, formatters, dependency analyzers) not just for code quality, but to make maintenance psychologically easier. **Pattern:** When maintenance is automated and guided, it gets done. When it's manual and complex, it accumulates as technical debt.
+## Core Insight
+**AI development velocity requires stronger engineering constraints, not weaker ones.** Traditional practices become amplifiers of AI capability rather than impediments to AI speed.
 
 ---
 
-## Development Experience Notes
-
-**On AI Collaboration:**
-- Claude Code needed constant guidance on broader context and architectural thinking
-- Excellent at cleanup tasks and modularization when directed
-- Required multiple sessions due to occasional AI instability ("wonky and mad")
-- Cost management was important - estimated <$300 total for entire project
-
-**On Technical Architecture:**
-- Started as 3KLOC single file, gradually modularized through AI assistance
-- SQLite vs hard-coding decisions required human architectural oversight
-- Persistence layer evolved: localStorage → Vercel KV → Blob storage (due to cost)
-- Geographic expansion (Durham → Continental US) needed significant guidance on data model implications
-
-**On Development Workflow:**
-- AI struggles with keeping dev server running while maintaining interactivity
-- Commit messages serve as detailed technical log
-- This log captures developer experience and high-level project evolution
-- Manual intervention needed for major architectural and philosophical decisions
+*Total cost: ~$400-600 | Architecture: React + SQLite + Monte Carlo simulation | Scope: Continental US garden planning*
