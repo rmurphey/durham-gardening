@@ -67,6 +67,8 @@ This shift affects the entire recommendation system:
 
 **Garden Log System Implementation (June 2025):** Built comprehensive garden state tracking system that bridges theoretical recommendations with actual planting reality. Key components: garden log service for planting lifecycle management, weather-aware urgent task generation, garden state service with 10-day forecast integration, persistence layer with localStorage, and honest recommendations that exclude already-planted crops. The system fundamentally shifts the app from theoretical garden planning to actual garden management, addressing the core user feedback about recommendations not reflecting garden reality. [af3fe16]
 
+**Code Quality Crisis and AST Realization (June 2025):** Hit a wall with fragile string-based refactoring that caused basic parameter mismatch errors - the kind an IDE would never make. This highlighted how brittle the testing methodology was when it relied on string replacement instead of understanding code structure. The solution was implementing AST-aware refactoring standards using jscodeshift, adding runtime parameter validation, and establishing JSDoc type annotations. Key insight: methodology for testing was very fragile, AST transformations are essential for reliable code changes. Now mandated AST-based refactoring in CLAUDE.md with tooling examples. [580a584]
+
 ---
 
 ## Development Experience Notes
