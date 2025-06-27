@@ -33,6 +33,9 @@ const DashboardView = ({
   gardenCalendar = [],
   locationConfig,
   onLocationChange,
+  // Garden log props
+  gardenLog,
+  forecastData,
   // Settings props
   climateScenarios,
   selectedSummer,
@@ -49,10 +52,10 @@ const DashboardView = ({
   simulating = false
 }) => {
 
-  // Get critical data for decision making
+  // Get critical data for decision making based on actual garden state
   const weatherAlerts = getLocationWeatherAlerts(locationConfig);
-  const readyToHarvest = getReadyToHarvest();
-  const criticalWindows = getCriticalTimingWindows();
+  const readyToHarvest = getReadyToHarvest(gardenLog, forecastData);
+  const criticalWindows = getCriticalTimingWindows(gardenLog, forecastData, locationConfig);
   const simulationSummary = getSimulationSummary(simulationResults, totalInvestment);
   const actionableGuidance = getTodaysActionableGuidance();
   

@@ -39,7 +39,8 @@ function AppContentInner() {
     totalInvestment,
     currentClimateScenarios,
     portfolioStrategies,
-    recommendations
+    recommendations,
+    gardenLog
   } = useGardenAppState();
   
   // State for async garden calendar
@@ -137,6 +138,9 @@ function AppContentInner() {
               totalInvestment={totalInvestment}
               onViewChange={handleViewChange}
               gardenCalendar={gardenCalendar}
+              // Garden log props
+              gardenLog={gardenLog}
+              forecastData={null} // TODO: Add forecast data integration
               // Settings props
               climateScenarios={currentClimateScenarios}
               selectedSummer={selectedSummer}
@@ -149,6 +153,8 @@ function AppContentInner() {
               onCustomPortfolioChange={handleCustomPortfolioChange}
               investmentConfig={customInvestment}
               onInvestmentChange={setCustomInvestment}
+              locationConfig={locationConfig}
+              onLocationChange={() => {}} // TODO: Add location change handler
               isReadOnly={false}
               simulating={simulating}
             />

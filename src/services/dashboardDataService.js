@@ -1,9 +1,9 @@
 /**
  * Dashboard Data Service
- * Provides critical, actionable information for Durham garden dashboard
+ * Provides critical, actionable information based on actual garden state
  */
 
-// Location-aware dashboard data service - no longer needs Durham-specific imports
+import { getActualHarvestReadiness, getActualUrgentTasks } from './gardenStateService.js';
 
 /**
  * Get current weather impact and location-specific alerts
@@ -84,122 +84,73 @@ export const getLocationWeatherAlerts = (locationConfig = {}) => {
 export const getDurhamWeatherAlerts = () => getLocationWeatherAlerts({ name: 'Durham, NC', hardiness: '7b' });
 
 /**
- * Get crops ready to harvest now based on Durham calendar
+ * Get crops ready to harvest based on actual garden log
  */
-export const getReadyToHarvest = () => {
-  const now = new Date();
-  const month = now.getMonth() + 1;
-  
-  const harvestReady = [];
-  
-  // Durham-specific harvest timing
-  switch (month) {
-    case 1:
-    case 2:
-      harvestReady.push(
-        { crop: 'Kale', variety: 'Red Russian', daysReady: 0, value: '$8/lb', note: 'Peak flavor in cold' },
-        { crop: 'Spinach', variety: 'Bloomsdale', daysReady: 3, value: '$12/lb', note: 'Before bolting' }
-      );
-      break;
-    case 3:
-    case 4:
-      harvestReady.push(
-        { crop: 'Lettuce', variety: 'Jericho', daysReady: 2, value: '$6/head', note: 'Before heat stress' },
-        { crop: 'Kale', variety: 'Red Russian', daysReady: 0, value: '$8/lb', note: 'Last harvest before summer' }
-      );
-      break;
-    case 5:
-    case 6:
-      harvestReady.push(
-        { crop: 'Lettuce', variety: 'Heat-tolerant', daysReady: 0, value: '$6/head', note: 'Harvest immediately' },
-        { crop: 'Peas', variety: 'Sugar snap', daysReady: 5, value: '$4/lb', note: 'Before pod gets tough' }
-      );
-      break;
-    case 7:
-    case 8:
-      harvestReady.push(
-        { crop: 'Okra', variety: 'Clemson Spineless', daysReady: 0, value: '$3/lb', note: 'Daily harvest needed' },
-        { crop: 'Tomatoes', variety: 'Heat-tolerant', daysReady: 2, value: '$5/lb', note: 'Peak ripening' }
-      );
-      break;
-    case 9:
-    case 10:
-      harvestReady.push(
-        { crop: 'Fall Lettuce', variety: 'Jericho', daysReady: 0, value: '$6/head', note: 'Perfect weather window' },
-        { crop: 'Kale', variety: 'Red Russian', daysReady: 5, value: '$8/lb', note: 'Sweetens with cool weather' }
-      );
-      break;
-    case 11:
-    case 12:
-      harvestReady.push(
-        { crop: 'Kale', variety: 'Red Russian', daysReady: 0, value: '$8/lb', note: 'Cold-sweetened leaves' },
-        { crop: 'Spinach', variety: 'Bloomsdale', daysReady: 0, value: '$12/lb', note: 'Peak cold-weather growth' }
-      );
-      break;
-    default:
-      // No specific harvest recommendations for this month
-      break;
+export const getReadyToHarvest = (gardenLog = null, forecastData = null) => {
+  if (!gardenLog || !gardenLog.plantings.length) {
+    return []; // No theoretical recommendations - only show actual plantings
   }
+
+  const { readyToHarvest, almostReady } = getActualHarvestReadiness(gardenLog, forecastData);
   
-  return harvestReady;
+  // Format for dashboard display
+  return readyToHarvest.map(planting => ({
+    crop: planting.crop,
+    variety: planting.variety || 'Unknown variety',
+    daysReady: planting.daysReady || 0,
+    location: planting.location || 'Garden',
+    note: planting.note || 'Ready to harvest',
+    readyStatus: planting.readyStatus,
+    plantingId: planting.id
+  }));
 };
 
 /**
- * Get critical timing windows happening now
+ * Get critical timing windows based on actual garden state
  */
-export const getCriticalTimingWindows = () => {
+export const getCriticalTimingWindows = (gardenLog = null, forecastData = null, locationConfig = {}) => {
   const now = new Date();
   const month = now.getMonth() + 1;
   const dayOfMonth = now.getDate();
   
-  const windows = [];
-  
-  // Durham-specific critical windows
-  if (month === 3 && dayOfMonth >= 15) {
-    windows.push({
-      type: 'planting-deadline',
-      icon: '⏰',
-      title: 'Cool Season Deadline',
-      message: 'Last 2 weeks to plant lettuce/spinach before heat',
-      daysLeft: Math.max(0, 31 - dayOfMonth),
-      action: 'Plant now or wait until fall'
-    });
+  if (!gardenLog || !gardenLog.plantings.length) {
+    return []; // No theoretical recommendations - only show actual garden-based windows
   }
+
+  // Get urgent tasks from actual garden state
+  const urgentTasks = getActualUrgentTasks(gardenLog, forecastData, locationConfig);
   
-  if (month === 4 && dayOfMonth >= 15) {
-    windows.push({
-      type: 'transplant-window',
-      icon: '🌱',
-      title: 'Warm Crop Transplant Window',
-      message: 'Soil warming - safe to transplant tomatoes/peppers',
-      daysLeft: 15,
-      action: 'Transplant indoor seedlings'
-    });
-  }
-  
-  if (month === 8 && dayOfMonth >= 15) {
-    windows.push({
-      type: 'fall-prep',
-      icon: '🍂',
-      title: 'Fall Planting Prep',
-      message: 'Start fall crops now for October/November harvest',
-      daysLeft: 15,
-      action: 'Start kale, lettuce, spinach seeds'
-    });
-  }
-  
-  if (month === 1 || month === 2) {
-    windows.push({
-      type: 'seed-ordering',
-      icon: '📦',
-      title: 'Annual Seed Ordering',
-      message: 'Prime ordering window for best selection',
-      daysLeft: month === 1 ? 60 : 30,
-      action: 'Review and order heat-tolerant varieties'
-    });
-  }
+  // Convert urgent tasks to critical timing windows format
+  const windows = urgentTasks
+    .filter(task => task.urgency === 'critical' || task.urgency === 'high')
+    .slice(0, 3) // Limit to top 3 most critical
+    .map(task => ({
+      type: task.type,
+      icon: getTaskIcon(task.type),
+      title: task.task,
+      message: task.reason,
+      daysLeft: task.deadline ? Math.max(0, Math.ceil((new Date(task.deadline) - now) / (1000 * 60 * 60 * 24))) : null,
+      action: task.task,
+      plantingId: task.planting?.id,
+      urgency: task.urgency
+    }));
   
   return windows;
+};
+
+/**
+ * Get icon for task type
+ */
+const getTaskIcon = (taskType) => {
+  const icons = {
+    'weather-protection': '⛈️',
+    'transplant': '🌱',
+    'support': '🪴',
+    'urgent-harvest': '🥬',
+    'watering': '💧',
+    'fertilize': '🌿'
+  };
+  return icons[taskType] || '⚠️';
 };
 
 /**
