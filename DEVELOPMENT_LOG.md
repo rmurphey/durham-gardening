@@ -69,6 +69,8 @@ This shift affects the entire recommendation system:
 
 **Code Quality Crisis and AST Realization (June 2025):** Hit a wall with fragile string-based refactoring that caused basic parameter mismatch errors - the kind an IDE would never make. This highlighted how brittle the testing methodology was when it relied on string replacement instead of understanding code structure. The solution was implementing AST-aware refactoring standards using jscodeshift, adding runtime parameter validation, and establishing JSDoc type annotations. Key insight: methodology for testing was very fragile, AST transformations are essential for reliable code changes. Now mandated AST-based refactoring in CLAUDE.md with tooling examples. [580a584]
 
+**Technical Debt Accumulation During AI-Assisted Feature Evolution (June 2025):** When running tests before git sync, discovered obsolete `durhamRecommendations` service mock that no longer matched codebase reality. The app had evolved from Durham-specific to continental US support, but test infrastructure wasn't updated accordingly. **Critical Learning:** AI-assisted rapid development creates "phantom dependencies" - tests and mocks that reference services that were refactored away or renamed during feature expansion. Unlike traditional development where developers manually track dependencies, AI can quickly evolve architecture without updating all references. Solution requires systematic dependency auditing during major feature changes, not just functional testing. This represents a new category of technical debt unique to AI-assisted development workflows. [3bbfcbe]
+
 ---
 
 ## Development Experience Notes
