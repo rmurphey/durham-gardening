@@ -32,6 +32,8 @@ Learning experiment about Claude Code workflows ($400-600 budget). Extract concr
 2. **Estimate cost** based on previous similar work
 3. **Mention if approach contradicts** established patterns
 
+Within reason, minimize irrigation needs. 
+
 ## Available Commands
 Commands now properly stored in `.claude/commands/` directory:
 - `/todo <item>` - Quick capture to ACTIVE_WORK.md
@@ -55,3 +57,21 @@ Commands now properly stored in `.claude/commands/` directory:
 4. **Be proactive about error detection** - Find and fix issues before the user encounters them
 
 These steps prevent the user from discovering errors that Claude should have caught during development.
+
+## AI-Assisted Development Constraints
+
+**CRITICAL LEARNING:** AI's high development velocity makes traditional engineering practices MORE critical, not less. Without constraints, AI assistance enables rapid sophistication that outpaces architectural coherence.
+
+### Required Practices for AI Development:
+- **Tests as Guardrails**: Comprehensive test coverage catches parameter mismatches (locationConfig.coordinates vs lat/lon) before they become runtime cascades
+- **Modularization as Constraint**: Clear module boundaries prevent service layer sprawl and make dependencies explicit
+- **Function Contracts**: JSDoc type annotations and parameter validation prevent breaking changes from propagating silently
+- **Architectural Reviews**: Regular assessment of whether complexity serves the problem or just demonstrates AI capability
+
+### Warning Signs of Complexity Accumulation:
+- Each "solution" adds layers rather than simplifying foundations
+- Increasing human guidance required for basic functionality
+- Multi-layered error handling to patch architectural issues
+- Service interdependencies that require deep knowledge to modify
+
+**Key Principle:** The faster you can add code with AI, the more important automated checks and clear boundaries become.
