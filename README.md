@@ -2,6 +2,8 @@
 
 A modern React application for climate-aware garden planning with intelligent card-based recommendations, Monte Carlo simulation, and comprehensive garden management tools.
 
+**Note**: The application currently uses static crop data for performance. A comprehensive SQLite database exists with detailed plant information, but integration is documented for future enhancement.
+
 ## Current Features
 
 ### 🃏 **Modern Card System**
@@ -20,7 +22,7 @@ A modern React application for climate-aware garden planning with intelligent ca
 ### 📊 **Garden Intelligence**
 - **Comprehensive Plant Database**: SQLite database with 79+ growing tips and 56+ companion relationships
 - **Regional Variety Recommendations**: Zone-specific cultivar scoring with climate compatibility algorithms
-- **Dynamic Location Support**: Multi-region presets (Durham NC, Phoenix AZ, Minneapolis MN, Seattle WA, Miami FL)
+- **Location Configuration**: Customizable climate parameters and hardiness zone settings
 - **Monte Carlo Simulation**: Professional statistical modeling using jStat library (5,000 iterations)
 - **12-Month Garden Calendar**: Dynamically generated planting, harvesting, and care schedules
 - **Climate Timeline Visualization**: Interactive charts showing scenario overlap across growing seasons
@@ -47,7 +49,7 @@ A modern React application for climate-aware garden planning with intelligent ca
 
 ## How to Use
 
-1. **Location Setup**: Choose from preset locations or configure custom climate parameters
+1. **Location Setup**: Configure custom climate parameters and hardiness zone
 2. **Climate Scenarios**: Select from 4 summer and 4 winter climate predictions with visual timeline
 3. **Portfolio Strategy**: Pick from three adaptive strategies or create custom allocations
 4. **Investment Planning**: Adjust budget across 8 categories (seeds, irrigation, tools, etc.)
@@ -165,7 +167,7 @@ A modern React application for climate-aware garden planning with intelligent ca
 - `src/App.js` - Main application component with simulation logic
 - `src/config.js` - Consolidated configuration, crop database, and helper functions
 - `src/index.css` - Complete styling including responsive design
-- `restart.sh` - Development utility for clean server restarts
+- `start-dev.sh` - Vercel development server startup script
 
 ### Design Principles
 - **Decision-Focused Interface**: Only show data that impacts decisions
@@ -176,12 +178,12 @@ A modern React application for climate-aware garden planning with intelligent ca
 ## Available Scripts
 
 ### Development
-- `npm start` - Start development server with fast refresh
-- `npm run dev` - Start development server with nodemon auto-restart (recommended)
+- `npm start` - Start React development server with Craco
+- `npm run dev` - Start React development server with nodemon auto-restart
+- `./start-dev.sh` - Start Vercel development server with API support (recommended for full functionality)
 - `npm run build` - Create production build  
 - `npm test` - Run test suite
-- `npm run test:interfaces` - Run card component integration tests
-- `./restart.sh` - Kill existing server and start fresh (development utility)
+- `npm run test:interfaces` - Run interface validation tests
 
 ### Database Operations
 - `npm run db:build` - Build SQLite database from SQL source files
@@ -207,12 +209,12 @@ This application represents a fully functional climate-aware garden planning sys
 ✅ **Professional Statistics**: Monte Carlo simulation with proper statistical modeling  
 ✅ **Database Integration**: SQLite-powered plant data with growing tips and companion planting  
 ✅ **Zone-Specific Varieties**: Regional cultivar recommendations with climate scoring  
-✅ **Global Adaptability**: Multi-region support with localized crop recommendations  
+✅ **Climate Adaptability**: Zone-based crop recommendations with local climate considerations  
 ✅ **User Customization**: Granular control over all planning parameters  
 ✅ **Visual Analytics**: Interactive charts and timeline visualizations  
 ✅ **Persistent Storage**: Configuration saved between sessions  
 ✅ **Responsive Design**: Works across all device sizes  
-✅ **Comprehensive Testing**: 95%+ test coverage with automated quality checks  
+✅ **Quality Assurance**: Automated linting, compilation checks, and interface validation tests  
 
 ### Recent Development Notes
 
