@@ -88,3 +88,9 @@ I might have read a post on the r/Austin reddit about how habitats are collapsin
 
 **Session Cost:** $22.38 total across multiple sessions
 **Session Stats:** 1229 lines added, 476 lines removed
+
+**Development Log Approach Decision:**
+- **Git commits serve as detailed technical work log** - commit messages already capture what was done
+- **This document focuses on high-level narrative** - philosophy shifts, architectural decisions, cost observations
+- **Reduces maintenance overhead** - no duplication of technical details already in version control
+- **Creates "Director's Commentary"** on project evolution while git history provides granular change tracking
