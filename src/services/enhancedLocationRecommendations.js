@@ -3,7 +3,7 @@
  * Combines static crop data with comprehensive database information
  */
 
-import databaseService from './databaseService.js';
+import databaseLocationRecommendations from './databaseLocationRecommendations.js';
 
 /**
  * Get enhanced crop recommendations with database growing tips and companion planting
@@ -17,30 +17,27 @@ export const getEnhancedLocationRecommendations = async (locationConfig) => {
   }
 
   try {
-    // Get zone-appropriate plants from database
-    const databasePlants = await databaseService.getPlantsByZone(locationConfig.hardiness);
+    // Get zone-appropriate plants with database integration
+    const enhancedPlants = await databaseLocationRecommendations.getDatabaseLocationRecommendations(locationConfig);
     
-    // Get enhanced data for each plant
-    const enhancedCrops = await Promise.all(
-      databasePlants.slice(0, 10) // Limit to first 10 for performance
-        .map(async (plant) => {
-          const [enhancedData, growingTips, companions] = await Promise.all([
-            databaseService.getEnhancedPlantData(plant.plantKey, locationConfig),
-            databaseService.getGrowingTips(plant.plantKey, locationConfig),
-            databaseService.getCompanionPlants(plant.plantKey)
-          ]);
+    // Limit to top plants for performance and add enhanced data structure
+    const enhancedCrops = enhancedPlants.slice(0, 10).map(plant => ({
+      ...plant,
+      enhancedData: {
+        zones: plant.zones,
+        category: plant.category,
+        heat: plant.heat,
+        drought: plant.drought,
+        minTemp: plant.minTemp,
+        maxTemp: plant.maxTemp,
+        plantingMonths: plant.plantingMonths,
+        harvestStart: plant.harvestStart,
+        harvestDuration: plant.harvestDuration,
+        daysToMaturity: plant.daysToMaturity
+      }
+    }));
 
-          return {
-            ...plant,
-            enhancedData,
-            growingTips,
-            companions,
-            locationSuitability: calculateLocationSuitability(enhancedData, locationConfig)
-          };
-        })
-    );
-
-    // Filter and sort by location suitability
+    // Filter by location suitability (already calculated in database service)
     const suitableCrops = enhancedCrops
       .filter(crop => crop.locationSuitability > 0.6)
       .sort((a, b) => b.locationSuitability - a.locationSuitability);

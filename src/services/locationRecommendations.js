@@ -4,7 +4,7 @@
  */
 
 import { DURHAM_CROPS } from '../config/durhamConfig.js';
-import { databaseService } from './databaseService.js';
+import databaseLocationRecommendations from './databaseLocationRecommendations.js';
 // import { DURHAM_CALENDAR } from '../config/durhamConfig.js'; // Available for future calendar integration
 
 /**
@@ -241,49 +241,77 @@ export const generateLocationTopCrops = (portfolio, locationConfig = {}, gardenL
  * @returns {Array} Enhanced recommendations with database insights
  */
 export const generateEnhancedCropRecommendations = async (portfolio, locationConfig = {}, gardenLog = null) => {
-  // Get base recommendations
-  const baseRecommendations = generateLocationTopCrops(portfolio, locationConfig, gardenLog);
-  
-  // Enhance each recommendation with database data
-  const enhancedRecommendations = await Promise.all(
-    baseRecommendations.map(async (rec) => {
-      try {
-        // Get enhanced plant data from database
-        const plantData = await databaseService.getEnhancedPlantData(rec.cropKey, locationConfig);
-        const growingTips = await databaseService.getGrowingTips(rec.cropKey);
-        const companionPlants = await databaseService.getCompanionPlants(rec.cropKey);
+  try {
+    // Get database-integrated crop recommendations
+    const databaseCrops = await databaseLocationRecommendations.getDatabaseCropRecommendations(locationConfig);
+    
+    if (!databaseCrops.database) {
+      console.log('Database integration not available, using static recommendations');
+      return generateLocationTopCrops(portfolio, locationConfig, gardenLog);
+    }
+
+    // Get crops already planted (if garden log available)
+    const plantedCrops = gardenLog ? 
+      gardenLog.plantings.map(p => p.crop) : [];
+
+    const currentMonth = new Date().getMonth() + 1;
+    const enhancedRecommendations = [];
+
+    // Process each category from database
+    Object.entries(databaseCrops).forEach(([category, crops]) => {
+      if (category === 'database') return; // Skip flag property
+      
+      crops.forEach(crop => {
+        const isInSeason = isCropInSeasonDatabase(crop, currentMonth);
+        const alreadyPlanted = plantedCrops.includes(crop.plantKey);
+        const portfolioRelevance = getPortfolioRelevance(crop.name, portfolio);
         
-        return {
-          ...rec,
-          // Add database-powered enhancements
-          databaseEnhanced: true,
-          zoneSuitability: plantData.zoneSuitability || 'unknown',
-          temperatureRange: plantData.temperatureRange || null,
-          daysToMaturity: plantData.daysToMaturity || null,
-          spacing: plantData.spacing || null,
-          droughtTolerance: plantData.droughtTolerance || 'medium',
-          
-          // Growing tips from database
-          growingTips: growingTips.slice(0, 2), // Top 2 tips
-          
-          // Companion planting suggestions
-          companionPlants: {
-            beneficial: companionPlants.beneficial?.slice(0, 3) || [],
-            antagonistic: companionPlants.antagonistic?.slice(0, 2) || []
-          },
-          
-          // Enhanced reasoning with database insights
-          enhancedReason: generateDatabaseEnhancedReason(rec, plantData, locationConfig)
-        };
-      } catch (error) {
-        console.warn(`Failed to enhance ${rec.cropKey} with database data:`, error);
-        // Return original recommendation if database enhancement fails
-        return { ...rec, databaseEnhanced: false };
-      }
-    })
-  );
-  
-  return enhancedRecommendations;
+        if (isInSeason && !alreadyPlanted && portfolioRelevance > 0) {
+          enhancedRecommendations.push({
+            cropKey: crop.plantKey,
+            crop: crop.name,
+            confidence: crop.locationSuitability > 0.8 ? 'high' : 
+                       crop.locationSuitability > 0.6 ? 'medium' : 'low',
+            reason: generateDatabaseReason(crop, currentMonth, locationConfig),
+            
+            // Database enhancements
+            databaseEnhanced: crop.databaseEnhanced,
+            zoneSuitability: crop.locationSuitability,
+            temperatureRange: crop.minTemp && crop.maxTemp ? 
+              `${crop.minTemp}°F to ${crop.maxTemp}°F` : null,
+            daysToMaturity: crop.daysToMaturity,
+            droughtTolerance: crop.drought,
+            heatTolerance: crop.heat,
+            
+            // Growing tips from database
+            growingTips: crop.growingTips.slice(0, 2),
+            
+            // Companion planting suggestions
+            companionPlants: {
+              beneficial: crop.companions.beneficial.slice(0, 3),
+              antagonistic: crop.companions.antagonistic.slice(0, 2)
+            },
+            
+            // Portfolio relevance for sorting
+            portfolioRelevance
+          });
+        }
+      });
+    });
+
+    // Sort by portfolio relevance and location suitability
+    enhancedRecommendations.sort((a, b) => {
+      const scoreA = (a.portfolioRelevance * 0.6) + (a.zoneSuitability * 0.4);
+      const scoreB = (b.portfolioRelevance * 0.6) + (b.zoneSuitability * 0.4);
+      return scoreB - scoreA;
+    });
+
+    return enhancedRecommendations.slice(0, 5); // Top 5 recommendations
+    
+  } catch (error) {
+    console.warn('Database-enhanced recommendations failed, using fallback:', error);
+    return generateLocationTopCrops(portfolio, locationConfig, gardenLog);
+  }
 };
 
 /**
@@ -312,6 +340,71 @@ const generateDatabaseEnhancedReason = (baseRec, plantData, locationConfig) => {
   if (plantData.daysToMaturity) {
     const maturityWeeks = Math.round(plantData.daysToMaturity / 7);
     reason += `, ready in ${maturityWeeks} weeks`;
+  }
+  
+  return reason;
+};
+
+/**
+ * Check if crop can be planted in current month using database data
+ * @param {Object} crop - Database crop object
+ * @param {number} currentMonth - Current month (1-12)
+ * @returns {boolean} Whether crop can be planted now
+ */
+const isCropInSeasonDatabase = (crop, currentMonth) => {
+  if (!crop.plantingMonths) return false;
+  
+  // Handle different planting month formats from database
+  let plantingMonths = crop.plantingMonths;
+  
+  if (typeof plantingMonths === 'string') {
+    try {
+      plantingMonths = JSON.parse(plantingMonths);
+    } catch (e) {
+      return false;
+    }
+  }
+  
+  if (plantingMonths.temperate && Array.isArray(plantingMonths.temperate)) {
+    return plantingMonths.temperate.includes(currentMonth);
+  }
+  
+  if (Array.isArray(plantingMonths)) {
+    return plantingMonths.includes(currentMonth);
+  }
+  
+  return false;
+};
+
+/**
+ * Generate reason text for database-enhanced recommendations
+ * @param {Object} crop - Database crop object
+ * @param {number} currentMonth - Current month
+ * @param {Object} locationConfig - Location configuration
+ * @returns {string} Reason text
+ */
+const generateDatabaseReason = (crop, currentMonth, locationConfig) => {
+  let reason = `Perfect timing for zone ${locationConfig.hardiness}`;
+  
+  // Add zone-specific insights
+  if (crop.locationSuitability >= 0.8) {
+    reason += `, excellent climate match`;
+  } else if (crop.locationSuitability >= 0.6) {
+    reason += `, good climate match`;
+  }
+  
+  // Add specific tolerance insights
+  if (locationConfig.heatDays > 90 && crop.heat === 'excellent') {
+    reason += `, thrives in heat`;
+  }
+  
+  if (locationConfig.avgRainfall < 40 && crop.drought === 'excellent') {
+    reason += `, drought tolerant`;
+  }
+  
+  // Add timing insights
+  if (crop.daysToMaturity) {
+    reason += `. Harvest in ${crop.daysToMaturity} days`;
   }
   
   return reason;
