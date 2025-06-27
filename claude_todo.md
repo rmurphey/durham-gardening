@@ -2,10 +2,6 @@
 
 
 
-## If a user's location is outside the continental US ...
-
-- Let them know the app can't support their garden.
-- Offer to set up a garden in Durham, NC.
 
 ## Cleanup: Metrics display
 
@@ -17,15 +13,15 @@
 - We switched to blob storage. It sucks, but it's free.
 - Are there free KV options you should consider?
 
-## Is `NODE_ENV` set properly for dev vs production?
+## Investigation: Is `NODE_ENV` set properly for dev vs production?
 
 - The app UI shows a test-related "toast" when tests pass. This should only happen in local development, not in production. 
 - Vercel should provide basic env data.
 - If you need additional env data, let's discuss!
 
-## Let users choose their location on a map
+## Feature: Let users choose their location on a map
 
-## when I click "share" there should be some kind of feedback
+## Fix: when I click "share" there should be some kind of feedback
 
 # evergreen todos
 
@@ -154,3 +150,12 @@ Right now, the application is based entirely on browser storage. What would it t
 - ✅ Consolidated garden management (fork, share, new garden) in compact header space
 - ✅ Eliminated redundant "Durham Garden" repetitions by moving to focused, informative header
 - ✅ Fixed duplicate navigation issue by separating garden and app routing architecture
+
+## ✅ COMPLETED: If a user's location is outside the continental US (2025-06-27)
+
+- ✅ Added reverse geocoding validation using OpenStreetMap Nominatim API
+- ✅ Validates both geolocation and manual coordinate entry for continental US only
+- ✅ Excludes Alaska, Hawaii, and international locations with clear messaging
+- ✅ Offers Durham, NC fallback location with user confirmation dialog
+- ✅ Gracefully handles API failures by allowing location entry anyway
+- ✅ Integrated seamlessly with existing location setup workflow
