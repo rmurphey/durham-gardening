@@ -137,7 +137,26 @@ A modern React application for climate-aware garden planning with intelligent ca
 - **Charting**: Recharts for data visualization
 - **Styling**: CSS Grid and Flexbox for responsive design
 - **Storage**: localStorage for configuration persistence
-- **Build**: Create React App with fast refresh
+- **Build & Development**: Craco + Vercel (see Architecture Notes below)
+
+### Build & Deployment Architecture
+
+**Craco (Frontend Build Tool)**
+- Webpack configuration override for Create React App
+- **Purpose**: Database/WASM browser support - enables SQLite (sql.js) to work in browser
+- **Key features**: Node.js polyfills (crypto, stream, path), WASM file handling, database asset copying
+- **When**: Development server (`npm start`) and production builds (`npm run build`)
+
+**Vercel (Full-Stack Platform)**  
+- Hosting platform with serverless API functions
+- **Purpose**: Weather API endpoints and cloud deployment
+- **Key features**: API routes (`/api/weather`, `/api/garden`), cron jobs, CDN, edge functions
+- **When**: Production hosting and API runtime (`npm run dev:vercel` for local API testing)
+
+**Why Both Are Needed**:
+- **Craco**: Required for complex SQLite database integration in browser
+- **Vercel**: Required for weather API and cloud storage functionality  
+- **Complementary**: Craco handles frontend complexity, Vercel handles backend/hosting
 
 ## Project Architecture
 
