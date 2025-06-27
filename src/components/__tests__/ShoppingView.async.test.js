@@ -23,7 +23,7 @@ jest.mock('../../data/portfolioStrategies', () => ({
   }))
 }));
 
-jest.mock('../../config/durhamConfig', () => ({
+jest.mock('../../config/defaultConfig', () => ({
   DURHAM_CONFIG: { location: 'Durham, NC' }
 }));
 

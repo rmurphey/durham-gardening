@@ -16,7 +16,7 @@ import {
   generateWeatherSamplesFromRealData,
   applyWeatherAdjustments 
 } from './weatherIntegration.js';
-import { DURHAM_CROPS } from '../config/durhamConfig.js';
+import { DEFAULT_CROPS as DURHAM_CROPS } from '../config/defaultConfig.js';
 
 /**
  * Run complete Monte Carlo simulation for garden planning

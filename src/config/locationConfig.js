@@ -3,7 +3,10 @@
  * Centralized config for different geographic locations and growing conditions
  */
 
-// Default Zone 7b Configuration
+// Import default configuration  
+import { DEFAULT_CONFIG } from './defaultConfig.js';
+
+// Default Zone 7b Configuration  
 export const DURHAM_CONFIG = {
   location: {
     name: 'Zone 7b Location',

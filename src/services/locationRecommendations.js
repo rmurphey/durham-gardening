@@ -3,10 +3,10 @@
  * Actionable gardening advice for any US location with hardiness zone support
  */
 
-import { DURHAM_CROPS } from '../config/durhamConfig.js';
+import { DEFAULT_CROPS as DURHAM_CROPS } from '../config/defaultConfig.js';
 import databaseLocationRecommendations from './databaseLocationRecommendations.js';
 import varietyRecommendationService from './varietyRecommendationService.js';
-// import { DURHAM_CALENDAR } from '../config/durhamConfig.js'; // Available for future calendar integration
+// import { DEFAULT_CALENDAR as DURHAM_CALENDAR } from '../config/defaultConfig.js'; // Available for future calendar integration
 
 /**
  * Generate this month's focus for location-specific gardening

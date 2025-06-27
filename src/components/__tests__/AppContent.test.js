@@ -95,7 +95,7 @@ jest.mock('../../hooks/useCalendarTaskManager', () => ({
 }));
 
 // Mock additional dependencies needed by GardenStateProvider
-jest.mock('../../config/durhamConfig', () => ({
+jest.mock('../../config/defaultConfig', () => ({
   DURHAM_CONFIG: {
     location: 'Durham, NC',
     zone: '7b'

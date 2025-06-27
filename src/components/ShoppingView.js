@@ -12,7 +12,7 @@ import ShoppingCardList from './ShoppingCardList';
 import { generatePureShoppingRecommendations } from '../services/temporalShoppingService';
 import { generateAnnualSeedPlan } from '../services/annualSeedPlanningService';
 import { getPortfolioStrategies } from '../data/portfolioStrategies';
-import { DURHAM_CONFIG } from '../config/durhamConfig';
+import { DEFAULT_CONFIG as DURHAM_CONFIG } from '../config/defaultConfig.js';
 
 const ShoppingView = ({ shoppingActions }) => {
   const [viewMode, setViewMode] = useState('annual'); // 'annual' or 'urgent'

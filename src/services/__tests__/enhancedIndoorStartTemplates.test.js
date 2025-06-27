@@ -4,7 +4,7 @@
  */
 
 import { generateDatabaseGardenCalendar } from '../databaseCalendarService.js';
-import { DURHAM_CONFIG } from '../../config/durhamConfig.js';
+import { DEFAULT_CONFIG as DURHAM_CONFIG } from '../../config/defaultConfig.js';
 import { databaseService } from '../databaseService.js';
 
 // Mock the database service

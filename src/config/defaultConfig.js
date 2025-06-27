@@ -4,7 +4,7 @@
  */
 
 // Default garden configuration - Zone 7b temperate climate
-export const DURHAM_CONFIG = {
+export const DEFAULT_CONFIG = {
   name: 'Zone 7b Location',
   zipCode: '27707',
   hardiness: '7b',
@@ -49,7 +49,7 @@ export const DURHAM_CONFIG = {
 };
 
 // Durham-optimized crop database
-export const DURHAM_CROPS = {
+export const DEFAULT_CROPS = {
   // HEAT CHAMPIONS - thrive in Durham summers
   heatLovers: {
     okra: {
@@ -225,7 +225,7 @@ export const DURHAM_CROPS = {
 };
 
 // Durham planting calendar - month by month
-export const DURHAM_CALENDAR = {
+export const DEFAULT_CALENDAR = {
   january: {
     planning: 'Order seeds, plan garden layout',
     indoor: 'Start onion seeds indoors',
@@ -287,3 +287,8 @@ export const DURHAM_CALENDAR = {
     maintenance: 'Tool maintenance, planning'
   }
 };
+
+// Legacy exports for backward compatibility
+export const DURHAM_CONFIG = DEFAULT_CONFIG;
+export const DURHAM_CROPS = DEFAULT_CROPS; 
+export const DURHAM_CALENDAR = DEFAULT_CALENDAR;
