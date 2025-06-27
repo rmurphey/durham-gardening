@@ -17,8 +17,6 @@
 
 ## Fix: when I click "share" there should be some kind of feedback
 
-## Fix: when I click "share" there should be some kind of feedback
-
 # evergreen todos
 
 ## Rename repo from durham-gardening to garden-sim
