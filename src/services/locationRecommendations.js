@@ -38,42 +38,42 @@ export const generateLocationMonthlyFocus = (portfolio, simulationResults, locat
       focus += "🌿 **Early Spring Prep**\n";
       focus += "- Start pepper and tomato seeds indoors with heat mat\n";
       focus += "- Direct sow kale and lettuce if soil isn't muddy\n";
-      focus += "- Add compost to beds (only when clay soil isn't sticky)\n";
+      focus += "- Support soil ecosystem with compost (only when clay soil isn't sticky)\n";
       break;
 
     case 3: // March
       focus += "🌱 **Spring Planting Begins**\n";
       focus += "- Continue cool-season plantings\n";
       focus += "- Harden off indoor seedlings\n";
-      focus += "- Prepare irrigation for summer heat\n";
+      focus += "- Prepare to support plants through summer heat\n";
       break;
 
     case 4: // April
       focus += "☀️ **Transition Month**\n";
       focus += "- Last chance for cool crops before heat\n";
       focus += hardinessNumber >= 8 ? "- Transplant warm-season crops (warmer zone allows earlier planting)\n" : "- Transplant warm-season crops after soil warms\n";
-      focus += "- Install shade cloth framework\n";
+      focus += "- Prepare shade support structures for heat protection\n";
       break;
 
     case 5: // May
       focus += "🔥 **Summer Heat Prep**\n";
       focus += "- Plant heat lovers: okra, peppers, sweet potatoes\n";
-      focus += "- Heavy mulching and shade cloth installation\n";
-      focus += "- Deep watering schedules begin\n";
+      focus += "- Heavy mulching and shade protection deployment\n";
+      focus += "- Begin deep watering to support root systems\n";
       break;
 
     case 6: // June
       focus += "🌞 **Heat Management**\n";
       focus += "- Harvest spring crops before they bolt\n";
-      focus += "- Maintain mulch and watering\n";
+      focus += "- Maintain mulch protection and consistent watering\n";
       focus += "- Order fall seeds while available\n";
       break;
 
     case 7: // July
       focus += "🔥 **Survival Mode**\n";
       focus += "- Daily okra harvest in early morning\n";
-      focus += "- Provide extra shade for struggling plants\n";
-      focus += "- Keep plants alive through heat waves\n";
+      focus += "- Support struggling plants with additional shade\n";
+      focus += "- Maintain plant health through heat waves\n";
       break;
 
     case 8: // August
@@ -101,7 +101,7 @@ export const generateLocationMonthlyFocus = (portfolio, simulationResults, locat
       focus += "❄️ **Winter Prep**\n";
       focus += "- Harvest kale (sweetest after frost)\n";
       focus += "- Clean up spent summer crops\n";
-      focus += "- Install cold protection\n";
+      focus += "- Provide cold protection for vulnerable plants\n";
       break;
 
     case 12: // December
@@ -362,7 +362,7 @@ export const generateLocationInvestmentPriority = (customInvestment, locationCon
       category: 'Seed Starting',
       urgency: 'high',
       timing: 'Install before starting seeds in February',
-      why: 'Durham winter light insufficient for strong seedlings',
+      why: 'Winter light insufficient for strong seedling development',
       where: 'Amazon or grow supply store',
       quantity: 1,
       specifications: 'Full spectrum LED, adjustable height, covers 2x4 area'
@@ -419,15 +419,15 @@ export const generateLocationInvestmentPriority = (customInvestment, locationCon
       price: 35.00,
       category: 'Heat Prep',
       urgency: 'medium',
-      timing: 'Build structure now, install cloth in April',
-      why: 'Framework must be ready before installing shade cloth',
+      timing: 'Prepare support structure now, deploy cloth in April',
+      why: 'Framework must be ready before deploying shade protection',
       where: 'Home Depot or Lowes',
       quantity: 1,
       specifications: '1/2" PVC pipes, joints, ground stakes for bed coverage'
     });
   }
 
-  // April (Month 4) - Critical installation window
+  // April (Month 4) - Critical deployment window
   else if (currentMonth === 4) {
     recommendations.push({
       id: 'drip-irrigation-system',
@@ -435,8 +435,8 @@ export const generateLocationInvestmentPriority = (customInvestment, locationCon
       price: 89.99,
       category: 'Irrigation',
       urgency: 'urgent',
-      timing: 'Install NOW before May heat waves begin',
-      why: 'Last chance to install before summer survival mode',
+      timing: 'Deploy NOW before May heat waves begin',
+      why: 'Last chance to establish support systems before summer survival mode',
       where: 'Home Depot for immediate pickup',
       quantity: 1,
       specifications: 'Timer, tubing, emitters for all three beds'
@@ -448,8 +448,8 @@ export const generateLocationInvestmentPriority = (customInvestment, locationCon
       price: 42.99,
       category: 'Heat Protection',
       urgency: 'urgent',
-      timing: 'Install immediately - heat stress starts early May',
-      why: 'Essential for preventing crop failure in Durham heat',
+      timing: 'Deploy immediately - heat stress starts early May',
+      why: 'Essential for supporting plants through intense heat',
       where: 'Amazon for quick delivery',
       quantity: 1,
       specifications: '12x20ft covers 4×8 and 4×5 beds with overlap'
@@ -464,7 +464,7 @@ export const generateLocationInvestmentPriority = (customInvestment, locationCon
       price: 25.00,
       category: 'Emergency Heat Protection',
       urgency: 'urgent',
-      timing: 'Install immediately to save struggling plants',
+      timing: 'Deploy immediately to support struggling plants',
       why: 'Crops are actively suffering from heat stress without protection',
       where: 'Local store for same-day pickup',
       quantity: 1,

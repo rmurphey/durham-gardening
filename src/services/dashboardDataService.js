@@ -269,7 +269,7 @@ export const getTodaysActionableGuidance = () => {
       actions: [
         'Check overnight watering results',
         'Harvest heat-sensitive crops',
-        'Apply water before temperatures rise'
+        'Support plants with early watering before heat'
       ]
     });
   }
@@ -297,7 +297,7 @@ export const getTodaysActionableGuidance = () => {
         icon: '☀️',
         title: 'Summer Heat Strategy',
         actions: [
-          'Shade cloth for lettuce/spinach',
+          'Provide shade protection for lettuce/spinach',
           'Mulch heavily to retain moisture',
           'Daily okra harvest prevents tough pods'
         ]
@@ -312,7 +312,7 @@ export const getTodaysActionableGuidance = () => {
         actions: [
           'Clay soil: wait 24hrs after rain to work',
           'Last plantings of cool crops',
-          'Prepare supports for warm season crops'
+          'Set up supports to help warm season crops thrive'
         ]
       });
       break;
@@ -325,7 +325,7 @@ export const getTodaysActionableGuidance = () => {
         actions: [
           'Best growing conditions of the year',
           'Start succession plantings every 2 weeks',
-          'Extend harvest with row covers'
+          'Support extended harvest with protective covers'
         ]
       });
       break;
