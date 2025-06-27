@@ -1,9 +1,6 @@
 # TODOs for Claude Code
 
 
-## Get more valuable information above the fold. 
-
-- Right now I see "Durham Garden" or some variation at least six times above the fold, and almost no useful information.
 
 ## If a user's location is outside the continental US ...
 
@@ -148,3 +145,12 @@ Right now, the application is based entirely on browser storage. What would it t
 - ✅ Added metric-first display (Celsius, millimeters) with imperial secondary values
 - ✅ Improved responsive design with better mobile spacing and hover effects
 - ✅ Reduced CSS debt by ~40 lines and created reusable formatting utilities
+
+## ✅ COMPLETED: Get more valuable information above the fold (2025-06-27)
+
+- ✅ Added garden ID, ownership status, and action buttons to header when in garden context
+- ✅ Displayed urgent tasks count and ready-to-harvest count in header quick stats
+- ✅ Integrated current temperature display in location info
+- ✅ Consolidated garden management (fork, share, new garden) in compact header space
+- ✅ Eliminated redundant "Durham Garden" repetitions by moving to focused, informative header
+- ✅ Fixed duplicate navigation issue by separating garden and app routing architecture
