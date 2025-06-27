@@ -14,17 +14,29 @@
 - ✅ Preserved accurate development history showing the evolution
 - ✅ Added context notes about storage layer decisions
 
-## Investigation: Is `NODE_ENV` set properly for dev vs production?
+## IN PROGRESS: Investigation: Is `NODE_ENV` set properly for dev vs production?
 
 - The app UI shows a test-related "toast" when tests pass. This should only happen in local development, not in production. 
 - Vercel should provide basic env data.
 - If you need additional env data, let's discuss!
+
+**Investigation Notes:**
+- Started: 2025-06-27
+- FINDING: Vercel project has NO environment variables set (`vercel env ls` returns empty)
+- NODE_ENV should be automatically set by Vercel to 'production' in production builds
+- Current code has NODE_ENV checks in weatherConfig.js and ForecastWidget.js
+- Comments in code suggest toast notifications planned but not implemented yet
+- Need to verify if Vercel is auto-setting NODE_ENV or if we need to set it manually
 
 ## Feature: Let users choose their location on a map
 
 ## Fix: when I click "share" there should be some kind of feedback
 
 # evergreen todos
+
+## Rename repo from durham-gardening to garden-sim
+
+## Rename directory from shopping to garden-sim
 
 ## Does the design system need any updates?
 
