@@ -18,6 +18,8 @@ You ...
 
 A React-based climate-aware garden planning application with Monte Carlo simulation, SQLite database integration, and comprehensive crop recommendations for US/Canadian regions.
 
+**Project Purpose: Learning over utility.** This application is built primarily for educational exploration, not optimization for end-user utility. Any log about the garden or development of this application has value as part of the learning process.
+
 ## Key Commands
 
 ### Development

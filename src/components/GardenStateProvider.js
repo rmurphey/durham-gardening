@@ -18,6 +18,15 @@ import { useSimulation } from '../hooks/useSimulation.js';
 import { useClimateSelection, useInvestmentConfig, useLocationConfig } from '../hooks/useLocalStorage.js';
 import { useShoppingList } from '../hooks/useShoppingList.js';
 import { useCalendarTaskManager } from '../hooks/useCalendarTaskManager.js';
+import { 
+  createEmptyGardenLog,
+  addPlanting,
+  updatePlanting,
+  removePlanting,
+  getActivePlantings,
+  getPlantingsByStatus,
+  PLANTING_STATUS
+} from '../services/gardenLog.js';
 
 const GardenStateContext = createContext();
 
@@ -42,6 +51,9 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
   const [customInvestment, setCustomInvestment] = useInvestmentConfig();
   const [customPortfolio, setCustomPortfolio] = useState(null);
   
+  // Garden log state management
+  const [gardenLog, setGardenLog] = useState(() => createEmptyGardenLog());
+  
   // Use simulation hook
   const { simulationResults, simulating, totalInvestment } = useSimulation(
     selectedSummer,
@@ -62,6 +74,25 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
     getPortfolioStrategies(locationConfig, customPortfolio), 
     [locationConfig, customPortfolio]
   );
+
+  // Garden log management functions
+  const handleAddPlanting = (plantingData) => {
+    if (!isReadOnly) {
+      setGardenLog(currentLog => addPlanting(currentLog, plantingData));
+    }
+  };
+
+  const handleUpdatePlanting = (plantingId, updates) => {
+    if (!isReadOnly) {
+      setGardenLog(currentLog => updatePlanting(currentLog, plantingId, updates));
+    }
+  };
+
+  const handleRemovePlanting = (plantingId) => {
+    if (!isReadOnly) {
+      setGardenLog(currentLog => removePlanting(currentLog, plantingId));
+    }
+  };
 
   // Handle custom portfolio changes
   const handleCustomPortfolioChange = (allocations) => {
@@ -93,6 +124,12 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
     };
   }, [portfolioStrategies, selectedPortfolio, simulationResults, locationConfig, customInvestment]);
 
+  // Garden log derived data
+  const activePlantings = useMemo(() => getActivePlantings(gardenLog), [gardenLog]);
+  const readyToHarvest = useMemo(() => 
+    getPlantingsByStatus(gardenLog, PLANTING_STATUS.READY), [gardenLog]
+  );
+
   const value = {
     // Core selection state
     selectedSummer,
@@ -114,6 +151,15 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
     customPortfolio,
     setCustomPortfolio,
     handleCustomPortfolioChange,
+    
+    // Garden log state and actions
+    gardenLog,
+    activePlantings,
+    readyToHarvest,
+    handleAddPlanting,
+    handleUpdatePlanting,
+    handleRemovePlanting,
+    PLANTING_STATUS,
     
     // Simulation data
     simulationResults,
