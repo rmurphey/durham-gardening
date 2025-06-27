@@ -1,5 +1,5 @@
--- Durham Garden Setup and Activity Templates
--- Populates database with Durham, NC specific garden data
+-- Garden Setup and Activity Templates  
+-- Populates database with Zone 7b temperate garden data
 
 -- Insert activity types
 INSERT INTO activity_types (type_key, name, description, default_priority, color_hex) VALUES
@@ -170,4 +170,7 @@ INSERT INTO activity_templates (
  '{"source_bed": "4×8 Bed", "winter_crop": "garlic"}'
 );
 
--- Durham activity templates loaded successfully
+-- Update data tracking
+INSERT INTO data_updates (update_type, description) VALUES
+('durham_activities', 'Initial Durham garden activity templates loaded'),
+('garden_setup', 'Durham garden beds and infrastructure defined');
