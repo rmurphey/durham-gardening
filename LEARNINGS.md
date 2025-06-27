@@ -42,5 +42,25 @@
 **Pattern:** Vercel-specific development workflow differs from standard React development
 **Impact:** Weather functionality depends on proper development server choice - document clearly
 
+## AI Development Complexity Accumulation (2025-06-27)
+**Insight:** AI adds sophistication faster than utility - each "solution" creates layers rather than simplifying foundations
+**Pattern:** Requires increasing human guidance as complexity grows beyond problem scope (Monte Carlo calendar, error handling cascades)
+**Impact:** AI velocity makes traditional practices (tests, modularization) MORE critical, not less - constraints become amplifiers
+
+## Phantom Dependencies Pattern (2025-06-27)
+**Insight:** AI rapid development creates tests/mocks referencing services refactored away during feature expansion
+**Pattern:** Unlike manual development, AI evolves architecture without updating all references - creates invisible technical debt
+**Impact:** Systematic dependency auditing required during major AI-assisted changes, not just functional testing
+
+## Maintenance Automation Psychology (2025-06-27)
+**Insight:** Maintenance friction determines whether it happens - AI transforms "tedious manual work" into "quick automated task"
+**Pattern:** 20+ ESLint warnings: 30min with AI guidance vs hours manual detective work - psychological difference drives action
+**Impact:** AI development workflows should emphasize automated tooling for psychological ease, not just code quality
+
+## AST-Aware Refactoring Necessity (2025-06-27)
+**Insight:** String-based refactoring fragile and error-prone with AI velocity - parameter mismatches that IDEs would catch
+**Pattern:** AST transformations (jscodeshift, babel) essential for reliable code changes at AI development speeds
+**Impact:** Mandated AST-based refactoring in CLAUDE.md - methodology critical when AI enables rapid architecture evolution
+
 ---
 *Auto-updated when significant insights discovered during task completion*

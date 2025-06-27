@@ -1,58 +1,71 @@
 # GardenSim Development Log
 
-A $400-600 learning experiment about AI-assisted development patterns.
+Personal journal documenting the experience of building a garden planning application with AI assistance.
 
-## Project Evolution
-**Durham garden planner** → **Continental US garden planning app** → **GardenSim with Monte Carlo simulation**
+## Project Journey
+Started with simple Durham garden recommendations, evolved into a comprehensive continental US garden planning application with weather forecasting and Monte Carlo simulation.
 
-Started with personal garden recommendations, evolved into comprehensive garden planning application with weather integration, SQLite database, and statistical modeling.
+**Evolution**: Durham-specific advice → location-agnostic system → weather-integrated planning → statistical modeling → actual garden state tracking
 
-## Key Learnings
+## Development Phases
 
-### AI Development Patterns
-- **Complexity Accumulation**: AI adds sophistication faster than utility. Each "solution" creates new layers rather than simplifying foundations. Requires increasing human guidance as complexity grows.
-- **Phantom Dependencies**: AI rapid development creates tests/mocks referencing refactored-away services. Unlike manual development, AI evolves architecture without updating all references.
-- **Velocity vs Architecture**: AI's high development speed makes traditional practices (tests, modularization, type annotations) MORE critical, not less. Speed without constraints leads to architectural drift.
+### Genesis
+- Had a garden, wanted AI recommendations
+- Convinced this problem was "app-able" 
+- Initial output promising enough to pursue
 
-### Maintenance Insights  
-- **Automation Enables Gardening**: Maintenance friction determines if it happens. AI transforms "tedious manual work" into "quick automated task" - psychological difference drives action.
-- **AST > String Replacement**: String-based refactoring is fragile and error-prone. AST-aware transformations essential for reliable code changes.
-- **Infrastructure Lag**: App identity evolves faster than naming (directory: `shopping`, repo: `durham-gardening`, app: `GardenSim`). Accept debt rather than disrupt workflow.
+### Durham Focus  
+- 3KLOC single file → modular architecture
+- SQLite database with crop data
+- Core functionality working locally
 
-### Architectural Decisions
-- **Triple Data System**: Static data (performance) + Garden log (reality) + SQLite database (completeness)
-- **Functional Focus**: Preferred deep functionality (statistical modeling, weather integration) over surface polish
-- **User Value > Code Purity**: 15 minutes UX improvement beats 60 minutes internal cleanup users never see
+### Geographic Expansion
+- Durham-specific → Continental US support
+- Required guidance on data model implications
+- Hardiness zone integration
 
-### Technical Debt Categories
-- **Phantom dependencies** from rapid AI refactoring
-- **Naming debt** from evolving app identity
-- **Service layer sprawl** from adding features without consolidation
-- **Error handling cascades** from patching vs fixing root issues
+### Feature Sophistication
+- Weather API integration via Vercel serverless
+- Monte Carlo simulation with jStat library
+- Garden log system bridging theory and reality
+- Probabilistic calendar generation
+
+### Philosophical Shift
+- Reddit post about habitat collapse changed direction
+- Language shift: "install/build" → "support/maintain"
+- Preservation over intervention mindset
 
 ## Development Experience
 
-### What Worked
-- AI excellent at guided cleanup and modularization
-- Command organization iteration (docs → separate tools → unified interface)
-- Habitat preservation philosophical shift implemented systematically
-- Garden log bridged theoretical recommendations with planting reality
+### AI Collaboration Patterns
+- Excellent at guided cleanup and implementation
+- Required constant architectural guidance
+- Needed help with broader context and prioritization
+- Multiple sessions due to occasional instability
 
-### What Required Guidance  
-- Architectural thinking and broader context
-- When to use SQLite vs hard-coding
-- Geographic expansion data model implications
-- Major feature prioritization decisions
+### What Surprised Me
+- Cost much lower than expected (~$400-600 vs initial $1000+ fears)
+- Complexity accumulated faster than utility
+- Manual maintenance vs automated maintenance psychological difference
+- AI can implement philosophical concepts systematically
 
-### Workflow Patterns
-- Multiple sessions due to AI instability costs
-- Dev server management challenging (blocking Claude interface)
-- Commit messages as technical documentation
-- Manual intervention for architectural decisions
+### Infrastructure Learnings
+- Dev server management tricky (blocking interface)
+- Naming debt accumulates (directory ≠ repo ≠ app name)
+- Vercel development workflow different from standard React
+- Commit messages serve as technical documentation
 
-## Core Insight
-**AI development velocity requires stronger engineering constraints, not weaker ones.** Traditional practices become amplifiers of AI capability rather than impediments to AI speed.
+## Architecture Outcomes
+- **Triple data system**: Static (performance) + Garden log (reality) + Database (completeness) 
+- **Weather-responsive**: Real forecast data drives recommendations
+- **Location-aware**: All functions require locationConfig parameter
+- **Statistically modeled**: Monte Carlo simulation with thousands of iterations
+
+## Current State
+Fully functional garden planning application for continental US with real-time weather integration, comprehensive plant database, and actual garden state tracking.
+
+**User flow**: Set location → Configure portfolio → Get weather-aware recommendations → Track actual plantings → Receive honest task guidance
 
 ---
 
-*Total cost: ~$400-600 | Architecture: React + SQLite + Monte Carlo simulation | Scope: Continental US garden planning*
+*$400-600 learning investment | React + SQLite + jStat + National Weather Service API*
