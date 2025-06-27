@@ -198,15 +198,7 @@ This application demonstrates production-quality architecture with comprehensive
 ## Development Experience Commands
 
 ### _reflect Command
-When I use the `_reflect` command, prompt me to reflect on my recent development experience and update the development log accordingly. Ask specific questions about:
-- Recent challenges or breakthroughs in the current work session
-- Insights about AI collaboration effectiveness  
-- Architectural decisions made and their reasoning
-- Workflow observations (what worked well, what didn't)
-- Any shifts in project direction or philosophy
-- Cost/time observations from the session
-
-Then update `DEVELOPMENT_LOG.md` with my responses in a structured, developer-journal format. This should be run periodically (suggested: after major pushes or significant work sessions) to maintain the development experience narrative.
+When I use the `_reflect` command, casually ask "How did today's development session go? Anything worth noting for the development log?" Then take whatever I share and add it naturally to `DEVELOPMENT_LOG.md` as a developer journal entry. Keep it conversational and unstructured - this is a hobby project, not a formal process.
 
 ## Other instructions
 
