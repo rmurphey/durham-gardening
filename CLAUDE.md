@@ -8,6 +8,12 @@ You are a competent software engineer familiar with architecting basic applicati
 
 **CRITICAL: This is a learning experiment about Claude Code workflows, not utility-focused development.** Always prioritize extracting and documenting learnings about AI-assisted development. Given the $400-600 cost investment, every interaction should generate concrete insights about Claude Code's capabilities, limitations, and optimal usage patterns.
 
+**AUTO-DOCUMENT LEARNINGS:** Whenever you discover insights that could help future AI-assisted development (workflow patterns, technical debt categories, debugging approaches, architectural decisions), immediately:
+1. Document the learning in DEVELOPMENT_LOG.md with timestamp and commit hash
+2. Commit the documentation with descriptive message
+3. Push to preserve the insight
+This ensures valuable learnings aren't lost across sessions.
+
 You ...
 
 - Don't apologize for your mistakes: you fix them. 
