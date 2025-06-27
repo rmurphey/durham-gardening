@@ -2,15 +2,18 @@
 
 *Updated: 2025-06-27*
 
-## 🎯 CANDIDATE TASKS - Choose Next
+## 🎯 NEXT SESSION PRIORITIES
 
-### **High-Value Opportunities** 
-1. **Monte Carlo Calendar Generation - Phase 2** (~$3-4) - Calendar Intelligence & Risk-Adjusted Timing
-   - Build UI components to display probabilistic calendar recommendations  
-   - Add confidence visualization and scenario strength indicators
-   - Implement weather-driven timing adjustments for critical decisions
-2. **Regional Plant Varieties** (~$3-4) - Add zone-specific variety recommendations based on hardiness zones
-3. **Microclimate Adjustments** (~$3-4) - Factor in user's site conditions (slope, exposure, soil type)
+### **Learning Experiment Status** 
+**Current Phase**: Code quality and infrastructure maturity ✅
+**Budget Used**: ~$25-30 of $400-600 (excellent efficiency)
+**Key Gap Identified**: AI development workflow supervision requirements
+
+### **Recommended Next Areas**
+1. **User Experience Polish** (~$2-3) - Address any remaining UI/UX issues
+2. **Performance Optimization** (~$2-3) - Bundle size, load times, rendering efficiency  
+3. **Error Handling Refinement** (~$2-3) - Improve graceful degradation and user feedback
+4. **Mobile Responsiveness** (~$3-4) - Ensure garden planning works well on mobile devices
 
 ### **Quick Wins** (~$1-2 each)
 - Eliminate unused code cleanup
@@ -26,6 +29,13 @@
 ---
 
 ## ✅ Recent Completions
+
+**Session Recap: Test Coverage & Code Quality** - COMPLETED (~$4-5 total)
+- Comprehensive test coverage for variety recommendation services (555+ lines of tests)
+- Removed 5 unused files (779 lines of dead code eliminated)  
+- Location-agnostic refactoring (eliminated Durham-specific references)
+- File organization improvements (renamed configs to generic patterns)
+- All functionality preserved, codebase much cleaner and more maintainable
 
 **Regional Plant Varieties** - COMPLETED (~$3-4 actual)
 - Created `regionalVarietyRecommendations.js` service for zone-specific cultivar recommendations
