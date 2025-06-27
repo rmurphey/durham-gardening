@@ -15,14 +15,7 @@
 - ✅ Added context notes about storage layer decisions
 
 
-## IN PROGRESS: Feature: Let users choose their location on a map
-
-**Plan:**
-- Started: 2025-06-27
-- Add interactive map component to location setup
-- Integrate with existing location validation and geolocation system
-- Support continental US region restrictions
-- Maintain existing fallback options and coordinate entry
+## Fix: when I click "share" there should be some kind of feedback
 
 ## Fix: when I click "share" there should be some kind of feedback
 
@@ -41,6 +34,13 @@
 ## Does the CSS need to be refactored into modules, or is it fine as is?
 
 ## Eliminate duplicate / unnecessary CSS
+
+## Feature: Let users choose their location on a map (LOW PRIORITY)
+
+- Current geolocation + coordinate entry is acceptable for now
+- Future enhancement: Add interactive map for location selection
+- Would integrate with existing continental US validation
+- Cost vs benefit doesn't justify current implementation
 
 ---
 
