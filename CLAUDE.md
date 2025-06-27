@@ -277,3 +277,4 @@ When I use the `_reflect` command, casually ask "How did today's development ses
 ## Claude Memories
 
 - whenever you are capturing project history, capture the most accurate version you can. don't embellish.
+- the project has a neutral opinion about AI codegen and AI-assisted development. part of the goal of the project is to develop these opinions independently, without machine influence.

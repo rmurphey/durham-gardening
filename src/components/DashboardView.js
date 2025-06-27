@@ -9,6 +9,7 @@ import GardenCalendar from './GardenCalendar.js';
 import ForecastWidget from './ForecastWidget.js';
 import CompactSettingsPanel from './CompactSettingsPanel.js';
 import SimulationResults from './SimulationResults.js';
+import DatabaseIntegrationDemo from './DatabaseIntegrationDemo.js';
 import { 
   getLocationWeatherAlerts, 
   getReadyToHarvest, 
@@ -241,6 +242,9 @@ const DashboardView = ({
         totalInvestment={totalInvestment}
         isReadOnly={isReadOnly}
       />
+
+      {/* Database Integration Demo */}
+      <DatabaseIntegrationDemo locationConfig={locationConfig} />
 
       {/* Garden Calendar - Full Width */}
       <div className="garden-calendar-dashboard">

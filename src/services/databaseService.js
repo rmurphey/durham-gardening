@@ -988,6 +988,285 @@ class DatabaseService {
     
     return [];
   }
+
+  /**
+   * Get enhanced plant data by combining database information with static config
+   * @param {string} plantKey - Plant identifier (e.g., 'okra', 'kale')
+   * @param {Object} locationConfig - User's location configuration
+   * @returns {Object} Enhanced plant data with database information
+   */
+  async getEnhancedPlantData(plantKey, locationConfig) {
+    await this.waitForInitialization();
+    
+    if (!this.isInitialized) {
+      return this.getStaticPlantData(plantKey);
+    }
+
+    try {
+      const query = `
+        SELECT 
+          p.plant_key,
+          p.min_zone,
+          p.max_zone,
+          p.min_temp_f,
+          p.max_temp_f,
+          p.optimal_temp_min_f,
+          p.optimal_temp_max_f,
+          p.days_to_maturity,
+          p.spacing_inches,
+          p.drought_tolerance,
+          p.heat_tolerance,
+          p.humidity_tolerance,
+          pn.common_name,
+          pn.alternate_names,
+          pc.category_name
+        FROM plants p
+        JOIN plant_names pn ON p.id = pn.plant_id
+        JOIN plant_categories pc ON p.category_id = pc.id
+        WHERE p.plant_key = ? AND pn.language = 'en'
+      `;
+
+      const result = this.db.exec(query, [plantKey]);
+      
+      if (result.length > 0 && result[0].values.length > 0) {
+        const row = result[0].values[0];
+        const staticData = this.getStaticPlantData(plantKey);
+        
+        return {
+          ...staticData,
+          // Enhance with database data
+          zones: `${row[1]}-${row[2]}`,
+          minTemp: row[3],
+          maxTemp: row[4],
+          optimalTemp: [row[5], row[6]],
+          daysToMaturity: row[7],
+          spacingInches: row[8],
+          drought: row[9],
+          heat: row[10],
+          humidity: row[11],
+          name: { en: row[12] },
+          alternateNames: row[13] ? row[13].split(',').map(n => n.trim()) : [],
+          category: row[14],
+          dataSource: 'database+static'
+        };
+      }
+      
+      return this.getStaticPlantData(plantKey);
+    } catch (error) {
+      console.warn(`Database query failed for ${plantKey}, using static data:`, error);
+      return this.getStaticPlantData(plantKey);
+    }
+  }
+
+  /**
+   * Get growing tips from database for a specific plant and location
+   * @param {string} plantKey - Plant identifier
+   * @param {Object} locationConfig - User's location configuration
+   * @returns {Array} Growing tips specific to plant and location
+   */
+  async getGrowingTips(plantKey, locationConfig) {
+    await this.waitForInitialization();
+    
+    if (!this.isInitialized) {
+      return [];
+    }
+
+    try {
+      const query = `
+        SELECT gt.tip_text, gt.category, gt.climate_zones, gt.priority
+        FROM growing_tips gt
+        JOIN plants p ON gt.plant_id = p.id
+        WHERE p.plant_key = ?
+        AND (gt.climate_zones LIKE '%${locationConfig.hardiness}%' OR gt.climate_zones IS NULL)
+        ORDER BY gt.priority DESC, gt.id
+      `;
+
+      const result = this.db.exec(query, [plantKey]);
+      
+      if (result.length > 0 && result[0].values.length > 0) {
+        return result[0].values.map(row => ({
+          text: row[0],
+          category: row[1],
+          zones: row[2],
+          priority: row[3]
+        }));
+      }
+      
+      return [];
+    } catch (error) {
+      console.warn(`Failed to get growing tips for ${plantKey}:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * Get companion planting recommendations from database
+   * @param {string} plantKey - Plant identifier
+   * @returns {Object} Companion planting recommendations
+   */
+  async getCompanionPlants(plantKey) {
+    await this.waitForInitialization();
+    
+    if (!this.isInitialized) {
+      return { beneficial: [], neutral: [], antagonistic: [] };
+    }
+
+    try {
+      const query = `
+        SELECT 
+          p2.plant_key,
+          pn2.common_name,
+          cp.relationship_type,
+          cp.notes
+        FROM companion_plants cp
+        JOIN plants p1 ON cp.plant_a_id = p1.id
+        JOIN plants p2 ON cp.plant_b_id = p2.id
+        JOIN plant_names pn2 ON p2.id = pn2.plant_id
+        WHERE p1.plant_key = ? AND pn2.language = 'en'
+        ORDER BY cp.relationship_type, pn2.common_name
+      `;
+
+      const result = this.db.exec(query, [plantKey]);
+      
+      const companions = { beneficial: [], neutral: [], antagonistic: [] };
+      
+      if (result.length > 0 && result[0].values.length > 0) {
+        result[0].values.forEach(row => {
+          const companion = {
+            plantKey: row[0],
+            name: row[1],
+            notes: row[3]
+          };
+          
+          const relationship = row[2];
+          if (relationship === 'beneficial' && companions.beneficial) {
+            companions.beneficial.push(companion);
+          } else if (relationship === 'neutral' && companions.neutral) {
+            companions.neutral.push(companion);
+          } else if (relationship === 'antagonistic' && companions.antagonistic) {
+            companions.antagonistic.push(companion);
+          }
+        });
+      }
+      
+      return companions;
+    } catch (error) {
+      console.warn(`Failed to get companion plants for ${plantKey}:`, error);
+      return { beneficial: [], neutral: [], antagonistic: [] };
+    }
+  }
+
+  /**
+   * Get all plants suitable for a specific hardiness zone from database
+   * @param {string} hardinessZone - USDA hardiness zone (e.g., '7b')
+   * @returns {Array} Plants suitable for the zone
+   */
+  async getPlantsByZone(hardinessZone) {
+    await this.waitForInitialization();
+    
+    if (!this.isInitialized) {
+      return this.getStaticPlantsByZone(hardinessZone);
+    }
+
+    try {
+      const zoneNumber = parseFloat(hardinessZone.replace(/[ab]/, ''));
+      
+      const query = `
+        SELECT 
+          p.plant_key,
+          pn.common_name,
+          p.min_zone,
+          p.max_zone,
+          pc.category_name,
+          p.heat_tolerance,
+          p.drought_tolerance
+        FROM plants p
+        JOIN plant_names pn ON p.id = pn.plant_id
+        JOIN plant_categories pc ON p.category_id = pc.id
+        WHERE CAST(SUBSTR(p.min_zone, 1, 1) AS REAL) <= ?
+        AND CAST(SUBSTR(p.max_zone, 1, 1) AS REAL) >= ?
+        AND pn.language = 'en'
+        ORDER BY pc.category_name, pn.common_name
+      `;
+
+      const result = this.db.exec(query, [zoneNumber, zoneNumber]);
+      
+      if (result.length > 0 && result[0].values.length > 0) {
+        return result[0].values.map(row => ({
+          plantKey: row[0],
+          name: row[1],
+          minZone: row[2],
+          maxZone: row[3],
+          category: row[4],
+          heatTolerance: row[5],
+          droughtTolerance: row[6],
+          dataSource: 'database'
+        }));
+      }
+      
+      return this.getStaticPlantsByZone(hardinessZone);
+    } catch (error) {
+      console.warn(`Failed to get plants by zone ${hardinessZone}:`, error);
+      return this.getStaticPlantsByZone(hardinessZone);
+    }
+  }
+
+  /**
+   * Fallback to static plant data from config.js
+   * @param {string} plantKey - Plant identifier
+   * @returns {Object} Static plant data
+   */
+  getStaticPlantData(plantKey) {
+    // Import is done at runtime to avoid circular dependencies
+    const { GLOBAL_CROP_DATABASE } = require('../config.js');
+    
+    // Search across all categories
+    for (const category of ['heatTolerant', 'coolSeason', 'perennials']) {
+      const plants = GLOBAL_CROP_DATABASE[category] || {};
+      if (plants[plantKey]) {
+        return {
+          ...plants[plantKey],
+          category,
+          dataSource: 'static'
+        };
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Fallback method to get plants by zone from static data
+   * @param {string} hardinessZone - USDA hardiness zone
+   * @returns {Array} Plants from static data suitable for zone
+   */
+  getStaticPlantsByZone(hardinessZone) {
+    const { GLOBAL_CROP_DATABASE } = require('../config.js');
+    const zoneNumber = parseFloat(hardinessZone.replace(/[ab]/, ''));
+    const plants = [];
+
+    // Check all categories
+    Object.entries(GLOBAL_CROP_DATABASE).forEach(([category, categoryPlants]) => {
+      Object.entries(categoryPlants).forEach(([plantKey, plantData]) => {
+        const zones = plantData.zones || '';
+        const [minZone, maxZone] = zones.split('-').map(z => parseFloat(z));
+        
+        if (minZone <= zoneNumber && maxZone >= zoneNumber) {
+          plants.push({
+            plantKey,
+            name: plantData.name?.en || plantKey,
+            category,
+            zones: plantData.zones,
+            heatTolerance: plantData.heat,
+            droughtTolerance: plantData.drought,
+            dataSource: 'static'
+          });
+        }
+      });
+    });
+
+    return plants;
+  }
 }
 
 // Export singleton instance
