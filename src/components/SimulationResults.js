@@ -6,6 +6,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { formatPercentage, formatCurrency, formatProbability } from '../config.js';
+import ProbabilisticCalendar from './ProbabilisticCalendar.js';
 
 const SimulationResults = ({
   simulationResults,
@@ -133,6 +134,11 @@ const SimulationResults = ({
           <div className="result-confidence">Annual budget allocation</div>
         </div>
       </div>
+
+      {/* Probabilistic Calendar - NEW FEATURE */}
+      {simulationResults.probabilisticCalendar && (
+        <ProbabilisticCalendar probabilisticCalendar={simulationResults.probabilisticCalendar} />
+      )}
 
     </section>
   );

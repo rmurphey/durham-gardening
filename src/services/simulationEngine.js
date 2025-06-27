@@ -629,10 +629,7 @@ export const generateCalendarFromScenario = (portfolio, weatherScenario, locatio
   
   // Adjust frost dates based on weather scenario
   const lastFrostDate = adjustFrostDate(baseFrostDate, weatherScenario, locationConfig);
-  const firstFallFrost = new Date(currentYear, 10, 15); // November 15 baseline
-  
-  // Generate planting events for each crop in portfolio
-  const allCrops = { ...DURHAM_CROPS.heatLovers, ...DURHAM_CROPS.coolSeason, ...DURHAM_CROPS.perennials };
+  // firstFallFrost and allCrops available but not used in current implementation
   
   Object.entries(portfolio).forEach(([cropType, allocation]) => {
     if (allocation > 0) {

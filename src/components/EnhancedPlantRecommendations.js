@@ -1,12 +1,12 @@
 /**
- * Database Integration Demo Component
- * Showcases the enhanced plant data and growing tips from the database
+ * Enhanced Plant Recommendations Component
+ * Displays location-specific plant data and growing tips from the database
  */
 
 import React, { useState, useEffect } from 'react';
 import { getEnhancedLocationRecommendations } from '../services/enhancedLocationRecommendations.js';
 
-const DatabaseIntegrationDemo = ({ locationConfig }) => {
+const EnhancedPlantRecommendations = ({ locationConfig }) => {
   const [enhancedData, setEnhancedData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,7 +35,7 @@ const DatabaseIntegrationDemo = ({ locationConfig }) => {
   if (!locationConfig) {
     return (
       <div className="database-demo">
-        <h3>🗃️ Database Integration Demo</h3>
+        <h3>🌱 Enhanced Plant Recommendations</h3>
         <p>Location configuration required to show enhanced recommendations.</p>
       </div>
     );
@@ -44,7 +44,7 @@ const DatabaseIntegrationDemo = ({ locationConfig }) => {
   if (loading) {
     return (
       <div className="database-demo">
-        <h3>🗃️ Database Integration Demo</h3>
+        <h3>🌱 Enhanced Plant Recommendations</h3>
         <p>Loading enhanced plant data from database...</p>
       </div>
     );
@@ -53,7 +53,7 @@ const DatabaseIntegrationDemo = ({ locationConfig }) => {
   if (error) {
     return (
       <div className="database-demo">
-        <h3>🗃️ Database Integration Demo</h3>
+        <h3>🌱 Enhanced Plant Recommendations</h3>
         <p style={{ color: 'orange' }}>
           Database integration in progress. Using static data fallback.
           <br />
@@ -66,7 +66,7 @@ const DatabaseIntegrationDemo = ({ locationConfig }) => {
   if (!enhancedData || enhancedData.crops.length === 0) {
     return (
       <div className="database-demo">
-        <h3>🗃️ Database Integration Demo</h3>
+        <h3>🌱 Enhanced Plant Recommendations</h3>
         <p>No enhanced recommendations available for {locationConfig.name}.</p>
       </div>
     );
@@ -74,7 +74,7 @@ const DatabaseIntegrationDemo = ({ locationConfig }) => {
 
   return (
     <div className="database-demo">
-      <h3>🗃️ Database Integration Demo</h3>
+      <h3>🌱 Enhanced Plant Recommendations</h3>
       
       {/* Summary */}
       <div className="summary-section">
@@ -348,4 +348,4 @@ const DatabaseIntegrationDemo = ({ locationConfig }) => {
   );
 };
 
-export default DatabaseIntegrationDemo;
+export default EnhancedPlantRecommendations;

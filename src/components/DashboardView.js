@@ -9,7 +9,7 @@ import GardenCalendar from './GardenCalendar.js';
 import ForecastWidget from './ForecastWidget.js';
 import CompactSettingsPanel from './CompactSettingsPanel.js';
 import SimulationResults from './SimulationResults.js';
-import DatabaseIntegrationDemo from './DatabaseIntegrationDemo.js';
+import EnhancedPlantRecommendations from './EnhancedPlantRecommendations.js';
 import { 
   getLocationWeatherAlerts, 
   getReadyToHarvest, 
@@ -253,8 +253,8 @@ const DashboardView = ({
         isReadOnly={isReadOnly}
       />
 
-      {/* Database Integration Demo */}
-      <DatabaseIntegrationDemo locationConfig={locationConfig} />
+      {/* Enhanced Plant Recommendations */}
+      <EnhancedPlantRecommendations locationConfig={locationConfig} />
 
       {/* Garden Calendar - Full Width */}
       <div className="garden-calendar-dashboard">

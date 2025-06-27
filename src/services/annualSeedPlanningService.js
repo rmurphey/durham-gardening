@@ -306,10 +306,8 @@ const calculateSeedRequirements = async (crop, allocation, sizeMultiplier) => {
 
 // Removed unused getRecommendedVariety function
 
-/**
- * Get specific seed ordering instructions with vendors, SKUs, and timing
- */
-const getSpecificSeedOrderingInstructions = (crop, packetsNeeded) => {
+// Removed unused getSpecificSeedOrderingInstructions function (was 120+ lines)
+/* const getSpecificSeedOrderingInstructions = (crop, packetsNeeded) => {
   const orderingDetails = {
     'okra': {
       variety: 'Clemson Spineless Okra',
@@ -425,12 +423,10 @@ const getSpecificSeedOrderingInstructions = (crop, packetsNeeded) => {
   };
 
   return orderingDetails[crop.key] || defaultDetails;
-};
+}; */
 
-/**
- * Generate specific ordering instructions for each crop
- */
-const generateSpecificOrderingInstructions = (crop, orderingDetails, packetsNeeded) => {
+// Removed unused generateSpecificOrderingInstructions function
+/* const generateSpecificOrderingInstructions = (crop, orderingDetails, packetsNeeded) => {
   const instructions = [
     `🛒 ORDER: ${packetsNeeded} packet${packetsNeeded > 1 ? 's' : ''} of ${orderingDetails.variety}`,
     `🏪 VENDOR: ${orderingDetails.vendor} (SKU: ${orderingDetails.sku})`,
