@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import PurchaseCard from './PurchaseCard';
-import TaskCard from './TaskCard';
+// TaskCard component removed - no longer exists
 import PlanningCard from './PlanningCard';
 import Card from './Card';
 
@@ -52,40 +52,7 @@ const CardDemo = () => {
       }
     },
     
-    // Task Cards
-    {
-      component: TaskCard,
-      props: {
-        id: 'task-1',
-        title: 'Start Tomato Seeds Indoors',
-        action: 'Sow Cherokee Purple and Early Girl tomato seeds in seed starting mix',
-        timing: 'March 15-30, 6-8 weeks before last frost',
-        location: '3×15 Bed',
-        tools: ['Seed starting trays', 'Heat mat', 'Grow lights'],
-        daysUntilDeadline: 5,
-        consequences: 'Late start = shorter growing season',
-        urgency: 'urgent',
-        category: 'Indoor Starting',
-        state: getCardState('task-1'),
-        onStateChange: handleStateChange
-      }
-    },
-    {
-      component: TaskCard,
-      props: {
-        id: 'task-2',
-        title: 'Prepare Garden Beds',
-        action: 'Add compost and work soil when dry enough',
-        timing: 'When soil crumbles in hand, not muddy',
-        location: 'All beds',
-        tools: ['Shovel', 'Rake', 'Compost'],
-        daysUntilDeadline: 14,
-        urgency: 'medium',
-        category: 'Soil Prep',
-        state: getCardState('task-2'),
-        onStateChange: handleStateChange
-      }
-    },
+    // Task Cards - Removed as TaskCard component no longer exists
     
     // Planning Cards
     {

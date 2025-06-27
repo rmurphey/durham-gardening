@@ -61,7 +61,7 @@ export const generateShoppingSuggestionsForActivity = (activity, existingShoppin
   console.log(`🛒 Generating shopping suggestions for activity: ${activity.type} - ${activity.action}`);
   
   // Get current temporal shopping recommendations
-  const temporalRecommendations = generateTemporalShoppingRecommendations();
+  const temporalRecommendations = generateTemporalShoppingRecommendations() || [];
   
   // Create lookup for existing items to avoid duplicates
   const existingItemsSet = new Set(
