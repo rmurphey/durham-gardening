@@ -192,18 +192,25 @@ export const generateLocationWeeklyActions = (portfolio) => {
 /**
  * Generate top crop recommendations for location
  */
-export const generateLocationTopCrops = (portfolio, locationConfig = {}) => {
+export const generateLocationTopCrops = (portfolio, locationConfig = {}, gardenLog = null) => {
   const currentMonth = new Date().getMonth() + 1;
   const hardiness = locationConfig.hardiness || '7b';
   const recommendations = [];
+
+  // Get crops already planted (if garden log available)
+  const plantedCrops = gardenLog ? 
+    gardenLog.plantings.map(p => p.crop) : [];
 
   // Get seasonal recommendations
   const allCrops = { ...DURHAM_CROPS.heatLovers, ...DURHAM_CROPS.coolSeason, ...DURHAM_CROPS.perennials };
   
   Object.entries(allCrops).forEach(([cropKey, crop]) => {
     const isInSeason = isCropInSeason(cropKey, currentMonth);
-    if (isInSeason) {
+    const alreadyPlanted = plantedCrops.includes(cropKey);
+    
+    if (isInSeason && !alreadyPlanted) {
       recommendations.push({
+        cropKey, // Add cropKey for garden log integration
         crop: crop.name,
         confidence: 'high',
         reason: getSeasonalReason(cropKey, currentMonth, hardiness),

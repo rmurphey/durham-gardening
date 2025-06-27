@@ -111,7 +111,7 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
       generateSuccessOutlook(simulationResults, locationConfig)?.message || 'Analyzing garden potential...' : 
       'Run simulation to see success outlook';
     const investmentPriority = generateLocationInvestmentPriority(customInvestment, locationConfig);
-    const topCropRecommendations = generateLocationTopCrops(portfolioStrategies[selectedPortfolio], locationConfig);
+    const topCropRecommendations = generateLocationTopCrops(portfolioStrategies[selectedPortfolio], locationConfig, gardenLog);
     const siteSpecificRecommendations = generateLocationSiteRecommendations(locationConfig);
 
     return {
