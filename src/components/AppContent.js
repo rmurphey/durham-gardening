@@ -97,7 +97,6 @@ function AppContentInner() {
     // For now, just copy current URL
     if (navigator.clipboard && window.location.href) {
       navigator.clipboard.writeText(window.location.href);
-      // Could add toast notification here
     }
   };
 

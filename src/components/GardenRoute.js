@@ -3,7 +3,7 @@
  * Handles garden-specific dashboard with cloud sync functionality
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardView from './DashboardView.js';
 import useCloudSync from '../hooks/useCloudSync.js';
 
@@ -11,6 +11,8 @@ import useCloudSync from '../hooks/useCloudSync.js';
  * Component that provides garden-specific dashboard with cloud sync
  */
 const GardenRoute = () => {
+  const [shareSuccess, setShareSuccess] = useState(false);
+  
   const {
     gardenId,
     gardenData,
@@ -86,11 +88,12 @@ const GardenRoute = () => {
               className="share-garden-btn"
               onClick={() => {
                 navigator.clipboard?.writeText(shareableUrl);
-                // Could add a toast notification here
+                setShareSuccess(true);
+                setTimeout(() => setShareSuccess(false), 2000);
               }}
               title="Copy garden sharing link"
             >
-              📋 Share Garden
+              {shareSuccess ? '✅ Copied!' : '📋 Share Garden'}
             </button>
           )}
         </div>

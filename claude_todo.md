@@ -15,7 +15,6 @@
 - ✅ Added context notes about storage layer decisions
 
 
-## Fix: when I click "share" there should be some kind of feedback
 
 # evergreen todos
 
@@ -173,3 +172,10 @@ Right now, the application is based entirely on browser storage. What would it t
 - ✅ Test toasts (✅ ZERO TOLERANCE: ALL TESTS PASSED) now only appear in development
 - ✅ Verified Vercel automatically sets NODE_ENV=production during builds
 - ✅ Current environment detection now working properly with toast fix applied
+
+## ✅ COMPLETED: Fix: when I click "share" there should be some kind of feedback (2025-06-27)
+
+- ✅ Added "Copied!" feedback to GardenRoute.js share button with 2-second timeout
+- ✅ Confirmed AppHeader.js already had proper share feedback implemented
+- ✅ Share buttons now show "✅ Copied!" → "📋 Share" transition when clicked
+- ✅ Simple state-based solution with minimal overhead (< $1 cost target achieved)
