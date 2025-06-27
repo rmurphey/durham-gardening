@@ -85,8 +85,16 @@ export const getDurhamWeatherAlerts = () => getLocationWeatherAlerts({ name: 'Du
 
 /**
  * Get crops ready to harvest based on actual garden log
+ * @param {Object|null} gardenLog - Garden log with plantings array
+ * @param {Object|null} forecastData - Weather forecast data
+ * @param {Object} locationConfig - Location configuration object (REQUIRED for harvest timing)
+ * @returns {Array} Array of harvest-ready items
  */
-export const getReadyToHarvest = (gardenLog = null, forecastData = null) => {
+export const getReadyToHarvest = (gardenLog = null, forecastData = null, locationConfig) => {
+  if (!locationConfig || !locationConfig.coordinates) {
+    throw new Error('getReadyToHarvest requires locationConfig with coordinates for accurate harvest timing');
+  }
+  
   if (!gardenLog || !gardenLog.plantings.length) {
     return []; // No theoretical recommendations - only show actual plantings
   }
@@ -107,8 +115,16 @@ export const getReadyToHarvest = (gardenLog = null, forecastData = null) => {
 
 /**
  * Get critical timing windows based on actual garden state
+ * @param {Object|null} gardenLog - Garden log with plantings array
+ * @param {Object|null} forecastData - Weather forecast data
+ * @param {Object} locationConfig - Location configuration object (REQUIRED)
+ * @returns {Array} Array of critical timing window objects
  */
-export const getCriticalTimingWindows = (gardenLog = null, forecastData = null, locationConfig = {}) => {
+export const getCriticalTimingWindows = (gardenLog = null, forecastData = null, locationConfig) => {
+  if (!locationConfig || !locationConfig.coordinates) {
+    throw new Error('getCriticalTimingWindows requires locationConfig with coordinates');
+  }
+  
   const now = new Date();
   const month = now.getMonth() + 1;
   const dayOfMonth = now.getDate();

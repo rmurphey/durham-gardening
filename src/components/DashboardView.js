@@ -54,7 +54,7 @@ const DashboardView = ({
 
   // Get critical data for decision making based on actual garden state
   const weatherAlerts = getLocationWeatherAlerts(locationConfig);
-  const readyToHarvest = getReadyToHarvest(gardenLog, forecastData);
+  const readyToHarvest = getReadyToHarvest(gardenLog, forecastData, locationConfig);
   const criticalWindows = getCriticalTimingWindows(gardenLog, forecastData, locationConfig);
   const simulationSummary = getSimulationSummary(simulationResults, totalInvestment);
   const actionableGuidance = getTodaysActionableGuidance();

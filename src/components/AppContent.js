@@ -102,8 +102,8 @@ function AppContentInner() {
   };
 
   // Calculate valuable header information
-  const criticalWindows = getCriticalTimingWindows(gardenCalendar, simulationResults);
-  const readyToHarvest = getReadyToHarvest(gardenCalendar, simulationResults);
+  const criticalWindows = getCriticalTimingWindows(gardenLog, null, locationConfig);
+  const readyToHarvest = getReadyToHarvest(gardenLog, null, locationConfig);
   const urgentTasksCount = criticalWindows.length;
   const readyToHarvestCount = readyToHarvest.length;
 

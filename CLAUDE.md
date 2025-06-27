@@ -244,6 +244,20 @@ When I use the `_reflect` command, casually ask "How did today's development ses
 
 - Add automated tests for changes when appropriate. Delete unused files regularly.
 - Consider writing tests before writing code
+- **CRITICAL**: All recommendation functions MUST require locationConfig parameter - garden advice is inherently location-specific
+- Use JSDoc type annotations for all exported functions to prevent parameter mismatches
+- Run `scripts/validate-function-calls.js` before commits to catch parameter errors
+
+## Refactoring Standards
+
+- **CRITICAL**: All refactoring MUST be AST-aware, never string-based replacement
+- Use tools like `jscodeshift`, `babel-parser`, or `@babel/traverse` for code transformations
+- String-based find/replace is fragile and misses edge cases (comments, strings, variable scope)
+- AST transformations ensure semantic correctness and handle all syntactic variations
+- When making systematic changes across files, write codemods rather than manual edits
+- Example codemod available at `scripts/ast-refactor-example.js` for function signature updates
+- For one-off changes: Use IDE refactoring tools (VS Code, WebStorm) that are AST-aware
+- For bulk changes: Write jscodeshift codemods to ensure consistent, safe transformations
 
 ## Naming Conventions
 
