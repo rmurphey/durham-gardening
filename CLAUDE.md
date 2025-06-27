@@ -32,10 +32,13 @@ Learning experiment about Claude Code workflows ($400-600 budget). Extract concr
 2. **Estimate cost** based on previous similar work
 3. **Mention if approach contradicts** established patterns
 
-## Commands
-- `_reflect`: Update DEV_LOG.md with week's insights
-- `_next`: Analyze ACTIVE_WORK.md priorities 
-- `_cost`: Estimate based on LEARNINGS.md patterns
+## Available Commands
+Commands now properly stored in `.claude/commands/` directory:
+- `/todo <item>` - Quick capture to ACTIVE_WORK.md
+- `/idea <item>` - Add exploration idea
+- `/next` - Analyze priorities and recommend next task
+- `/reflect` - Weekly insights update
+- `/cost <task>` - Estimate based on learned patterns
 
 ## Key Constraints
 - Never commit without explicit request

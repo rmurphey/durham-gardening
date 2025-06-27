@@ -25,6 +25,9 @@
 ## Blockers & Decisions Needed
 *None currently*
 
+## Quick Capture
+*Use /todo or /idea commands to add items here*
+
 ## Next Session Prep
 - Weather simulation integration ready to start
 - Database expansion proved much cheaper than expected
