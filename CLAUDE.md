@@ -244,8 +244,6 @@ This application demonstrates production-quality architecture with comprehensive
 ### _reflect Command
 When I use the `_reflect` command, casually ask "How did today's development session go? Anything worth noting for the development log?" Then take whatever I share and add it naturally to `DEVELOPMENT_LOG.md` as a developer journal entry. Keep it conversational and unstructured - this is a hobby project, not a formal process.
 
-### _ideas Command  
-When I use the `_ideas` command, review `ideas.md` and recommend which features would provide the best value for the current learning experiment. Consider current todo priorities, development cost, and learning objectives. Suggest 2-3 specific ideas that should be prioritized or added to `claude_todo.md`.
 
 ## Other instructions
 
