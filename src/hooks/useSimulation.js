@@ -109,7 +109,7 @@ export const useSimulation = (
     } finally {
       setSimulating(false);
     }
-  }, [simulationKey, selectedSummer, selectedWinter, selectedPortfolio, locationConfig, customPortfolio, totalInvestment, simulating]);
+  }, [simulationKey, selectedSummer, selectedWinter, selectedPortfolio, locationConfig, customPortfolio, totalInvestment, simulating, hasWeatherData, currentWeather, weatherForecast, gddData]);
 
   // Single effect to handle all simulation triggers with debouncing
   useEffect(() => {

@@ -124,7 +124,8 @@ export const getReadyToHarvest = (gardenLog = null, forecastData = null, locatio
  */
 export const getCriticalTimingWindows = (gardenLog = null, forecastData = null, locationConfig) => {
   if (!locationConfig || !locationConfig.coordinates) {
-    throw new Error('getCriticalTimingWindows requires locationConfig with coordinates');
+    console.warn('getCriticalTimingWindows: Missing locationConfig coordinates, using fallback');
+    return [];
   }
   
   const now = new Date();
