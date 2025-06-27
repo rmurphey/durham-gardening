@@ -8,7 +8,7 @@ I had used Claude Code to ask questions about rapu, but I hadn't used it to buil
 
 In the meantime, I have a garden.
 
-I started just by asking Claude Code to make some recommendations for my garden based on my location and what I had already planted. The results of that are in the `archive` directory. The logs are not preserved.
+I started just by asking Claude Code to make some recommendations for my garden based on my location and what I had already planted. The results of that are in the `archive` directory. The logs are not preserved. The output convinced me that this problem was app-able.
 
 The logs aren't preserved for anything, but the commits are pretty good. Eventually I also set up a todo file, and a command for interacting with it.
 
@@ -76,6 +76,8 @@ This shift affects the entire recommendation system:
 **Command Organization Evolution in AI-Assisted Workflows (June 2025):** Rapidly iterated through command organization patterns: documentation in CLAUDE.md → separate `/next-todo` and `/ideas` commands → unified `/next` command with prioritization logic. **Learning:** Fast iteration on tooling organization is possible when development overhead is low. The unified command consolidates multiple data sources (todos + ideas) with prioritization criteria (urgency, impact, cost, learning value). Evolution: scattered documentation → purpose-built tools → consolidated interface. This demonstrates how low-friction development environments enable rapid tooling experimentation. [3bbf03a]
 
 **Project Neutrality on AI Development (June 2025):** Established that this project maintains a neutral stance on AI codegen and AI-assisted development. The goal is to develop independent opinions through direct experience without machine influence on the evaluation process. Documentation should focus on observable workflow patterns, technical outcomes, and development process changes rather than promoting or dismissing AI capabilities. This learning experiment aims to generate unbiased insights about development tooling effectiveness through practical usage. [35e4be7]
+
+**Deep vs Surface Functionality Focus (June 2025):** Session reflection revealed strong preference for deep functionality over surface-level features or cosmetic improvements. Project direction emphasizes substantial technical implementation - statistical modeling, database integration, weather-responsive systems - rather than UI polish or appearance enhancements. Key insight: when fundamentally out of depth on technical implementation, AI assistance enables exploration of complex functionality that would otherwise be prohibitive. The learning experiment tests how far technical depth can be pushed with AI collaboration when starting from limited domain expertise.
 
 ---
 
