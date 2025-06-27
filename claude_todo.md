@@ -3,10 +3,7 @@
 
 ## the simulation should incorporate updated weather data
 
-## make a plan for more species coverage
-
-- Reasonable varieties and recommendations for continental US
-- Limit research costs 
+ 
 
 # evergreen todos
 
@@ -30,6 +27,11 @@
 ---
 
 # KEY LEARNINGS & ARCHITECTURAL DECISIONS
+
+## Species Coverage Expansion (2025-06-27)
+**Learning:** Database expansion from 22 → 41 varieties (+86%) cost only ~$23 vs. initial $300+ estimate - content work much cheaper than expected
+**Pattern Established:** Efficient batch data entry using extension service sources and template approach for rapid variety addition
+**Architecture:** Existing database schema handled expansion seamlessly - technical foundation was ready, just needed content
 
 ## Database Schema Documentation (2025-06-27)
 **Learning:** Well-structured database architecture but massive content gap - 22 varieties vs. 100+ needed for continental US coverage
