@@ -3,10 +3,10 @@
  * Centralized config for different geographic locations and growing conditions
  */
 
-// Durham, NC Configuration (Zone 7b)
+// Default Zone 7b Configuration
 export const DURHAM_CONFIG = {
   location: {
-    name: 'Durham, NC',
+    name: 'Zone 7b Location',
     zone: '7b',
     region: 'Southeast US',
     coordinates: { lat: 35.9940, lng: -78.8986 }
@@ -199,17 +199,18 @@ export const LOCATION_TEMPLATE = {
 // export const PHOENIX_CONFIG = { ... };
 
 // Helper functions to get location-specific data
-export const getLocationConfig = (locationName = 'Durham, NC') => {
+export const getLocationConfig = (locationName = 'Zone 7b Location') => {
   switch (locationName) {
-    case 'Durham, NC':
+    case 'Zone 7b Location':
+    case 'Durham, NC': // Legacy support
       return DURHAM_CONFIG;
     default:
-      console.warn(`Location config not found for: ${locationName}. Using Durham as default.`);
+      console.warn(`Location config not found for: ${locationName}. Using Zone 7b default.`);
       return DURHAM_CONFIG;
   }
 };
 
-export const getCurrentMonthConfig = (locationName = 'Durham, NC') => {
+export const getCurrentMonthConfig = (locationName = 'Zone 7b Location') => {
   const config = getLocationConfig(locationName);
   const currentMonth = new Date().getMonth() + 1;
   
@@ -237,7 +238,7 @@ export const getCurrentMonthConfig = (locationName = 'Durham, NC') => {
   };
 };
 
-export const getSupplierPreferences = (locationName = 'Durham, NC', category = 'all') => {
+export const getSupplierPreferences = (locationName = 'Zone 7b Location', category = 'all') => {
   const config = getLocationConfig(locationName);
   const suppliers = config.suppliers.preferred;
   
@@ -248,7 +249,7 @@ export const getSupplierPreferences = (locationName = 'Durham, NC', category = '
   );
 };
 
-export const shouldRecommendItem = (itemCategory, locationName = 'Durham, NC') => {
+export const shouldRecommendItem = (itemCategory, locationName = 'Zone 7b Location') => {
   const monthConfig = getCurrentMonthConfig(locationName);
   const { urgentItems = [], avoidItems = [] } = monthConfig;
   

@@ -1,22 +1,22 @@
 /**
- * Durham, NC Garden Configuration
- * All garden planning optimized for Durham, North Carolina (Zone 7b)
+ * Default Garden Configuration (Zone 7b Example)
+ * Template configuration for temperate climate gardening
  */
 
-// Durham garden configuration - fixed location
+// Default garden configuration - Zone 7b temperate climate
 export const DURHAM_CONFIG = {
-  name: 'Durham, NC',
+  name: 'Zone 7b Location',
   zipCode: '27707',
   hardiness: '7b',
   lat: 35.994,
   lon: -78.8986,
   
-  // Durham climate specifics
+  // Zone 7b climate characteristics
   lastFrost: 'April 15', // Average last frost date
   firstFrost: 'November 15', // Average first frost date
   growingSeasonDays: 214,
   
-  // Durham soil characteristics
+  // Typical Zone 7b soil characteristics
   soil: {
     type: 'Clay-heavy, often compacted',
     drainage: 'Poor when wet, hard when dry',
@@ -24,7 +24,7 @@ export const DURHAM_CONFIG = {
     amendments: 'Needs regular compost, avoid working when wet'
   },
   
-  // Durham weather patterns
+  // Zone 7b weather patterns
   climate: {
     summerHigh: '95-105°F extreme heat days',
     winterLow: '15-25°F typical lows',

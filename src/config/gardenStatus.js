@@ -67,7 +67,7 @@ export const CURRENT_GARDEN_STATUS = {
    */
   notes: {
     gardenType: 'above-ground beds and planters',
-    climate: 'Durham, NC - Zone 7b',
+    climate: 'Zone 7b Temperate',
     focus: 'Heat-tolerant summer crops, no cool season currently',
     lastMajorChange: 'June 2025 - removed failing squash, focus on successful heat crops'
   }

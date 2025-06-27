@@ -16,7 +16,7 @@ import { getEnhancedLocationRecommendations } from '../../services/enhancedLocat
 
 describe('EnhancedPlantRecommendations', () => {
   const mockLocationConfig = {
-    name: 'Durham, NC',
+    name: 'Zone 7b Location',
     hardiness: '7b',
     coordinates: { lat: 35.7796, lon: -78.6382 }
   };
@@ -26,7 +26,7 @@ describe('EnhancedPlantRecommendations', () => {
       totalSuitableCrops: 15,
       heatTolerantOptions: 8,
       droughtTolerantOptions: 5,
-      locationChallenge: 'Hot, humid summers with clay soil',
+      locationChallenge: 'Hot, humid summers with heavy clay soil',
       topRecommendation: 'Focus on heat-tolerant varieties with good drainage',
       bestStrategies: [
         'Use shade cloth during peak summer',
@@ -162,7 +162,7 @@ describe('EnhancedPlantRecommendations', () => {
     render(<EnhancedPlantRecommendations locationConfig={mockLocationConfig} />);
 
     await waitFor(() => {
-      expect(screen.getByText('No enhanced recommendations available for Durham, NC.')).toBeInTheDocument();
+      expect(screen.getByText('No enhanced recommendations available for Zone 7b Location.')).toBeInTheDocument();
     });
   });
 

@@ -604,7 +604,7 @@ export const generateLocationInvestmentPriority = (customInvestment, locationCon
       category: 'Irrigation Prep',
       urgency: 'high',
       timing: 'Design now, install in April before heat',
-      why: 'Critical to have watering plan before Durham summer heat arrives',
+      why: 'Critical to have watering plan before summer heat arrives',
       where: 'DripWorks.com for planning materials',
       quantity: 1,
       specifications: 'Measuring tools, planning guide, sample fittings'
@@ -707,7 +707,7 @@ export const generateLocationInvestmentPriority = (customInvestment, locationCon
       category: 'Fall Garden',
       urgency: 'high',
       timing: 'Use immediately for fall crop establishment',
-      why: 'Window for fall planting closes quickly in Durham',
+      why: 'Window for fall planting closes quickly in Zone 7b',
       where: 'Local nursery for fresh transplants',
       quantity: 1,
       specifications: 'Fall transplants, fall fertilizer, row cover'
