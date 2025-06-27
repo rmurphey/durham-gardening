@@ -2,6 +2,16 @@
 
 *Patterns and discoveries that inform future development decisions*
 
+## Claude Code Cost Reality Check (2025-06-27)
+**Insight:** Cost estimates consistently 3-4x higher than actual usage - session with major weather integration + fixes cost $9.71 total, not $15+ estimated
+**Pattern:** Major features ~$3-5, bug fixes ~$1-2, documentation nearly free due to caching. Context reuse (21.5M cache reads) dramatically reduces costs
+**Impact:** Cost anxiety was blocking valuable work - can attempt much more ambitious features within budget
+
+## Weather Integration Hooks Pattern (2025-06-27)
+**Insight:** Composing React hooks (useWeatherData + useSimulation) creates seamless real-time data integration with automatic caching
+**Pattern:** Weather data flows: locationConfig → useWeatherData → useSimulation → enhanced Monte Carlo → UI display with graceful degradation
+**Impact:** Real weather forecast data now drives simulation parameters, making predictions location-aware and current rather than purely theoretical (~$3-4 actual cost)
+
 ## Documentation Workflow Automation (2025-06-27)
 **Insight:** AI context overhead reduced while improving human value by separating concerns and building auto-triggers
 **Pattern:** Structured files (ACTIVE_WORK, LEARNINGS, DEV_LOG) with automatic update triggers prevent documentation debt

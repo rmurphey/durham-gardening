@@ -38,7 +38,7 @@ Commands now properly stored in `.claude/commands/` directory:
 - `/idea <item>` - Add exploration idea
 - `/next` - Analyze priorities and recommend next task
 - `/reflect` - Weekly insights update
-- `/cost <task>` - Estimate based on learned patterns
+- `/cost <task>` - Estimate based on learned patterns (major features ~$3-5, fixes ~$1-2)
 
 ## Key Constraints
 - Never commit without explicit request
