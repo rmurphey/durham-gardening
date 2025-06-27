@@ -1,6 +1,6 @@
 # GardenSim Development Log
 
-A chronicle of building a garden planning application through collaboration between a human gardener and Claude Code AI.
+A developer's journal chronicling the experience of building a garden planning application. This log captures the collaborative process between human intuition and AI assistance, documenting the journey from concept to working application.
 
 ## Genesis (Early Sessions)
 
@@ -44,53 +44,37 @@ Claude has needed a lot of encouragement to modularize things. The app started o
 
 I asked Claude to fix some "cosmetic" things in the repo that maybe I wouldn't have prioritized ever. The cost was so trivial and I knew the changes would make the repo more accessible.
 
-## Philosophical Shift (June 27, 2025)
 
-I might have read a post on the r/Austin reddit about how habitats are collapsing, and so I've provided the new guidance to prioritize habitat preservation.
+## Major Philosophical Shift: Habitat Preservation (June 2025)
+
+The project took a significant turn when external context (habitat collapse concerns) prompted a fundamental rethinking of the application's purpose. Instead of focusing on *habitat propagation* (adding, installing, enhancing), the app now emphasizes *habitat preservation* (supporting, maintaining, working with existing systems).
+
+This shift affects the entire recommendation system:
+- Language changed from intervention to stewardship
+- Monthly guidance moved from "install" to "support" 
+- Crop recommendations emphasize working with natural conditions
+- Companion planting focuses on supporting existing beneficial relationships
+
+**Implementation Status:** Analysis complete, awaiting execution
 
 ---
 
-## Session Log: June 27, 2025
+## Development Experience Notes
 
-**Human Input:** "the 'new garden' button is huge. let's also move the garden id and the ability to fork it to the header"
+**On AI Collaboration:**
+- Claude Code needed constant guidance on broader context and architectural thinking
+- Excellent at cleanup tasks and modularization when directed
+- Required multiple sessions due to occasional AI instability ("wonky and mad")
+- Cost management was important - estimated <$300 total for entire project
 
-**AI Response:** Continued work from previous session on moving garden management features to the header. Successfully:
-- Added smaller header button styling (`.header-garden-btn` class)
-- Moved garden ID display to AppHeader component
-- Consolidated fork and share functionality in the header
-- Removed redundant garden-info panel from GardenAppContent
+**On Technical Architecture:**
+- Started as 3KLOC single file, gradually modularized through AI assistance
+- SQLite vs hard-coding decisions required human architectural oversight
+- Persistence layer evolved: localStorage → Vercel KV → Blob storage (due to cost)
+- Geographic expansion (Durham → Continental US) needed significant guidance on data model implications
 
-**Human Input:** "omg, i still somehow see two navs on the dashboard page"
-
-**AI Analysis & Fix:** Discovered routing architecture issue where garden routes were nested inside AppContent, causing double navigation rendering:
-- **Problem:** `App.js → AppContent (Navigation) → GardenAppContent (Navigation)`
-- **Solution:** Separated garden routes to top-level routing
-- **Result:** Clean single navigation experience
-
-**Commits:**
-- c1b1a12: Move garden ID and actions to header, reduce button sizes
-- 2964b04: Fix duplicate navigation by separating garden and app routes
-
-**Human Input:** "Whereas the goal might have previously been habitat propagation, now it's habitat preservation. Adjust recommendations accordingly."
-
-**AI Analysis:** Identified major philosophical shift requiring updates to:
-- Monthly focus recommendations (installation → support)
-- Crop descriptions (improvement → preservation) 
-- Daily guidance (control → stewardship)
-- Companion plant relationships (attract → support existing)
-
-**Key Philosophy Changes:**
-- From "Install drip irrigation" → "Support natural rainfall with targeted watering"
-- From "Add beneficial insects" → "Support existing beneficial populations"  
-- From "Enhance soil conditions" → "Maintain soil ecosystem health"
-
-**Status:** Analysis complete, implementation pending
-
-**Session Cost:** $22.38 total across multiple sessions
-**Session Stats:** 1229 lines added, 476 lines removed
-
-**Development Log Approach Decision:**
-- **Git commits serve as detailed technical work log** - commit messages already capture what was done
-- **This document focuses on high-level narrative** - philosophy shifts, architectural decisions, cost observations
-- **Reduces maintenance overhead** - no duplication of technical details already in version control
-- **Creates "Director's Commentary"** on project evolution while git history provides granular change tracking
+**On Development Workflow:**
+- AI struggles with keeping dev server running while maintaining interactivity
+- Commit messages serve as detailed technical log
+- This log captures developer experience and high-level project evolution
+- Manual intervention needed for major architectural and philosophical decisions
