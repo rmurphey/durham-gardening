@@ -18,6 +18,7 @@ import { useSimulation } from '../hooks/useSimulation.js';
 import { useClimateSelection, useInvestmentConfig, useLocationConfig } from '../hooks/useLocalStorage.js';
 import { useShoppingList } from '../hooks/useShoppingList.js';
 import { useCalendarTaskManager } from '../hooks/useCalendarTaskManager.js';
+import { useGardenLogPersistence } from '../hooks/useGardenLogPersistence.js';
 import { 
   createEmptyGardenLog,
   addPlanting,
@@ -51,8 +52,8 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
   const [customInvestment, setCustomInvestment] = useInvestmentConfig();
   const [customPortfolio, setCustomPortfolio] = useState(null);
   
-  // Garden log state management
-  const [gardenLog, setGardenLog] = useState(() => createEmptyGardenLog());
+  // Garden log state management with persistence
+  const { gardenLog, setGardenLog } = useGardenLogPersistence();
   
   // Use simulation hook
   const { simulationResults, simulating, totalInvestment } = useSimulation(
