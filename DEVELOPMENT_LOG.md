@@ -61,6 +61,10 @@ This shift affects the entire recommendation system:
 
 **Reflection (June 2025):** The philosophical shift came from a single Reddit post about Hill Country habitat collapse that deeply resonated as someone who loves Austin. It's remarkable how one piece of external context can fundamentally change an entire application's purpose. Claude demonstrated the ability to systematically translate a philosophical concept into practical code changes - updating language from "install/build/add" to "support/deploy/provide" across multiple service files while maintaining all functionality. The shift felt meaningful rather than cosmetic.
 
+**Development Prioritization Decision (June 2025):** When evaluating evergreen cleanup tasks vs regular todos, chose to prioritize high-impact user-facing improvements over internal code organization. Reasoning: CSS cleanup provides minimal user value (~8000 line CSS file has no performance impact when cached/gzipped), while share button feedback and metrics display precision directly improve user experience. This represents a shift toward user value over code purity - choosing 15 minutes of UX improvement over 60 minutes of internal cleanup that users never see.
+
+**Metrics Display Cleanup (June 2025):** Updated percentage and temperature formatting functions to meet user requirements: percentages now always display as whole numbers (0 decimal places) and temperatures default to Fahrenheit instead of Celsius. This simple change improves readability by eliminating unnecessary decimal precision in percentage displays (e.g., "75%" instead of "75.34%") while maintaining US-friendly temperature units throughout the application.
+
 ---
 
 ## Development Experience Notes

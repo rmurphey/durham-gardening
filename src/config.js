@@ -557,55 +557,14 @@ export const CLIMATE_ADJUSTMENTS = {
 // Utility function for intelligent percentage formatting (up to 3 decimals, only when useful)
 export const formatPercentage = (decimal) => {
   const percentage = decimal * 100;
-  
-  // If it's a whole number, show no decimals
-  if (percentage === Math.round(percentage)) {
-    return Math.round(percentage);
-  }
-  
-  // If it's close to a whole number (within 0.01), round to whole
-  if (Math.abs(percentage - Math.round(percentage)) < 0.01) {
-    return Math.round(percentage);
-  }
-  
-  // If one decimal place is sufficient (e.g., 12.3 not 12.30)
-  if (Math.abs(percentage - Math.round(percentage * 10) / 10) < 0.001) {
-    return Math.round(percentage * 10) / 10;
-  }
-  
-  // If two decimal places are sufficient (e.g., 12.34 not 12.340)
-  if (Math.abs(percentage - Math.round(percentage * 100) / 100) < 0.0001) {
-    return Math.round(percentage * 100) / 100;
-  }
-  
-  // Otherwise use up to 2 decimal places
-  return Math.round(percentage * 100) / 100;
+  // Always show percentages with 0 decimal places (whole numbers only)
+  return Math.round(percentage);
 };
 
 // Alternative function for probabilities that are already percentages (not decimals)
 export const formatProbability = (percentage) => {
-  // If it's a whole number, show no decimals
-  if (percentage === Math.round(percentage)) {
-    return Math.round(percentage);
-  }
-  
-  // If it's close to a whole number (within 0.01), round to whole
-  if (Math.abs(percentage - Math.round(percentage)) < 0.01) {
-    return Math.round(percentage);
-  }
-  
-  // If one decimal place is sufficient
-  if (Math.abs(percentage - Math.round(percentage * 10) / 10) < 0.001) {
-    return Math.round(percentage * 10) / 10;
-  }
-  
-  // If two decimal places are sufficient
-  if (Math.abs(percentage - Math.round(percentage * 100) / 100) < 0.0001) {
-    return Math.round(percentage * 100) / 100;
-  }
-  
-  // Otherwise use up to 2 decimal places
-  return Math.round(percentage * 100) / 100;
+  // Always show probabilities with 0 decimal places (whole numbers only)
+  return Math.round(percentage);
 };
 
 // Currency formatting utility with proper decimal precision
@@ -646,9 +605,9 @@ export const formatTemperature = (tempF, options = {}) => {
   }
   
   const {
-    unit = 'metric', // 'metric' (Celsius) or 'imperial' (Fahrenheit)
-    precision = 0,   // decimal places
-    showUnit = true  // include unit symbol
+    unit = 'imperial', // 'imperial' (Fahrenheit) or 'metric' (Celsius) - default to Fahrenheit
+    precision = 0,     // decimal places
+    showUnit = true    // include unit symbol
   } = options;
   
   let temp, symbol;
@@ -708,7 +667,7 @@ export const formatTemperatureRange = (lowF, highF, options = {}) => {
 
 // Default unit preferences
 export const DEFAULT_UNIT_PREFERENCES = {
-  temperature: 'metric',    // 'metric' (Celsius) or 'imperial' (Fahrenheit)
+  temperature: 'imperial',  // 'imperial' (Fahrenheit) or 'metric' (Celsius) - default to Fahrenheit
   precipitation: 'metric',  // 'metric' (mm) or 'imperial' (inches)
   showUnits: true
 };
