@@ -28,7 +28,7 @@ At some point it became clear that the app was the thing, not the notes I had as
 
 ## Persistence and Sharing Features
 
-Eventually, to make the app something I would want to show someone, I added the ability to create a garden and the ability to store data about the garden that would persist across sessions, browsers, and devices. I thought Vercel had a free KV store (or rather, Claude said it did), but I had to switch to blob storage to keep it easy and free.
+Eventually, to make the app something I would want to show someone, I added the ability to create a garden and the ability to store data about the garden that would persist across sessions, browsers, and devices. I thought Vercel had a free KV store (or rather, Claude said it did), but I had to switch to Blob storage to keep it easy and free.
 
 ## Geographic Expansion
 

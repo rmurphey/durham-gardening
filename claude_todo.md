@@ -8,10 +8,11 @@
 - Percents should ALWAYS be shown ONLY to 0 decimal point precision.
 - Temperatures should be shown in Fahrenheit.
 
-## Cleanup: There should be no more mention of KV storage
+## ✅ COMPLETED: Remove outdated KV storage references (2025-06-27)
 
-- We switched to blob storage. It sucks, but it's free.
-- Are there free KV options you should consider?
+- ✅ Updated documentation to clarify KV → Blob storage migration
+- ✅ Preserved accurate development history showing the evolution
+- ✅ Added context notes about storage layer decisions
 
 ## Investigation: Is `NODE_ENV` set properly for dev vs production?
 
@@ -55,7 +56,7 @@
 
 - ✅ Created forecast API route with 10-day weather data from National Weather Service
 - ✅ Built Vercel cron function to update forecast every 6 hours
-- ✅ Added forecast data storage in Vercel KV for caching
+- ✅ Added forecast data storage in Vercel KV for caching (later migrated to Blob)
 - ✅ Created ForecastWidget component with garden-specific alerts and recommendations
 - ✅ Integrated forecast display on dashboard with simulation impact factors
 - ✅ Added growing degree days, frost risk, and heat stress calculations
