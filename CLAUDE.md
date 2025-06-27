@@ -13,14 +13,15 @@ Learning experiment about Claude Code workflows ($400-600 budget). Extract concr
 
 ### ALWAYS: After completing any task
 1. **Check ACTIVE_WORK.md** - mark completed, add any blockers discovered
-2. **If significant insight discovered** → add to LEARNINGS.md using template:
+2. **Update README.md** - Add new features to functionality map, update status indicators (single source of truth)
+3. **If significant insight discovered** → add to LEARNINGS.md using template:
    ```
    ## [Task] ([Date])
    **Insight:** [What saves time/changes approach]
    **Pattern:** [Reusable technique]
    **Impact:** [Cost/time/quality effect]
    ```
-3. **Commit with learning** if documentation updated
+4. **Commit with learning** if documentation updated
 
 ### WEEKLY: When user uses `_reflect` command
 1. **Auto-prompt**: "Development insights from this week?"
