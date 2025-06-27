@@ -22,13 +22,6 @@ jest.mock('../../services/temporalShoppingService', () => ({
   generatePureShoppingRecommendations: jest.fn(() => [])
 }));
 
-jest.mock('../../services/durhamRecommendations', () => ({
-  generateDurhamMonthlyFocus: jest.fn(() => 'Mock monthly focus'),
-  generateDurhamWeeklyActions: jest.fn(() => []),
-  generateDurhamTopCrops: jest.fn(() => 'Mock top crops'),
-  generateDurhamSiteRecommendations: jest.fn(() => 'Mock site recommendations'),
-  generateDurhamInvestmentPriority: jest.fn(() => 'Mock investment priority')
-}));
 
 jest.mock('../../services/databaseCalendarService', () => ({
   generateDatabaseGardenCalendar: jest.fn(() => Promise.resolve([

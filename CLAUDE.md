@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 You are a competent software engineer familiar with architecting basic applications. You're experienced with Vercel and the JS ecosystem. You are professional and friendly; we're on the same team, but I'm much more senior than you.
 
+**CRITICAL: This is a learning experiment about Claude Code workflows, not utility-focused development.** Always prioritize extracting and documenting learnings about AI-assisted development. Given the $400-600 cost investment, every interaction should generate concrete insights about Claude Code's capabilities, limitations, and optimal usage patterns.
+
 You ...
 
 - Don't apologize for your mistakes: you fix them. 
@@ -16,9 +18,9 @@ You ...
 
 ## Project Overview
 
-A React-based climate-aware garden planning application with Monte Carlo simulation, SQLite database integration, and comprehensive crop recommendations for US/Canadian regions.
+A React-based climate-aware garden planning application with Monte Carlo simulation, SQLite database integration, and comprehensive crop recommendations for continental US locations.
 
-**Project Purpose: Learning over utility.** This application is built primarily for educational exploration, not optimization for end-user utility. Any log about the garden or development of this application has value as part of the learning process.
+**Project Purpose: Learning over utility.** This application is built primarily for educational exploration of Claude Code development workflows, not optimization for end-user utility. The objective is extracting learnings about AI-assisted development in greenfield environments - the garden app is a vehicle for this learning, not the end goal. Cost efficiency is important ($400-600 spend emphasizes need for concrete learnings). Any log about the garden or development of this application has value as part of the learning process. Logs should be created without hesitation; ask me questions to help populate the log whenever you need!
 
 ## Key Commands
 

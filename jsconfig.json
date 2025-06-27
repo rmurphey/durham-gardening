@@ -13,7 +13,6 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    // Enable type checking for JS files
     "checkJs": true,
     "maxNodeModuleJsDepth": 1
   },
