@@ -58,18 +58,29 @@ npm run db:status  # Check database data freshness
 
 ## Architecture Overview
 
-### Data Architecture (Dual-System)
+### Data Architecture (Triple-System)
 - **React App Data**: Static crop data in `src/config.js` for performance
+- **Garden Log**: Actual planting lifecycle tracking with weather integration
 - **SQLite Database**: Comprehensive plant database at `database/plant_varieties.db` with 18 varieties, 79 growing tips, 56 companion relationships
 - **Key Difference**: Database stores planting months as JSON strings (`"[4,5,6]"`) while app expects JavaScript arrays (`[4,5,6]`)
 
 ### Core Components Structure
 ```
 src/
-├── App.js          # Main application with simulation logic
-├── config.js       # Consolidated configuration, crop database, helpers
-├── index.css       # Complete styling with responsive design
-└── index.js        # React app entry point
+├── App.js                    # Main application with simulation logic
+├── config.js                 # Consolidated configuration, crop database, helpers
+├── index.css                 # Complete styling with responsive design
+├── index.js                  # React app entry point
+├── components/
+│   ├── GardenStateProvider.js # Centralized state management with garden log
+│   ├── GardenLogQuickAdd.js   # Garden log planting interface
+│   └── DashboardView.js       # Main dashboard with actual garden state
+├── services/
+│   ├── gardenLog.js           # Garden log lifecycle management
+│   ├── gardenStateService.js  # Weather-aware garden analysis
+│   └── dashboardDataService.js # Honest recommendations from garden state
+└── hooks/
+    └── useGardenLogPersistence.js # Garden log localStorage persistence
 
 database/
 ├── plant_varieties.db        # SQLite database (132KB, production-ready)
@@ -94,14 +105,24 @@ database/
 
 ### State Management
 - React hooks-based state management (no Redux)
-- localStorage for configuration persistence
+- GardenStateProvider for centralized state management
+- localStorage for configuration and garden log persistence
 - Debounced simulations for performance optimization
 
 ### Data Flow
 1. User configures location, climate scenarios, portfolio strategy
-2. App generates Monte Carlo simulation (5,000 iterations)
-3. Results displayed as charts, garden calendar, risk analysis
-4. Configuration persisted to localStorage
+2. Garden log tracks actual plantings with lifecycle management
+3. App generates Monte Carlo simulation (5,000 iterations)
+4. Weather-aware recommendations integrate 10-day forecasts with garden state
+5. Results displayed as charts, garden calendar, risk analysis
+6. Configuration and garden log persisted to localStorage
+
+### Garden Log Integration
+App now maintains actual garden state alongside static crop data:
+- Garden log tracks planting lifecycle (planned → planted → growing → ready → harvested)
+- Weather integration provides 10-day forecast awareness for timing decisions
+- Recommendations exclude already-planted crops and reflect actual garden reality
+- Persistence via localStorage with future sharing capabilities
 
 ### Database Integration Notes
 Database exists but app currently uses static data. Future integration requires:
@@ -120,6 +141,15 @@ Database exists but app currently uses static data. Future integration requires:
 - `isPlantingSeasonValid()`: Handles both array and JSON string formats
 - `getClimateAdaptedCrops()`: Returns crops suitable for climate conditions
 - `getMicroclimateAdjustedRecommendations()`: Site-specific adaptations
+
+### Garden Log Services (`src/services/gardenLog.js`)
+- `addPlanting()`, `updatePlanting()`, `removePlanting()`: Core CRUD operations
+- `getActivePlantings()`, `getPlantingsByStatus()`: Query functions
+- `PLANTING_STATUS`: Lifecycle status constants (planned, planted, growing, ready, harvested)
+
+### Garden State Analysis (`src/services/gardenStateService.js`)
+- `getActualHarvestReadiness()`: Weather-aware harvest timing with forecast integration
+- `getWeatherAwareUrgentTasks()`: Real garden tasks based on conditions and plantings
 
 ### Database Management (`scripts/database.js`)
 - `DatabaseCLI`: Command-line interface for database operations
@@ -149,10 +179,13 @@ Database exists but app currently uses static data. Future integration requires:
 ## Integration Points
 
 ### Current Data Flow
-React App (static data) → User Interface → Monte Carlo Simulation → Results
+React App (static data + garden log) → Weather-Aware Recommendations → Monte Carlo Simulation → Results
+
+### Garden Log Data Flow
+User Actions → Garden Log Service → Weather Integration → Honest Task Generation → UI Updates
 
 ### Future Database Integration
-SQLite Database → API/Query Layer → React App → Simulation → Results
+SQLite Database → API/Query Layer → React App → Garden Log → Simulation → Results
 
 ### Key Integration Challenges
 - Format conversion: JSON strings ↔ JavaScript arrays
@@ -161,8 +194,9 @@ SQLite Database → API/Query Layer → React App → Simulation → Results
 
 ## Architecture Decisions
 
-### Why Dual Data Systems
+### Why Triple Data Systems
 - **Performance**: Static data provides instant access for simulations
+- **Reality Tracking**: Garden log maintains actual planting state for honest recommendations
 - **Completeness**: Database contains comprehensive plant data and growing tips
 - **Flexibility**: Database supports multi-language, regional variations
 - **Development Speed**: Static data simplifies React development
@@ -214,3 +248,7 @@ When I use the `_reflect` command, casually ask "How did today's development ses
 ## Naming Conventions
 
 - Always use camelCase for naming JavaScript files, never hyphenated filenames
+
+## Claude Memories
+
+- whenever you are capturing project history, capture the most accurate version you can. don't embellish.
