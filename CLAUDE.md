@@ -45,3 +45,13 @@ Commands now properly stored in `.claude/commands/` directory:
 - Run `npm run lint:changed:fix` after code changes
 - Use `./start-dev.sh` for dev server
 - Require locationConfig for all garden functions
+
+## Critical Development Workflow
+
+**ALWAYS do these steps after any code changes:**
+1. **Check dev server logs** - Monitor dev-server.log for compilation errors and runtime issues
+2. **Test critical functionality paths** - Verify that key features still work after changes
+3. **Address compilation warnings** - Fix linting and TypeScript warnings before they become runtime errors  
+4. **Be proactive about error detection** - Find and fix issues before the user encounters them
+
+These steps prevent the user from discovering errors that Claude should have caught during development.
