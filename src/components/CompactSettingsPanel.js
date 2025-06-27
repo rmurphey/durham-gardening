@@ -79,6 +79,31 @@ const CompactSettingsPanel = ({
     showSettingsSavedFeedback();
   };
 
+  // Check if location is in continental US
+  const validateContinentalUS = async (lat, lon) => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=3&addressdetails=1`);
+      const data = await response.json();
+      
+      const country = data.address?.country;
+      const state = data.address?.state;
+      
+      // Check if location is in continental US (excludes Alaska, Hawaii, territories)
+      if (country !== 'United States') {
+        return { valid: false, reason: 'outside_us' };
+      }
+      
+      if (state === 'Alaska' || state === 'Hawaii') {
+        return { valid: false, reason: 'non_continental' };
+      }
+      
+      return { valid: true };
+    } catch (error) {
+      console.warn('Could not validate location, allowing anyway:', error);
+      return { valid: true }; // Default to allowing if validation fails
+    }
+  };
+
   const handleGeolocation = () => {
     if (!navigator.geolocation) {
       alert('Geolocation is not supported by this browser.');
@@ -86,8 +111,29 @@ const CompactSettingsPanel = ({
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
+        
+        // Validate location is in continental US
+        const validation = await validateContinentalUS(latitude, longitude);
+        
+        if (!validation.valid) {
+          const message = validation.reason === 'outside_us' 
+            ? 'GardenSim currently only supports gardens in the continental United States. Would you like to set up a garden in Durham, NC instead?'
+            : 'GardenSim currently only supports the continental US (excluding Alaska and Hawaii). Would you like to set up a garden in Durham, NC instead?';
+          
+          if (window.confirm(message)) {
+            // Use Durham, NC as fallback
+            setLocationSetupConfig({
+              name: 'Durham, NC (Default)',
+              lat: 35.9940,
+              lon: -78.8986,
+              hardiness: '7b'
+            });
+          }
+          return;
+        }
+        
         setLocationSetupConfig(prev => ({
           ...prev,
           lat: parseFloat(latitude.toFixed(4)),
@@ -133,8 +179,31 @@ const CompactSettingsPanel = ({
     }
   };
 
-  const handleSaveLocation = () => {
+  const handleSaveLocation = async () => {
     if (onLocationChange && locationSetupConfig.lat && locationSetupConfig.lon) {
+      // Validate location is in continental US
+      const validation = await validateContinentalUS(locationSetupConfig.lat, locationSetupConfig.lon);
+      
+      if (!validation.valid) {
+        const message = validation.reason === 'outside_us' 
+          ? 'GardenSim currently only supports gardens in the continental United States. Would you like to set up a garden in Durham, NC instead?'
+          : 'GardenSim currently only supports the continental US (excluding Alaska and Hawaii). Would you like to set up a garden in Durham, NC instead?';
+        
+        if (window.confirm(message)) {
+          // Use Durham, NC as fallback
+          const durhamConfig = {
+            name: 'Durham, NC (Default)',
+            lat: 35.9940,
+            lon: -78.8986,
+            hardiness: '7b',
+            zipCode: locationConfig?.zipCode
+          };
+          onLocationChange(durhamConfig);
+          setLocationSetupConfig(durhamConfig);
+        }
+        return;
+      }
+      
       onLocationChange({
         ...locationSetupConfig,
         zipCode: locationConfig?.zipCode // Preserve existing zipCode if any
