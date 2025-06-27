@@ -75,3 +75,6 @@ These steps prevent the user from discovering errors that Claude should have cau
 - Service interdependencies that require deep knowledge to modify
 
 **Key Principle:** The faster you can add code with AI, the more important automated checks and clear boundaries become.
+
+## Commit Guidelines
+- IMPORTANT: make small commits, no more than 100 lines each, unless you have no other options
