@@ -4,32 +4,6 @@
 
 ## move completed todos to the end of this file
 
-## ✅ COMPLETED: Database Integration (2025-06-27)
-
-- ✅ Connected comprehensive plant database (79 growing tips, 56 companion relationships) to location-aware recommendations
-- ✅ Added enhanced plant data methods to DatabaseService: getEnhancedPlantData(), getGrowingTips(), getCompanionPlants(), getPlantsByZone()
-- ✅ Created enhanced location recommendations service with database integration
-- ✅ Built DatabaseIntegrationDemo component showcasing plant data, growing tips, companion planting, and location suitability scoring
-- ✅ Integrated demo component into dashboard to display real database information alongside static data
-- ✅ Established fallback system: database queries with graceful degradation to static data when database unavailable
-
-
-
-
-## ✅ COMPLETED: Cleanup: Metrics display (2025-06-27)
-
-- ✅ Issue already resolved in recent formatting improvements
-- ✅ Summary stats layout fixes included proper decimal precision
-- ✅ Temperature display working correctly with unit conversion system
-
-## ✅ COMPLETED: Remove outdated KV storage references (2025-06-27)
-
-- ✅ Updated documentation to clarify KV → Blob storage migration
-- ✅ Preserved accurate development history showing the evolution
-- ✅ Added context notes about storage layer decisions
-
-
-
 # evergreen todos
 
 ## Rename repo from durham-gardening to garden-sim
@@ -56,6 +30,27 @@
 ---
 
 # COMPLETED ITEMS
+
+## ✅ COMPLETED: Database Integration (2025-06-27)
+
+- ✅ Connected comprehensive plant database (79 growing tips, 56 companion relationships) to location-aware recommendations
+- ✅ Added enhanced plant data methods to DatabaseService: getEnhancedPlantData(), getGrowingTips(), getCompanionPlants(), getPlantsByZone()
+- ✅ Created enhanced location recommendations service with database integration
+- ✅ Built DatabaseIntegrationDemo component showcasing plant data, growing tips, companion planting, and location suitability scoring
+- ✅ Integrated demo component into dashboard to display real database information alongside static data
+- ✅ Established fallback system: database queries with graceful degradation to static data when database unavailable
+
+## ✅ COMPLETED: Cleanup: Metrics display (2025-06-27)
+
+- ✅ Issue already resolved in recent formatting improvements
+- ✅ Summary stats layout fixes included proper decimal precision
+- ✅ Temperature display working correctly with unit conversion system
+
+## ✅ COMPLETED: Remove outdated KV storage references (2025-06-27)
+
+- ✅ Updated documentation to clarify KV → Blob storage migration
+- ✅ Preserved accurate development history showing the evolution
+- ✅ Added context notes about storage layer decisions
 
 ## ✅ COMPLETED: Consider how to make the app usable for more locations (2025-06-26)
 
