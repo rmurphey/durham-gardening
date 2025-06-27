@@ -1,6 +1,6 @@
-# GardenSim Development Log
+# GardenSim Project History
 
-Personal journal documenting the experience of building a garden planning application with AI assistance.
+Personal journal documenting the evolution of a garden planning application from concept to continental US coverage.
 
 ## Project Journey
 Started with simple Durham garden recommendations, evolved into a comprehensive continental US garden planning application with weather forecasting and Monte Carlo simulation.
