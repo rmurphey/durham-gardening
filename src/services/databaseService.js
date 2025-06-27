@@ -1212,6 +1212,155 @@ class DatabaseService {
   }
 
   /**
+   * Get all varieties for a specific plant from database
+   * @param {string} plantKey - Plant identifier (e.g., 'kale', 'tomato')
+   * @returns {Array} Array of plant varieties with their characteristics
+   */
+  async getPlantVarieties(plantKey) {
+    if (!this.isInitialized || !this.db) {
+      console.warn('Database not initialized, using static varieties');
+      return this.getStaticPlantVarieties(plantKey);
+    }
+
+    try {
+      const query = `
+        SELECT 
+          p.plant_key,
+          pn.common_name,
+          p.min_zone,
+          p.max_zone,
+          p.min_temp_f,
+          p.max_temp_f,
+          p.optimal_temp_min_f,
+          p.optimal_temp_max_f,
+          p.drought_tolerance,
+          p.heat_tolerance,
+          p.humidity_tolerance,
+          p.days_to_maturity,
+          p.spacing_inches,
+          p.mature_height_inches,
+          sp.variety_name,
+          sp.packet_size,
+          sp.price,
+          v.name as vendor_name,
+          sp.is_organic,
+          sp.is_heirloom
+        FROM plants p
+        JOIN plant_names pn ON p.id = pn.plant_id
+        LEFT JOIN seed_products sp ON p.id = sp.plant_id
+        LEFT JOIN vendors v ON sp.vendor_id = v.id
+        WHERE p.plant_key = ? AND pn.language = 'en'
+        ORDER BY sp.price ASC
+      `;
+      
+      const result = this.db.exec(query, [plantKey]);
+      
+      if (result.length > 0 && result[0].values.length > 0) {
+        const varieties = result[0].values.map(row => ({
+          plantKey: row[0],
+          commonName: row[1],
+          minZone: row[2],
+          maxZone: row[3],
+          minTemp: row[4],
+          maxTemp: row[5],
+          optimalTempMin: row[6],
+          optimalTempMax: row[7],
+          droughtTolerance: row[8],
+          heatTolerance: row[9],
+          humidityTolerance: row[10],
+          daysToMaturity: row[11],
+          spacing: row[12],
+          matureHeight: row[13],
+          varietyName: row[14] || row[1], // Use variety name or common name
+          packetSize: row[15],
+          price: row[16],
+          vendorName: row[17],
+          isOrganic: row[18],
+          isHeirloom: row[19],
+          dataSource: 'database'
+        }));
+
+        // If no specific varieties found, return the base plant as a variety
+        if (varieties.length === 1 && !varieties[0].varietyName) {
+          varieties[0].varietyName = varieties[0].commonName;
+        }
+
+        return varieties;
+      }
+      
+      return this.getStaticPlantVarieties(plantKey);
+    } catch (error) {
+      console.warn(`Failed to get varieties for ${plantKey}:`, error);
+      return this.getStaticPlantVarieties(plantKey);
+    }
+  }
+
+  /**
+   * Fallback to static plant variety data
+   * @param {string} plantKey - Plant identifier
+   * @returns {Array} Static plant variety data
+   */
+  getStaticPlantVarieties(plantKey) {
+    console.log(`Using static variety fallback for ${plantKey}`);
+    
+    // Import config at runtime to avoid circular deps
+    const { GLOBAL_CROP_DATABASE } = require('../config.js');
+    
+    // Find the plant in static data
+    let plantData = null;
+    let category = null;
+    
+    for (const [cat, plants] of Object.entries(GLOBAL_CROP_DATABASE)) {
+      if (plants[plantKey]) {
+        plantData = plants[plantKey];
+        category = cat;
+        break;
+      }
+    }
+    
+    if (!plantData) return [];
+    
+    // Extract varieties if they exist
+    const varieties = [];
+    
+    if (plantData.varieties) {
+      Object.entries(plantData.varieties).forEach(([varietyName, description]) => {
+        varieties.push({
+          plantKey,
+          commonName: plantData.name?.en || plantData.name || plantKey,
+          varietyName,
+          description,
+          minZone: plantData.zones?.split('-')[0],
+          maxZone: plantData.zones?.split('-')[1],
+          minTemp: plantData.minTemp,
+          maxTemp: plantData.maxTemp,
+          droughtTolerance: plantData.drought,
+          heatTolerance: plantData.heat,
+          daysToMaturity: plantData.daysToMaturity,
+          dataSource: 'static'
+        });
+      });
+    } else {
+      // Create a single variety from the plant data
+      varieties.push({
+        plantKey,
+        commonName: plantData.name?.en || plantData.name || plantKey,
+        varietyName: plantData.name?.en || plantData.name || plantKey,
+        minZone: plantData.zones?.split('-')[0],
+        maxZone: plantData.zones?.split('-')[1],
+        minTemp: plantData.minTemp,
+        maxTemp: plantData.maxTemp,
+        droughtTolerance: plantData.drought,
+        heatTolerance: plantData.heat,
+        daysToMaturity: plantData.daysToMaturity,
+        dataSource: 'static'
+      });
+    }
+    
+    return varieties;
+  }
+
+  /**
    * Fallback to static plant data from config.js
    * @param {string} plantKey - Plant identifier
    * @returns {Object} Static plant data

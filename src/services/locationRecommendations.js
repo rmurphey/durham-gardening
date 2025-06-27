@@ -5,6 +5,7 @@
 
 import { DURHAM_CROPS } from '../config/durhamConfig.js';
 import databaseLocationRecommendations from './databaseLocationRecommendations.js';
+import varietyRecommendationService from './varietyRecommendationService.js';
 // import { DURHAM_CALENDAR } from '../config/durhamConfig.js'; // Available for future calendar integration
 
 /**
@@ -283,6 +284,12 @@ export const generateEnhancedCropRecommendations = async (portfolio, locationCon
             droughtTolerance: crop.drought,
             heatTolerance: crop.heat,
             
+            // Zone-specific variety information
+            varieties: crop.varieties || [],
+            bestVariety: crop.bestVariety,
+            varietyRecommendation: crop.bestVariety ? 
+              `Try ${crop.bestVariety.varietyName} - ${crop.bestVariety.recommendation}` : null,
+            
             // Growing tips from database
             growingTips: crop.growingTips.slice(0, 2),
             
@@ -386,8 +393,12 @@ const isCropInSeasonDatabase = (crop, currentMonth) => {
 const generateDatabaseReason = (crop, currentMonth, locationConfig) => {
   let reason = `Perfect timing for zone ${locationConfig.hardiness}`;
   
-  // Add zone-specific insights
-  if (crop.locationSuitability >= 0.8) {
+  // Add variety-specific insights first
+  if (crop.bestVariety && crop.bestVariety.zoneSuitability === 'Excellent') {
+    reason += ` - ${crop.bestVariety.varietyName} is excellent for your zone`;
+  } else if (crop.bestVariety && crop.bestVariety.zoneSuitability === 'Good') {
+    reason += ` - ${crop.bestVariety.varietyName} is well-suited`;
+  } else if (crop.locationSuitability >= 0.8) {
     reason += `, excellent climate match`;
   } else if (crop.locationSuitability >= 0.6) {
     reason += `, good climate match`;
@@ -402,9 +413,10 @@ const generateDatabaseReason = (crop, currentMonth, locationConfig) => {
     reason += `, drought tolerant`;
   }
   
-  // Add timing insights
-  if (crop.daysToMaturity) {
-    reason += `. Harvest in ${crop.daysToMaturity} days`;
+  // Add timing insights - prefer variety-specific if available
+  const maturityDays = crop.bestVariety?.daysToMaturity || crop.daysToMaturity;
+  if (maturityDays) {
+    reason += `. Harvest in ${maturityDays} days`;
   }
   
   return reason;

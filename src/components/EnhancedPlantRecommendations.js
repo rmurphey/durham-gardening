@@ -135,6 +135,33 @@ const EnhancedPlantRecommendations = ({ locationConfig }) => {
               </div>
             )}
 
+            {/* Zone-Specific Varieties */}
+            {crop.varieties && crop.varieties.length > 0 && (
+              <div className="varieties">
+                <h6>🌿 Recommended Varieties for Zone {locationConfig.hardiness}:</h6>
+                {crop.varieties.slice(0, 3).map((variety, varietyIndex) => (
+                  <div key={varietyIndex} className="variety-item">
+                    <div className="variety-header">
+                      <span className="variety-name">{variety.varietyName}</span>
+                      <span className={`variety-score ${variety.zoneSuitability.toLowerCase()}`}>
+                        {variety.zoneSuitability}
+                      </span>
+                    </div>
+                    <div className="variety-recommendation">
+                      {variety.recommendation}
+                    </div>
+                    {variety.daysToMaturity && (
+                      <div className="variety-details">
+                        Harvest in {variety.daysToMaturity} days
+                        {variety.vendorName && ` • Available from ${variety.vendorName}`}
+                        {variety.price && ` • $${variety.price}`}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Companion Plants */}
             {crop.companions && (crop.companions.beneficial.length > 0 || crop.companions.antagonistic.length > 0) && (
               <div className="companions">
@@ -298,6 +325,76 @@ const EnhancedPlantRecommendations = ({ locationConfig }) => {
         .companions p {
           margin: 5px 0;
           font-size: 0.85em;
+        }
+
+        .varieties {
+          margin: 10px 0;
+          padding: 10px;
+          background: #f8f9fa;
+          border-radius: 4px;
+        }
+
+        .varieties h6 {
+          margin: 0 0 8px 0;
+          color: #495057;
+          font-size: 0.9em;
+        }
+
+        .variety-item {
+          margin: 8px 0;
+          padding: 8px;
+          background: white;
+          border-radius: 3px;
+          border-left: 3px solid #28a745;
+        }
+
+        .variety-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 4px;
+        }
+
+        .variety-name {
+          font-weight: bold;
+          color: #495057;
+          font-size: 0.9em;
+        }
+
+        .variety-score {
+          font-size: 0.75em;
+          padding: 2px 6px;
+          border-radius: 8px;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+
+        .variety-score.excellent {
+          background: #d4edda;
+          color: #155724;
+        }
+
+        .variety-score.good {
+          background: #fff3cd;
+          color: #856404;
+        }
+
+        .variety-score.fair {
+          background: #f8d7da;
+          color: #721c24;
+        }
+
+        .variety-recommendation {
+          font-size: 0.8em;
+          color: #6c757d;
+          margin: 4px 0;
+          font-style: italic;
+        }
+
+        .variety-details {
+          font-size: 0.75em;
+          color: #6c757d;
+          margin-top: 4px;
         }
 
         .seasonal-section, .strategies-section {

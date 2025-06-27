@@ -4,6 +4,7 @@
  */
 
 import databaseService from './databaseService.js';
+import regionalVarietyRecommendations from './regionalVarietyRecommendations.js';
 import { GLOBAL_CROP_DATABASE } from '../config.js';
 
 /**
@@ -32,10 +33,11 @@ export const getDatabaseLocationRecommendations = async (locationConfig) => {
     const enhancedPlants = await Promise.all(
       databasePlants.map(async (plant) => {
         try {
-          const [enhancedData, growingTips, companions] = await Promise.all([
+          const [enhancedData, growingTips, companions, varieties] = await Promise.all([
             databaseService.getEnhancedPlantData(plant.plantKey, locationConfig),
             databaseService.getGrowingTips(plant.plantKey, locationConfig),
-            databaseService.getCompanionPlants(plant.plantKey)
+            databaseService.getCompanionPlants(plant.plantKey),
+            regionalVarietyRecommendations.getZoneSpecificVarieties(plant.plantKey, locationConfig)
           ]);
 
           return {
@@ -43,6 +45,8 @@ export const getDatabaseLocationRecommendations = async (locationConfig) => {
             enhancedData,
             growingTips: growingTips || [],
             companions: companions || { beneficial: [], antagonistic: [] },
+            varieties: varieties || [],
+            bestVariety: varieties && varieties.length > 0 ? varieties[0] : null,
             locationSuitability: calculateLocationSuitability(enhancedData || plant, locationConfig),
             databaseEnhanced: true
           };
