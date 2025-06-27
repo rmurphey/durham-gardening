@@ -3,7 +3,7 @@
  * Unified header for both standard app and garden-specific contexts
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
 function AppHeader({ 
   gardenId = null,
@@ -24,10 +24,17 @@ function AppHeader({
 }) {
   const isGardenContext = !!gardenId;
 
-  const handleShareClick = () => {
+  const [shareSuccess, setShareSuccess] = useState(false);
+
+  const handleShareClick = async () => {
     if (shareableUrl && navigator.clipboard) {
-      navigator.clipboard.writeText(shareableUrl);
-      // Could add toast notification here
+      try {
+        await navigator.clipboard.writeText(shareableUrl);
+        setShareSuccess(true);
+        setTimeout(() => setShareSuccess(false), 2000);
+      } catch (error) {
+        console.warn('Failed to copy to clipboard:', error);
+      }
     }
     if (onShareGarden) {
       onShareGarden();
@@ -161,7 +168,7 @@ function AppHeader({
                 onClick={handleShareClick}
                 title="Copy sharing link"
               >
-                📋 Share
+                {shareSuccess ? '✅ Copied!' : '📋 Share'}
               </button>
             )}
           </div>
