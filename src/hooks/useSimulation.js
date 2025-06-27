@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { runCompleteSimulation } from '../services/simulationEngine.js';
 import { getPortfolioStrategies } from '../data/portfolioStrategies.js';
+import { useWeatherData } from './useWeatherData.js';
 
 export const useSimulation = (
   selectedSummer,
@@ -20,6 +21,19 @@ export const useSimulation = (
   const debounceTimer = useRef(null);
   const lastSimulationParams = useRef(null);
 
+  // Integrate real weather data for enhanced simulation accuracy
+  const { 
+    current: currentWeather, 
+    forecast: weatherForecast, 
+    gddData, 
+    hasWeatherData,
+    loading: weatherLoading 
+  } = useWeatherData(locationConfig, {
+    enableForecast: true,
+    enableGDD: true,
+    autoRefresh: true
+  });
+
   // Stable total investment calculation
   const totalInvestment = useMemo(() => {
     if (!customInvestment) return 400;
@@ -29,16 +43,20 @@ export const useSimulation = (
     }, 0);
   }, [customInvestment]);
 
-  // Create stable simulation parameters
+  // Create stable simulation parameters including weather data freshness
   const simulationKey = useMemo(() => {
     return JSON.stringify({
       selectedSummer,
       selectedWinter,
       selectedPortfolio,
       totalInvestment,
-      customPortfolio: customPortfolio ? JSON.stringify(customPortfolio) : null
+      customPortfolio: customPortfolio ? JSON.stringify(customPortfolio) : null,
+      hasWeatherData,
+      // Include weather timestamp to refresh simulation when weather data updates
+      weatherTimestamp: hasWeatherData && currentWeather ? 
+        Math.floor(Date.now() / (30 * 60 * 1000)) : null // Round to 30-minute intervals
     });
-  }, [selectedSummer, selectedWinter, selectedPortfolio, totalInvestment, customPortfolio]);
+  }, [selectedSummer, selectedWinter, selectedPortfolio, totalInvestment, customPortfolio, hasWeatherData, currentWeather]);
 
   // Main simulation runner
   const runSimulation = useCallback(async () => {
@@ -47,7 +65,13 @@ export const useSimulation = (
       return;
     }
 
-    console.log('Running Monte Carlo simulation...', { selectedSummer, selectedWinter, selectedPortfolio });
+    console.log('Running Monte Carlo simulation...', { 
+      selectedSummer, 
+      selectedWinter, 
+      selectedPortfolio,
+      weatherEnhanced: hasWeatherData ? 'Yes' : 'No',
+      forecastDays: weatherForecast?.length || 0
+    });
     lastSimulationParams.current = simulationKey;
     setSimulating(true);
     
@@ -56,13 +80,22 @@ export const useSimulation = (
       const portfolioMultiplier = selectedPortfolio === 'conservative' ? 0.85 : 
                                  selectedPortfolio === 'aggressive' ? 1.15 : 1.0;
 
+      // Prepare weather data for simulation if available
+      const weatherData = hasWeatherData ? {
+        current: currentWeather,
+        forecast: weatherForecast,
+        gddData: gddData,
+        timestamp: new Date()
+      } : null;
+
       const config = {
         portfolio,
         baseInvestment: totalInvestment,
         selectedSummer,
         selectedWinter,
         locationConfig,
-        portfolioMultiplier
+        portfolioMultiplier,
+        weatherData
       };
 
       const results = await runCompleteSimulation(config, 1000);
@@ -117,6 +150,10 @@ export const useSimulation = (
     simulationResults,
     simulating,
     triggerSimulation,
-    totalInvestment
+    totalInvestment,
+    // Weather integration status
+    weatherEnhanced: hasWeatherData,
+    weatherLoading,
+    forecastAvailable: weatherForecast?.length > 0
   };
 };

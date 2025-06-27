@@ -92,7 +92,9 @@ export const getDurhamWeatherAlerts = () => getLocationWeatherAlerts({ name: 'Du
  */
 export const getReadyToHarvest = (gardenLog = null, forecastData = null, locationConfig) => {
   if (!locationConfig || !locationConfig.coordinates) {
-    throw new Error('getReadyToHarvest requires locationConfig with coordinates for accurate harvest timing');
+    console.warn('getReadyToHarvest: Missing locationConfig coordinates, using fallback');
+    // Return empty array for graceful degradation instead of throwing
+    return [];
   }
   
   if (!gardenLog || !gardenLog.plantings.length) {

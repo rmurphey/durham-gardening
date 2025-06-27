@@ -8,6 +8,7 @@ Quickly capture a new idea for future exploration.
 ```
 
 ## What it does
-- Appends the idea to ACTIVE_WORK.md with "IDEA:" prefix
-- Timestamps the entry
-- Marks as low-priority exploration for later evaluation
+- Appends the idea to IDEAS.md in appropriate section
+- Timestamps the entry  
+- Organizes by category (Immediate Opportunities, Feature Expansions, etc.)
+- Available for /next command analysis and prioritization

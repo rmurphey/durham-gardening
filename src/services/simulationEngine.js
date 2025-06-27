@@ -35,13 +35,13 @@ export const runCompleteSimulation = async (config, iterations = 1000) => {
   } = config;
 
   try {
-    // Enhance simulation with weather data if available (temporarily disabled)
+    // Enhance simulation with weather data if available
     let enhancedConfig = { ...config };
-    if (weatherData) {
+    if (weatherData && weatherData.forecast && weatherData.forecast.length > 0) {
       enhancedConfig.weatherData = weatherData;
+      console.log('Using real weather data in simulation with', weatherData.forecast.length, 'days of forecast');
     } else {
-      // Skip weather API calls for now to restore basic functionality
-      console.log('Skipping weather data integration for performance');
+      console.log('Using synthetic weather scenarios - no real forecast data available');
     }
 
     // Run Monte Carlo simulation with enhanced weather data
