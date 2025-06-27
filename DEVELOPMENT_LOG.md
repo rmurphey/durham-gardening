@@ -73,6 +73,8 @@ This shift affects the entire recommendation system:
 
 **Infrastructure Naming Debt in AI-Assisted Development (June 2025):** Discovered directory name (`shopping`) doesn't match repo name (`durham-gardening`), both of which are outdated since app evolved to `GardenSim` with continental US support. **Key Learning:** AI-assisted development can evolve app identity and purpose faster than infrastructure naming gets updated. Project started Durham-specific → became shopping-focused → evolved to comprehensive garden planning → branded as GardenSim, but underlying infrastructure (repo name, directory name, internal references) lag behind functional evolution. Unlike traditional development where naming changes are deliberate, AI-assisted evolution can outpace infrastructure maintenance. Decision: Accept naming debt rather than disrupt workflow, but document for future reference.
 
+**Command Organization Evolution in AI-Assisted Workflows (June 2025):** Rapidly iterated through command organization patterns: documentation in CLAUDE.md → separate `/next-todo` and `/ideas` commands → unified `/next` command with intelligent prioritization. **Critical Learning:** AI-assisted development enables rapid tooling iteration to find optimal workflows. The unified `/next` command demonstrates how AI can synthesize multiple data sources (todos + ideas) with prioritization logic (urgency, impact, cost, learning value) in ways that wouldn't be practical in traditional development. Evolution: scattered documentation → purpose-built tools → intelligent unified interface. This represents a new category of development tooling that adapts as quickly as the AI-assisted workflow itself. [3bbf03a]
+
 ---
 
 ## Development Experience Notes
