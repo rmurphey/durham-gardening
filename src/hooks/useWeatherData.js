@@ -183,7 +183,7 @@ export const useWeatherData = (locationConfig, options = {}) => {
 
   // Get planting recommendations based on weather
   const getPlantingRecommendations = useCallback((cropType = 'warm_season') => {
-    const metrics = getWeatherMetrics();
+    getWeatherMetrics(); // Metrics available but not used in current implementation
     const { current, forecast, frostDates } = weatherState;
     
     const recommendations = {

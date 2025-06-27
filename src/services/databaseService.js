@@ -1302,7 +1302,7 @@ if (typeof window !== 'undefined') {
           console.log(`\n📅 Month ${month}: Testing ${allTemplates.length} templates...`);
         }
         
-        allTemplates.forEach(template => {
+        for (const template of allTemplates) {
           totalTests++;
           
           try {
@@ -1326,7 +1326,7 @@ if (typeof window !== 'undefined') {
             failedTests++;
             console.error(`❌ TEMPLATE ${template.id} THREW ERROR:`, error.message);
           }
-        });
+        }
       }
       
       console.log('\n🏁 TEST RESULTS:');

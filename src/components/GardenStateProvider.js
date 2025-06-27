@@ -3,12 +3,13 @@
  * Centralized state management for garden application state
  */
 
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { generateSuccessOutlook } from '../config.js';
 import { 
   generateLocationMonthlyFocus,
   generateLocationWeeklyActions,
   generateLocationTopCrops,
+  generateEnhancedCropRecommendations,
   generateLocationSiteRecommendations,
   generateLocationInvestmentPriority
 } from '../services/locationRecommendations.js';
@@ -20,7 +21,6 @@ import { useShoppingList } from '../hooks/useShoppingList.js';
 import { useCalendarTaskManager } from '../hooks/useCalendarTaskManager.js';
 import { useGardenLogPersistence } from '../hooks/useGardenLogPersistence.js';
 import { 
-  createEmptyGardenLog,
   addPlanting,
   updatePlanting,
   removePlanting,
@@ -54,6 +54,10 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
   
   // Garden log state management with persistence
   const { gardenLog, setGardenLog } = useGardenLogPersistence();
+  
+  // Enhanced recommendations with database integration
+  const [enhancedRecommendations, setEnhancedRecommendations] = useState([]);
+  const [enhancedRecommendationsLoading, setEnhancedRecommendationsLoading] = useState(false);
   
   // Use simulation hook
   const { simulationResults, simulating, totalInvestment } = useSimulation(
@@ -123,13 +127,37 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
       topCropRecommendations,
       siteSpecificRecommendations
     };
-  }, [portfolioStrategies, selectedPortfolio, simulationResults, locationConfig, customInvestment]);
+  }, [portfolioStrategies, selectedPortfolio, simulationResults, locationConfig, customInvestment, gardenLog]);
 
   // Garden log derived data
   const activePlantings = useMemo(() => getActivePlantings(gardenLog), [gardenLog]);
   const readyToHarvest = useMemo(() => 
     getPlantingsByStatus(gardenLog, PLANTING_STATUS.READY), [gardenLog]
   );
+
+  // Fetch enhanced recommendations when key dependencies change
+  useEffect(() => {
+    const fetchEnhancedRecommendations = async () => {
+      if (!portfolioStrategies || !selectedPortfolio || !locationConfig) return;
+
+      setEnhancedRecommendationsLoading(true);
+      try {
+        const enhanced = await generateEnhancedCropRecommendations(
+          portfolioStrategies[selectedPortfolio], 
+          locationConfig, 
+          gardenLog
+        );
+        setEnhancedRecommendations(enhanced);
+      } catch (error) {
+        console.error('Failed to load enhanced recommendations:', error);
+        setEnhancedRecommendations([]);
+      } finally {
+        setEnhancedRecommendationsLoading(false);
+      }
+    };
+
+    fetchEnhancedRecommendations();
+  }, [portfolioStrategies, selectedPortfolio, locationConfig, gardenLog]);
 
   const value = {
     // Core selection state
@@ -171,6 +199,10 @@ export function GardenStateProvider({ children, isReadOnly = false }) {
     currentClimateScenarios,
     portfolioStrategies,
     recommendations,
+    
+    // Database-enhanced recommendations
+    enhancedRecommendations,
+    enhancedRecommendationsLoading,
     
     // Read-only state
     isReadOnly

@@ -56,7 +56,17 @@ const DashboardView = ({
   // Get critical data for decision making based on actual garden state
   const weatherAlerts = getLocationWeatherAlerts(locationConfig);
   const readyToHarvest = getReadyToHarvest(gardenLog, forecastData, locationConfig);
-  const criticalWindows = getCriticalTimingWindows(gardenLog, forecastData, locationConfig);
+  
+  // Safely get critical timing windows with error handling
+  let criticalWindows = [];
+  try {
+    criticalWindows = getCriticalTimingWindows(gardenLog, forecastData, locationConfig);
+  } catch (error) {
+    console.error('Error getting critical timing windows:', error);
+    console.warn('locationConfig provided:', locationConfig);
+    criticalWindows = []; // Fallback to empty array
+  }
+  
   const simulationSummary = getSimulationSummary(simulationResults, totalInvestment);
   const actionableGuidance = getTodaysActionableGuidance();
   

@@ -5,7 +5,10 @@
 ## 🎯 CANDIDATE TASKS - Choose Next
 
 ### **High-Value Opportunities** 
-1. **Database Integration** (~$4-5) - Connect plant database (79 growing tips, 56 companion relationships) to location-aware recommendations
+1. **Monte Carlo Calendar Generation - Phase 2** (~$3-4) - Calendar Intelligence & Risk-Adjusted Timing
+   - Build UI components to display probabilistic calendar recommendations  
+   - Add confidence visualization and scenario strength indicators
+   - Implement weather-driven timing adjustments for critical decisions
 2. **Regional Plant Varieties** (~$3-4) - Add zone-specific variety recommendations based on hardiness zones
 3. **Microclimate Adjustments** (~$3-4) - Factor in user's site conditions (slope, exposure, soil type)
 
@@ -23,6 +26,13 @@
 ---
 
 ## ✅ Recent Completions
+
+**Monte Carlo Calendar Generation - Phase 1** - COMPLETED (~$2-3 actual)
+- Transformed simulation from abstract yield histograms to date-specific garden events
+- Created `generateCalendarFromScenario()` - converts weather scenarios to planting/harvest windows
+- Modified `runMonteCarloSimulation()` to output probabilistic calendar data for each iteration
+- Built consensus algorithm `generateProbabilisticCalendar()` aggregating 5,000 scenario calendars
+- Now generates actionable recommendations: "Plant tomatoes April 15-25 (70% confidence)"
 
 **Weather Data Integration** - COMPLETED (~$3-4 actual)
 - Real forecast data now drives Monte Carlo simulation

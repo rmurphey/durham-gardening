@@ -2973,7 +2973,11 @@ p {
 
 .completed-indicator {
   color: var(--color-success-dark);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold); /* Make it bolder */
+  background: var(--color-success-light);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: var(--font-size-xs);
 }
 
 .next-due {
@@ -3005,14 +3009,17 @@ p {
 
 /* Activity states */
 .activity.state-completed {
-  opacity: 0.7;
+  opacity: 1; /* Keep full visibility */
   background: var(--color-success-light);
   border-left-color: var(--color-success);
+  border-left-width: 4px; /* Make completed border more prominent */
+  box-shadow: 0 1px 3px rgba(40, 167, 69, 0.2); /* Subtle green shadow */
 }
 
 .activity.state-completed .activity-action {
   text-decoration: line-through;
-  color: var(--color-text-tertiary);
+  color: var(--color-success-dark); /* Use success color instead of tertiary */
+  font-weight: var(--font-weight-medium); /* Make text slightly bolder */
 }
 
 .activity.state-pending.priority-urgent,
@@ -3045,11 +3052,7 @@ p {
   gap: var(--spacing-xs);
 }
 
-.completed-indicator {
-  color: var(--color-success-dark);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-xs);
-}
+/* Completed indicator styling moved above - no duplicate needed */
 
 /* Mobile responsiveness for task management */
 @media (max-width: 768px) {

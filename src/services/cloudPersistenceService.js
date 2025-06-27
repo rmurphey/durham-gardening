@@ -74,7 +74,7 @@ export class CloudPersistenceService {
         throw new Error(error.message || `HTTP ${response.status}`);
       }
 
-      const result = await response.json();
+      await response.json(); // Result not used currently
       this.lastSyncTime = new Date().toISOString();
       
       this.notifySyncListeners({ 

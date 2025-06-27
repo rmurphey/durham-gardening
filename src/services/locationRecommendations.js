@@ -4,6 +4,7 @@
  */
 
 import { DURHAM_CROPS } from '../config/durhamConfig.js';
+import { databaseService } from './databaseService.js';
 // import { DURHAM_CALENDAR } from '../config/durhamConfig.js'; // Available for future calendar integration
 
 /**
@@ -230,6 +231,90 @@ export const generateLocationTopCrops = (portfolio, locationConfig = {}, gardenL
   }
 
   return recommendations.slice(0, 3); // Top 3 recommendations
+};
+
+/**
+ * Generate database-enhanced crop recommendations with growing tips and companion planting
+ * @param {Object} portfolio - User's portfolio allocation
+ * @param {Object} locationConfig - Location configuration with coordinates and hardiness zone
+ * @param {Object} gardenLog - Current garden log state
+ * @returns {Array} Enhanced recommendations with database insights
+ */
+export const generateEnhancedCropRecommendations = async (portfolio, locationConfig = {}, gardenLog = null) => {
+  // Get base recommendations
+  const baseRecommendations = generateLocationTopCrops(portfolio, locationConfig, gardenLog);
+  
+  // Enhance each recommendation with database data
+  const enhancedRecommendations = await Promise.all(
+    baseRecommendations.map(async (rec) => {
+      try {
+        // Get enhanced plant data from database
+        const plantData = await databaseService.getEnhancedPlantData(rec.cropKey, locationConfig);
+        const growingTips = await databaseService.getGrowingTips(rec.cropKey);
+        const companionPlants = await databaseService.getCompanionPlants(rec.cropKey);
+        
+        return {
+          ...rec,
+          // Add database-powered enhancements
+          databaseEnhanced: true,
+          zoneSuitability: plantData.zoneSuitability || 'unknown',
+          temperatureRange: plantData.temperatureRange || null,
+          daysToMaturity: plantData.daysToMaturity || null,
+          spacing: plantData.spacing || null,
+          droughtTolerance: plantData.droughtTolerance || 'medium',
+          
+          // Growing tips from database
+          growingTips: growingTips.slice(0, 2), // Top 2 tips
+          
+          // Companion planting suggestions
+          companionPlants: {
+            beneficial: companionPlants.beneficial?.slice(0, 3) || [],
+            antagonistic: companionPlants.antagonistic?.slice(0, 2) || []
+          },
+          
+          // Enhanced reasoning with database insights
+          enhancedReason: generateDatabaseEnhancedReason(rec, plantData, locationConfig)
+        };
+      } catch (error) {
+        console.warn(`Failed to enhance ${rec.cropKey} with database data:`, error);
+        // Return original recommendation if database enhancement fails
+        return { ...rec, databaseEnhanced: false };
+      }
+    })
+  );
+  
+  return enhancedRecommendations;
+};
+
+/**
+ * Generate enhanced reasoning that incorporates database insights
+ */
+const generateDatabaseEnhancedReason = (baseRec, plantData, locationConfig) => {
+  let reason = baseRec.reason;
+  
+  // Add zone-specific insights
+  if (plantData.zoneSuitability && plantData.zoneSuitability !== 'unknown') {
+    const suitabilityText = plantData.zoneSuitability >= 0.8 ? 'excellent' :
+                           plantData.zoneSuitability >= 0.6 ? 'good' : 'marginal';
+    reason += ` (${suitabilityText} zone match)`;
+  }
+  
+  // Add temperature insights
+  if (plantData.temperatureRange) {
+    const currentMonth = new Date().getMonth() + 1;
+    const isOptimalTemp = currentMonth >= 4 && currentMonth <= 9; // Growing season approximation
+    if (isOptimalTemp) {
+      reason += `, optimal temperature conditions`;
+    }
+  }
+  
+  // Add maturity insights
+  if (plantData.daysToMaturity) {
+    const maturityWeeks = Math.round(plantData.daysToMaturity / 7);
+    reason += `, ready in ${maturityWeeks} weeks`;
+  }
+  
+  return reason;
 };
 
 /**

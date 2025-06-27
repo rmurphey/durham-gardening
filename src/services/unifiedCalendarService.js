@@ -5,7 +5,6 @@
 
 import { generateDatabaseGardenCalendar } from './databaseCalendarService.js';
 import { generateGardenTasks } from './temporalShoppingService.js';
-import { shouldShowCropActivity } from '../config/gardenStatus.js';
 import { getUrgencyLevel } from '../utils/urgencyHelpers.js';
 
 /**

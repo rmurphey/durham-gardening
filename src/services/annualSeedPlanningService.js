@@ -304,24 +304,7 @@ const calculateSeedRequirements = async (crop, allocation, sizeMultiplier) => {
   };
 };
 
-/**
- * Get recommended varieties for Durham climate with specific ordering details
- */
-const getRecommendedVariety = (crop) => {
-  const durhamVarieties = {
-    'okra': 'Clemson Spineless (heat-tolerant)',
-    'hot_peppers': 'Serrano or Jalapeño (reliable in heat)',
-    'kale': 'Red Russian (bolt-resistant)',
-    'lettuce': 'Jericho or Nevada (heat-tolerant)',
-    'spinach': 'Space or Tyee (slow-bolt)',
-    'sweet_potato': 'Beauregard (short-season)',
-    'amaranth': 'Red Callaloo (heat-loving)',
-    'carrots': 'Paris Market (clay soil tolerant)',
-    'cabbage': 'Early Jersey Wakefield (quick-maturing)'
-  };
-  
-  return durhamVarieties[crop.key] || `Standard ${crop.name} variety`;
-};
+// Removed unused getRecommendedVariety function
 
 /**
  * Get specific seed ordering instructions with vendors, SKUs, and timing
@@ -748,43 +731,13 @@ const getSeedPrice = (crop) => {
   return standardPrices[crop.key] || 4.00;
 };
 
-const calculateSeedCost = (crop, quantity) => {
-  const packetSize = getPacketSize(crop);
-  const packetsNeeded = Math.ceil(quantity / packetSize);
-  const pricePerPacket = getSeedPrice(crop);
-  return packetsNeeded * pricePerPacket;
-};
+// Removed unused calculateSeedCost function
 
-const getPreferredVendor = (crop) => {
-  return 'True Leaf Market'; // User's preferred vendor per instructions
-};
+// Removed unused getPreferredVendor function
 
-const getFirstPlantingDate = (crop) => {
-  const plantingMonths = crop.plantingSeasons?.temperate || [];
-  if (plantingMonths.length > 0) {
-    const monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return `${monthNames[plantingMonths[0]]} 15`;
-  }
-  return 'Spring';
-};
+// Removed unused getFirstPlantingDate function
 
-const generateSeedNotes = (crop, successionMultiplier) => {
-  const notes = [];
-  
-  if (successionMultiplier > 1) {
-    notes.push(`Plan ${successionMultiplier} succession plantings for continuous harvest`);
-  }
-  
-  if (crop.key === 'lettuce' || crop.key === 'spinach') {
-    notes.push('Choose bolt-resistant varieties for Durham heat');
-  }
-  
-  if (crop.key === 'carrots') {
-    notes.push('Short varieties work best in Durham clay soil');
-  }
-  
-  return notes.join('. ');
-};
+// Removed unused generateSeedNotes function
 
 const getSeedPriority = (crop) => {
   const highPriority = ['kale', 'lettuce', 'hot_peppers', 'okra'];

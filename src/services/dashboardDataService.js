@@ -123,21 +123,26 @@ export const getReadyToHarvest = (gardenLog = null, forecastData = null, locatio
  * @returns {Array} Array of critical timing window objects
  */
 export const getCriticalTimingWindows = (gardenLog = null, forecastData = null, locationConfig) => {
-  if (!locationConfig || !locationConfig.coordinates) {
-    console.warn('getCriticalTimingWindows: Missing locationConfig coordinates, using fallback');
+  if (!locationConfig || typeof locationConfig.lat !== 'number' || typeof locationConfig.lon !== 'number') {
+    console.warn('getCriticalTimingWindows: Missing locationConfig coordinates (lat/lon), using fallback');
     return [];
   }
   
   const now = new Date();
-  const month = now.getMonth() + 1;
-  const dayOfMonth = now.getDate();
+  // month and dayOfMonth available but not used in current implementation
   
-  if (!gardenLog || !gardenLog.plantings.length) {
+  if (!gardenLog || !gardenLog.plantings || !gardenLog.plantings.length) {
     return []; // No theoretical recommendations - only show actual garden-based windows
   }
 
-  // Get urgent tasks from actual garden state
-  const urgentTasks = getActualUrgentTasks(gardenLog, forecastData, locationConfig);
+  // Get urgent tasks from actual garden state with error handling
+  let urgentTasks = [];
+  try {
+    urgentTasks = getActualUrgentTasks(gardenLog, forecastData, locationConfig);
+  } catch (error) {
+    console.error('Error in getActualUrgentTasks:', error);
+    return [];
+  }
   
   // Convert urgent tasks to critical timing windows format
   const windows = urgentTasks

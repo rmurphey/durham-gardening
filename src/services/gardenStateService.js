@@ -5,7 +5,6 @@
 
 import { 
   estimateHarvestDate, 
-  isPlantingReadyForHarvest,
   getDaysSincePlanting,
   PLANTING_STATUS 
 } from './gardenLog.js';
@@ -71,7 +70,7 @@ export const getActualHarvestReadiness = (gardenLog, forecastData = null) => {
  */
 export const getActualUrgentTasks = (gardenLog, forecastData = null, locationConfig = {}) => {
   const urgentTasks = [];
-  const today = new Date();
+  // today variable available but not used in current implementation
 
   // Check forecast for upcoming weather events
   const weatherThreats = analyzeWeatherThreats(forecastData);
