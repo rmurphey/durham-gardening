@@ -5,26 +5,59 @@
 ## 🎯 NEXT SESSION PRIORITIES
 
 ### **Learning Experiment Status** 
-**Current Phase**: Code quality and infrastructure maturity ✅
-**Budget Used**: ~$25-30 of $400-600 (excellent efficiency)
-**Key Gap Identified**: AI development workflow supervision requirements
+**Current Phase**: Maintainability & Technical Debt Reduction 🔧
+**Budget Used**: ~$30-35 of $400-600 (excellent efficiency)
+**Key Gap Identified**: Code complexity accumulation needs architectural discipline
 
-### **Recommended Next Areas**
-1. **User Experience Polish** (~$2-3) - Address any remaining UI/UX issues
-2. **Performance Optimization** (~$2-3) - Bundle size, load times, rendering efficiency  
-3. **Error Handling Refinement** (~$2-3) - Improve graceful degradation and user feedback
-4. **Mobile Responsiveness** (~$3-4) - Ensure garden planning works well on mobile devices
+**Maintainability Score**: 68/100 (Fair) - Needs improvement before feature expansion
 
-### **Quick Wins** (~$1-2 each)
-- Eliminate unused code cleanup
-- CSS refactoring into modules  
-- Design system updates review
-- Mobile responsiveness improvements
+## 🚨 CRITICAL MAINTAINABILITY PLAN
 
-### **Advanced Features** (~$5-8 each)
-- Season Extension Planning - Cold frames, row covers by zone
-- Companion Planting Integration - Zone-aware suggestions from database
-- Onboarding Flow - Guided setup for new users
+### **Phase 1: Code Quality Foundation** (~$4-6 total)
+**Target**: Reduce technical debt to sustainable levels
+
+**Week 1: Linting & Immediate Fixes** (~$1-2)
+- Fix critical ESLint warnings (target: 197 → 50 warnings)
+- Address unused variables and imports
+- Clean up code style inconsistencies
+
+**Week 2: Monolithic File Breakdown** (~$2-3)
+- Split config.js (1,576 lines) into domain modules:
+  - `config/climate.js` - Climate and weather constants
+  - `config/portfolio.js` - Investment and portfolio logic  
+  - `config/formatting.js` - Display formatting utilities
+  - `config/microclimate.js` - Microclimate calculations
+- Split simulationEngine.js (1,001 lines) into focused modules
+
+**Week 3: Test Coverage Critical Path** (~$1-2)
+- Add unit tests for high-risk, zero-coverage services:
+  - `enhancedWeatherIntegration.js` (0% → 60%)
+  - `forecastingEngine.js` (0% → 60%)
+  - `simulationEngine.js` (7.76% → 60%)
+
+### **Phase 2: Architectural Cleanup** (~$3-4 total)
+
+**Week 4: Service Decoupling** (~$2-3)
+- Implement dependency injection for databaseService
+- Extract responsibilities from databaseService.js god object
+- Define clear service boundaries and interfaces
+
+**Week 5: Configuration Consolidation** (~$1-2)
+- Centralize 6 scattered config files into coherent system
+- Create configuration validation and type checking
+- Document configuration architecture
+
+### **Success Metrics**
+- **File sizes**: Average <400 lines (currently many >800)
+- **Test coverage**: >50% overall (currently 32.73%)
+- **Linting warnings**: <20 (currently 197)
+- **Maintainability score**: >80 (currently 68)
+
+### **Previous Priorities** (Deferred until maintainability improved)
+- User Experience Polish - Deferred to Phase 3
+- Performance Optimization - Deferred to Phase 3  
+- Mobile Responsiveness - Deferred to Phase 3
+- Advanced Features - Blocked until technical debt reduced
 
 ## 💡 FUTURE ENHANCEMENT IDEAS
 
@@ -47,6 +80,14 @@
 ---
 
 ## ✅ Recent Completions
+
+**Repository Maintainability Assessment & Planning** - COMPLETED (~$1-2 actual)
+- Comprehensive maintainability analysis across 5 dimensions (code, architecture, docs, workflow, dependencies)
+- Overall score: 68/100 (Fair) - maintainable but requires effort
+- Identified critical issues: 197 ESLint warnings, 5 files >800 lines, 32.73% test coverage
+- Created /maintainability command for ongoing health monitoring
+- Developed 5-week technical debt reduction plan targeting 80+ maintainability score
+- Prioritized maintainability over new features to prevent complexity accumulation
 
 **AST-Based Architectural Refactoring** - COMPLETED (~$2-3 actual)
 - Eliminated static GLOBAL_CROP_DATABASE entirely using jscodeshift AST transformations

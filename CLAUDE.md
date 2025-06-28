@@ -72,6 +72,8 @@ Commands now properly stored in `.claude/commands/` directory:
 - `/version-tag [type]` - Interactive version tagging with package.json sync
 - `/learn <insight>` - Capture development insight to docs/LEARNINGS.md
 - `/docs [scope]` - Update all documentation (README, API docs, ACTIVE_WORK)
+- `/maintainability [scope]` - Evaluate repository maintainability across multiple dimensions
+- `/hygiene` - Check repository hygiene and development artifact cleanliness
 
 ## Key Constraints
 - Never commit without explicit request
