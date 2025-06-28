@@ -113,5 +113,10 @@
 **Pattern:** Systematic artifact categorization by type: logs (*.log, dev-server.log), test artifacts (coverage/, test-*.html), package files (package-lock.json), IDE files (.vscode/, .idea/), and OS files (Thumbs.db, *.tmp). Use `git rm --cached <file>` to untrack files when adding new ignore rules.
 **Impact:** Repository cleanliness dramatically improved - removed 21,800+ lines of development artifacts from tracking. Prevents diff noise, IDE conflicts, and focuses commits on intentional changes. Essential for AI development velocity where artifacts multiply quickly.
 
+## Claude-Centric Prevention vs Universal Automation (2025-06-28) - d428911
+**Insight:** When asked to "prevent" problems, Claude defaults to Claude-specific solutions (CLAUDE.md workflow rules, command documentation) rather than universal automation (git hooks, scripts, linters) that work regardless of development environment
+**Pattern:** Claude naturally creates prevention through configuration and documentation rather than standalone automation. This assumes all developers use Claude and follow Claude-defined workflows, which may not be realistic for team environments.
+**Impact:** Prevention measures only work within Claude ecosystem. Real prevention needs tool-agnostic automation: git hooks, package.json scripts, CI checks, linters. Claude solutions are documentation/training, not enforcement. Need to distinguish between "Claude workflow guidance" vs "universal project constraints."
+
 ---
 *Auto-updated when significant insights discovered during task completion*
