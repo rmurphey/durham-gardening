@@ -55,6 +55,13 @@ const useCloudSync = () => {
         setIsLoading(true);
         setError(null);
 
+        // Skip cloud sync in development to prevent hanging
+        if (process.env.NODE_ENV === 'development') {
+          setIsLoading(false);
+          setGardenId(urlGardenId || 'dev-garden');
+          return;
+        }
+
         // Validate garden ID from URL if provided
         if (urlGardenId && !isValidGardenId(urlGardenId)) {
           setError('Invalid garden ID format');
@@ -110,6 +117,11 @@ const useCloudSync = () => {
 
   // Update sync status from cloud persistence service
   useEffect(() => {
+    // Skip polling in development
+    if (process.env.NODE_ENV === 'development') {
+      return;
+    }
+
     const updateSyncStatus = () => {
       setIsSyncing(cloudPersistence.isSyncing());
       setLastSyncTime(cloudPersistence.getLastSyncTime());
@@ -118,8 +130,8 @@ const useCloudSync = () => {
     // Update immediately
     updateSyncStatus();
 
-    // Set up periodic updates
-    const interval = setInterval(updateSyncStatus, 1000);
+    // Set up periodic updates - reduced frequency
+    const interval = setInterval(updateSyncStatus, 10000); // 10 seconds instead of 1
 
     return () => clearInterval(interval);
   }, []);

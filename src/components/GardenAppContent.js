@@ -15,7 +15,7 @@ import Navigation from './Navigation.js';
 import GardenStateProvider, { useGardenAppState } from './GardenStateProvider.js';
 
 // Configuration Components
-import { generateUnifiedCalendar } from '../services/unifiedCalendarService.js';
+// Note: unifiedCalendarService is dynamically imported to avoid database initialization in development
 
 /**
  * Check if user is the creator of this garden
@@ -106,6 +106,8 @@ function GardenAppContentInner() {
   useEffect(() => {
     const loadGardenCalendar = async () => {
       try {
+        // Dynamic import to avoid database initialization in development
+        const { generateUnifiedCalendar } = await import('../services/unifiedCalendarService.js');
         const calendar = await generateUnifiedCalendar(
           selectedSummer, 
           selectedWinter, 

@@ -9,7 +9,13 @@ class DatabaseService {
   constructor() {
     this.db = null;
     this.isInitialized = false;
-    this.initializeDatabase();
+    this.initializationPromise = null;
+    
+    // Only initialize in constructor for production builds
+    // In development, use lazy loading to avoid dev server conflicts
+    if (process.env.NODE_ENV === 'production') {
+      this.initializeDatabase();
+    }
   }
 
   async initializeDatabase(forceReload = false) {

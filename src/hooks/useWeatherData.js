@@ -118,8 +118,11 @@ export const useWeatherData = (locationConfig, options = {}) => {
           newState[dataType] = result.value;
         } else {
           newState.errors.push(`${dataType}: ${result.reason.message}`);
-          // Keep previous data if available
-          newState[dataType] = weatherState[dataType];
+          // Use current state reference instead of dependency
+          setWeatherState(currentState => {
+            newState[dataType] = currentState[dataType];
+            return currentState;
+          });
         }
       });
 
@@ -138,10 +141,15 @@ export const useWeatherData = (locationConfig, options = {}) => {
         }));
       }
     }
-  }, [locationConfig, config, enableForecast, enableHistorical, enableGDD, enableFrostDates, weatherState]);
+  }, [locationConfig, config, enableForecast, enableHistorical, enableGDD, enableFrostDates]);
 
   // Auto-refresh functionality
   useEffect(() => {
+    // Skip auto-refresh in development to prevent background polling
+    if (process.env.NODE_ENV === 'development') {
+      return;
+    }
+
     if (autoRefresh && config?.hasBasicWeather && locationConfig?.lat && locationConfig?.lon) {
       // Initial fetch
       fetchWeatherData(true);

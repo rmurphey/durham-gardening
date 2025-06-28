@@ -61,13 +61,20 @@ export class CloudPersistenceService {
       this.syncInProgress = true;
       this.notifySyncListeners({ type: 'sync_start', operation: 'save' });
 
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
       const response = await fetch(`/api/garden/${this.gardenId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(gardenData),
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const error = await response.json();
@@ -87,10 +94,12 @@ export class CloudPersistenceService {
 
     } catch (error) {
       console.error('Failed to save to cloud:', error);
+      // Don't treat timeouts or network errors as critical failures in development
+      const errorMessage = error.name === 'AbortError' ? 'Request timeout' : error.message;
       this.notifySyncListeners({ 
         type: 'sync_error', 
         operation: 'save',
-        error: error.message
+        error: errorMessage
       });
       return false;
     } finally {
@@ -111,7 +120,15 @@ export class CloudPersistenceService {
       this.syncInProgress = true;
       this.notifySyncListeners({ type: 'sync_start', operation: 'load' });
 
-      const response = await fetch(`/api/garden/${this.gardenId}`);
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      const response = await fetch(`/api/garden/${this.gardenId}`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
 
       if (response.status === 404) {
         // Garden not found - this is okay for new gardens
@@ -138,10 +155,12 @@ export class CloudPersistenceService {
 
     } catch (error) {
       console.error('Failed to load from cloud:', error);
+      // Don't treat timeouts or network errors as critical failures in development
+      const errorMessage = error.name === 'AbortError' ? 'Request timeout' : error.message;
       this.notifySyncListeners({ 
         type: 'sync_error', 
         operation: 'load',
-        error: error.message
+        error: errorMessage
       });
       return null;
     } finally {
