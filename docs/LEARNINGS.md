@@ -123,5 +123,10 @@
 **Pattern:** When replacing functions with error-throwing stubs, use function declarations (`function name() { throw ... }`) not IIFEs (`(() => { throw ... })()`). IIFEs execute immediately when module loads, breaking the entire application. Function declarations only execute when explicitly called.
 **Impact:** Critical difference between compile-time and runtime execution. AST codemods need to consider execution timing, not just syntax validity. Module-level errors break entire dependency chains, while function-level errors only break specific code paths. Always test generated code execution flow, not just syntax correctness.
 
+## Prevention System Failures Require Root Cause Analysis (2025-06-28) - 6cf4133
+**Insight:** 197 ESLint warnings accumulating indicates prevention system failure, not just technical debt - the commit process should have blocked this accumulation entirely
+**Pattern:** When quality metrics degrade significantly (197 warnings), investigate prevention gaps rather than just planning cleanup. Pre-commit hooks must enforce zero-tolerance for new warnings (`--max-warnings 0`), not just check for artifacts. Prevention systems need multiple layers: workflow documentation + automated enforcement + feedback loops.
+**Impact:** Proactive prevention is exponentially more effective than reactive cleanup. 197 warnings = prevention system design flaw, not implementation flaw. Enhanced pre-commit hook now blocks ANY ESLint warnings in staged files, ensuring quality metrics can only improve, never degrade. Root cause analysis prevents systemic quality decay.
+
 ---
 *Auto-updated when significant insights discovered during task completion*
