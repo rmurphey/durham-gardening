@@ -2,6 +2,12 @@
 
 Personal journal documenting the evolution of a garden planning application from concept to continental US coverage.
 
+## Documentation Organization (2025-06-28)
+**Change:** Moved project documentation from root directory to `/docs/` for better organization
+**Files Moved:** ACTIVE_WORK.md, AI_WORKFLOW_INSIGHTS.md, DATABASE_ARCHITECTURE.md, DEPLOYMENT.md, IDEAS.md, LEARNINGS.md, PROJECT_HISTORY.md, TEST_COVERAGE_PLAN.md
+**Rationale:** Keep root directory clean with only essential files (CLAUDE.md, README.md), while preserving comprehensive development documentation in dedicated location
+**Impact:** Improved repository navigation and clearer separation between code and documentation
+
 ## Project Journey
 Started with simple Durham garden recommendations, evolved into a comprehensive continental US garden planning application with weather forecasting and Monte Carlo simulation.
 

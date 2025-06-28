@@ -12,9 +12,9 @@ Learning experiment about Claude Code workflows ($400-600 budget). Extract concr
 ## Auto-Documentation Triggers
 
 ### ALWAYS: After completing any task
-1. **Check ACTIVE_WORK.md** - mark completed, add any blockers discovered
+1. **Check docs/ACTIVE_WORK.md** - mark completed, add any blockers discovered
 2. **Update README.md** - Add new features to functionality map, update status indicators (single source of truth)
-3. **If significant insight discovered** → add to LEARNINGS.md using template:
+3. **If significant insight discovered** → add to docs/LEARNINGS.md using template:
    ```
    ## [Task] ([Date])
    **Insight:** [What saves time/changes approach]
@@ -25,11 +25,11 @@ Learning experiment about Claude Code workflows ($400-600 budget). Extract concr
 
 ### WEEKLY: When user uses `_reflect` command
 1. **Auto-prompt**: "Development insights from this week?"
-2. **Add to AI_WORKFLOW_INSIGHTS.md** with timestamp
-3. **Update ACTIVE_WORK.md** with next session priorities
+2. **Add to docs/AI_WORKFLOW_INSIGHTS.md** with timestamp
+3. **Update docs/ACTIVE_WORK.md** with next session priorities
 
 ### CRITICAL: Before major decisions
-1. **Check LEARNINGS.md** for relevant patterns
+1. **Check docs/LEARNINGS.md** for relevant patterns
 2. **Estimate cost** based on previous similar work
 3. **Mention if approach contradicts** established patterns
 
@@ -37,7 +37,7 @@ Within reason, minimize irrigation needs.
 
 ## Available Commands
 Commands now properly stored in `.claude/commands/` directory:
-- `/todo <item>` - Quick capture to ACTIVE_WORK.md
+- `/todo <item>` - Quick capture to docs/ACTIVE_WORK.md
 - `/idea <item>` - Add exploration idea
 - `/next` - Analyze priorities and recommend next task
 - `/reflect` - Weekly insights update
