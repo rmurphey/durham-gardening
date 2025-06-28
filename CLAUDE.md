@@ -23,6 +23,33 @@ Learning experiment about Claude Code workflows ($400-600 budget). Extract concr
    ```
 4. **Commit with learning** if documentation updated
 
+### API Documentation Maintenance
+**CRITICAL: Update API docs when modifying database services**
+
+**Triggers for docs/DATABASE_API.md updates:**
+- Adding new methods to DatabaseService, CropDataService, or related services
+- Changing method signatures (parameters, return types)
+- Modifying parameter validation or error handling
+- Adding new template placeholder patterns
+- Changing fallback behavior or error conditions
+
+**Process:**
+1. **Before coding**: Check existing API docs to understand current patterns
+2. **During development**: Add JSDoc comments to new/modified methods
+3. **After completion**: Update docs/DATABASE_API.md with:
+   - New method documentation
+   - Updated parameter descriptions
+   - Changed return value specifications
+   - Modified error conditions or fallback behavior
+4. **Testing**: Verify documentation matches implementation
+5. **Commit**: Include API doc updates in same commit as implementation changes
+
+**Documentation Standards:**
+- All public methods must have complete JSDoc comments
+- Parameter types, return types, and error conditions documented
+- Example usage for complex methods
+- Clear distinction between database and fallback behavior
+
 ### WEEKLY: When user uses `_reflect` command
 1. **Auto-prompt**: "Development insights from this week?"
 2. **Add to docs/LEARNINGS.md** with timestamp

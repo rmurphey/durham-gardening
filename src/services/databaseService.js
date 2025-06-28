@@ -82,6 +82,8 @@ class DatabaseService {
   
   /**
    * Force reload of database (for cache-busting)
+   * @returns {Promise<void>}
+   * @throws {Error} If database reload fails
    */
   async reloadDatabase() {
     this.isInitialized = false;
@@ -89,6 +91,10 @@ class DatabaseService {
     await this.initializeDatabase(true);
   }
 
+  /**
+   * Wait for database initialization to complete
+   * @returns {Promise<void>}
+   */
   async waitForInitialization() {
     // Wait for database to be initialized
     while (!this.isInitialized && !this.fallbackData) {
@@ -639,9 +645,10 @@ class DatabaseService {
 
   /**
    * CRITICAL VALIDATION: Prevents ANY placeholder from reaching UI
-   * @param {string} text - Text to validate
+   * Zero tolerance policy - throws error if any {placeholder} pattern found
+   * @param {string} text - Text to validate for placeholder patterns
    * @returns {string} Validated text with NO placeholders
-   * @throws {Error} If placeholders are found
+   * @throws {Error} If placeholders are found with pattern details
    */
   validateNoPlaceholders(text) {
     const placeholderPattern = /\{[^}]+\}/g;
@@ -658,8 +665,15 @@ class DatabaseService {
 
   /**
    * Process timing template text to replace placeholders
-   * @param {Object} template - Activity template
+   * Handles all database placeholder patterns with intelligent fallbacks
+   * @param {Object} template - Activity template from database
+   * @param {string} template.timing_template - Template text with placeholders
+   * @param {Array} [template.variety_suggestions] - Recommended varieties
+   * @param {Array} [template.supplier_preferences] - Preferred suppliers
+   * @param {Object} [template.bed_requirements] - Bed size and layout data
+   * @param {string} [template.bed_size_requirements] - JSON bed data from database
    * @returns {string} Timing text - GUARANTEED NO PLACEHOLDERS
+   * @throws {Error} If any placeholder remains after processing
    */
   generateTimingText(template) {
     let timing = template.timing_template || '';
@@ -758,9 +772,19 @@ class DatabaseService {
   }
 
   /**
-   * Generate action text from template
+   * Generate action text from template with comprehensive placeholder replacement
+   * Supports both function templates (fallback data) and string templates (database)
    * @param {Object} template - Activity template
+   * @param {string|function} template.action_template - Template text or function
+   * @param {Array} [template.variety_suggestions] - Recommended varieties
+   * @param {Array} [template.supplier_preferences] - Preferred suppliers
+   * @param {Object} [template.bed_requirements] - Bed configuration
+   * @param {string} [template.bed_size_requirements] - JSON bed data
+   * @param {number} [template.estimated_cost_min] - Minimum cost
+   * @param {number} [template.estimated_cost_max] - Maximum cost
+   * @param {string} [template.activity_type] - Activity type for cost display
    * @returns {string} Action text - GUARANTEED NO PLACEHOLDERS
+   * @throws {Error} If any placeholder remains after processing
    */
   generateActionText(template) {
     // If action_template is a function (JavaScript template literal)
@@ -901,9 +925,14 @@ class DatabaseService {
 
 
   /**
-   * Get garden beds for a specific garden
-   * @param {number} gardenId - Garden ID
-   * @returns {Promise<Array>} Garden beds
+   * Get predefined garden bed configurations
+   * @param {number} [gardenId=1] - Garden identifier (currently unused)
+   * @returns {Promise<Array<Object>>} Garden bed definitions
+   * @property {number} id - Bed identifier
+   * @property {string} name - Display name (e.g., '4×8 Bed')
+   * @property {number} length - Length in feet
+   * @property {number} width - Width in feet  
+   * @property {number} area - Area in square feet
    */
   async getGardenBeds(gardenId = 1) {
     return [

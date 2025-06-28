@@ -13,8 +13,11 @@ class CropDataService {
   }
 
   /**
-   * Get all crop data, loading from database on first call
+   * Get all crop data, loading from database on first call with caching
    * @returns {Promise<Object>} Crop database organized by category
+   * @property {Object} heatTolerant - Heat-tolerant crops
+   * @property {Object} coolSeason - Cool-season crops
+   * @property {Object} perennials - Perennial crops
    */
   async getCropDatabase() {
     if (this.cropData) {
@@ -37,17 +40,28 @@ class CropDataService {
   }
 
   /**
-   * Load crop data from database with static fallback
-   * @returns {Promise<Object>} Crop database
+   * Load crop data from database with timeout protection and static fallback
+   * @returns {Promise<Object>} Crop database from database or static config
+   * @throws {Error} Timeout after 10 seconds, triggers fallback
    */
   async loadCropData() {
     try {
       console.log('Loading crop data from database...');
-      const cropData = await databaseService.getAllCropsFromDatabase();
+      
+      // Add timeout protection for development environments
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database load timeout after 10 seconds')), 10000)
+      );
+      
+      const cropData = await Promise.race([
+        databaseService.getAllCropsFromDatabase(),
+        timeoutPromise
+      ]);
+      
       console.log('Successfully loaded crop data from database');
       return cropData;
     } catch (error) {
-      console.error('Failed to load crop data from database, using static fallback:', error);
+      console.warn('Database load failed or timed out, using static fallback:', error.message);
       // Fallback to static data
       const { GLOBAL_CROP_DATABASE } = await import('../config.js');
       return GLOBAL_CROP_DATABASE;
@@ -55,9 +69,9 @@ class CropDataService {
   }
 
   /**
-   * Get crops by category
-   * @param {string} category - Category: heatTolerant, coolSeason, perennials
-   * @returns {Promise<Object>} Crops in the specified category
+   * Get crops filtered by category
+   * @param {string} category - Category: 'heatTolerant', 'coolSeason', 'perennials'
+   * @returns {Promise<Object>} Crops in the specified category, empty object if invalid
    */
   async getCropsByCategory(category) {
     const cropDb = await this.getCropDatabase();
@@ -65,9 +79,11 @@ class CropDataService {
   }
 
   /**
-   * Get a specific crop by key
-   * @param {string} cropKey - Crop identifier
-   * @returns {Promise<Object|null>} Crop data or null if not found
+   * Get specific crop data with category information
+   * @param {string} cropKey - Crop identifier (e.g., 'kale', 'hot_peppers')
+   * @returns {Promise<Object|null>} Crop data with category and plantKey, null if not found
+   * @property {string} category - Source category
+   * @property {string} plantKey - Original crop key
    */
   async getCrop(cropKey) {
     const cropDb = await this.getCropDatabase();
@@ -104,9 +120,12 @@ class CropDataService {
   }
 
   /**
-   * Filter crops by hardiness zone
-   * @param {string} hardinessZone - USDA hardiness zone (e.g., '7b')
-   * @returns {Promise<Object>} Filtered crop database
+   * Filter entire crop database by hardiness zone suitability
+   * @param {string} hardinessZone - USDA hardiness zone (e.g., '7b', '9a')
+   * @returns {Promise<Object>} Filtered crop database with same structure
+   * @property {Object} heatTolerant - Zone-suitable heat-tolerant crops
+   * @property {Object} coolSeason - Zone-suitable cool-season crops
+   * @property {Object} perennials - Zone-suitable perennial crops
    */
   async getCropsByZone(hardinessZone) {
     const cropDb = await this.getCropDatabase();
