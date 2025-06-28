@@ -136,11 +136,13 @@ describe('PurchaseWindowPanel', () => {
       expect(screen.getByText('🔵 Soon')).toBeInTheDocument();
     });
 
-    test('applies correct CSS classes based on status', () => {
-      const { container } = render(<PurchaseWindowPanel {...defaultProps} />);
+    test('displays correct status indicator based on current timing', () => {
+      render(<PurchaseWindowPanel {...defaultProps} />);
       
-      const panel = container.querySelector('.purchase-window-panel');
-      expect(panel).toHaveClass('status-active');
+      // Test user-visible status indicators instead of CSS classes
+      // Since defaultProps.window.name includes 'Winter' and we're testing in December-February range
+      // the status should be 'active' showing "🟢 Now"
+      expect(screen.getByText('🟢 Now')).toBeInTheDocument();
     });
   });
 

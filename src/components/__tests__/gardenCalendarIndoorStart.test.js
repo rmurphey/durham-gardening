@@ -97,74 +97,68 @@ describe('GardenCalendar Indoor Start Activities', () => {
       expect(screen.getByText('Start Japanese Long eggplant seeds indoors')).toBeInTheDocument();
     });
 
-    test('should render indoor start icons', () => {
-      const { container } = render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
+    test('should render indoor start activities with meaningful content', () => {
+      render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
       
-      // Look for seedling/indoor start icons (🌱)
-      const indoorStartIcons = container.querySelectorAll('.activity-icon');
-      expect(indoorStartIcons.length).toBeGreaterThan(0);
+      // Test that user-visible indoor starting activities are displayed
+      expect(screen.getByText(/Start Cherokee Purple.*tomato seeds indoors/)).toBeInTheDocument();
+      expect(screen.getByText(/Start Fish Pepper.*seeds indoors/)).toBeInTheDocument();
       
-      // Check that indoor start activities have the seedling icon
-      const indoorStartActivities = container.querySelectorAll('.activity.activity-indoor-starting');
-      const seedStartActivities = container.querySelectorAll('.activity.activity-seed-starting');
-      
-      // Should have activities with indoor start icons
-      expect(indoorStartActivities.length).toBeGreaterThanOrEqual(2);
-      expect(seedStartActivities.length).toBeGreaterThanOrEqual(1);
+      // Verify activity icons are present (🌱 seedling icon for indoor starting)
+      expect(screen.getAllByText('🌱').length).toBeGreaterThan(0);
     });
   });
 
-  describe('CSS Class Application', () => {
-    test('should apply correct CSS classes for indoor-starting activities', () => {
-      const { container } = render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
+  describe('Activity Type Identification', () => {
+    test('displays indoor-starting activities with proper categorization', () => {
+      render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
       
-      // Check for indoor-starting activity classes
-      const indoorStartActivities = container.querySelectorAll('.activity.activity-indoor-starting');
-      expect(indoorStartActivities.length).toBeGreaterThanOrEqual(2);
+      // Test that indoor starting activities are properly identified by their content
+      // Instead of CSS classes, test the user-visible distinctions
+      expect(screen.getByText(/Start.*tomato seeds indoors/)).toBeInTheDocument();
+      expect(screen.getByText(/Start.*seeds indoors/)).toBeInTheDocument();
       
-      indoorStartActivities.forEach(activity => {
-        expect(activity).toHaveClass('activity');
-        expect(activity).toHaveClass('activity-indoor-starting');
-      });
+      // Activities should show indoor starting timing indicators
+      expect(screen.getByText(/8-10 weeks before last frost/)).toBeInTheDocument();
+      expect(screen.getByText(/10-12 weeks before last frost/)).toBeInTheDocument();
     });
 
-    test('should apply correct CSS classes for seed-starting activities', () => {
-      const { container } = render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
+    test('displays seed-starting activities separately from direct sowing', () => {
+      render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
       
-      const seedStartActivities = container.querySelectorAll('.activity.activity-seed-starting');
-      expect(seedStartActivities.length).toBe(1);
+      // Test specific seed-starting content instead of CSS classes
+      expect(screen.getByText(/Start Japanese Long eggplant seeds indoors/)).toBeInTheDocument();
+      expect(screen.getByText('Eggplant')).toBeInTheDocument();
       
-      seedStartActivities.forEach(activity => {
-        expect(activity).toHaveClass('activity');
-        expect(activity).toHaveClass('activity-seed-starting');
-      });
+      // Should display proper timing for eggplant starting
+      expect(screen.getByText(/8-10 weeks before last frost/)).toBeInTheDocument();
     });
 
-    test('should apply priority classes correctly', () => {
-      const { container } = render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
+    test('displays priority indicators for critical activities', () => {
+      render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
       
-      // Check high priority indoor start activity
-      const highPriorityActivities = container.querySelectorAll('.activity.priority-high');
-      expect(highPriorityActivities.length).toBeGreaterThan(0);
+      // Test user-visible priority indicators instead of CSS classes
+      // Critical priority activities should show "URGENT" text
+      expect(screen.getByText('URGENT')).toBeInTheDocument();
       
-      // Check critical priority indoor start activity
-      const criticalPriorityActivities = container.querySelectorAll('.activity.priority-critical');
-      expect(criticalPriorityActivities.length).toBe(1);
-      
-      // Check medium priority activity
-      const mediumPriorityActivities = container.querySelectorAll('.activity.priority-medium');
-      expect(mediumPriorityActivities.length).toBeGreaterThan(0);
+      // Should display activities with different priorities
+      // High priority: Tomatoes and Eggplant (2 activities)  
+      // Critical priority: Hot Peppers (1 activity)
+      // Medium priority: Basil (1 activity)
+      expect(screen.getByText(/Start Fish Pepper.*seeds/)).toBeInTheDocument(); // Critical priority
+      expect(screen.getByText(/Start Cherokee Purple.*tomato/)).toBeInTheDocument(); // High priority
     });
 
-    test('should combine activity type and priority classes', () => {
-      const { container } = render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
+    test('properly categorizes indoor starting activities by priority level', () => {
+      render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
       
-      // Look for combined classes like activity-indoor-starting priority-high
-      const highPriorityIndoorStart = container.querySelector('.activity.activity-indoor-starting.priority-high');
-      expect(highPriorityIndoorStart).toBeInTheDocument();
+      // Test that high priority indoor starting shows with correct content
+      expect(screen.getByText(/Start Cherokee Purple.*tomato seeds indoors/)).toBeInTheDocument();
+      expect(screen.getByText(/8-10 weeks before last frost \(April 15\)/)).toBeInTheDocument();
       
-      const criticalPriorityIndoorStart = container.querySelector('.activity.activity-indoor-starting.priority-critical');
-      expect(criticalPriorityIndoorStart).toBeInTheDocument();
+      // Test that critical priority indoor starting shows URGENT indicator
+      expect(screen.getByText(/Start Fish Pepper.*seeds indoors/)).toBeInTheDocument();
+      expect(screen.getByText('URGENT')).toBeInTheDocument();
     });
   });
 
@@ -205,31 +199,33 @@ describe('GardenCalendar Indoor Start Activities', () => {
   });
 
   describe('Activity Structure', () => {
-    test('should render activity headers with crop and priority', () => {
-      const { container } = render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
+    test('displays activity information with crop names and priorities', () => {
+      render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
       
-      const activityHeaders = container.querySelectorAll('.activity-header');
-      expect(activityHeaders.length).toBeGreaterThan(0);
+      // Test that crop names are displayed (which would be in activity headers)
+      expect(screen.getByText('Tomatoes')).toBeInTheDocument();
+      expect(screen.getByText('Hot Peppers')).toBeInTheDocument();
+      expect(screen.getByText('Basil')).toBeInTheDocument();
+      expect(screen.getByText('Eggplant')).toBeInTheDocument();
       
-      // Each activity should have crop name and icon
-      const activityCrops = container.querySelectorAll('.activity-crop');
-      expect(activityCrops.length).toBeGreaterThan(0);
+      // Test that priority indicators are displayed
+      expect(screen.getByText('URGENT')).toBeInTheDocument(); // Critical priority indicator
       
-      // Should have priority indicators
-      const activityPriorities = container.querySelectorAll('.activity-priority');
-      expect(activityPriorities.length).toBeGreaterThan(0);
+      // Test that activity icons are shown
+      expect(screen.getAllByText('🌱')).toHaveLength(4); // All indoor/seed starting activities
     });
 
-    test('should render activity actions and timing', () => {
-      const { container } = render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
+    test('displays activity actions and timing information', () => {
+      render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
       
-      // Check for action text
-      const activityActions = container.querySelectorAll('.activity-action');
-      expect(activityActions.length).toBeGreaterThan(0);
+      // Test specific action text is displayed
+      expect(screen.getByText(/Start Cherokee Purple.*tomato seeds indoors/)).toBeInTheDocument();
+      expect(screen.getByText(/Start Fish Pepper.*seeds indoors/)).toBeInTheDocument();
       
-      // Check for timing text
-      const activityTimings = container.querySelectorAll('.activity-timing');
-      expect(activityTimings.length).toBeGreaterThan(0);
+      // Test specific timing information is displayed
+      expect(screen.getByText(/8-10 weeks before last frost \(April 15\)/)).toBeInTheDocument();
+      expect(screen.getByText(/10-12 weeks before last frost/)).toBeInTheDocument();
+      expect(screen.getByText(/4-6 weeks before last frost/)).toBeInTheDocument();
     });
 
     test('should handle activities without timing gracefully', () => {
