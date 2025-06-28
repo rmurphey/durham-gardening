@@ -1,44 +1,55 @@
-# Deployment Guide - Durham Garden Planner
+# Deployment Guide - GardenSim
 
-## Recommended Platform: Vercel
+## Deployment Platform: Vercel
 
-We recommend **Vercel** for deploying this garden planning application for the following reasons:
+GardenSim is deployed on **Vercel** and designed specifically for this platform:
 
-### Why Vercel?
+### Why Vercel Works Well for GardenSim:
 - **Superior WebAssembly support** for our SQLite database integration
-- **Edge Functions** for weather API proxying and caching
+- **Serverless functions** for weather API proxying and cloud garden storage
 - **Excellent build performance** for data-heavy applications
-- **Built-in analytics** to track forecast API usage
-- **Generous free tier** perfect for OSS projects
+- **Built-in blob storage** for cloud garden sharing
+- **Edge deployment** for fast global access
 
-## Quick Deploy to Vercel
+## Current Deployment
 
-### 1. One-Click Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/durham-garden-planner)
+The application is already deployed and configured on Vercel. For development and maintenance:
 
-### 2. Manual Deployment
-
+### Local Development with Vercel
 ```bash
-# Install Vercel CLI
-npm i -g vercel
+# Use Vercel dev server (required for API routes)
+npm run dev:vercel
 
-# Deploy from your local repository
-git clone https://github.com/your-username/durham-garden-planner
-cd durham-garden-planner/apps/climate-garden-sim
-npm install
-npm run deploy
+# Alternative: use start-dev.sh script
+./start-dev.sh
+```
+
+### Deploying Changes
+```bash
+# Automatic deployment via GitHub integration
+git push origin main  # Triggers automatic Vercel deployment
+
+# Manual deployment (if needed)
+vercel --prod
 ```
 
 ## Configuration
 
-### Environment Variables (Optional)
+### Environment Variables
 
-The app works perfectly without any API keys using the National Weather Service, but you can enhance forecasting with:
+Required and optional environment variables in Vercel dashboard:
 
 ```bash
-# In Vercel dashboard > Settings > Environment Variables
-OPENWEATHERMAP_API_KEY=your_key_here  # Optional: Enhanced weather data
-WEATHERAPI_API_KEY=your_key_here      # Optional: Extended forecasts
+# Required for cloud garden sharing
+BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
+
+# Required for weather integration (free)
+REACT_APP_USE_WEATHER_GOV=true
+
+# Optional: Enhanced weather data
+REACT_APP_WEATHER_API_KEY=your_weatherapi_key    # WeatherAPI.com free tier
+REACT_APP_OPENWEATHER_API_KEY=your_openweather_key  # OpenWeatherMap
+REACT_APP_NOAA_CDO_TOKEN=your_noaa_token         # NOAA historical data
 ```
 
 ### Build Settings
@@ -60,43 +71,27 @@ Vercel will auto-detect the React app, but you can configure:
 2. Add your custom domain
 3. Configure DNS records as shown
 
-## Alternative Platforms
+## Architecture Requirements
 
-### Netlify
-Good alternative with similar features:
+GardenSim requires specific platform capabilities:
 
-```bash
-# Deploy to Netlify
-npm install -g netlify-cli
-npm run build
-netlify deploy --prod --dir=build
-```
+### Required Features
+- **Serverless Functions**: For weather API proxying and cloud storage
+- **Blob Storage**: For cloud garden sharing functionality  
+- **WebAssembly Support**: For SQLite database in browser
+- **Environment Variables**: For API key management
+- **Automatic Deployment**: GitHub integration for CI/CD
 
-**Netlify considerations:**
-- No Edge Functions (weather API proxying more complex)
-- Build time limits may affect large database builds
-- Slightly less optimal WebAssembly performance
+### Alternative Platforms
 
-### GitHub Pages
-Budget option for basic hosting:
+**Note**: While other platforms are possible, they would require significant architecture changes:
 
-```bash
-# Add to package.json
-"homepage": "https://yourusername.github.io/durham-garden-planner"
+- **Netlify**: Would need alternative cloud storage solution
+- **GitHub Pages**: Cannot support serverless functions or cloud features
+- **Railway/Render**: Overkill for this static app
+- **AWS S3/CloudFront**: Would need Lambda functions for API proxying
 
-# Deploy
-npm install --save-dev gh-pages
-npm run build
-npx gh-pages -d build
-```
-
-**GitHub Pages limitations:**
-- No server-side functionality
-- No custom headers for optimal caching
-- Manual deployment process
-
-### Railway/Render
-Overkill for this static app, but options if you need backend features.
+Vercel provides the complete stack needed for GardenSim's features out of the box.
 
 ## Performance Optimizations
 
@@ -255,9 +250,9 @@ npm run build     # Retry build
 - Verify environment variables are set correctly
 
 ### Getting Help
-- Check [GitHub Issues](https://github.com/your-username/durham-garden-planner/issues)
 - Vercel documentation: [vercel.com/docs](https://vercel.com/docs)
 - Weather API documentation linked in code comments
+- Check dev-server.log for local development issues
 
 ## Contributing to Deployment
 
@@ -276,4 +271,4 @@ npm run build     # Retry build
 - Rate limiting improvements
 - Caching optimizations
 
-The deployment is designed to be as simple and cost-effective as possible while providing a robust, scalable platform for the garden planning application.
+GardenSim's Vercel deployment provides a robust, scalable platform with minimal configuration required. The current setup supports all features including weather integration, database functionality, and cloud garden sharing.
