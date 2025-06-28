@@ -108,5 +108,10 @@
 **Pattern:** Template-driven research and batch operations dramatically more efficient than assumed. Context reuse and structured approaches reduce overhead
 **Impact:** Cost anxiety was blocking valuable work - can attempt much more ambitious features within budget. Learning-first approach more cost-effective than feature optimization
 
+## Repository Hygiene in AI Development (2025-06-28) - 6f33f32
+**Insight:** AI-assisted development generates artifacts much faster than traditional development - logs, test files, coverage reports, and package files accumulate rapidly and need proactive .gitignore management
+**Pattern:** Systematic artifact categorization by type: logs (*.log, dev-server.log), test artifacts (coverage/, test-*.html), package files (package-lock.json), IDE files (.vscode/, .idea/), and OS files (Thumbs.db, *.tmp). Use `git rm --cached <file>` to untrack files when adding new ignore rules.
+**Impact:** Repository cleanliness dramatically improved - removed 21,800+ lines of development artifacts from tracking. Prevents diff noise, IDE conflicts, and focuses commits on intentional changes. Essential for AI development velocity where artifacts multiply quickly.
+
 ---
 *Auto-updated when significant insights discovered during task completion*

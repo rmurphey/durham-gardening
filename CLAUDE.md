@@ -87,7 +87,15 @@ Commands now properly stored in `.claude/commands/` directory:
 3. **Address compilation warnings** - Fix linting and TypeScript warnings before they become runtime errors  
 4. **Be proactive about error detection** - Find and fix issues before the user encounters them
 
-These steps prevent the user from discovering errors that Claude should have caught during development.
+**BEFORE any commit:**
+5. **Repository hygiene check** - Run `git status` and verify no development artifacts are staged:
+   - No `*.log` files (dev-server.log, server.log, etc.)
+   - No `test-*.html` or coverage files 
+   - No `package-lock.json` unless intentionally updating dependencies
+   - No IDE files (.vscode/, .idea/) or OS files (Thumbs.db, .DS_Store)
+6. **Use `git add` selectively** - Never use `git add .` or `git add -A` without reviewing what's being added
+
+These steps prevent the user from discovering errors that Claude should have caught during development and keep the repository clean.
 
 ## AI-Assisted Development Constraints
 
@@ -109,6 +117,9 @@ These steps prevent the user from discovering errors that Claude should have cau
 
 ## Commit Guidelines
 - IMPORTANT: make small commits, no more than 100 lines each, unless you have no other options
+- **Repository hygiene**: Always check `git status` before committing to ensure no development artifacts are included
+- **Selective staging**: Use `git add <specific-files>` instead of `git add .` to avoid accidentally staging ignored files
+- **Pre-commit verification**: Verify staged files with `git diff --cached --name-only` before committing
 
 ## Version Management
 **CRITICAL: Keep package.json version in sync with git tags**
