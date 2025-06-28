@@ -106,3 +106,19 @@ These steps prevent the user from discovering errors that Claude should have cau
 
 ## Commit Guidelines
 - IMPORTANT: make small commits, no more than 100 lines each, unless you have no other options
+
+## Version Management
+**CRITICAL: Keep package.json version in sync with git tags**
+
+**Process for creating new versions:**
+1. **Update package.json version** to match intended tag (e.g., "1.0.0")
+2. **Commit version update** with message: "Bump version to vX.Y.Z"
+3. **Create git tag** with same version: `git tag vX.Y.Z`
+4. **Push both** commit and tag: `git push origin main && git push origin vX.Y.Z`
+
+**Version numbering:**
+- **Major (X.0.0)**: Breaking changes, new architecture
+- **Minor (1.X.0)**: New features, significant enhancements
+- **Patch (1.0.X)**: Bug fixes, documentation updates, small improvements
+
+**Automation requirement:** Always update package.json version before creating git tags

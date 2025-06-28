@@ -1,6 +1,6 @@
 {
   "name": "climate-garden-sim",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@vercel/blob": "^1.1.1",
@@ -16,30 +16,41 @@
     "sql.js": "^1.13.0"
   },
   "scripts": {
+    "// Development Commands": "======================================",
     "start": "FAST_REFRESH=true craco start",
     "dev": "npm run dev:react",
     "dev:vercel": "vercel dev",
     "dev:react": "nodemon --exec 'FAST_REFRESH=true craco start' --watch src --watch public --ext js,jsx,ts,tsx,css,html",
     "dev:quiet": "ESLINT_NO_DEV_ERRORS=true FAST_REFRESH=true nodemon --exec 'craco start' --watch src --watch public --ext js,jsx,ts,tsx,css,html --ignore 'src/**/*.test.js'",
     "dev:bg": "nohup npm run dev > /tmp/dev-server.log 2>&1 &",
+    
+    "// Build & Test Commands": "===================================",
     "build": "craco build",
     "test": "craco test",
     "test:db": "jest scripts/__tests__/database-manager.test.js",
+    "test:interfaces": "npm test -- --testPathPattern='interface-validation' --watchAll=false",
     "eject": "react-scripts eject",
+    
+    "// Code Quality Commands": "=================================",
     "lint": "eslint src --ext .js,.jsx",
     "lint:fix": "eslint src --ext .js,.jsx --fix",
     "lint:changed": "git diff --name-only --cached | grep '\\.jsx\\?$' | xargs eslint",
     "lint:changed:fix": "git diff --name-only --cached | grep '\\.jsx\\?$' | xargs eslint --fix",
+    
+    "// Database Commands": "======================================",
     "db:build": "node scripts/database.js build",
     "db:test": "node scripts/database.js test",
     "db:verify": "node scripts/database.js verify",
     "db:update": "node scripts/database.js update",
     "db:status": "node scripts/database.js status",
+    
+    "// Quality Checks": "========================================",
     "check:syntax": "node scripts/quick-syntax-check.js",
     "check:react": "node scripts/react-compilation-check.js",
     "check:compilation": "node scripts/check-compilation.js",
     "precommit": "npm run check:react && npm run test:interfaces && npm run db:verify",
-    "test:interfaces": "npm test -- --testPathPattern='interface-validation' --watchAll=false",
+    
+    "// Deployment Commands": "===================================",
     "vercel": "vercel",
     "vercel:dev": "vercel dev",
     "vercel:build": "npm run db:build && npm run build",
