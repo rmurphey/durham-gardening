@@ -7,12 +7,12 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import EnhancedPlantRecommendations from '../EnhancedPlantRecommendations.js';
 
+import { getEnhancedLocationRecommendations } from '../../services/enhancedLocationRecommendations.js';
+
 // Mock the enhanced location recommendations service
 jest.mock('../../services/enhancedLocationRecommendations.js', () => ({
   getEnhancedLocationRecommendations: jest.fn()
 }));
-
-import { getEnhancedLocationRecommendations } from '../../services/enhancedLocationRecommendations.js';
 
 describe('EnhancedPlantRecommendations', () => {
   const mockLocationConfig = {

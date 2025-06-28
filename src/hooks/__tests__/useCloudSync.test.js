@@ -65,7 +65,7 @@ describe('useCloudSync', () => {
     useParams.mockReturnValue({});
     mockCloudPersistence.initialize.mockResolvedValue('generated-id');
 
-    const { result } = renderHook(() => useCloudSync());
+    renderHook(() => useCloudSync());
 
     await waitFor(() => {
       expect(mockCloudPersistence.initialize).toHaveBeenCalledWith(undefined);

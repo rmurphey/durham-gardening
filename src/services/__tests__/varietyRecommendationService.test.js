@@ -5,13 +5,13 @@
 
 import varietyRecommendationService from '../varietyRecommendationService.js';
 
+import regionalVarietyRecommendations from '../regionalVarietyRecommendations.js';
+
 // Mock the regional variety recommendations service
 jest.mock('../regionalVarietyRecommendations.js', () => ({
   getBestVarietyForZone: jest.fn(),
   getZoneSpecificVarieties: jest.fn()
 }));
-
-import regionalVarietyRecommendations from '../regionalVarietyRecommendations.js';
 
 describe('Variety Recommendation Service', () => {
   const mockLocationConfig = {

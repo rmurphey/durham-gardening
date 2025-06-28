@@ -7,6 +7,8 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import ShoppingView from '../ShoppingView';
 
+import { generateAnnualSeedPlan } from '../../services/annualSeedPlanningService';
+
 // Mock the annual seed planning service
 jest.mock('../../services/annualSeedPlanningService', () => ({
   generateAnnualSeedPlan: jest.fn()
@@ -26,8 +28,6 @@ jest.mock('../../data/portfolioStrategies', () => ({
 jest.mock('../../config/defaultConfig', () => ({
   DURHAM_CONFIG: { location: 'Durham, NC' }
 }));
-
-import { generateAnnualSeedPlan } from '../../services/annualSeedPlanningService';
 
 describe('ShoppingView Async Loading', () => {
   const mockShoppingActions = {

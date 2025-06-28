@@ -4,7 +4,7 @@
  */
 
 import { generateAnnualSeedPlan } from '../annualSeedPlanningService';
-import { GLOBAL_CROP_DATABASE } from '../../config';
+// import { GLOBAL_CROP_DATABASE } from '../../config'; // Removed with database-only architecture
 
 // Mock the config to isolate our tests
 jest.mock('../../config', () => ({
@@ -110,14 +110,13 @@ describe('Annual Seed Planning Service', () => {
       const seedWithVendorInfo = plan.seedOrders.find(seed => seed.vendorSku);
       expect(seedWithVendorInfo).toBeDefined();
       
-      if (seedWithVendorInfo) {
-        expect(seedWithVendorInfo.vendor).toBeTruthy();
-        expect(seedWithVendorInfo.vendorSku).toBeTruthy();
-        expect(seedWithVendorInfo.specificInstructions).toBeTruthy();
-        expect(seedWithVendorInfo.specificInstructions).toContain('ORDER:');
-        expect(seedWithVendorInfo.specificInstructions).toContain('VENDOR:');
-        expect(seedWithVendorInfo.specificInstructions).toContain('COST:');
-      }
+      // Directly test the found seed (Jest will fail if undefined)
+      expect(seedWithVendorInfo.vendor).toBeTruthy();
+      expect(seedWithVendorInfo.vendorSku).toBeTruthy();
+      expect(seedWithVendorInfo.specificInstructions).toBeTruthy();
+      expect(seedWithVendorInfo.specificInstructions).toContain('ORDER:');
+      expect(seedWithVendorInfo.specificInstructions).toContain('VENDOR:');
+      expect(seedWithVendorInfo.specificInstructions).toContain('COST:');
     });
 
     test('generates infrastructure recommendations', async () => {

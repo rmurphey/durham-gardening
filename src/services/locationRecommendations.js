@@ -5,7 +5,7 @@
 
 import { DEFAULT_CROPS as DURHAM_CROPS } from '../config/defaultConfig.js';
 import databaseLocationRecommendations from './databaseLocationRecommendations.js';
-import varietyRecommendationService from './varietyRecommendationService.js';
+// import varietyRecommendationService from './varietyRecommendationService.js'; // Unused in current implementation
 // import { DEFAULT_CALENDAR as DURHAM_CALENDAR } from '../config/defaultConfig.js'; // Available for future calendar integration
 
 /**
@@ -322,35 +322,9 @@ export const generateEnhancedCropRecommendations = async (portfolio, locationCon
 };
 
 /**
- * Generate enhanced reasoning that incorporates database insights
+ * generateDatabaseEnhancedReason function removed - unused in current implementation
+ * Function was designed to add database insights to recommendation reasoning
  */
-const generateDatabaseEnhancedReason = (baseRec, plantData, locationConfig) => {
-  let reason = baseRec.reason;
-  
-  // Add zone-specific insights
-  if (plantData.zoneSuitability && plantData.zoneSuitability !== 'unknown') {
-    const suitabilityText = plantData.zoneSuitability >= 0.8 ? 'excellent' :
-                           plantData.zoneSuitability >= 0.6 ? 'good' : 'marginal';
-    reason += ` (${suitabilityText} zone match)`;
-  }
-  
-  // Add temperature insights
-  if (plantData.temperatureRange) {
-    const currentMonth = new Date().getMonth() + 1;
-    const isOptimalTemp = currentMonth >= 4 && currentMonth <= 9; // Growing season approximation
-    if (isOptimalTemp) {
-      reason += `, optimal temperature conditions`;
-    }
-  }
-  
-  // Add maturity insights
-  if (plantData.daysToMaturity) {
-    const maturityWeeks = Math.round(plantData.daysToMaturity / 7);
-    reason += `, ready in ${maturityWeeks} weeks`;
-  }
-  
-  return reason;
-};
 
 /**
  * Check if crop can be planted in current month using database data

@@ -23,12 +23,7 @@ const PlanningCard = ({
 }) => {
   const getPlanningActions = () => {
     if (options.length > 0) {
-      // Multiple choice planning decision
-      const primaryAction = {
-        id: 'choose_option',
-        label: 'Choose Option'
-      };
-      
+      // Multiple choice planning decision - no primary action, only options
       const secondaryActions = options.map((option, index) => ({
         id: `option_${index}`,
         label: option.label || option,

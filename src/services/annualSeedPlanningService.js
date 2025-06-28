@@ -708,31 +708,8 @@ const organizeByVendors = (plan) => {
 
 /**
  * Helper functions for seed calculations
+ * Note: getPacketSize and getSeedPrice removed - now database-driven
  */
-const getPacketSize = (crop) => {
-  const standardSizes = {
-    'lettuce': 1000,
-    'carrots': 500, 
-    'spinach': 300,
-    'kale': 200,
-    'okra': 50,
-    'hot_peppers': 25
-  };
-  return standardSizes[crop.key] || 100;
-};
-
-const getSeedPrice = (crop) => {
-  const standardPrices = {
-    'lettuce': 3.50,
-    'carrots': 4.00,
-    'spinach': 3.75,
-    'kale': 4.25,
-    'okra': 5.50,
-    'hot_peppers': 6.00,
-    'herbs': 4.50
-  };
-  return standardPrices[crop.key] || 4.00;
-};
 
 // Removed unused calculateSeedCost function
 

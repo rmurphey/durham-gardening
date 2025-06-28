@@ -329,15 +329,14 @@ describe('Indoor Start Templates', () => {
       templates.forEach(template => {
         // All timing should reference last frost
         expect(template.timing_template).toContain('before last frost');
-        
-        // Earlier months should have longer timing
-        if (template.month === 2) {
-          expect(template.timing_template).toMatch(/[8-9][0-9]*.*weeks/);
-        }
-        if (template.month === 4) {
-          expect(template.timing_template).toMatch(/[2-4].*weeks/);
-        }
       });
+      
+      // Test month-specific timing patterns separately (avoids conditional expects)
+      const feb_templates = templates.filter(t => t.month === 2);
+      const apr_templates = templates.filter(t => t.month === 4);
+      
+      feb_templates.forEach(t => expect(t.timing_template).toMatch(/[8-9][0-9]*.*weeks/));
+      apr_templates.forEach(t => expect(t.timing_template).toMatch(/[2-4].*weeks/));
     });
   });
 

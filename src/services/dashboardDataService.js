@@ -101,7 +101,7 @@ export const getReadyToHarvest = (gardenLog = null, forecastData = null, locatio
     return []; // No theoretical recommendations - only show actual plantings
   }
 
-  const { readyToHarvest, almostReady } = getActualHarvestReadiness(gardenLog, forecastData);
+  const { readyToHarvest } = getActualHarvestReadiness(gardenLog, forecastData);
   
   // Format for dashboard display
   return readyToHarvest.map(planting => ({

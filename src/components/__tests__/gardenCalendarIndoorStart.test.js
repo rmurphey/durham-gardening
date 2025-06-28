@@ -170,7 +170,7 @@ describe('GardenCalendar Indoor Start Activities', () => {
 
   describe('Priority Indicators', () => {
     test('should display priority badges for indoor start activities', () => {
-      const { container } = render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
+      render(<GardenCalendar gardenCalendar={mockIndoorStartCalendar} />);
       
       // Check for urgent priority indicators (may be multiple)
       expect(screen.getAllByText('urgent').length).toBeGreaterThan(0);

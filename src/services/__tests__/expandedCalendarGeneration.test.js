@@ -223,7 +223,7 @@ describe('Expanded Calendar Generation', () => {
       databaseService.getSuccessionTemplates.mockResolvedValue([]);
       databaseService.generateActionText.mockImplementation((template) => template.action_template);
 
-      const calendar = await generateDatabaseGardenCalendar(
+      await generateDatabaseGardenCalendar(
         'hot_summer',
         'mild_winter',
         'conservative',

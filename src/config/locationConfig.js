@@ -4,7 +4,7 @@
  */
 
 // Import default configuration  
-import { DEFAULT_CONFIG } from './defaultConfig.js';
+// import { DEFAULT_CONFIG } from './defaultConfig.js'; // Unused, commented out
 
 // Default Zone 7b Configuration  
 export const DURHAM_CONFIG = {

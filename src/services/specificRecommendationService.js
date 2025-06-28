@@ -4,7 +4,7 @@
  * with exact products, prices, and shopping list integration
  */
 
-import { getLocationConfig, getCurrentMonthConfig, getSupplierPreferences, shouldRecommendItem } from '../config/locationConfig.js';
+import { getLocationConfig, getCurrentMonthConfig, getSupplierPreferences } from '../config/locationConfig.js';
 
 /**
  * Generate specific actionable recommendations for any planning scenario
@@ -13,7 +13,6 @@ export const generateSpecificRecommendations = (scenario, context = {}) => {
   const currentMonth = new Date().getMonth() + 1;
   const { 
     bedSizes, 
-    budget = 'moderate', 
     location = 'Durham, NC' 
   } = context;
   
