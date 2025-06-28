@@ -77,5 +77,15 @@
 **Pattern:** Methodical framework: 1) Execution Flow First ("WHEN does this execute?") 2) Environment Isolation (disable all background processes) 3) Progressive Re-enabling (one system at a time) 4) Static Import Awareness (imports execute immediately, bypass runtime checks)
 **Impact:** Red flags: "eventually locks up" = background process, "works in prod/fails in dev" = environment execution difference, "static imports of services" = immediate execution risk. Process discipline prevents 30+ minute debugging circles
 
+## AI Development Supervision Requirements (2025-06-27)
+**Insight:** AI needs explicit guidance for development environment management and runtime verification - strong at code generation but has blind spots in user-facing validation
+**Pattern:** Development server management, browser error checking, and runtime verification require explicit prompting. AI focuses on code compilation rather than end-user experience
+**Impact:** Success pattern requires: Code → Test → Browser check → User verification cycle. Higher supervision needed than expected for environment state management
+
+## AI Workflow Cost Reality vs Estimates (2025-06-27)
+**Insight:** AI development cost estimates consistently 3-4x higher than actual usage - database expansion cost $23 vs $300+ estimated (92% overestimate)
+**Pattern:** Template-driven research and batch operations dramatically more efficient than assumed. Context reuse and structured approaches reduce overhead
+**Impact:** Cost anxiety was blocking valuable work - can attempt much more ambitious features within budget. Learning-first approach more cost-effective than feature optimization
+
 ---
 *Auto-updated when significant insights discovered during task completion*

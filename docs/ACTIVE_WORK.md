@@ -26,6 +26,24 @@
 - Companion Planting Integration - Zone-aware suggestions from database
 - Onboarding Flow - Guided setup for new users
 
+## 💡 FUTURE ENHANCEMENT IDEAS
+
+### **Feature Expansions**
+- **Pest & Disease Alerts** - Regional pest pressure and disease timing alerts
+- **Water Management** - Location-specific irrigation planning based on climate data
+- **Microclimate Adjustments** - Factor in user's specific site conditions (slope, exposure, soil type)
+
+### **User Experience**
+- **Mobile Responsiveness** - Optimize the location selection and garden planning for mobile gardeners
+- **Garden Photo Integration** - Upload and track garden progress with photos
+
+### **Advanced Features**
+- **Multi-Location Support** - Compare recommendations across different properties/zones
+- **Historical Weather Analysis** - Use past weather data to refine growing season predictions
+- **Crop Rotation Planning** - Multi-year planning with location-specific rotation schedules
+- **Yield Tracking** - Track actual harvest yields vs. predictions to improve recommendations
+- **Community Features** - Share gardens and learn from other gardeners in similar zones
+
 ---
 
 ## ✅ Recent Completions

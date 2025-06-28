@@ -5,18 +5,12 @@ This directory contains comprehensive development documentation for the GardenSi
 ## Documentation Files
 
 ### Development Process
-- **ACTIVE_WORK.md** - Current tasks, blockers, and session priorities
-- **AI_WORKFLOW_INSIGHTS.md** - Weekly development insights and workflow patterns
-- **LEARNINGS.md** - Technical insights and patterns discovered during development
-- **PROJECT_HISTORY.md** - Chronological record of major development phases
+- **ACTIVE_WORK.md** - Current tasks, priorities, and future enhancement ideas
+- **LEARNINGS.md** - Technical insights, AI workflow patterns, and development discoveries
 
 ### Technical Documentation  
 - **DATABASE_ARCHITECTURE.md** - Database schema, integration patterns, and expansion plans
 - **DEPLOYMENT.md** - Deployment configuration and environment setup
-- **TEST_COVERAGE_PLAN.md** - Testing strategy and coverage plans
-
-### Planning
-- **IDEAS.md** - Future feature ideas and exploration concepts
 
 ## Purpose
 

@@ -25,7 +25,7 @@ Learning experiment about Claude Code workflows ($400-600 budget). Extract concr
 
 ### WEEKLY: When user uses `_reflect` command
 1. **Auto-prompt**: "Development insights from this week?"
-2. **Add to docs/AI_WORKFLOW_INSIGHTS.md** with timestamp
+2. **Add to docs/LEARNINGS.md** with timestamp
 3. **Update docs/ACTIVE_WORK.md** with next session priorities
 
 ### CRITICAL: Before major decisions
