@@ -217,31 +217,25 @@ describe('Indoor Starting Activity Type', () => {
       const templates = await service.getActivityTemplates(1, 2, ['tomatoes']);
       const template = templates[0];
       
-      // Should parse JSON fields correctly when present
-      // Test JSON fields that exist (restructured to avoid conditional expects)
-      if (template.conditions) {
-        expect(() => JSON.parse(template.conditions)).not.toThrow();
-      } else {
-        expect(template.conditions).toBeUndefined(); // Explicit expectation for missing field
-      }
+      // Test that JSON fields are either valid JSON or undefined (no conditional expects)
+      const jsonFields = ['conditions', 'variety_suggestions', 'supplier_preferences', 'bed_size_requirements'];
       
-      if (template.variety_suggestions) {
-        expect(() => JSON.parse(template.variety_suggestions)).not.toThrow();
-      } else {
-        expect(template.variety_suggestions).toBeUndefined();
-      }
-      
-      if (template.supplier_preferences) {
-        expect(() => JSON.parse(template.supplier_preferences)).not.toThrow();
-      } else {
-        expect(template.supplier_preferences).toBeUndefined();
-      }
-      
-      if (template.bed_size_requirements) {
-        expect(() => JSON.parse(template.bed_size_requirements)).not.toThrow();
-      } else {
-        expect(template.bed_size_requirements).toBeUndefined();
-      }
+      jsonFields.forEach(field => {
+        const value = template[field];
+        // All fields should be defined or undefined (not null or other values)
+        expect(value === undefined || typeof value === 'string').toBeTruthy();
+        
+        // For defined string values, they should be valid JSON
+        const isValidJsonOrUndefined = value === undefined || (() => {
+          try {
+            JSON.parse(value);
+            return true;
+          } catch {
+            return false;
+          }
+        })();
+        expect(isValidJsonOrUndefined).toBe(true);
+      });
     });
   });
 
