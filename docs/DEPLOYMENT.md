@@ -52,25 +52,6 @@ REACT_APP_OPENWEATHER_API_KEY=your_openweather_key  # OpenWeatherMap
 REACT_APP_NOAA_CDO_TOKEN=your_noaa_token         # NOAA historical data
 ```
 
-### Build Settings
-
-Vercel will auto-detect the React app, but you can configure:
-
-```json
-{
-  "buildCommand": "npm run vercel:build",
-  "outputDirectory": "build",
-  "installCommand": "npm install",
-  "devCommand": "npm start"
-}
-```
-
-### Custom Domain (Optional)
-
-1. Go to Vercel Dashboard > Your Project > Settings > Domains
-2. Add your custom domain
-3. Configure DNS records as shown
-
 ## Architecture Requirements
 
 GardenSim requires specific platform capabilities:

@@ -8,7 +8,7 @@ Quickly capture a new idea for future exploration.
 ```
 
 ## What it does
-- Appends the idea to IDEAS.md in appropriate section
+- Appends the idea to docs/ACTIVE_WORK.md in the "💡 FUTURE ENHANCEMENT IDEAS" section
 - Timestamps the entry  
-- Organizes by category (Immediate Opportunities, Feature Expansions, etc.)
+- Organizes by category (Feature Expansions, User Experience, Advanced Features)
 - Available for /next command analysis and prioritization

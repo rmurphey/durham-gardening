@@ -8,9 +8,9 @@ Intelligently recommend the next most valuable task by analyzing active work and
 ```
 
 ## What it does
-1. **Analyze current todos**: Review ACTIVE_WORK.md for urgent/high-impact items
-2. **Review ideas backlog**: Consider IDEAS.md features that provide exceptional value
-3. **Check cost patterns**: Use LEARNINGS.md for effort estimates
+1. **Analyze current todos**: Review docs/ACTIVE_WORK.md for urgent/high-impact items
+2. **Review ideas backlog**: Consider docs/ACTIVE_WORK.md "💡 FUTURE ENHANCEMENT IDEAS" section
+3. **Check cost patterns**: Use docs/LEARNINGS.md for effort estimates
 4. **Recommend single best task** based on:
    - **Urgency**: Bug fixes, blocking problems, user experience issues
    - **Impact vs Cost**: Maximum value for learning experiment budget  
