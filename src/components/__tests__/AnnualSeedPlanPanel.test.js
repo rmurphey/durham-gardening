@@ -266,10 +266,10 @@ describe('AnnualSeedPlanPanel', () => {
       const instructionsToggle = screen.getAllByText('📋 Specific Ordering Instructions')[0];
       fireEvent.click(instructionsToggle);
       
-      const vendorLink = screen.getByText(/View on True Leaf Market website/);
-      expect(vendorLink.closest('a')).toHaveAttribute('href', 
+      const vendorLink = screen.getByRole('link', { name: /View on True Leaf Market website/ });
+      expect(vendorLink).toHaveAttribute('href', 
         'https://www.trueleafmarket.com/products/kale-red-russian');
-      expect(vendorLink.closest('a')).toHaveAttribute('target', '_blank');
+      expect(vendorLink).toHaveAttribute('target', '_blank');
     });
   });
 

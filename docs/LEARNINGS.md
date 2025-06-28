@@ -143,5 +143,10 @@
 **Pattern:** Temporarily downgrade systematic violations to warnings, fix blocking errors (unused vars), then systematically address architectural issues. Rule downgrading != ignoring - it's triage.
 **Impact:** Reduced 197 ESLint problems → 0 errors + 163 warnings. Pre-commit hooks work again. Quality violations visible but non-blocking. Enables focused refactoring of test patterns vs. endless individual fixes.
 
+## AST Codemod Limitations for Complex Transformations (2025-06-28)
+**Insight:** AST codemods excellent for simple patterns but struggle with complex Testing Library refactoring due to context-dependent replacements
+**Pattern:** Simple transforms (remove imports, rename variables) work well. Complex transforms (container.querySelector → screen.getByRole) need semantic understanding of what elements actually contain, making manual fixes more reliable.
+**Impact:** Mixed approach optimal: AST for mechanical changes (act() removal, unused imports), manual for context-aware changes (proper Testing Library queries). Don't force AST when manual is clearer and faster.
+
 ---
 *Auto-updated when significant insights discovered during task completion*

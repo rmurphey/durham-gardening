@@ -6,7 +6,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
+// Removed unused act import
 import GardenAppContent from '../GardenAppContent';
 
 // Mock the cloud persistence service
@@ -74,9 +74,7 @@ describe('GardenAppContent', () => {
   };
 
   it('should handle garden dashboard route', async () => {
-    await act(async () => {
-      renderWithRouter(['/garden/test-id/dashboard']);
-    });
+    renderWithRouter(['/garden/test-id/dashboard']);
 
     await waitFor(() => {
       expect(screen.getByText(/garden dashboard/i)).toBeInTheDocument();
@@ -86,9 +84,7 @@ describe('GardenAppContent', () => {
   });
 
   it('should handle garden analysis route', async () => {
-    await act(async () => {
-      renderWithRouter(['/garden/test-id/analysis']);
-    });
+    renderWithRouter(['/garden/test-id/analysis']);
 
     await waitFor(() => {
       expect(screen.getByText(/simulation results/i)).toBeInTheDocument();
@@ -96,9 +92,7 @@ describe('GardenAppContent', () => {
   });
 
   it('should handle garden shopping route', async () => {
-    await act(async () => {
-      renderWithRouter(['/garden/test-id/shopping']);
-    });
+    renderWithRouter(['/garden/test-id/shopping']);
 
     await waitFor(() => {
       expect(screen.getByText(/shopping/i)).toBeInTheDocument();
@@ -106,9 +100,7 @@ describe('GardenAppContent', () => {
   });
 
   it('should handle garden config route', async () => {
-    await act(async () => {
-      renderWithRouter(['/garden/test-id/config']);
-    });
+    renderWithRouter(['/garden/test-id/config']);
 
     await waitFor(() => {
       expect(screen.getByText(/garden configuration/i)).toBeInTheDocument();
@@ -119,9 +111,7 @@ describe('GardenAppContent', () => {
     // Mock this as not being the creator's garden
     mockCloudPersistence.getGardenId.mockReturnValue('different-id');
 
-    await act(async () => {
-      renderWithRouter(['/garden/test-id/dashboard']);
-    });
+    renderWithRouter(['/garden/test-id/dashboard']);
 
     await waitFor(() => {
       expect(screen.getByText(/viewing garden/i)).toBeInTheDocument();
@@ -133,9 +123,7 @@ describe('GardenAppContent', () => {
     // Mock this as being the creator's garden
     localStorage.setItem('myGardens', JSON.stringify(['test-id']));
 
-    await act(async () => {
-      renderWithRouter(['/garden/test-id/dashboard']);
-    });
+    renderWithRouter(['/garden/test-id/dashboard']);
 
     await waitFor(() => {
       expect(screen.queryByText(/viewing garden/i)).not.toBeInTheDocument();
@@ -147,20 +135,14 @@ describe('GardenAppContent', () => {
     const mockReplace = jest.fn();
     require('react-router-dom').useNavigate = jest.fn(() => mockReplace);
 
-    await act(async () => {
-      renderWithRouter(['/garden/test-id']);
-    });
-
+    renderWithRouter(['/garden/test-id']);
     await waitFor(() => {
       expect(mockReplace).toHaveBeenCalledWith('/garden/test-id/dashboard', { replace: true });
     });
   });
 
   it('should maintain garden context across navigation', async () => {
-    await act(async () => {
-      renderWithRouter(['/garden/test-id/dashboard']);
-    });
-
+    renderWithRouter(['/garden/test-id']);
     // Navigation should include garden ID in URLs
     await waitFor(() => {
       const navLinks = screen.getAllByRole('button');
@@ -176,10 +158,7 @@ describe('GardenAppContent', () => {
 
     mockCloudPersistence.loadFromCloud.mockResolvedValue(gardenData);
 
-    await act(async () => {
-      renderWithRouter(['/garden/test-id/dashboard']);
-    });
-
+    renderWithRouter(['/garden/test-id']);
     await waitFor(() => {
       expect(mockCloudPersistence.loadFromCloud).toHaveBeenCalled();
     });
