@@ -62,5 +62,20 @@
 **Pattern:** AST transformations (jscodeshift, babel) essential for reliable code changes at AI development speeds
 **Impact:** Mandated AST-based refactoring in CLAUDE.md - methodology critical when AI enables rapid architecture evolution
 
+## Development Environment Hanging Crisis (2025-06-28)
+**Insight:** Static import chains bypass runtime environment checks - module loading happens at import time, not execution time
+**Pattern:** Multiple root causes created compounding failure: static imports → database init → API calls without timeouts → infinite useEffect loops → background polling. Each fix addressed symptoms, not the import chain root cause
+**Impact:** Environment-specific code requires dynamic imports or runtime guards to prevent dev/prod conflicts. Static analysis insufficient - need execution flow mapping for React component trees
+
+## AI Debugging Circles Pattern (2025-06-28)
+**Insight:** AI initially focuses on obvious symptoms (database service hanging) instead of execution flow analysis (when/why it executes)
+**Pattern:** Static imports execute immediately → useEffect dependencies cause infinite loops → background timers accumulate → interface lockup. Required systematic disabling of all background processes to isolate root cause
+**Impact:** Complex debugging needs methodical process: 1) Disable all background activity 2) Test basic functionality 3) Re-enable one system at a time. AI tendency to add complexity requires constraint-first debugging approach
+
+## Systematic Debugging Framework for AI Development (2025-06-28)
+**Insight:** AI debugging requires forcing execution flow analysis over symptom treatment - natural tendency is to fix the obvious problem without understanding the timeline
+**Pattern:** Methodical framework: 1) Execution Flow First ("WHEN does this execute?") 2) Environment Isolation (disable all background processes) 3) Progressive Re-enabling (one system at a time) 4) Static Import Awareness (imports execute immediately, bypass runtime checks)
+**Impact:** Red flags: "eventually locks up" = background process, "works in prod/fails in dev" = environment execution difference, "static imports of services" = immediate execution risk. Process discipline prevents 30+ minute debugging circles
+
 ---
 *Auto-updated when significant insights discovered during task completion*
