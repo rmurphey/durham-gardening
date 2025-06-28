@@ -2,6 +2,11 @@
 
 *Patterns and discoveries that inform future development decisions*
 
+## Environment-Specific Database Initialization (2025-06-28)
+**Insight:** Database service uses environment-specific initialization strategies: production auto-initializes on service creation to avoid runtime delays, while development uses lazy loading via `waitForInitialization()` to prevent WASM/webpack dev server conflicts. Both environments access the same database data, just with different timing patterns.
+**Pattern:** For services with complex dependencies (WASM, binary modules): separate initialization timing by environment while maintaining consistent API access. Use constructor initialization in production for performance, lazy initialization in development for tooling compatibility, with graceful fallbacks in both cases.
+**Impact:** This pattern prevents dev server crashes while maintaining full database functionality in both environments. It demonstrates that AI-assisted development needs to be aware of environment-specific constraints - not all approaches work universally across dev/prod toolchains.
+
 ## NPM Security Vulnerability Reality (2025-06-28)
 **Insight:** Security fixes can be harder for AI than expected due to deep dependency chains and breaking changes. NPM audit fix --force broke react-scripts by downgrading to 0.0.0
 **Pattern:** Vulnerabilities 4+ levels deep (app → react-scripts → @svgr/webpack → svgo → nth-check) require architectural changes, not simple updates. Risk assessment matters more than automated fixes

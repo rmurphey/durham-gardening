@@ -1,10 +1,10 @@
-# Cost Estimate
+# Estimate
 
-Estimate task cost based on previous similar work patterns.
+Estimate task cost based on project-specific learned patterns.
 
 ## Usage
 ```
-/cost <task description>
+/estimate <task description>
 ```
 
 ## What it does
