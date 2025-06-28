@@ -118,5 +118,10 @@
 **Pattern:** Claude naturally creates prevention through configuration and documentation rather than standalone automation. This assumes all developers use Claude and follow Claude-defined workflows, which may not be realistic for team environments.
 **Impact:** Prevention measures only work within Claude ecosystem. Real prevention needs tool-agnostic automation: git hooks, package.json scripts, CI checks, linters. Claude solutions are documentation/training, not enforcement. Need to distinguish between "Claude workflow guidance" vs "universal project constraints."
 
+## AST Codemod Execution Timing Pitfalls (2025-06-28) - 8ac26a4
+**Insight:** AST transformations can create valid syntax that executes at the wrong time - immediately-invoked function expressions (IIFEs) execute during module loading, not function calls, causing runtime errors during import
+**Pattern:** When replacing functions with error-throwing stubs, use function declarations (`function name() { throw ... }`) not IIFEs (`(() => { throw ... })()`). IIFEs execute immediately when module loads, breaking the entire application. Function declarations only execute when explicitly called.
+**Impact:** Critical difference between compile-time and runtime execution. AST codemods need to consider execution timing, not just syntax validity. Module-level errors break entire dependency chains, while function-level errors only break specific code paths. Always test generated code execution flow, not just syntax correctness.
+
 ---
 *Auto-updated when significant insights discovered during task completion*
