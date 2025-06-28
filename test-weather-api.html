@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; border: 1px solid #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Weather API Integration Test</h1>
+    <p>This will test weather APIs using Durham, NC coordinates (35.9940, -78.8986)</p>
+    
+    <button onclick="testWeatherGov()">Test Weather.gov API</button>
+    <button onclick="testWeatherConfig()">Test Weather Config</button>
+    <button onclick="testAllWeatherData()">Test Full Weather Integration</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+        
+        function clearResults() {
+            results.innerHTML = '';
+        }
+        
+        // Test Weather.gov API directly
+        async function testWeatherGov() {
+            clearResults();
+            addResult('Testing Weather.gov API...', 'info');
+            
+            try {
+                // Durham, NC coordinates
+                const lat = 35.9940;
+                const lon = -78.8986;
+                
+                // Step 1: Get weather office and grid coordinates
+                addResult('Step 1: Getting grid coordinates...', 'info');
+                const pointResponse = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+                
+                if (!pointResponse.ok) {
+                    throw new Error(`Point lookup failed: ${pointResponse.status}`);
+                }
+                
+                const pointData = await pointResponse.json();
+                addResult(`✓ Grid coordinates: ${pointData.properties.gridX}, ${pointData.properties.gridY}`, 'success');
+                addResult(`Office: ${pointData.properties.gridId}`, 'info');
+                
+                // Step 2: Get current weather
+                addResult('Step 2: Getting current weather...', 'info');
+                const forecastResponse = await fetch(pointData.properties.forecast);
+                
+                if (!forecastResponse.ok) {
+                    throw new Error(`Forecast failed: ${forecastResponse.status}`);
+                }
+                
+                const forecastData = await forecastResponse.json();
+                const currentPeriod = forecastData.properties.periods[0];
+                
+                addResult(`✓ Current conditions: ${currentPeriod.temperature}°${currentPeriod.temperatureUnit}`, 'success');
+                addResult(`Weather: ${currentPeriod.shortForecast}`, 'success');
+                addResult(`<pre>${JSON.stringify(currentPeriod, null, 2)}</pre>`, 'info');
+                
+            } catch (error) {
+                addResult(`✗ Weather.gov API Error: ${error.message}`, 'error');
+                console.error('Weather.gov test failed:', error);
+            }
+        }
+        
+        // Test weather configuration
+        async function testWeatherConfig() {
+            clearResults();
+            addResult('Testing weather configuration...', 'info');
+            
+            try {
+                // Check environment variables (these would be set in Vercel)
+                const hasWeatherGov = 'true'; // This should be set in Vercel as REACT_APP_USE_WEATHER_GOV
+                
+                addResult(`Weather.gov enabled: ${hasWeatherGov}`, hasWeatherGov === 'true' ? 'success' : 'error');
+                
+                // Test the weather config validation
+                const config = {
+                    USE_WEATHER_GOV: hasWeatherGov === 'true',
+                    WEATHER_API_KEY: '', // Not needed for Weather.gov
+                    OPENWEATHER_API_KEY: '',
+                    NOAA_CDO_TOKEN: ''
+                };
+                
+                const hasBasicWeather = config.USE_WEATHER_GOV || config.WEATHER_API_KEY || config.OPENWEATHER_API_KEY;
+                
+                if (hasBasicWeather) {
+                    addResult('✓ Basic weather API available', 'success');
+                } else {
+                    addResult('✗ No weather API configured', 'error');
+                    addResult('Set REACT_APP_USE_WEATHER_GOV=true in Vercel dashboard', 'info');
+                }
+                
+                if (!config.NOAA_CDO_TOKEN) {
+                    addResult('! Historical climate data will be limited (NOAA token not set)', 'info');
+                }
+                
+            } catch (error) {
+                addResult(`✗ Config test error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Test full weather integration (simulating React app behavior)
+        async function testAllWeatherData() {
+            clearResults();
+            addResult('Testing full weather data integration...', 'info');
+            
+            try {
+                const lat = 35.9940;
+                const lon = -78.8986;
+                
+                // Test multiple weather data types
+                const tests = [
+                    { name: 'Current Weather', test: () => getCurrentWeather(lat, lon) },
+                    { name: '7-Day Forecast', test: () => getWeatherForecast(lat, lon, 7) },
+                    { name: 'Frost Dates', test: () => calculateFrostDates(lat, lon) }
+                ];
+                
+                for (const test of tests) {
+                    try {
+                        addResult(`Testing ${test.name}...`, 'info');
+                        const result = await test.test();
+                        addResult(`✓ ${test.name}: Success`, 'success');
+                        addResult(`<pre>${JSON.stringify(result, null, 2).substring(0, 500)}...</pre>`, 'info');
+                    } catch (error) {
+                        addResult(`✗ ${test.name}: ${error.message}`, 'error');
+                    }
+                }
+                
+            } catch (error) {
+                addResult(`✗ Full integration test error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Simplified weather functions for testing
+        async function getCurrentWeather(lat, lon) {
+            const pointResponse = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+            const pointData = await pointResponse.json();
+            
+            const forecastResponse = await fetch(pointData.properties.forecast);
+            const forecastData = await forecastResponse.json();
+            
+            const current = forecastData.properties.periods[0];
+            return {
+                temperature: {
+                    current: current.temperature,
+                    unit: current.temperatureUnit
+                },
+                conditions: current.shortForecast,
+                windSpeed: current.windSpeed,
+                windDirection: current.windDirection
+            };
+        }
+        
+        async function getWeatherForecast(lat, lon, days) {
+            const pointResponse = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+            const pointData = await pointResponse.json();
+            
+            const forecastResponse = await fetch(pointData.properties.forecast);
+            const forecastData = await forecastResponse.json();
+            
+            return forecastData.properties.periods.slice(0, days * 2).map(period => ({
+                name: period.name,
+                temperature: period.temperature,
+                conditions: period.shortForecast,
+                precipitation: period.probabilityOfPrecipitation?.value || 0
+            }));
+        }
+        
+        async function calculateFrostDates(lat, lon) {
+            // This would normally use historical data, but for testing we'll simulate
+            return {
+                lastSpringFrost: "April 15",
+                firstFallFrost: "November 15",
+                growingSeasonLength: 214,
+                plantingSafeDate: "April 20",
+                status: "simulated - requires NOAA historical data for accuracy"
+            };
+        }
+        
+        // Initial message
+        addResult('Ready to test weather APIs. Click buttons above to run tests.', 'info');
+        addResult('Make sure REACT_APP_USE_WEATHER_GOV=true is set in your Vercel dashboard first.', 'info');
+    </script>
+</body>
+</html>
