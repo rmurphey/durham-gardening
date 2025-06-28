@@ -70,6 +70,7 @@ Commands now properly stored in `.claude/commands/` directory:
 - `/reflect` - Weekly insights update
 - `/cost <task>` - Estimate based on learned patterns (major features ~$3-5, fixes ~$1-2)
 - `/version-tag [type]` - Interactive version tagging with package.json sync
+- `/learn <insight>` - Capture development insight to docs/LEARNINGS.md
 
 ## Key Constraints
 - Never commit without explicit request

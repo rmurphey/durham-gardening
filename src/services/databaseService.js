@@ -1448,12 +1448,10 @@ class DatabaseService {
     
     // Find the plant in static data
     let plantData = null;
-    let category = null;
     
-    for (const [cat, plants] of Object.entries(GLOBAL_CROP_DATABASE)) {
+    for (const [, plants] of Object.entries(GLOBAL_CROP_DATABASE)) {
       if (plants[plantKey]) {
         plantData = plants[plantKey];
-        category = cat;
         break;
       }
     }

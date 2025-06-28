@@ -2,6 +2,11 @@
 
 *Patterns and discoveries that inform future development decisions*
 
+## NPM Security Vulnerability Reality (2025-06-28)
+**Insight:** Security fixes can be harder for AI than expected due to deep dependency chains and breaking changes. NPM audit fix --force broke react-scripts by downgrading to 0.0.0
+**Pattern:** Vulnerabilities 4+ levels deep (app → react-scripts → @svgr/webpack → svgo → nth-check) require architectural changes, not simple updates. Risk assessment matters more than automated fixes
+**Impact:** For toy apps with no real user data, accept vulnerability risk rather than major architecture changes. Real projects need Vite migration or dependency overrides (~$0 cost, high learning value)
+
 ## Claude Code Cost Reality Check (2025-06-27)
 **Insight:** Cost estimates consistently 3-4x higher than actual usage - session with major weather integration + fixes cost $9.71 total, not $15+ estimated
 **Pattern:** Major features ~$3-5, bug fixes ~$1-2, documentation nearly free due to caching. Context reuse (21.5M cache reads) dramatically reduces costs
