@@ -90,9 +90,7 @@ describe('GardenRoute', () => {
 
     mockCloudPersistence.loadFromCloud.mockResolvedValue(gardenData);
 
-    await act(async () => {
-      renderWithRouter();
-    });
+    renderWithRouter();
 
     await waitFor(() => {
       expect(mockCloudPersistence.loadFromCloud).toHaveBeenCalled();
@@ -103,9 +101,7 @@ describe('GardenRoute', () => {
   it('should handle cloud load errors gracefully', async () => {
     mockCloudPersistence.loadFromCloud.mockRejectedValue(new Error('Network error'));
 
-    await act(async () => {
-      renderWithRouter();
-    });
+    renderWithRouter();
 
     await waitFor(() => {
       // Should still render app content even if cloud load fails
@@ -116,9 +112,7 @@ describe('GardenRoute', () => {
   it('should display sync status', async () => {
     mockCloudPersistence.isSyncing.mockReturnValue(true);
 
-    await act(async () => {
-      renderWithRouter();
-    });
+    renderWithRouter();
 
     await waitFor(() => {
       expect(screen.getByText(/syncing/i)).toBeInTheDocument();
@@ -129,9 +123,7 @@ describe('GardenRoute', () => {
     const lastSync = '2024-01-01T12:00:00.000Z';
     mockCloudPersistence.getLastSyncTime.mockReturnValue(lastSync);
 
-    await act(async () => {
-      renderWithRouter();
-    });
+    renderWithRouter();
 
     await waitFor(() => {
       expect(screen.getByText(/last synced/i)).toBeInTheDocument();
@@ -139,9 +131,7 @@ describe('GardenRoute', () => {
   });
 
   it('should cleanup sync listeners on unmount', async () => {
-    const { unmount } = await act(async () => {
-      return renderWithRouter();
-    });
+    const { unmount } = renderWithRouter();
 
     await act(async () => {
       unmount();
