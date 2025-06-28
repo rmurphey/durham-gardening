@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Navigation from '../Navigation';
 
@@ -168,18 +168,17 @@ describe('Navigation Component', () => {
       renderWithRouter(['/'], { hasShoppingItems: 5 });
       
       const shoppingLink = screen.getByRole('link', { name: /Shopping/ });
-      const badge = shoppingLink.querySelector('.nav-badge');
+      const badge = within(shoppingLink).getByText('5');
       
       expect(badge).toBeInTheDocument();
       expect(badge).toHaveClass('count');
-      expect(badge).toHaveTextContent('5');
     });
 
     test('shows tasks badge when hasTasks is true', () => {
       renderWithRouter(['/'], { hasTasks: true });
       
       const tasksLink = screen.getByRole('link', { name: /Garden Tasks/ });
-      const badge = tasksLink.querySelector('.nav-badge');
+      const badge = within(tasksLink).getByRole('status');
       
       expect(badge).toBeInTheDocument();
       expect(badge).toHaveClass('new');
@@ -190,31 +189,29 @@ describe('Navigation Component', () => {
       renderWithRouter(['/'], { hasShoppingItems: 0 });
       
       const shoppingLink = screen.getByRole('link', { name: /Shopping/ });
-      const badge = shoppingLink.querySelector('.nav-badge');
       
-      expect(badge).not.toBeInTheDocument();
+      expect(within(shoppingLink).queryByRole('status')).not.toBeInTheDocument();
     });
 
     test('does not show tasks badge when hasTasks is false', () => {
       renderWithRouter(['/'], { hasTasks: false });
       
       const tasksLink = screen.getByRole('link', { name: /Garden Tasks/ });
-      const badge = tasksLink.querySelector('.nav-badge');
       
-      expect(badge).not.toBeInTheDocument();
+      expect(within(tasksLink).queryByRole('status')).not.toBeInTheDocument();
     });
 
     test('shows both badges when both conditions are met', () => {
       renderWithRouter(['/'], { hasShoppingItems: 3, hasTasks: true });
       
       const shoppingLink = screen.getByRole('link', { name: /Shopping/ });
-      const shoppingBadge = shoppingLink.querySelector('.nav-badge');
+      const shoppingBadge = within(shoppingLink).getByText('3');
       
       const tasksLink = screen.getByRole('link', { name: /Garden Tasks/ });
-      const tasksBadge = tasksLink.querySelector('.nav-badge');
+      const tasksBadge = within(tasksLink).getByRole('status');
       
       expect(shoppingBadge).toBeInTheDocument();
-      expect(shoppingBadge).toHaveTextContent('3');
+      expect(shoppingBadge).toHaveClass('count');
       
       expect(tasksBadge).toBeInTheDocument();
     });
@@ -321,28 +318,26 @@ describe('Navigation Component', () => {
       renderWithRouter(['/'], { hasShoppingItems: undefined });
       
       const shoppingLink = screen.getByRole('link', { name: /Shopping/ });
-      const badge = shoppingLink.querySelector('.nav-badge');
       
-      expect(badge).not.toBeInTheDocument();
+      expect(within(shoppingLink).queryByRole('status')).not.toBeInTheDocument();
     });
 
     test('handles undefined hasTasks', () => {
       renderWithRouter(['/'], { hasTasks: undefined });
       
       const tasksLink = screen.getByRole('link', { name: /Garden Tasks/ });
-      const badge = tasksLink.querySelector('.nav-badge');
       
-      expect(badge).not.toBeInTheDocument();
+      expect(within(tasksLink).queryByRole('status')).not.toBeInTheDocument();
     });
 
     test('handles different badge number types', () => {
       renderWithRouter(['/'], { hasShoppingItems: '7' });
       
       const shoppingLink = screen.getByRole('link', { name: /Shopping/ });
-      const badge = shoppingLink.querySelector('.nav-badge');
+      const badge = within(shoppingLink).getByText('7');
       
       expect(badge).toBeInTheDocument();
-      expect(badge).toHaveTextContent('7');
+      expect(badge).toHaveClass('count');
     });
   });
 

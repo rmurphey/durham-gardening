@@ -228,8 +228,8 @@ describe('AppContent Component', () => {
       
       await waitFor(() => {
         expect(mockGetDurhamWeatherAlerts).toHaveBeenCalled();
-        expect(mockGetReadyToHarvest).toHaveBeenCalled();
       });
+      expect(mockGetReadyToHarvest).toHaveBeenCalled();
     });
 
     test('calendar loads database calendar service', async () => {

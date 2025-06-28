@@ -193,11 +193,11 @@ describe('EnhancedPlantRecommendations', () => {
 
     await waitFor(() => {
       expect(screen.getByText('EXCELLENT')).toBeInTheDocument();
-      expect(screen.getByText('GOOD')).toBeInTheDocument();
     });
+    expect(screen.getByText('GOOD')).toBeInTheDocument();
 
     // Check that the CSS classes are applied
-    const excellentBadge = screen.getByText('EXCELLENT').closest('.variety-score');
+    const excellentBadge = screen.getByText('EXCELLENT');
     expect(excellentBadge).toHaveClass('excellent');
   });
 

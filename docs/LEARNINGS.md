@@ -148,5 +148,10 @@
 **Pattern:** Simple transforms (remove imports, rename variables) work well. Complex transforms (container.querySelector → screen.getByRole) need semantic understanding of what elements actually contain, making manual fixes more reliable.
 **Impact:** Mixed approach optimal: AST for mechanical changes (act() removal, unused imports), manual for context-aware changes (proper Testing Library queries). Don't force AST when manual is clearer and faster.
 
+## Pre-commit Hook Zero-Tolerance Enforcement (2025-06-28)
+**Insight:** Zero-tolerance pre-commit hooks prevent quality degradation by blocking commits with ANY warnings in staged files - exactly as designed
+**Pattern:** Enhanced pre-commit hook works: 34 warnings in staged files → commit blocked → forces systematic cleanup before committing → prevents incremental quality decay
+**Impact:** Quality constraint forces completion of cleanup work rather than partial fixes. Systematic approach required: identify patterns, fix violations in groups, commit clean files. Prevention system working as intended.
+
 ---
 *Auto-updated when significant insights discovered during task completion*
