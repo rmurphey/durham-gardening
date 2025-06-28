@@ -13,13 +13,14 @@ Capture a development insight or lesson learned for future reference.
 ## What it does
 
 1. **Prompt for details** - Ask for the full insight, pattern, and impact
-2. **Add to docs/LEARNINGS.md** - Append formatted entry with current date
+2. **Add to docs/LEARNINGS.md** - Append formatted entry with current date and git SHA
 3. **Categorize learning type** - Technical, workflow, cost, architectural, etc.
 4. **Confirm addition** - Show the added entry for verification
+5. **Git SHA capture** - Automatically associates learning with current commit for traceability
 
 ### Learning Entry Format
 ```
-## [Title] ([Date])
+## [Title] ([Date]) - [git SHA]
 **Insight:** [What was discovered or learned]
 **Pattern:** [Reusable technique or approach]
 **Impact:** [Effect on development speed, quality, or cost]
@@ -42,7 +43,7 @@ Capture a development insight or lesson learned for future reference.
 # What was the impact?
 
 # Adds to docs/LEARNINGS.md:
-## NPM Security Vulnerability Reality (2025-06-28)
+## NPM Security Vulnerability Reality (2025-06-28) - 5bef90f
 **Insight:** Security fixes can be harder for AI than expected...
 **Pattern:** Vulnerabilities 4+ levels deep require architectural changes...
 **Impact:** For toy apps, accept vulnerability risk rather than major changes...

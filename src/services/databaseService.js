@@ -81,7 +81,7 @@ class DatabaseService {
       this.loadFallbackData();
     }
   }
-  
+
   /**
    * Force reload of database (for cache-busting)
    * @returns {Promise<void>}
@@ -514,7 +514,7 @@ class DatabaseService {
     await this.waitForInitialization();
     
     if (!this.isInitialized) {
-      return this.getStaticPlantData(plantKey);
+      throw new Error('Static getStaticPlantData removed - database must be initialized');
     }
 
     try {
@@ -542,14 +542,13 @@ class DatabaseService {
       `;
 
       const result = this.db.exec(query, [plantKey]);
-      
+
       if (result.length > 0 && result[0].values.length > 0) {
         const row = result[0].values[0];
-        const staticData = this.getStaticPlantData(plantKey);
         
         return {
-          ...staticData,
-          // Enhance with database data
+          // Use database data only
+          plantKey,
           zones: `${row[1]}-${row[2]}`,
           minTemp: row[3],
           maxTemp: row[4],
@@ -562,14 +561,14 @@ class DatabaseService {
           name: { en: row[12] },
           alternateNames: row[13] ? row[13].split(',').map(n => n.trim()) : [],
           category: row[14],
-          dataSource: 'database+static'
+          dataSource: 'database'
         };
       }
-      
-      return this.getStaticPlantData(plantKey);
+
+      throw new Error('Static getStaticPlantData removed - database must be initialized');
     } catch (error) {
       console.warn(`Database query failed for ${plantKey}, using static data:`, error);
-      return this.getStaticPlantData(plantKey);
+      throw new Error('Static getStaticPlantData removed - database must be initialized');
     }
   }
 
@@ -680,12 +679,12 @@ class DatabaseService {
     await this.waitForInitialization();
     
     if (!this.isInitialized) {
-      return this.getStaticPlantsByZone(hardinessZone);
+      throw new Error('Static getStaticPlantsByZone removed - database must be initialized');
     }
 
     try {
       const zoneNumber = parseFloat(hardinessZone.replace(/[ab]/, ''));
-      
+
       const query = `
         SELECT 
           p.plant_key,
@@ -705,7 +704,7 @@ class DatabaseService {
       `;
 
       const result = this.db.exec(query, [zoneNumber, zoneNumber]);
-      
+
       if (result.length > 0 && result[0].values.length > 0) {
         return result[0].values.map(row => ({
           plantKey: row[0],
@@ -718,11 +717,11 @@ class DatabaseService {
           dataSource: 'database'
         }));
       }
-      
-      return this.getStaticPlantsByZone(hardinessZone);
+
+      throw new Error('Static getStaticPlantsByZone removed - database must be initialized');
     } catch (error) {
       console.warn(`Failed to get plants by zone ${hardinessZone}:`, error);
-      return this.getStaticPlantsByZone(hardinessZone);
+      throw new Error('Static getStaticPlantsByZone removed - database must be initialized');
     }
   }
 
@@ -734,7 +733,7 @@ class DatabaseService {
   async getPlantVarieties(plantKey) {
     if (!this.isInitialized || !this.db) {
       console.warn('Database not initialized, using static varieties');
-      return this.getStaticPlantVarieties(plantKey);
+      throw new Error('Static plant varieties removed - database must be initialized');
     }
 
     try {
@@ -767,9 +766,9 @@ class DatabaseService {
         WHERE p.plant_key = ? AND pn.language = 'en'
         ORDER BY sp.price ASC
       `;
-      
+
       const result = this.db.exec(query, [plantKey]);
-      
+
       if (result.length > 0 && result[0].values.length > 0) {
         const varieties = result[0].values.map(row => ({
           plantKey: row[0],
@@ -802,22 +801,22 @@ class DatabaseService {
 
         return varieties;
       }
-      
-      return this.getStaticPlantVarieties(plantKey);
+
+      throw new Error('Static plant varieties removed - database must be initialized');
     } catch (error) {
       console.warn(`Failed to get varieties for ${plantKey}:`, error);
-      return this.getStaticPlantVarieties(plantKey);
+      throw new Error('Static plant varieties removed - database must be initialized');
     }
   }
 
   /**
-   * Get all crops from database in format compatible with GLOBAL_CROP_DATABASE
+   * Get all crops from database organized by category
    * @returns {Object} Crops organized by category (heatTolerant, coolSeason, perennials)
    */
   async getAllCropsFromDatabase() {
     if (!this.isInitialized) {
       console.log('Database not initialized, using static fallback');
-      return this.getStaticCropDatabase();
+      throw new Error('Static crop database removed - database must be initialized');
     }
 
     try {
@@ -846,7 +845,8 @@ class DatabaseService {
       `;
 
       const result = this.db.exec(query);
-      if (!result.length) return this.getStaticCropDatabase();
+      if (!result.length)
+        throw new Error('Static crop database removed - database must be initialized');
 
       const crops = {
         heatTolerant: {},
@@ -901,138 +901,8 @@ class DatabaseService {
 
     } catch (error) {
       console.error('Error loading crops from database:', error);
-      return this.getStaticCropDatabase();
+      throw new Error('Static crop database removed - database must be initialized');
     }
-  }
-
-  /**
-   * Get static crop database as fallback
-   * @returns {Object} Static crop data
-   */
-  getStaticCropDatabase() {
-    console.log('Using static crop database fallback');
-    const { GLOBAL_CROP_DATABASE } = require('../config.js');
-    return GLOBAL_CROP_DATABASE;
-  }
-
-  /**
-   * Fallback to static plant variety data
-   * @param {string} plantKey - Plant identifier
-   * @returns {Array} Static plant variety data
-   */
-  getStaticPlantVarieties(plantKey) {
-    console.log(`Using static variety fallback for ${plantKey}`);
-    
-    // Import config at runtime to avoid circular deps
-    const { GLOBAL_CROP_DATABASE } = require('../config.js');
-    
-    // Find the plant in static data
-    let plantData = null;
-    
-    for (const [/* category */, plants] of Object.entries(GLOBAL_CROP_DATABASE)) {
-      if (plants[plantKey]) {
-        plantData = plants[plantKey];
-        break;
-      }
-    }
-    
-    if (!plantData) return [];
-    
-    // Extract varieties if they exist
-    const varieties = [];
-    
-    if (plantData.varieties) {
-      Object.entries(plantData.varieties).forEach(([varietyName, description]) => {
-        varieties.push({
-          plantKey,
-          commonName: plantData.name?.en || plantData.name || plantKey,
-          varietyName,
-          description,
-          minZone: plantData.zones?.split('-')[0],
-          maxZone: plantData.zones?.split('-')[1],
-          minTemp: plantData.minTemp,
-          maxTemp: plantData.maxTemp,
-          droughtTolerance: plantData.drought,
-          heatTolerance: plantData.heat,
-          daysToMaturity: plantData.daysToMaturity,
-          dataSource: 'static'
-        });
-      });
-    } else {
-      // Create a single variety from the plant data
-      varieties.push({
-        plantKey,
-        commonName: plantData.name?.en || plantData.name || plantKey,
-        varietyName: plantData.name?.en || plantData.name || plantKey,
-        minZone: plantData.zones?.split('-')[0],
-        maxZone: plantData.zones?.split('-')[1],
-        minTemp: plantData.minTemp,
-        maxTemp: plantData.maxTemp,
-        droughtTolerance: plantData.drought,
-        heatTolerance: plantData.heat,
-        daysToMaturity: plantData.daysToMaturity,
-        dataSource: 'static'
-      });
-    }
-    
-    return varieties;
-  }
-
-  /**
-   * Fallback to static plant data from config.js
-   * @param {string} plantKey - Plant identifier
-   * @returns {Object} Static plant data
-   */
-  getStaticPlantData(plantKey) {
-    // Import is done at runtime to avoid circular dependencies
-    const { GLOBAL_CROP_DATABASE } = require('../config.js');
-    
-    // Search across all categories
-    for (const category of ['heatTolerant', 'coolSeason', 'perennials']) {
-      const plants = GLOBAL_CROP_DATABASE[category] || {};
-      if (plants[plantKey]) {
-        return {
-          ...plants[plantKey],
-          category,
-          dataSource: 'static'
-        };
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Fallback method to get plants by zone from static data
-   * @param {string} hardinessZone - USDA hardiness zone
-   * @returns {Array} Plants from static data suitable for zone
-   */
-  getStaticPlantsByZone(hardinessZone) {
-    const { GLOBAL_CROP_DATABASE } = require('../config.js');
-    const zoneNumber = parseFloat(hardinessZone.replace(/[ab]/, ''));
-    const plants = [];
-
-    // Check all categories
-    Object.entries(GLOBAL_CROP_DATABASE).forEach(([category, categoryPlants]) => {
-      Object.entries(categoryPlants).forEach(([plantKey, plantData]) => {
-        const zones = plantData.zones || '';
-        const [minZone, maxZone] = zones.split('-').map(z => parseFloat(z));
-        
-        if (minZone <= zoneNumber && maxZone >= zoneNumber) {
-          plants.push({
-            plantKey,
-            name: plantData.name?.en || plantKey,
-            category,
-            zones: plantData.zones,
-            heatTolerance: plantData.heat,
-            droughtTolerance: plantData.drought,
-            dataSource: 'static'
-          });
-        }
-      });
-    });
-
-    return plants;
   }
 }
 

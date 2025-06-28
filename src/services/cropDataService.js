@@ -1,6 +1,5 @@
 /**
- * Crop Data Service - Provides unified access to crop data from database or static fallback
- * Replaces direct usage of GLOBAL_CROP_DATABASE throughout the application
+ * Crop Data Service - Provides unified access to crop data from database only (static fallback removed)
  */
 
 import { databaseService } from './databaseService.js';
@@ -61,10 +60,8 @@ class CropDataService {
       console.log('Successfully loaded crop data from database');
       return cropData;
     } catch (error) {
-      console.warn('Database load failed or timed out, using static fallback:', error.message);
-      // Fallback to static data
-      const { GLOBAL_CROP_DATABASE } = await import('../config.js');
-      return GLOBAL_CROP_DATABASE;
+      console.error('Database load failed or timed out:', error.message);
+      throw new Error('Static crop database removed - database must be initialized');
     }
   }
 

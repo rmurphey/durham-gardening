@@ -1,6 +1,6 @@
 # Active Work - Current Session Focus
 
-*Updated: 2025-06-27*
+*Updated: 2025-06-28*
 
 ## 🎯 NEXT SESSION PRIORITIES
 
@@ -47,6 +47,14 @@
 ---
 
 ## ✅ Recent Completions
+
+**AST-Based Architectural Refactoring** - COMPLETED (~$2-3 actual)
+- Eliminated static GLOBAL_CROP_DATABASE entirely using jscodeshift AST transformations
+- Forced all services to use SQLite database instead of mixed data sources
+- Created custom codemods for systematic removal of static fallback methods
+- Fixed architectural debt: no more redundant static/database dual systems
+- All plant data now sources exclusively from database with proper error handling
+- Learned AST tooling limitations: generated invalid throw expressions requiring manual fix
 
 **Session Recap: Test Coverage & Code Quality** - COMPLETED (~$4-5 total)
 - Comprehensive test coverage for variety recommendation services (555+ lines of tests)

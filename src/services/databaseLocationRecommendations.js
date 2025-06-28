@@ -5,7 +5,6 @@
 
 import databaseService from './databaseService.js';
 import regionalVarietyRecommendations from './regionalVarietyRecommendations.js';
-import { GLOBAL_CROP_DATABASE } from '../config.js';
 
 /**
  * Get location-appropriate plants from database with fallback to static data
@@ -15,7 +14,7 @@ import { GLOBAL_CROP_DATABASE } from '../config.js';
 export const getDatabaseLocationRecommendations = async (locationConfig) => {
   if (!locationConfig) {
     console.warn('Location configuration required for database recommendations');
-    return getStaticFallbackRecommendations();
+    throw new Error('Location configuration required for database recommendations');
   }
 
   try {
@@ -26,7 +25,7 @@ export const getDatabaseLocationRecommendations = async (locationConfig) => {
     
     if (!databasePlants || databasePlants.length === 0) {
       console.log('No database plants found, using static fallback');
-      return getStaticFallbackRecommendations();
+      throw new Error('Location configuration required for database recommendations');
     }
 
     // Enhance each plant with database information
@@ -75,7 +74,7 @@ export const getDatabaseLocationRecommendations = async (locationConfig) => {
 
   } catch (error) {
     console.warn('Database integration failed, using static fallback:', error);
-    return getStaticFallbackRecommendations();
+    throw new Error('Location configuration required for database recommendations');
   }
 };
 
@@ -227,40 +226,8 @@ const calculateLocationSuitability = (plantData, locationConfig) => {
   return Math.max(0, Math.min(1, score));
 };
 
-/**
- * Fallback to static data when database is unavailable
- * @returns {Array} Static plant recommendations
- */
-const getStaticFallbackRecommendations = () => {
-  console.log('Using static fallback data for plant recommendations');
-  
-  const staticPlants = [];
-  
-  // Convert static data to database-like format
-  Object.entries(GLOBAL_CROP_DATABASE).forEach(([category, crops]) => {
-    Object.entries(crops).forEach(([key, crop]) => {
-      staticPlants.push({
-        plantKey: key,
-        name: crop.name?.en || crop.name || key,
-        category: category,
-        zones: crop.zones,
-        minTemp: crop.minTemp,
-        maxTemp: crop.maxTemp,
-        heat: crop.heat,
-        drought: crop.drought,
-        plantingMonths: crop.plantingMonths,
-        harvestStart: crop.harvestStart,
-        harvestDuration: crop.harvestDuration,
-        growingTips: [],
-        companions: { beneficial: [], antagonistic: [] },
-        locationSuitability: 0.7, // Default good suitability for static data
-        databaseEnhanced: false
-      });
-    });
-  });
-
-  return staticPlants;
-};
+// Static fallback removed - all plant data must come from database
+// This forces proper database initialization and prevents mixed data sources
 
 const databaseLocationRecommendations = {
   getDatabaseLocationRecommendations,

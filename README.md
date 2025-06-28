@@ -2,7 +2,7 @@
 
 A modern React application for climate-aware garden planning with intelligent card-based recommendations, Monte Carlo simulation, and comprehensive garden management tools.
 
-**Database-Driven**: The application uses a comprehensive SQLite database with detailed plant information, growing tips, and companion relationships, with static fallback for reliability.
+**Database-Driven**: The application uses a comprehensive SQLite database with detailed plant information, growing tips, and companion relationships. Static fallbacks have been eliminated to ensure consistent data sourcing.
 
 ## Current Features
 

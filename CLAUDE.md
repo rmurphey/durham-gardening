@@ -16,7 +16,7 @@ Learning experiment about Claude Code workflows ($400-600 budget). Extract concr
 2. **Update README.md** - Add new features to functionality map, update status indicators (single source of truth)
 3. **If significant insight discovered** → add to docs/LEARNINGS.md using template:
    ```
-   ## [Task] ([Date])
+   ## [Task] ([Date]) - [git SHA]
    **Insight:** [What saves time/changes approach]
    **Pattern:** [Reusable technique]
    **Impact:** [Cost/time/quality effect]
@@ -68,9 +68,10 @@ Commands now properly stored in `.claude/commands/` directory:
 - `/idea <item>` - Add exploration idea
 - `/next` - Analyze priorities and recommend next task
 - `/reflect` - Weekly insights update
-- `/cost <task>` - Estimate based on learned patterns (major features ~$3-5, fixes ~$1-2)
+- `/estimate <task>` - Project-specific cost estimate based on learned patterns
 - `/version-tag [type]` - Interactive version tagging with package.json sync
 - `/learn <insight>` - Capture development insight to docs/LEARNINGS.md
+- `/docs [scope]` - Update all documentation (README, API docs, ACTIVE_WORK)
 
 ## Key Constraints
 - Never commit without explicit request

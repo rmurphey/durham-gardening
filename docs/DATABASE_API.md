@@ -4,7 +4,7 @@
 
 ## Overview
 
-This document provides comprehensive API reference for all database services in the Durham Garden Planner. The system uses SQLite with WebAssembly for browser-native database operations, with structured fallback data when the database is unavailable.
+This document provides comprehensive API reference for all database services in the Climate Garden Planner. The system uses SQLite with WebAssembly for browser-native database operations. Static fallbacks have been eliminated to ensure consistent data sourcing and prevent architectural debt.
 
 ## Core Services
 

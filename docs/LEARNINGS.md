@@ -2,12 +2,12 @@
 
 *Patterns and discoveries that inform future development decisions*
 
-## Environment-Specific Database Initialization (2025-06-28)
+## Environment-Specific Database Initialization (2025-06-28) - 05802fa
 **Insight:** Database service uses environment-specific initialization strategies: production auto-initializes on service creation to avoid runtime delays, while development uses lazy loading via `waitForInitialization()` to prevent WASM/webpack dev server conflicts. Both environments access the same database data, just with different timing patterns.
 **Pattern:** For services with complex dependencies (WASM, binary modules): separate initialization timing by environment while maintaining consistent API access. Use constructor initialization in production for performance, lazy initialization in development for tooling compatibility, with graceful fallbacks in both cases.
 **Impact:** This pattern prevents dev server crashes while maintaining full database functionality in both environments. It demonstrates that AI-assisted development needs to be aware of environment-specific constraints - not all approaches work universally across dev/prod toolchains.
 
-## NPM Security Vulnerability Reality (2025-06-28)
+## NPM Security Vulnerability Reality (2025-06-28) - 2258d86
 **Insight:** Security fixes can be harder for AI than expected due to deep dependency chains and breaking changes. NPM audit fix --force broke react-scripts by downgrading to 0.0.0
 **Pattern:** Vulnerabilities 4+ levels deep (app → react-scripts → @svgr/webpack → svgo → nth-check) require architectural changes, not simple updates. Risk assessment matters more than automated fixes
 **Impact:** For toy apps with no real user data, accept vulnerability risk rather than major architecture changes. Real projects need Vite migration or dependency overrides (~$0 cost, high learning value)
@@ -71,6 +71,17 @@
 **Insight:** String-based refactoring fragile and error-prone with AI velocity - parameter mismatches that IDEs would catch
 **Pattern:** AST transformations (jscodeshift, babel) essential for reliable code changes at AI development speeds
 **Impact:** Mandated AST-based refactoring in CLAUDE.md - methodology critical when AI enables rapid architecture evolution
+
+## AST Tooling for Architectural Refactoring (2025-06-28) - 5bef90f
+**Insight:** AST transformations using jscodeshift are essential for large-scale code changes, but require careful syntax handling and validation
+**Pattern:** Use AST codemods for systematic removal of patterns across multiple files, but always validate generated syntax before applying
+**Impact:** 
+- **Success:** AST removed 90% of GLOBAL_CROP_DATABASE references across multiple files safely and systematically
+- **Failure:** Generated invalid `const x = throw new Error()` syntax that required manual fixing due to throw expressions not being supported
+- **Learning:** Always run in `--dry` mode first, test generated syntax, and understand the limitations of experimental syntax features
+- **Best Practice:** Use AST for imports, method removal, and variable renaming; be cautious with complex expression replacements that might generate invalid syntax
+- **Time Saved:** 15+ minutes vs manual search-and-replace across multiple files
+- **Quality Improved:** Systematic removal prevents missed references that manual editing often misses, but requires syntax validation step
 
 ## Development Environment Hanging Crisis (2025-06-28)
 **Insight:** Static import chains bypass runtime environment checks - module loading happens at import time, not execution time
