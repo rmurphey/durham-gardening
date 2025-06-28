@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import DefaultGardenRedirect from '../DefaultGardenRedirect';
 
@@ -141,10 +141,10 @@ describe('DefaultGardenRedirect', () => {
   });
 
   it('should display loading message while redirecting', () => {
-    const { getByText } = renderComponent();
+    renderComponent();
 
-    expect(getByText(/loading your garden/i)).toBeInTheDocument();
-    expect(getByText(/setting up your personalized garden dashboard/i)).toBeInTheDocument();
+    expect(screen.getByText(/loading your garden/i)).toBeInTheDocument();
+    expect(screen.getByText(/setting up your personalized garden dashboard/i)).toBeInTheDocument();
   });
 
   it('should only call navigate once', async () => {
