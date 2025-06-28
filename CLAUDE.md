@@ -95,7 +95,9 @@ Commands now properly stored in `.claude/commands/` directory:
    - No `test-*.html` or coverage files 
    - No `package-lock.json` unless intentionally updating dependencies
    - No IDE files (.vscode/, .idea/) or OS files (Thumbs.db, .DS_Store)
-6. **Use `git add` selectively** - Never use `git add .` or `git add -A` without reviewing what's being added
+6. **Code quality check** - Run `npm run lint:changed:fix` to auto-fix style issues
+7. **Use `git add` selectively** - Never use `git add .` or `git add -A` without reviewing what's being added
+8. **Pre-commit hook enforcement** - Hook automatically blocks commits with ESLint errors/warnings
 
 These steps prevent the user from discovering errors that Claude should have caught during development and keep the repository clean.
 
