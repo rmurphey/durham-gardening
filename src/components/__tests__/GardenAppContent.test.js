@@ -115,8 +115,8 @@ describe('GardenAppContent', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/viewing garden/i)).toBeInTheDocument();
-      expect(screen.getByText(/fork garden/i)).toBeInTheDocument();
     });
+    expect(screen.getByText(/fork garden/i)).toBeInTheDocument();
   });
 
   it('should show edit mode for creator', async () => {
@@ -127,8 +127,8 @@ describe('GardenAppContent', () => {
 
     await waitFor(() => {
       expect(screen.queryByText(/viewing garden/i)).not.toBeInTheDocument();
-      expect(screen.queryByText(/fork garden/i)).not.toBeInTheDocument();
     });
+    expect(screen.queryByText(/fork garden/i)).not.toBeInTheDocument();
   });
 
   it('should redirect garden root to dashboard', async () => {

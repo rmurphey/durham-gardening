@@ -18,6 +18,7 @@
  *   - Issue: AST comment insertion in complex expressions causes recast printing errors
  *   - Resolution: Used manual approach instead - successfully fixed 5 container.querySelector patterns
  *   - Learning: Container queries need semantic understanding; manual approach more reliable
+ *   - Associated commit: "Improve git hooks: Move zero-tolerance to pre-push, allow warnings in commits" (33ba1c1)
  */
 
 module.exports = function(fileInfo, api) {

@@ -98,9 +98,9 @@ describe('useCloudSync', () => {
     const { result } = renderHook(() => useCloudSync());
 
     await waitFor(() => {
-      expect(mockCloudPersistence.loadFromCloud).toHaveBeenCalled();
       expect(result.current.gardenData).toEqual(gardenData);
     });
+    expect(mockCloudPersistence.loadFromCloud).toHaveBeenCalled();
   });
 
   it('should handle cloud load errors gracefully', async () => {
@@ -109,9 +109,9 @@ describe('useCloudSync', () => {
     const { result } = renderHook(() => useCloudSync());
 
     await waitFor(() => {
-      expect(result.current.error).toBe(null); // Should not set error for load failures
       expect(result.current.gardenData).toBe(null);
     });
+    expect(result.current.error).toBe(null); // Should not set error for load failures
   });
 
   it('should provide saveGardenData function', async () => {
