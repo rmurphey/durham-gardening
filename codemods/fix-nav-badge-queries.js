@@ -14,7 +14,7 @@
  * expect(within(linkElement).queryByTestId('nav-badge')).not.toBeInTheDocument();
  * 
  * USAGE HISTORY:
- * - 2025-06-28: Tested on Navigation.test.js  
+ * - 2025-06-28: Tested on Navigation.test.js (Commit: 161e146)
  *   - Result: FAILED - TypeError: Received an unexpected value [object Object]
  *   - Files processed: 1
  *   - Changes made: 0 (transformation error)
@@ -22,6 +22,8 @@
  *   - Issue: Complex AST manipulation of variable declarations + expect statement patterns
  *   - Resolution: Used manual approach instead - successfully fixed 8 nav-badge patterns
  *   - Learning: AST struggles with multi-statement transformations, manual approach more reliable
+ *   - Associated commit: "Continue systematic Testing Library cleanup: 97→77 warnings (-21%)"
+ *   - Manual fixes included: querySelector('.nav-badge') → within(link).getByText(badgeText)
  */
 
 module.exports = function(fileInfo, api) {

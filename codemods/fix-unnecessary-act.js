@@ -13,13 +13,14 @@
  * act(() => { Testing Library calls })
  * 
  * USAGE HISTORY:
- * - 2025-06-28: Applied to GardenRoute.test.js
+ * - 2025-06-28: Applied to GardenRoute.test.js (Commit: 2483ae0)
  *   - Result: SUCCESS - Removed 5 unnecessary act() wrappers around render() calls
  *   - Files processed: 1
  *   - Changes made: 5 transformations
  *   - Time: 0.218s
  *   - Validation: AST approach works perfectly for simple act() removal patterns
  *   - Note: Required minor manual cleanup of double semicolons from transformation
+ *   - Associated commit: "AST codemod success: Fix unnecessary act() wrappers (59→54 warnings, -8%)"
  */
 
 module.exports = function(fileInfo, api) {

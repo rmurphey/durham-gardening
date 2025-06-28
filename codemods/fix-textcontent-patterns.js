@@ -12,12 +12,13 @@
  * element.textContent  // Add comment for manual review
  * 
  * USAGE HISTORY:
- * - 2025-06-28: Tested on AnnualSeedPlanPanel.test.js
+ * - 2025-06-28: Tested on AnnualSeedPlanPanel.test.js (Commit: 161e146)
  *   - Result: SUCCESS - Correctly identified comparison patterns as safe, skipped them
  *   - Files processed: 1
  *   - Changes made: 0 (no unsafe patterns found)
  *   - Time: 0.334s
  *   - Validation: AST approach works well for identifying safe vs unsafe textContent usage
+ *   - Associated commit: "Continue systematic Testing Library cleanup: 97→77 warnings (-21%)"
  */
 
 module.exports = function(fileInfo, api) {

@@ -148,10 +148,25 @@
 **Pattern:** Simple transforms (remove imports, rename variables) work well. Complex transforms (container.querySelector → screen.getByRole) need semantic understanding of what elements actually contain, making manual fixes more reliable.
 **Impact:** Mixed approach optimal: AST for mechanical changes (act() removal, unused imports), manual for context-aware changes (proper Testing Library queries). Don't force AST when manual is clearer and faster.
 
+## Systematic ESLint Cleanup Success Pattern (2025-06-28) - d99b631
+**Insight:** Mixed AST/manual approach achieves 81% violation reduction (197→37) by targeting violations by complexity and automation potential
+**Pattern:** Success rates: AST excellent for mechanical patterns (act() removal: 5/5 success), manual excellent for semantic patterns (wait-for-multiple-assertions: 4/4 success, container queries: 5/5 success). Target highest-count, lowest-complexity violations first for maximum efficiency.
+**Impact:** Systematic approach eliminated entire violation categories: conditional-expect (8→0), unnecessary-act (5→0), container (5→0), wait-for-multiple-assertions (4→0). Demonstrated that quality improvement scales with right tools: AST for automation, manual for understanding. Workflow optimization (git hooks) enables iterative development while maintaining quality gates.
+
+## Quality Tool Drift Prevention Failure (2025-06-28) - 5bf3025
+**Insight:** Allowing tests and ESLint to drift out of sync creates exponential technical debt - 197 accumulated warnings indicate systemic prevention failure, not just implementation issues
+**Pattern:** Quality tools must be kept synchronized continuously from project start. Prevention systems require multiple layers: workflow documentation + automated enforcement + feedback loops. Cost of cleanup scales exponentially: 5 warnings = 5 minutes, 197 warnings = hours of systematic effort.
+**Impact:** Cleanup required sophisticated mixed AST/manual approach and multiple sessions to achieve 82% reduction. Initial aggressive pre-commit hooks blocked development velocity, requiring workflow redesign (pre-commit allows warnings, pre-push enforces zero tolerance). Prevention exponentially cheaper than cure: daily maintenance vs. systematic overhaul.
+
 ## Pre-commit Hook Zero-Tolerance Enforcement (2025-06-28)
 **Insight:** Zero-tolerance pre-commit hooks prevent quality degradation by blocking commits with ANY warnings in staged files - exactly as designed
 **Pattern:** Enhanced pre-commit hook works: 34 warnings in staged files → commit blocked → forces systematic cleanup before committing → prevents incremental quality decay
 **Impact:** Quality constraint forces completion of cleanup work rather than partial fixes. Systematic approach required: identify patterns, fix violations in groups, commit clean files. Prevention system working as intended.
+
+## Git Hook Workflow Optimization (2025-06-28) - 33ba1c1
+**Insight:** Zero-tolerance pre-commit hooks too aggressive for iterative development - should move to pre-push for better workflow
+**Pattern:** Pre-commit: block ERRORS only, allow warnings with notification. Pre-push: zero-tolerance for ANY warnings/errors before remote push. This enables local iterations while maintaining shared repository quality.
+**Impact:** Developer workflow dramatically improved - can commit intermediate states with warnings for iterative development, but push is blocked until clean. Balances development velocity with code quality. Hook logic required parsing ESLint summary line correctly rather than grepping individual violations.
 
 ---
 *Auto-updated when significant insights discovered during task completion*
