@@ -837,11 +837,11 @@ const getClimateZoneFromLocation = (locationConfig) => {
   return 'temperate';
 };
 
-export const getClimateAdaptedCrops = (() => {
+export const getClimateAdaptedCrops = () => {
   throw new Error(
     'Function \'getClimateAdaptedCrops\' removed - use database service instead'
   );
-})();
+};
 
 // Calculate microclimate adjustments
 export const calculateMicroclimateEffects = (microclimate) => {
@@ -1316,7 +1316,9 @@ const getCostOptimizationRecommendations = (locationConfig, microclimateEffects)
 export const generateWeeklyActions = (locationConfig, portfolio, currentDate = new Date()) => {
   const actions = [];
   const currentMonth = currentDate.getMonth() + 1;
-  const adaptedCrops = getClimateAdaptedCrops(locationConfig, 'extreme'); // Use current scenario
+  // Note: This function now requires database service integration
+  // TODO: Replace with database service call for climate-adapted crops
+  const adaptedCrops = {}; // Placeholder - integrate with database service
   
   // Check portfolio for actionable items
   Object.entries(portfolio || {}).forEach(([cropType, percentage]) => {
@@ -1528,7 +1530,9 @@ export const generateTopCropRecommendations = (locationConfig, portfolio) => {
   
   const recommendations = [];
   const microEffects = locationConfig.microclimateEffects || {};
-  const adaptedCrops = getClimateAdaptedCrops(locationConfig, 'extreme');
+  // Note: This function now requires database service integration  
+  // TODO: Replace with database service call for climate-adapted crops
+  const adaptedCrops = {}; // Placeholder - integrate with database service
   
   // Get top portfolio categories
   const topCategories = Object.entries(portfolio)
