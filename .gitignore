@@ -15,3 +15,27 @@ yarn-error.log*
 /build
 /dist
 .vercel
+
+# Development logs and artifacts
+*.log
+server.log
+dev-server.log
+
+# Test artifacts and coverage
+coverage/
+test-*.html
+*.test.html
+
+# Package manager files
+package-lock.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+Thumbs.db
+*.tmp
