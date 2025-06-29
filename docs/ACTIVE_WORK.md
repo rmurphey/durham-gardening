@@ -74,17 +74,17 @@
 ### **Prevention Systems Implementation** (~$1-2)
 **Goal:** Prevent future accumulation of 197+ warnings through systematic prevention
 
-**Immediate Prevention Tasks:**
-- [ ] **Create PROJECT_QUALITY.md**: Document quality standards and prevention checklist
-- [ ] **Automate remaining patterns**: Create AST codemod for no-render-in-setup violations  
-- [ ] **Quality metrics tracking**: Set up warning count monitoring over time
-- [ ] **Team guidelines**: Document AST vs manual decision framework from learnings
+**Prevention Systems - IMPLEMENTED:**
+- ✅ **PROJECT_QUALITY.md**: Quality standards and prevention checklist documented
+- ✅ **Quality metrics tracking**: `/quality-check` command for monitoring
+- ✅ **Team guidelines**: AST vs manual framework documented
+- ✅ **CI quality gates**: GitHub Actions workflow with warning thresholds
+- ✅ **Daily maintenance principle**: Automated in quality standards
+- ✅ **Tool synchronization**: Guidelines established in PROJECT_QUALITY.md
+- ✅ **Prevention-first architecture**: Quality gates integrated into workflow
 
-**Long-term Prevention Strategy:**
-- [ ] **Daily maintenance principle**: Fix quality issues within 24 hours (5 warnings max)
-- [ ] **Tool synchronization**: Keep ESLint, tests, and dependencies in sync continuously
-- [ ] **Prevention-first architecture**: Design quality gates into new feature development
-- [ ] **Learning application**: Apply documented patterns to prevent known failure modes
+**Remaining Active Tasks:**
+- [ ] **Automate remaining patterns**: Create AST codemod for no-render-in-setup violations
 
 ### **Remaining Technical Debt Management**
 **Current State:** 35 warnings remaining (acceptable technical debt)
@@ -196,6 +196,12 @@
 
 ## Quick Capture
 *Use /todo or /idea commands to add items here*
+
+- **2025-06-28**: Evaluate how to switch to a KV store from the Vercel marketplace
+- **2025-06-28**: The app has a very github-inspired look. That's great, but there's still a lot of UI complexity. Make a plan to do something differently.
+- **2025-06-28**: Help me develop a blog post about the progression of this project, useful tools and patterns, regrets and lessons learned, and how you'd set up a similar app from scratch if you had to do it over.
+- **2025-06-28**: Show a Gantt chart or similar for the garden timeline
+- **2025-06-28**: Consider free alternatives to sqlite
 
 ---
 *Auto-updated after each task completion*
