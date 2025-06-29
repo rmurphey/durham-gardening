@@ -2,6 +2,16 @@
 
 *Patterns and discoveries that inform future development decisions*
 
+## UI Simplification Complexity Trap (2025-06-29) - 78b9acf  
+**Insight:** Attempted UI simplification introduced MORE complexity than it solved. Added second navigation layer, broke calendar functionality, and created architectural confusion. The "fix" for complexity accumulation became complexity accumulation itself. Reverted all changes after user feedback revealed the solution was worse than the original problem.
+**Pattern:** Simplification attempts can introduce meta-complexity: new components, additional state management, conflicting navigation patterns. The desire to fix "GitHub-inspired complexity" led to creating new abstractions (PriorityWidget, QuickActionsBar) that fragmented the user experience. Sometimes the existing interface, despite seeming complex, has evolved organically and works better than designed alternatives.
+**Impact:** Critical lesson for AI-assisted development: not all complexity is bad complexity. User feedback is essential - what seems like an improvement from a developer perspective can break user workflows. Cost of failed simplification: ~3 hours implementation + revert time. Repository back to working state, but with valuable learning about when NOT to simplify. Complex is sometimes better than complicated.
+
+## AST Codemod Success: no-render-in-setup Pattern (2025-06-29) - 78b9acf
+**Insight:** JSCodeshift codemod successfully eliminated all 4 `testing-library/no-render-in-setup` violations by moving beforeEach render() calls into individual test setups. Total warning count reduced from 35 to 31 warnings (11% improvement). Pattern matches documented AST vs manual framework: highly repetitive, well-defined pattern with 100% success rate.
+**Pattern:** AST codemods excel at mechanical transformations with clear structural patterns. The transformation (beforeEach with render → individual test setup) required no semantic understanding, just AST manipulation to move statements between function bodies. Each test now has its own isolated setup, improving test isolation and eliminating ESLint violations.
+**Impact:** Validates documented mixed AST/manual approach. AST codemods achieve 100% success on well-defined patterns (4/4 violations fixed), while manual fixes better suited for context-dependent changes. Repository now at 31 warnings (Green threshold <10, target reached for this pattern). Reinforces pattern of using AST for repetitive mechanical changes, manual for semantic complexity.
+
 ## Environment-Specific Database Initialization (2025-06-28) - 05802fa
 **Insight:** Database service uses environment-specific initialization strategies: production auto-initializes on service creation to avoid runtime delays, while development uses lazy loading via `waitForInitialization()` to prevent WASM/webpack dev server conflicts. Both environments access the same database data, just with different timing patterns.
 **Pattern:** For services with complex dependencies (WASM, binary modules): separate initialization timing by environment while maintaining consistent API access. Use constructor initialization in production for performance, lazy initialization in development for tooling compatibility, with graceful fallbacks in both cases.
