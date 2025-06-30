@@ -91,6 +91,13 @@ class DatabaseManager {
         });
       });
 
+      // Copy database to public directory for frontend access
+      const publicDbPath = 'public/database/plant_varieties.db';
+      const publicDbDir = path.dirname(publicDbPath);
+      await fs.mkdir(publicDbDir, { recursive: true });
+      await fs.copyFile(this.dbPath, publicDbPath);
+      results.steps.push('Copied database to public directory');
+
       results.steps.push('Database build completed successfully');
       results.success = true;
       

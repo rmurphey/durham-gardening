@@ -16,6 +16,9 @@ yarn-error.log*
 /dist
 .vercel
 
+# Generated database files (source database/ is managed, public copy is built)
+public/database/plant_varieties.db
+
 # Development logs and artifacts
 *.log
 server.log
