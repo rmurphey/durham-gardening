@@ -15,8 +15,13 @@ export default async function handler(request) {
 
   const { searchParams } = new URL(request.url);
   const provider = searchParams.get('provider');
-  const lat = searchParams.get('lat') || '35.9940'; // Durham, NC default
-  const lon = searchParams.get('lon') || '-78.8986';
+  const lat = searchParams.get('lat');
+  const lon = searchParams.get('lon');
+  
+  // Require coordinates
+  if (!lat || !lon) {
+    return new Response('Latitude and longitude are required', { status: 400 });
+  }
   const days = parseInt(searchParams.get('days')) || 7;
 
   // Rate limiting by IP

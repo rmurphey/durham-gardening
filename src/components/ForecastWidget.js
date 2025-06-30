@@ -139,7 +139,9 @@ const ForecastWidget = ({ onSimulationImpact, locationConfig }) => {
     <div className="forecast-widget card">
       <div className="forecast-header">
         <h3>🌤️ 10-Day Garden Forecast</h3>
-        <p className="forecast-location">Durham, NC (27707)</p>
+        <p className="forecast-location">
+          {locationConfig?.locationName || locationConfig?.zipCode || 'Current Location'}
+        </p>
         {error && (
           <div className="forecast-warning">
             ⚠️ Using fallback data - {error}
