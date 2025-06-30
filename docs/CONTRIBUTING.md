@@ -51,6 +51,42 @@ This is a **learning experiment** focused on AI-assisted development patterns wi
   - Yellow: 10-25 warnings (acceptable)
   - Red: 25+ warnings (requires cleanup)
 
+## 🤖 Automated Quality Checks
+
+### GitHub Actions Workflow
+Our CI pipeline (`.github/workflows/quality-check.yml`) automatically runs on:
+- **Push** to `main` or `develop` branches  
+- **Pull requests** targeting `main`
+
+### Automated Checks
+1. **ESLint Quality Gate**
+   - ❌ **Fails** if >25 warnings (blocks merge)
+   - ⚠️ **Warns** if >10 warnings (approaching threshold)
+   - ✅ **Passes** if ≤10 warnings
+
+2. **Test Coverage Monitoring**
+   - ⚠️ **Warns** if coverage <50% (doesn't block)
+   - Reports current coverage percentage
+
+3. **Environment**
+   - Node.js 18 with npm caching
+   - Ubuntu latest runner
+   - Full `npm ci` dependency installation
+
+### Debugging CI Failures
+- **ESLint failures**: Run `npm run lint` locally to see issues
+- **Test failures**: Run `npm test` to reproduce locally
+- **Coverage drops**: Run `npm test -- --coverage` to check coverage
+- **Environment issues**: Ensure Node.js 18+ compatibility
+
+### Local Testing to Match CI
+```bash
+# Replicate CI environment locally
+npm ci                    # Clean install (matches CI)
+npm run lint             # Check ESLint (matches CI)
+npm test -- --coverage --watchAll=false  # Full test suite with coverage
+```
+
 ## 🗄️ SQLite Database Development
 
 ### Database Architecture
