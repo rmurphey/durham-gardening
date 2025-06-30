@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import App from '../App';
 
 // Mock the database to prevent async issues in tests
-jest.mock('./services/databaseCalendarService.js', () => ({
+jest.mock('../services/databaseCalendarService.js', () => ({
   generateDatabaseGardenCalendar: jest.fn().mockResolvedValue([])
 }));
 
