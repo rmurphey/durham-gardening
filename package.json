@@ -24,7 +24,7 @@
     "dev:quiet": "ESLINT_NO_DEV_ERRORS=true FAST_REFRESH=true nodemon --exec 'craco start' --watch src --watch public --ext js,jsx,ts,tsx,css,html --ignore 'src/**/*.test.js'",
     "dev:bg": "nohup npm run dev > /tmp/dev-server.log 2>&1 &",
     "// Build & Test Commands": "===================================",
-    "build": "craco build",
+    "build": "npm run db:build && craco build",
     "test": "craco test",
     "test:db": "jest scripts/__tests__/database-manager.test.js",
     "test:interfaces": "npm test -- --testPathPattern='interface-validation' --watchAll=false",
@@ -45,7 +45,7 @@
     "// Deployment Commands": "===================================",
     "vercel": "vercel",
     "vercel:dev": "vercel dev",
-    "vercel:build": "npm run db:build && npm run build",
+    "vercel:build": "npm run build",
     "deploy": "npm run vercel:build && vercel --prod",
     "prepare": "husky"
   },
