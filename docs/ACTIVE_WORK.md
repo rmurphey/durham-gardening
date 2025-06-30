@@ -1,6 +1,6 @@
 # Active Work - Current Session Focus
 
-*Updated: 2025-06-28*
+*Updated: 2025-06-30*
 
 ## 🎯 NEXT SESSION PRIORITIES
 
@@ -119,6 +119,21 @@
 
 ## ✅ Recent Completions
 
+**CLAUDE.md Documentation Streamlining** - COMPLETED (~$0.5 actual, 2025-06-30)
+- Removed duplication and redundant sections from sprawling CLAUDE.md 
+- Better organized content into clear sections (Communication, Workflow, Commands, Constraints)
+- Reduced from 142 to 75 lines while keeping essential insights
+- Focus on core development workflow and AI constraints learning
+
+**Garden Timeline Gantt Chart Investigation** - ATTEMPTED/ABANDONED (~$1-2 actual, 2025-06-30)
+- Attempted to implement garden timeline visualization for activity scheduling
+- Created GardenGanttChart component with SVG-based timeline and data transformation service
+- Discovered critical issue: calendar generation service hangs indefinitely, preventing real data flow
+- Root cause: generateUnifiedCalendar() in unifiedCalendarService.js never completes/resolves
+- **Decision**: Abandoned implementation rather than implement workaround with sample data
+- **Learning**: Complex service dependencies can create blocking issues requiring architectural investigation
+- All related code properly removed and changes reverted
+
 **Repository Maintainability Assessment & Planning** - COMPLETED (~$1-2 actual)
 - Comprehensive maintainability analysis across 5 dimensions (code, architecture, docs, workflow, dependencies)
 - Overall score: 68/100 (Fair) - maintainable but requires effort
@@ -200,7 +215,7 @@
 - **2025-06-28**: Evaluate how to switch to a KV store from the Vercel marketplace
 - **2025-06-28**: The app has a very github-inspired look. That's great, but there's still a lot of UI complexity. Make a plan to do something differently.
 - **2025-06-28**: Help me develop a blog post about the progression of this project, useful tools and patterns, regrets and lessons learned, and how you'd set up a similar app from scratch if you had to do it over.
-- **2025-06-28**: Show a Gantt chart or similar for the garden timeline
+- **2025-06-30**: ✅ ATTEMPTED: Garden timeline Gantt chart - abandoned due to hanging calendar service
 - **2025-06-28**: Consider free alternatives to sqlite
 
 ---
