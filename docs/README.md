@@ -9,6 +9,7 @@ This directory contains comprehensive development documentation for the GardenSi
 - **LEARNINGS.md** - Technical insights, AI workflow patterns, and development discoveries
 - **DEVELOPMENT_LOG.md** - Weekly reflection and architectural evolution tracking
 - **PATTERNS_AND_PRACTICES.md** - Frontend development patterns and architectural constraints
+- **PROJECT_QUALITY.md** - Quality standards, thresholds, and prevention checklist
 - **notes-to-the-future.md** - AI coding success patterns and lessons learned *(root directory)*
 
 ### Technical Documentation  
