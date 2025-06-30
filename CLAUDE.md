@@ -25,6 +25,7 @@ Learning experiment about Claude Code workflows ($400-600 budget). Extract concr
 
 ### Documentation Triggers
 - **Always**: Update docs/ACTIVE_WORK.md when completing tasks
+- **Always**: Update the blog post draft as needed when completing tasks.
 - **New features**: Update README.md functionality map
 - **API changes**: Update docs/DATABASE_API.md for database service modifications
 - **Insights**: Add to docs/LEARNINGS.md with template:
@@ -63,7 +64,7 @@ Commands stored in `.claude/commands/` directory:
 
 ## Key Constraints
 - Never commit without explicit request
-- Use `./start-dev.sh` for dev server
+- Use `./scripts/start-dev.sh` for dev server
 - Require locationConfig for all garden functions
 - Keep package.json version synced with git tags
 

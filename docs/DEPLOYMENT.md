@@ -21,7 +21,7 @@ The application is already deployed and configured on Vercel. For development an
 npm run dev:vercel
 
 # Alternative: use start-dev.sh script
-./start-dev.sh
+./scripts/start-dev.sh
 ```
 
 ### Deploying Changes

@@ -167,7 +167,7 @@ A modern React application for climate-aware garden planning with intelligent ca
 - `src/App.js` - Main application component with simulation logic
 - `src/config.js` - Consolidated configuration, crop database, and helper functions
 - `src/index.css` - Complete styling including responsive design
-- `start-dev.sh` - Vercel development server startup script
+- `scripts/start-dev.sh` - Vercel development server startup script
 
 ### Design Principles
 - **Decision-Focused Interface**: Only show data that impacts decisions
@@ -180,7 +180,7 @@ A modern React application for climate-aware garden planning with intelligent ca
 ### Development
 - `npm start` - Start React development server with Craco
 - `npm run dev` - Start React development server with nodemon auto-restart
-- `./start-dev.sh` - Start Vercel development server with API support (recommended for full functionality)
+- `./scripts/start-dev.sh` - Start Vercel development server with API support (recommended for full functionality)
 - `npm run build` - Create production build  
 - `npm test` - Run test suite
 - `npm run test:interfaces` - Run interface validation tests
