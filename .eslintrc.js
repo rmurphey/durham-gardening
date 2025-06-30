@@ -31,6 +31,7 @@ module.exports = {
   overrides: [
     {
       files: ['src/components/**/*.js', 'src/components/**/*.jsx'],
+      excludedFiles: ['src/components/**/*.test.js', 'src/components/**/*.test.jsx'],
       rules: {
         'max-lines': ['error', { max: 400 }],
         'complexity': ['warn', { max: 12 }]
@@ -39,9 +40,20 @@ module.exports = {
     {
       // Extra strict for known complex components
       files: ['src/components/**/Dashboard*.js', 'src/components/**/CompactSettings*.js'],
+      excludedFiles: ['src/components/**/*.test.js', 'src/components/**/*.test.jsx'],
       rules: {
         'max-lines': ['error', { max: 350 }],
         'complexity': ['error', { max: 10 }]
+      }
+    },
+    {
+      // Relaxed rules for test files - comprehensive tests can be longer
+      files: ['**/*.test.js', '**/*.test.jsx', '**/*.spec.js', '**/*.spec.jsx'],
+      rules: {
+        'max-lines': ['warn', { max: 600, skipBlankLines: true, skipComments: true }],
+        'max-lines-per-function': ['warn', { max: 500, skipBlankLines: true, skipComments: true }],
+        'complexity': 'off', // Test complexity often reflects scenario coverage, not code quality issues
+        'max-depth': 'off' // Deep nesting in tests often reflects test scenario structure
       }
     }
   ]

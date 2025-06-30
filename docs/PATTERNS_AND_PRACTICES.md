@@ -14,13 +14,15 @@ These patterns and practices prevent complexity accumulation in React components
 - **Hard limit**: 400 lines per component (ESLint error)
 - **Review threshold**: 300 lines (ESLint warning)
 - **Target**: <300 lines per component
+- **Test files**: 600 lines warning threshold (comprehensive test suites can be longer)
 
 ### Function Complexity
 - **Max parameters**: 10 per function (ESLint error)
 - **Max complexity**: 15 (ESLint warning), 12 for UI components
 - **Max nesting depth**: 4 levels (ESLint error)
+- **Test files**: Complexity and nesting rules disabled (test structure reflects scenarios)
 
-**Rationale**: Large components become difficult to test, maintain, and understand. They often indicate multiple responsibilities that should be separated.
+**Rationale**: Large components become difficult to test, maintain, and understand. They often indicate multiple responsibilities that should be separated. Test files have relaxed constraints because comprehensive test coverage often requires longer files and complex test scenarios.
 
 ## Prop Interface Constraints
 
