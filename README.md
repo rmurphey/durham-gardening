@@ -243,17 +243,23 @@ This application represents a fully functional climate-aware garden planning sys
 
 ## Contributing
 
-This project follows functional programming principles and emphasizes decision-focused interfaces. When adding features:
+We welcome contributions! Please see our [Contributing Guide](docs/CONTRIBUTING.md) for detailed information on:
 
-1. Ensure changes don't decrease maintainability or readability
-2. Use the TodoWrite tool for planning complex changes
-3. Run linting and formatting after code changes
-4. Focus on data that impacts user decisions
-5. Maintain the existing responsive design patterns
-6. **Update README.md functionality map** - Add new features to appropriate sections and update status indicators
-7. **Document architectural decisions** - Significant changes should be noted in Recent Development Notes
-8. **Maintain test coverage** - New features require corresponding test coverage
-9. **Small commits** - Keep commits under 100 lines when possible for better review and rollback
+- **Development setup** and workflow
+- **Code standards** and quality gates  
+- **SQLite database development** and adding new plant varieties
+- **Testing requirements** and procedures
+- **Pull request process** and review guidelines
+
+### Quick Start for Contributors
+1. Fork the repository and create a feature branch
+2. Install dependencies: `npm install`
+3. Start development: `./scripts/start-dev.sh`
+4. Make changes following our coding standards
+5. Test your changes: `npm test && npm run db:verify`
+6. Submit a pull request with clear description
+
+For database contributions (adding new plants, growing tips, etc.), see the comprehensive SQLite development section in our [Contributing Guide](docs/CONTRIBUTING.md#-sqlite-database-development).
 
 ## License
 
