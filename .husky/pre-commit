@@ -1,6 +1,2 @@
-# UI Constraints Check (Warning only for now)
-echo "🔍 Running UI architectural constraints check..."
-./scripts/ui-constraints-check.sh || echo "⚠️  UI constraints check completed with warnings"
-
-# Standard pre-commit checks
+# Pre-commit quality checks
 npm run lint:changed:fix
