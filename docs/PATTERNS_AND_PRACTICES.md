@@ -1,8 +1,8 @@
-# UI Architectural Constraints
+# Frontend Patterns and Practices
 
 ## Overview
 
-These constraints prevent complexity accumulation in React components, based on learnings from AI-assisted development patterns. The goal is to maintain functionality while preventing the "GitHub-inspired complexity" that can overwhelm users.
+These patterns and practices prevent complexity accumulation in React components, based on learnings from AI-assisted development. The goal is to maintain functionality while preventing the "GitHub-inspired complexity" that can overwhelm users.
 
 ## Core Principle
 
