@@ -2,6 +2,86 @@
 
 *Tracking weekly insights and project evolution*
 
+---
+
+## Week of June 30, 2025 - Continental US Support & Documentation Consolidation
+
+### Key Accomplishments
+
+**🌍 Forecast System Overhaul**
+- **Problem**: Forecast system hardcoded to Durham, NC only - useless for continental US support
+- **Solution**: Eliminated all Durham-specific infrastructure and defaults
+- **Impact**: Removed 412 lines of Durham-specific code, system now location-agnostic
+- **Technical Details**: 
+  - Deleted `api/cron/forecast.js` (Durham-only daily updates)
+  - Removed Durham coordinate defaults from all weather APIs
+  - Fixed ForecastWidget to display actual location names
+  - Made APIs require proper lat/lon instead of defaulting
+
+**📚 Documentation Architecture Improvement**
+- **Problem**: Development standards scattered across multiple files with duplication
+- **Solution**: Consolidated PROJECT_QUALITY.md and PATTERNS_AND_PRACTICES.md into unified DEVELOPMENT_STANDARDS.md
+- **Impact**: Single source of truth for all quality and architectural guidance
+- **Benefits**: Eliminated conflicting guidance, improved maintainability, better developer experience
+
+**🛠️ Infrastructure Cleanup**
+- **Scripts Directory**: Removed redundant Node.js database scripts (760 lines), kept essential scripts
+- **Pre-commit Hooks**: Simplified by removing redundant ui-constraints-check script (86 lines)
+- **Codemod Documentation**: Added comprehensive README to codemods/ directory with usage examples and historical context
+
+### Technical Decisions
+
+**Location-Agnostic Architecture**
+- **Decision**: Require coordinates instead of defaulting to hardcoded locations
+- **Rationale**: Prevents silent failures and ensures proper location handling
+- **Trade-off**: Requires more explicit coordinate handling but eliminates hidden Durham dependency
+
+**Documentation Consolidation Strategy**
+- **Decision**: Merge related documentation files instead of maintaining separate concerns
+- **Rationale**: Reduces cognitive overhead for developers, prevents guidance conflicts
+- **Pattern**: Look for content overlap and conceptual alignment when organizing docs
+
+### Quality Metrics
+- **ESLint Warnings**: Maintained at 68 (Green zone - below 70 threshold)
+- **File Cleanup**: Removed 1,270+ lines of redundant/obsolete code
+- **Documentation**: Improved from fragmented to unified standards
+
+### Learning Insights
+
+**AI Development Velocity vs Quality**
+- High-speed AI development makes rigorous quality processes MORE critical, not less
+- Automated quality gates become essential when code generation is fast
+- Documentation consolidation pays immediate dividends for AI-assisted workflows
+
+**Infrastructure Debt Recognition**
+- Location-specific hardcoding can hide architectural limitations for months
+- Regular audit of "temporary" or "default" values prevents accumulation
+- Continental-scale applications require different assumptions than local-focused ones
+
+**Documentation Evolution Patterns**
+- Start with separate concerns, consolidate when overlap becomes maintenance burden
+- Single source of truth beats comprehensive separate documentation
+- Developer experience improves significantly with unified guidance
+
+### Architectural Evolution
+
+**From Location-Specific to Location-Agnostic**
+- **Before**: Durham, NC hardcoded throughout forecast system
+- **After**: Clean coordinate-based architecture supporting any US location
+- **Future**: Foundation for international expansion if needed
+
+**From Fragmented to Unified Documentation**
+- **Before**: Standards scattered across PROJECT_QUALITY.md, PATTERNS_AND_PRACTICES.md
+- **After**: Comprehensive DEVELOPMENT_STANDARDS.md with all guidance
+- **Future**: Template for consolidating other documentation areas
+
+### Next Session Preparation
+- **Priority**: Garden Profile System (replace hardcoded bed sizes with user-configurable profiles)
+- **Focus**: Advanced features now that maintainability foundation is solid
+- **Quality**: Continue monitoring ESLint warning drift (currently stable at 68)
+
+---
+
 ## Week of 2025-06-28: Quality Tool Drift Prevention & Systematic Cleanup
 
 ### Development Insights
