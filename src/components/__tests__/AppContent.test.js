@@ -373,13 +373,9 @@ describe('AppContent Component', () => {
     test('renders main app structure', () => {
       renderWithRouter(['/']);
       
-      const app = document.querySelector('.app');
-      expect(app).toBeInTheDocument();
-      
-      const mainContent = document.querySelector('.main-content');
-      expect(mainContent).toBeInTheDocument();
-      
-      const navigation = document.querySelector('.main-navigation');
+      expect(screen.getByRole('application')).toBeInTheDocument(); // .app
+      expect(screen.getByRole('main')).toBeInTheDocument(); // .main-content  
+      const navigation = screen.getByRole('navigation'); // .main-navigation
       expect(navigation).toBeInTheDocument();
     });
 
@@ -387,9 +383,8 @@ describe('AppContent Component', () => {
       renderWithRouter(['/tasks']);
       
       // Navigation should come before main content in DOM order
-      const app = document.querySelector('.app');
-      const navigation = app.querySelector('.main-navigation');
-      const mainContent = app.querySelector('.main-content');
+      const navigation = screen.getByRole('navigation');
+      const mainContent = screen.getByRole('main');
       
       expect(navigation).toBeInTheDocument();
       expect(mainContent).toBeInTheDocument();

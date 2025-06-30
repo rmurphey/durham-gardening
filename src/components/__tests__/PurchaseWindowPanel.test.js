@@ -177,13 +177,10 @@ describe('PurchaseWindowPanel', () => {
   });
 
   describe('Item Display', () => {
-    beforeEach(() => {
+    test('displays all window items when expanded', () => {
       render(<PurchaseWindowPanel {...defaultProps} />);
       const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
       fireEvent.click(header); // Expand to show items
-    });
-
-    test('displays all window items when expanded', () => {
       expect(screen.getByText('Kale')).toBeInTheDocument();
       expect(screen.getByText(/Red Russian Kale/)).toBeInTheDocument();
       expect(screen.getByText('Lettuce')).toBeInTheDocument();
@@ -191,34 +188,43 @@ describe('PurchaseWindowPanel', () => {
     });
 
     test('shows packet information when available', () => {
+      render(<PurchaseWindowPanel {...defaultProps} />);
+      const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       expect(screen.getByText('2 packets')).toBeInTheDocument();
     });
 
     test('shows quantity information when available', () => {
+      render(<PurchaseWindowPanel {...defaultProps} />);
+      const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       expect(screen.getByText('Qty: 3')).toBeInTheDocument();
     });
 
     test('displays cost information', () => {
+      render(<PurchaseWindowPanel {...defaultProps} />);
+      const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       expect(screen.getByText('$7.9')).toBeInTheDocument();
       expect(screen.getByText('$16.5')).toBeInTheDocument();
     });
 
     test('shows item notes when available', () => {
+      render(<PurchaseWindowPanel {...defaultProps} />);
+      const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       expect(screen.getByText('Heat-tolerant variety')).toBeInTheDocument();
     });
   });
 
   describe('Item Actions', () => {
-    beforeEach(() => {
+    test('calls onAddToShoppingList when Add button is clicked', () => {
       render(<PurchaseWindowPanel {...defaultProps} />);
       const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
       fireEvent.click(header); // Expand to show items
-    });
-
-    test('calls onAddToShoppingList when Add button is clicked', () => {
       const addButtons = screen.getAllByText('+ Add');
       fireEvent.click(addButtons[0]); // Click first item's add button
-      
+
       expect(defaultProps.onAddToShoppingList).toHaveBeenCalledWith({
         id: 'seed_kale',
         item: 'Kale',
@@ -230,16 +236,22 @@ describe('PurchaseWindowPanel', () => {
     });
 
     test('calls onMarkAsOwned when Have It button is clicked', () => {
+      render(<PurchaseWindowPanel {...defaultProps} />);
+      const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       const ownedButtons = screen.getAllByText('Have It');
       fireEvent.click(ownedButtons[1]); // Click second item's owned button
-      
+
       expect(defaultProps.onMarkAsOwned).toHaveBeenCalledWith('seed_lettuce');
     });
 
     test('handles items with cost vs totalCost properties', () => {
+      render(<PurchaseWindowPanel {...defaultProps} />);
+      const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       const addButtons = screen.getAllByText('+ Add');
       fireEvent.click(addButtons[1]); // Click lettuce (has cost, not totalCost)
-      
+
       expect(defaultProps.onAddToShoppingList).toHaveBeenCalledWith({
         id: 'seed_lettuce',
         item: 'Lettuce',
@@ -251,42 +263,48 @@ describe('PurchaseWindowPanel', () => {
     });
 
     test('shows correct button states based on item status', () => {
+      render(<PurchaseWindowPanel {...defaultProps} />);
+      const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       const mockGetItemStatus = jest.fn((id) => {
         if (id === 'seed_kale') return 'shopping'; // Kale is added
         if (id === 'seed_lettuce') return 'owned'; // Lettuce is owned
         return 'unselected';
       });
-      
+
       render(
         <PurchaseWindowPanel 
           {...defaultProps} 
           getItemStatus={mockGetItemStatus}
         />
       );
-      
+
       const expandButton = screen.getByText('▶');
       fireEvent.click(expandButton);
-      
+
       expect(screen.getByText('✓ Added')).toBeInTheDocument();
       expect(screen.getByText('✓ Own')).toBeInTheDocument();
     });
 
     test('disables buttons based on item status', () => {
+      render(<PurchaseWindowPanel {...defaultProps} />);
+      const header = screen.getByText('Winter Seed Ordering').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       const mockGetItemStatus = jest.fn((id) => {
         if (id === 'seed_kale') return 'shopping'; // Kale is added
         return 'unselected';
       });
-      
+
       render(
         <PurchaseWindowPanel 
           {...defaultProps} 
           getItemStatus={mockGetItemStatus}
         />
       );
-      
+
       const expandButton = screen.getByText('▶');
       fireEvent.click(expandButton);
-      
+
       const addedButton = screen.getByText('✓ Added');
       expect(addedButton).toBeDisabled();
     });
