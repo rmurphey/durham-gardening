@@ -118,13 +118,10 @@ describe('VendorGroupPanel', () => {
   });
 
   describe('Item Display', () => {
-    beforeEach(() => {
+    test('displays all vendor items when expanded', () => {
       render(<VendorGroupPanel {...defaultProps} />);
       const header = screen.getByText('True Leaf Market').closest('.card-header');
       fireEvent.click(header); // Expand to show items
-    });
-
-    test('displays all vendor items when expanded', () => {
       expect(screen.getByText('Kale')).toBeInTheDocument();
       expect(screen.getByText(/Red Russian Kale/)).toBeInTheDocument();
       expect(screen.getByText('Okra')).toBeInTheDocument();
@@ -132,33 +129,39 @@ describe('VendorGroupPanel', () => {
     });
 
     test('shows item categories and costs', () => {
+      render(<VendorGroupPanel {...defaultProps} />);
+      const header = screen.getByText('True Leaf Market').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       expect(screen.getAllByText('Seeds')).toHaveLength(2);
       expect(screen.getByText('$7.90')).toBeInTheDocument();
       expect(screen.getByText('$4.95')).toBeInTheDocument();
     });
 
     test('displays packet information when available', () => {
+      render(<VendorGroupPanel {...defaultProps} />);
+      const header = screen.getByText('True Leaf Market').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       expect(screen.getByText('2 packets')).toBeInTheDocument();
       expect(screen.getByText('1 packets')).toBeInTheDocument();
     });
 
     test('shows item notes and descriptions', () => {
+      render(<VendorGroupPanel {...defaultProps} />);
+      const header = screen.getByText('True Leaf Market').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       expect(screen.getByText('Heat-tolerant variety')).toBeInTheDocument();
       expect(screen.getByText('Classic reliable variety')).toBeInTheDocument();
     });
   });
 
   describe('Individual Item Actions', () => {
-    beforeEach(() => {
+    test('calls onAddToShoppingList when individual Add button is clicked', () => {
       render(<VendorGroupPanel {...defaultProps} />);
       const header = screen.getByText('True Leaf Market').closest('.card-header');
       fireEvent.click(header); // Expand to show items
-    });
-
-    test('calls onAddToShoppingList when individual Add button is clicked', () => {
       const addButtons = screen.getAllByText('+ Add');
       fireEvent.click(addButtons[0]); // Click first item's add button
-      
+
       expect(defaultProps.onAddToShoppingList).toHaveBeenCalledWith({
         id: 'seed_kale',
         item: 'Kale',
@@ -171,53 +174,62 @@ describe('VendorGroupPanel', () => {
     });
 
     test('calls onMarkAsOwned when Have It button is clicked', () => {
+      render(<VendorGroupPanel {...defaultProps} />);
+      const header = screen.getByText('True Leaf Market').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       const ownedButtons = screen.getAllByText('Have It');
       fireEvent.click(ownedButtons[1]); // Click second item's owned button
-      
+
       expect(defaultProps.onMarkAsOwned).toHaveBeenCalledWith('seed_okra');
     });
 
     test('shows correct button states based on item status', () => {
+      render(<VendorGroupPanel {...defaultProps} />);
+      const header = screen.getByText('True Leaf Market').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       const mockGetItemStatus = jest.fn((id) => {
         if (id === 'seed_kale') return 'shopping'; // Kale is added
         if (id === 'seed_okra') return 'owned'; // Okra is owned
         return 'unselected';
       });
-      
+
       render(
         <VendorGroupPanel 
           {...defaultProps} 
           getItemStatus={mockGetItemStatus}
         />
       );
-      
+
       const expandButton = screen.getByText('▶');
       fireEvent.click(expandButton);
-      
+
       expect(screen.getByText('✓ Added')).toBeInTheDocument();
       expect(screen.getByText('✓ Own')).toBeInTheDocument();
     });
 
     test('disables buttons based on item status', () => {
+      render(<VendorGroupPanel {...defaultProps} />);
+      const header = screen.getByText('True Leaf Market').closest('.card-header');
+      fireEvent.click(header); // Expand to show items
       const mockGetItemStatus = jest.fn((id) => {
         if (id === 'seed_kale') return 'shopping'; // Kale is added
         if (id === 'seed_okra') return 'owned'; // Okra is owned
         return 'unselected';
       });
-      
+
       render(
         <VendorGroupPanel 
           {...defaultProps} 
           getItemStatus={mockGetItemStatus}
         />
       );
-      
+
       const expandButton = screen.getByText('▶');
       fireEvent.click(expandButton);
-      
+
       const addedButton = screen.getByText('✓ Added');
       const ownedButton = screen.getByText('✓ Own');
-      
+
       expect(addedButton).toBeDisabled();
       expect(ownedButton).toBeDisabled();
     });

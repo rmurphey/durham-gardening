@@ -254,11 +254,8 @@ describe('Navigation Component', () => {
       const nav = screen.getByRole('navigation');
       expect(nav).toHaveClass('main-navigation');
       
-      const navItems = nav.querySelector('.nav-items');
-      expect(navItems).toBeInTheDocument();
-      
-      const navHeader = nav.querySelector('.nav-header');
-      expect(navHeader).toBeInTheDocument();
+      expect(within(nav).getByRole('list')).toBeInTheDocument(); // nav-items
+      expect(within(nav).getByRole('banner')).toBeInTheDocument(); // nav-header
     });
   });
 

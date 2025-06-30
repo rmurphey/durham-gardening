@@ -279,7 +279,7 @@ describe('GardenCalendar Indoor Start Activities', () => {
         }
       ];
       
-      const { container } = render(<GardenCalendar gardenCalendar={mixedCalendar} />);
+      render(<GardenCalendar gardenCalendar={mixedCalendar} />);
       
       // Should have different activity types
       expect(screen.getByText(/start.*seeds.*indoors/i)).toBeInTheDocument(); // indoor-starting activity
@@ -308,7 +308,7 @@ describe('GardenCalendar Indoor Start Activities', () => {
         }
       ];
       
-      const { container } = render(<GardenCalendar gardenCalendar={mixedCalendar} />);
+      render(<GardenCalendar gardenCalendar={mixedCalendar} />);
       
       // Check for specific activity types by content
       expect(screen.getByText(/start.*seeds.*indoors/i)).toBeInTheDocument(); // indoor-starting

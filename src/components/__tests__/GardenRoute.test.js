@@ -93,9 +93,9 @@ describe('GardenRoute', () => {
     renderWithRouter();
 
     await waitFor(() => {
-      expect(mockCloudPersistence.loadFromCloud).toHaveBeenCalled();
       expect(screen.getByTestId('app-content')).toBeInTheDocument();
     });
+    expect(mockCloudPersistence.loadFromCloud).toHaveBeenCalled();
   });
 
   it('should handle cloud load errors gracefully', async () => {
