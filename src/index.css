@@ -264,10 +264,6 @@ body {
   margin-left: auto;
 }
 
-.investment-item:hover .action-buttons {
-  /* Always visible now */
-}
-
 .add-btn, .owned-btn, .reject-btn {
   padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid transparent;
