@@ -16,8 +16,8 @@ yarn-error.log*
 /dist
 .vercel
 
-# Generated database files (source database/ is managed, public copy is built)
-public/database/plant_varieties.db
+# Build outputs (database files copied during build process)
+# Note: source database/ directory is version controlled, build copies to /database/ in output
 
 # Development logs and artifacts
 *.log
