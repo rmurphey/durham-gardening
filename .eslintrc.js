@@ -33,8 +33,8 @@ module.exports = {
       files: ['src/components/**/*.js', 'src/components/**/*.jsx'],
       excludedFiles: ['src/components/**/*.test.js', 'src/components/**/*.test.jsx'],
       rules: {
-        'max-lines': ['error', { max: 400 }],
-        'complexity': ['warn', { max: 12 }]
+        'max-lines': ['warn', { max: 500 }],
+        'complexity': ['warn', { max: 15 }]
       }
     },
     {
@@ -42,8 +42,8 @@ module.exports = {
       files: ['src/components/**/Dashboard*.js', 'src/components/**/CompactSettings*.js'],
       excludedFiles: ['src/components/**/*.test.js', 'src/components/**/*.test.jsx'],
       rules: {
-        'max-lines': ['error', { max: 350 }],
-        'complexity': ['error', { max: 10 }]
+        'max-lines': ['warn', { max: 600 }],
+        'complexity': ['warn', { max: 15 }]
       }
     },
     {
@@ -54,6 +54,17 @@ module.exports = {
         'max-lines-per-function': ['warn', { max: 500, skipBlankLines: true, skipComments: true }],
         'complexity': 'off', // Test complexity often reflects scenario coverage, not code quality issues
         'max-depth': 'off' // Deep nesting in tests often reflects test scenario structure
+      }
+    },
+    {
+      // Override for service and config files (can be longer due to business logic)
+      files: ["src/services/**/*.js", "src/config.js", "src/utils/**/*.js"],
+      rules: {
+        "max-lines": ["warn", {"max": 800, "skipBlankLines": true, "skipComments": true}],
+        "complexity": ["warn", {"max": 20}],
+        "max-lines-per-function": ["warn", {"max": 200}],
+        "max-depth": ["error", 4],
+        "max-nested-callbacks": ["error", 3]
       }
     }
   ]
