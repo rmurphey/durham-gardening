@@ -60,22 +60,28 @@ const ForecastWidget = ({ onSimulationImpact, locationConfig }) => {
       setLoading(true);
       setError(null);
       
+      // Debug logging
+      console.log('ForecastWidget - locationConfig:', locationConfig);
+      
       // Use coordinates if available, otherwise fallback to zipCode
       const zipCode = locationConfig?.zipCode || '27707';
       const { lat, lon } = locationConfig || {};
       
-      let url;
-      if (lat && lon) {
-        // Use coordinates for more precise weather data
-        url = forceRefresh 
-          ? `/api/forecast?lat=${lat}&lon=${lon}&refresh=true`
-          : `/api/forecast?lat=${lat}&lon=${lon}`;
-      } else {
-        // Fallback to ZIP code
-        url = forceRefresh 
-          ? `/api/forecast?zipCode=${zipCode}&refresh=true` 
-          : `/api/forecast?zipCode=${zipCode}`;
+      console.log('ForecastWidget - extracted coordinates:', { lat, lon, zipCode });
+      
+      // Coordinates are required for the API
+      if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
+        console.error('ForecastWidget - Invalid coordinates:', { lat, lon });
+        setError('Location coordinates required for weather forecast');
+        setLoading(false);
+        return;
       }
+      
+      const url = forceRefresh 
+        ? `/api/forecast?lat=${lat}&lon=${lon}&refresh=true`
+        : `/api/forecast?lat=${lat}&lon=${lon}`;
+      
+      console.log('ForecastWidget - Using coordinates URL:', url);
       const response = await fetch(url);
       const result = await response.json();
       
