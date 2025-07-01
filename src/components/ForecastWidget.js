@@ -139,12 +139,12 @@ const ForecastWidget = ({ onSimulationImpact, locationConfig }) => {
   }
 
   const { dailyForecasts, summary, gardenAlerts, simulationFactors } = forecastData;
-  const displayedForecasts = expandedView ? dailyForecasts : dailyForecasts.slice(0, 5);
+  const displayedForecasts = expandedView ? dailyForecasts : dailyForecasts.slice(0, 8);
 
   return (
     <div className="forecast-widget card">
       <div className="forecast-header">
-        <h3>🌤️ 10-Day Garden Forecast</h3>
+        <h3>🌤️ Garden Forecast</h3>
         <p className="forecast-location">
           {locationConfig?.locationName || locationConfig?.zipCode || 'Current Location'}
         </p>
