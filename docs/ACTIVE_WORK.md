@@ -193,6 +193,7 @@
 ## Quick Capture
 *Use /todo or /idea commands to add items here*
 
+- **2025-07-01**: Show 8 days of weather, not five
 - **2025-06-30**: Garden Profile System - Replace hardcoded bed sizes with user-configurable garden profiles (custom bed dimensions, sun mapping, total space)
 - **2025-06-30**: ESLint should never run on deleted files (fix git hooks)
 - **2025-06-30**: ✅ COMPLETED: Database duplication cleanup
