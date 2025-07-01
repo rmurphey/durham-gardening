@@ -149,6 +149,58 @@ CREATE INDEX idx_garden_activities_garden_date ON garden_activities(garden_id, s
 CREATE INDEX idx_garden_activities_completed ON garden_activities(completed_date);
 CREATE INDEX idx_variety_performance_garden_year ON variety_performance(garden_id, year);
 
+-- Layout templates and standards for garden design
+CREATE TABLE layout_templates (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    template_type VARCHAR(50) NOT NULL, -- 'rectangular', 'keyhole', 'raised_beds', 'container', 'square_foot'
+    typical_width DECIMAL(5,1),
+    typical_height DECIMAL(5,1),
+    bed_count INTEGER,
+    template_config TEXT, -- JSON configuration for template
+    suitable_for TEXT, -- JSON array of garden types/sizes
+    difficulty_level VARCHAR(20) DEFAULT 'beginner', -- 'beginner', 'intermediate', 'advanced'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE bed_standards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    bed_type VARCHAR(50) NOT NULL, -- 'raised', 'ground', 'container', 'keyhole'
+    typical_width DECIMAL(4,1) NOT NULL,
+    typical_length DECIMAL(4,1) NOT NULL,
+    typical_height DECIMAL(3,1), -- for raised beds
+    min_spacing DECIMAL(3,1) NOT NULL, -- minimum space between beds
+    max_reach DECIMAL(3,1), -- maximum comfortable reach for maintenance
+    soil_volume DECIMAL(6,2), -- cubic feet of soil needed
+    cost_estimate_min DECIMAL(6,2),
+    cost_estimate_max DECIMAL(6,2),
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE layout_recommendations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    plant_id INTEGER NOT NULL,
+    min_bed_width DECIMAL(4,1),
+    min_bed_length DECIMAL(4,1),
+    preferred_bed_type VARCHAR(50),
+    spacing_between_plants DECIMAL(3,1),
+    spacing_between_rows DECIMAL(3,1),
+    companion_distance DECIMAL(3,1), -- ideal distance from companion plants
+    antagonist_distance DECIMAL(3,1), -- minimum distance from antagonistic plants
+    sun_requirements VARCHAR(50), -- affects bed placement
+    drainage_needs VARCHAR(50), -- affects bed type/location
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (plant_id) REFERENCES plants(id)
+);
+
+-- Indexes for layout queries
+CREATE INDEX idx_layout_templates_type ON layout_templates(template_type);
+CREATE INDEX idx_bed_standards_type ON bed_standards(bed_type);
+CREATE INDEX idx_layout_recommendations_plant ON layout_recommendations(plant_id);
+
 -- Views for easy querying
 CREATE VIEW garden_calendar_view AS
 SELECT 
