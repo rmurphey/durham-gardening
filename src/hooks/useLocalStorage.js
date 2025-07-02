@@ -114,12 +114,12 @@ export const useClimateSelection = () => {
  */
 export const useLocationConfig = () => {
   const defaultConfig = {
-    name: 'Durham, NC',
-    hardiness: '7b',
-    lat: 35.994,
-    lon: -78.8986,
-    avgRainfall: 46,
-    heatDays: 95,
+    name: null, // Force users to configure their garden location
+    hardiness: null,
+    lat: null,
+    lon: null,
+    avgRainfall: 40,
+    heatDays: 90,
     heatIntensity: 3,
     winterSeverity: 3,
     gardenSize: 2,

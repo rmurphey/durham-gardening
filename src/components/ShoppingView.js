@@ -12,7 +12,7 @@ import ShoppingCardList from './ShoppingCardList';
 import { generatePureShoppingRecommendations } from '../services/temporalShoppingService';
 import { generateAnnualSeedPlan } from '../services/annualSeedPlanningService';
 import { getPortfolioStrategies } from '../data/portfolioStrategies';
-import { DEFAULT_CONFIG as DURHAM_CONFIG } from '../config/defaultConfig.js';
+import { DEFAULT_CONFIG } from '../config/defaultConfig.js';
 
 const ShoppingView = ({ shoppingActions }) => {
   const [viewMode, setViewMode] = useState('annual'); // 'annual' or 'urgent'
@@ -24,8 +24,8 @@ const ShoppingView = ({ shoppingActions }) => {
     const loadAnnualPlan = async () => {
       try {
         setIsLoadingPlan(true);
-        const portfolioStrategies = getPortfolioStrategies(DURHAM_CONFIG);
-        const plan = await generateAnnualSeedPlan(portfolioStrategies.hedge, DURHAM_CONFIG);
+        const portfolioStrategies = getPortfolioStrategies(DEFAULT_CONFIG);
+        const plan = await generateAnnualSeedPlan(portfolioStrategies.hedge, DEFAULT_CONFIG);
         setAnnualPlan(plan);
       } catch (error) {
         console.error('Error loading annual seed plan:', error);

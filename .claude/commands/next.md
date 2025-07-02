@@ -2,6 +2,10 @@
 
 Intelligently recommend the next most valuable task by analyzing active work and ideas backlog.
 
+## ALWAYS
+
+- Verify the user would like to proceed with your recommendation.
+
 ## Usage
 ```
 /next
