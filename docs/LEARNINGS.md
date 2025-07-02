@@ -184,5 +184,11 @@ rom a developer perspective can break user workflows. Cost of failed simplificat
 **Pattern:** Pre-commit: block ERRORS only, allow warnings with notification. Pre-push: zero-tolerance for ANY warnings/errors before remote push. This enables local iterations while maintaining shared repository quality.
 **Impact:** Developer workflow dramatically improved - can commit intermediate states with warnings for iterative development, but push is blocked until clean. Balances development velocity with code quality. Hook logic required parsing ESLint summary line correctly rather than grepping individual violations.
 
+## Methodology Extraction Strategic Pivot (2025-07-02) - [Reflection Session]
+**Insight:** Feature development provides diminishing returns compared to methodology extraction - the real value is in creating repeatable systems for Claude Code project success.
+**Pattern:** Use successful project as laboratory to extract transferable patterns rather than continuing feature development indefinitely. Garden platform achieved stable quality (68 warnings, below threshold) and demonstrates successful AI collaboration patterns - now serves as case study for methodology development.
+**Impact:** Strategic pivot from $78-104 planned garden features to $17-28 methodology systems with exponentially higher leverage. Setup system (claude_setup_rules.md) completed, next: project assessment and rehabilitation systems for fixing bad Claude Code projects.
+**Context:** When a project achieves stable quality and demonstrates successful patterns, the highest ROI comes from systematizing those learnings rather than adding more features. Extract patterns while they're fresh and the project context is clear.
+
 ---
 *Auto-updated when significant insights discovered during task completion*
