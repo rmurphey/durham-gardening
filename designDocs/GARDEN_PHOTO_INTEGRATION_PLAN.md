@@ -1,5 +1,12 @@
 # Garden Photo Integration Plan
 
+## 💰 Cost Summary
+**Total Estimated Cost: $11-15 across 4 phases**
+- Phase 1: Photo Upload Infrastructure ($3-4)
+- Phase 2: Gallery & Management ($3-4)
+- Phase 3: AI Analysis & Tagging ($3-4)
+- Phase 4: Progress Tracking ($2-3)
+
 ## Overview
 Add photo upload and tracking capabilities to allow gardeners to document their garden progress over time, providing visual context for planting decisions and tracking growth outcomes.
 

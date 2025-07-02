@@ -1,5 +1,12 @@
 # Historical Weather Analysis Design
 
+## 💰 Cost Summary
+**Total Estimated Cost: $10-14 across 4 phases**
+- Phase 1: Historical Data Integration ($3-4)
+- Phase 2: Analysis & Pattern Detection ($3-4)
+- Phase 3: Recommendation Enhancement ($2-3)
+- Phase 4: Trend Visualization ($2-3)
+
 ## Overview & Goals
 
 Implement comprehensive historical weather analysis to refine growing season predictions, improve planting recommendations, and provide long-term climate trend insights for garden planning decisions.

@@ -48,6 +48,11 @@
   - 📋 **Design:** [Garden Photo Integration Plan](../designDocs/GARDEN_PHOTO_INTEGRATION_PLAN.md)
   - **Cost:** $11-15 across 4 phases
 
+### **Authentication & Security**
+- **Authentication System** - User accounts, garden ownership, and secure sharing
+  - 📋 **Design:** [Authentication System Plan](../designDocs/AUTHENTICATION_SYSTEM_PLAN.md)
+  - **Cost:** $10-14 across 4 phases (Clerk-based, preserves current architecture)
+
 ### **Advanced Features**
 - **Historical Weather Analysis** - Use past weather data to refine growing season predictions
   - 📋 **Design:** [Historical Weather Analysis Plan](../designDocs/HISTORICAL_WEATHER_ANALYSIS_PLAN.md)
