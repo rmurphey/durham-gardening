@@ -15,10 +15,12 @@
 **Target**: Deliver compelling new functionality
 
 **Available Options**:
-- **Pest & Disease Alerts**: Location-specific pest timing and pressure forecasts
-- **Water Management**: Irrigation planning based on climate data and soil moisture
-- **Crop Rotation Planning**: Multi-year planning with location-specific rotation schedules
 - **Yield Tracking**: Track actual harvests vs predictions to improve recommendations
+- **Mobile Responsiveness**: Optimize location selection and garden planning for mobile
+- **Multi-Location Support**: Compare recommendations across different properties/zones
+- **Community Features**: Share gardens and learn from other gardeners in similar zones
+
+**Note**: Pest & Disease Alerts, Water Management, and Crop Rotation Planning have been moved to Planned Features with completed design documents.
 
 ### **Maintenance Backlog** (Address when warnings exceed thresholds)
 - 68 ESLint warnings (below 70 threshold - acceptable)
@@ -74,9 +76,6 @@
 ## 💡 FUTURE ENHANCEMENT IDEAS
 *Features identified but not yet designed*
 
-### **Feature Expansions**
-- **Microclimate Adjustments** - Factor in user's specific site conditions (slope, exposure, soil type)
-
 ### **User Experience**
 - **Mobile Responsiveness** - Optimize the location selection and garden planning for mobile gardeners
 
@@ -84,6 +83,14 @@
 - **Multi-Location Support** - Compare recommendations across different properties/zones
 - **Yield Tracking** - Track actual harvest yields vs. predictions to improve recommendations
 - **Community Features** - Share gardens and learn from other gardeners in similar zones
+
+## 🔄 DEFERRED FEATURES
+*Features postponed for later consideration*
+
+### **Deferred on 2025-07-02**
+- **Microclimate Adjustments** - Factor in user's specific site conditions (slope, exposure, soil type)
+  - **Defer Reason:** Lower priority compared to pest management and water planning features
+  - **Original Section:** Future Enhancement Ideas - Feature Expansions
 
 ═══════════════════════════════════════════════════════════════════════════════
 # 📜 COMPLETED WORK & HISTORICAL RECORD

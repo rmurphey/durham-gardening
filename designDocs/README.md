@@ -7,11 +7,12 @@ This directory contains comprehensive design documents for major features and ar
 All design documents follow a consistent structure:
 
 ### Required Sections
+- **Cost Summary**: Total estimated cost prominently displayed at top
 - **Overview & Goals**: Feature purpose and user value proposition
 - **Technical Architecture**: Database schema, services, component structure
 - **Security & Privacy**: Data protection, access controls, user safety
 - **Content Moderation**: Validation, filtering, abuse prevention (for UGC features)
-- **Implementation Phases**: Staged development with cost estimates
+- **Implementation Phases**: Staged development with detailed cost estimates
 - **Integration Points**: Connections to existing systems
 - **Risk Mitigation**: Performance, scalability, safety considerations
 - **Success Metrics**: Measurable outcomes and KPIs
@@ -40,7 +41,22 @@ Features accepting user content must include:
 - `GARDEN_SCHEMA.md` - Vercel Blob storage structure for garden data
 
 ### Feature Designs
-- `GARDEN_PHOTO_INTEGRATION_PLAN.md` - Photo upload and tracking system
+
+#### **User Experience** 
+- `GARDEN_PHOTO_INTEGRATION_PLAN.md` - Photo upload and tracking system ($11-15)
+
+#### **Authentication & Security**
+- `AUTHENTICATION_SYSTEM_PLAN.md` - User accounts with Clerk integration ($10-14)
+
+#### **Advanced Features**
+- `HISTORICAL_WEATHER_ANALYSIS_PLAN.md` - Historical data for refined predictions ($10-14)
+
+#### **Garden Management**
+- `PEST_DISEASE_ALERTS_PLAN.md` - Regional pest timing with weather-based risk assessment ($8-12)
+- `WATER_MANAGEMENT_PLAN.md` - Smart irrigation planning with rainfall integration ($6-10) 
+- `CROP_ROTATION_PLANNING_PLAN.md` - Multi-year soil health and family rotation system ($7-11)
+
+**Total Planned Features Cost: $52-76**
 
 ## Creating New Designs
 
@@ -53,9 +69,10 @@ Use the `/design` command to create new design documents:
 This command automatically:
 1. Analyzes current project state from `docs/ACTIVE_WORK.md`
 2. Reviews existing architecture patterns
-3. Creates comprehensive design document
+3. Creates comprehensive design document with **cost summary at top**
 4. Includes security and content safety requirements
-5. Provides cost estimates and implementation phases
+5. Provides detailed cost estimates and implementation phases
+6. Moves feature from "Future Ideas" to "Planned Features" in ACTIVE_WORK.md
 
 ## Design Review Process
 

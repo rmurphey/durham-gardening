@@ -75,10 +75,11 @@ All design documents are stored in `designDocs/` directory:
 ## Design Document Linking
 Every `/design` command MUST:
 1. Create the design document in `designDocs/` with **cost summary at the very top**
-2. Find the relevant feature in `docs/ACTIVE_WORK.md`
-3. Move the feature from "FUTURE ENHANCEMENT IDEAS" to "PLANNED FEATURES" section
+2. Find the relevant feature in `docs/ACTIVE_WORK.md` (check ALL sections: priorities, future ideas, deferred)
+3. Move the feature from ANY section to "PLANNED FEATURES" section
 4. Add design link: `- 📋 **Design:** [Feature Name](../designDocs/FEATURE_NAME.md)`
 5. Include cost estimate from the design document: `- **Cost:** $X-Y total across Z phases`
-6. This ensures all planned features have accessible design documentation and clear implementation readiness
+6. **Remove from original section** to prevent duplication (planned features ONLY appear in PLANNED section)
+7. This ensures all planned features have accessible design documentation and clear implementation readiness
 
 The design command ensures comprehensive planning before implementation, maintaining code quality, architectural consistency, and user safety.
