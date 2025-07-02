@@ -58,12 +58,23 @@
   - 📋 **Design:** [Historical Weather Analysis Plan](../designDocs/HISTORICAL_WEATHER_ANALYSIS_PLAN.md)
   - **Cost:** $10-14 across 4 phases
 
+### **Garden Management**
+- **Pest & Disease Alerts** - Regional pest pressure and disease timing alerts
+  - 📋 **Design:** [Pest & Disease Alerts Plan](../designDocs/PEST_DISEASE_ALERTS_PLAN.md)
+  - **Cost:** $8-12 across 3 phases
+
+- **Water Management** - Location-specific irrigation planning based on climate data
+  - 📋 **Design:** [Water Management Plan](../designDocs/WATER_MANAGEMENT_PLAN.md)
+  - **Cost:** $6-10 across 3 phases
+
+- **Crop Rotation Planning** - Multi-year planning with location-specific rotation schedules
+  - 📋 **Design:** [Crop Rotation Planning Plan](../designDocs/CROP_ROTATION_PLANNING_PLAN.md)
+  - **Cost:** $7-11 across 3 phases
+
 ## 💡 FUTURE ENHANCEMENT IDEAS
 *Features identified but not yet designed*
 
 ### **Feature Expansions**
-- **Pest & Disease Alerts** - Regional pest pressure and disease timing alerts
-- **Water Management** - Location-specific irrigation planning based on climate data
 - **Microclimate Adjustments** - Factor in user's specific site conditions (slope, exposure, soil type)
 
 ### **User Experience**
@@ -71,7 +82,6 @@
 
 ### **Advanced Features**
 - **Multi-Location Support** - Compare recommendations across different properties/zones
-- **Crop Rotation Planning** - Multi-year planning with location-specific rotation schedules
 - **Yield Tracking** - Track actual harvest yields vs. predictions to improve recommendations
 - **Community Features** - Share gardens and learn from other gardeners in similar zones
 
