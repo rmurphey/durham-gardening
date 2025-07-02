@@ -7,6 +7,12 @@
 - Phase 3: Garden Sharing ($3-4)
 - Phase 4: Migration & Compatibility ($2-3)
 
+**Clerk Operational Costs:**
+- **Free Tier**: 10,000 monthly active users (MAU)
+- **Pro Tier**: $0.02 per MAU after 10,000 users
+- **Enhanced Auth**: $100/month (MFA, device tracking, enterprise SSO)
+- **Enhanced Admin**: $100/month (user impersonation, audit logs)
+
 ## Overview & Goals
 
 **Feature Purpose**: Transform the current anonymous garden-sharing system into a secure, user-owned garden management platform with proper authentication and data ownership.
@@ -397,8 +403,15 @@ npm install @clerk/clerk-react
 ### **Operational Costs**
 - **Clerk Free Tier**: 10,000 monthly active users (sufficient for learning experiment)
 - **Clerk Pro**: $0.02 per MAU after 10,000 (only if successful)
+- **Clerk Enhanced Features**: $100/month each for MFA/SSO or admin features (optional)
 - **Vercel Costs**: No increase (same serverless function usage)
 - **Storage Costs**: Minimal increase for user profile data
+
+### **Clerk Pricing Advantages**
+- **Pay-per-active-user**: Only charged for users who actually return ("never charged for users who sign up and never come back")
+- **Generous Free Tier**: 10,000 MAU covers significant growth before any costs
+- **Predictable Scaling**: Linear $0.02/MAU pricing, no surprise costs or usage spikes
+- **No Setup Fees**: Unlike enterprise auth solutions, no upfront costs
 
 ### **Cost Comparison with Alternatives**
 - **Supabase**: $25/month Pro plan + $16-24 implementation = $41-49 first year
