@@ -15,12 +15,12 @@
 **Target**: Deliver compelling new functionality
 
 **Available Options**:
-- **Yield Tracking**: Track actual harvests vs predictions to improve recommendations
-- **Mobile Responsiveness**: Optimize location selection and garden planning for mobile
-- **Multi-Location Support**: Compare recommendations across different properties/zones
-- **Community Features**: Share gardens and learn from other gardeners in similar zones
+*All high-priority features now have completed design documents and have been moved to Planned Features.*
 
-**Note**: Pest & Disease Alerts, Water Management, and Crop Rotation Planning have been moved to Planned Features with completed design documents.
+**Next Actions**: 
+- Implement planned features with completed designs ($52-76 total cost)
+- Design remaining Future Enhancement Ideas if needed
+- Focus on highest-impact features within learning experiment budget
 
 ### **Maintenance Backlog** (Address when warnings exceed thresholds)
 - 68 ESLint warnings (below 70 threshold - acceptable)
@@ -73,16 +73,35 @@
   - 📋 **Design:** [Crop Rotation Planning Plan](../designDocs/CROP_ROTATION_PLANNING_PLAN.md)
   - **Cost:** $7-11 across 3 phases
 
+### **Core Application Features**
+- **Yield Tracking** - Track actual harvests vs predictions to improve recommendations
+  - 📋 **Design:** [Yield Tracking Plan](../designDocs/YIELD_TRACKING_PLAN.md)
+  - **Cost:** $5-9 across 3 phases
+
+- **Mobile Responsiveness** - Optimize location selection and garden planning for mobile
+  - 📋 **Design:** [Mobile Responsiveness Plan](../designDocs/MOBILE_RESPONSIVENESS_PLAN.md)
+  - **Cost:** $4-7 across 2 phases
+
+### **Advanced Platform Features**
+- **Community Features** - Share gardens and learn from other gardeners in similar zones
+  - 📋 **Design:** [Community Features Plan](../designDocs/COMMUNITY_FEATURES_PLAN.md)
+  - **Cost:** $12-18 across 4 phases
+  - **🔗 Dependency:** Requires Authentication System to be implemented first
+
+**Total All Planned Features: $78-104**
+
+## 📊 Implementation Dependencies
+
+**Authentication System ($10-14)** enables:
+- Community Features ($12-18) - CRITICAL dependency
+- Garden Photo Integration ($11-15) - Recommended for user galleries
+- Multi-Location Support ($6-10) - CRITICAL dependency (deferred)
+
 ## 💡 FUTURE ENHANCEMENT IDEAS
 *Features identified but not yet designed*
 
-### **User Experience**
-- **Mobile Responsiveness** - Optimize the location selection and garden planning for mobile gardeners
-
 ### **Advanced Features**
-- **Multi-Location Support** - Compare recommendations across different properties/zones
-- **Yield Tracking** - Track actual harvest yields vs. predictions to improve recommendations
-- **Community Features** - Share gardens and learn from other gardeners in similar zones
+*All previously listed features now have completed design documents and have been moved to Planned Features.*
 
 ## 🔄 DEFERRED FEATURES
 *Features postponed for later consideration*
@@ -91,6 +110,12 @@
 - **Microclimate Adjustments** - Factor in user's specific site conditions (slope, exposure, soil type)
   - **Defer Reason:** Lower priority compared to pest management and water planning features
   - **Original Section:** Future Enhancement Ideas - Feature Expansions
+
+- **Multi-Location Support** - Compare recommendations across different properties/zones
+  - 📋 **Design:** [Multi-Location Support Plan](../designDocs/MULTI_LOCATION_SUPPORT_PLAN.md)
+  - **Cost:** $6-10 across 3 phases
+  - **Defer Reason:** Serves niche audience of advanced users with multiple properties
+  - **Original Section:** Planned Features - Advanced Platform Features
 
 ═══════════════════════════════════════════════════════════════════════════════
 # 📜 COMPLETED WORK & HISTORICAL RECORD

@@ -19,6 +19,7 @@ Creates comprehensive design documents for features based on current project sta
 
 ## Design Document Structure
 - **Cost Summary**: Total estimated cost prominently displayed at top
+- **Dependencies**: Required features/systems that must be implemented first
 - **Overview & Goals**: Feature purpose and user value
 - **Technical Architecture**: Database schema, services, components
 - **Security & Privacy**: Data protection, access controls, content safety
@@ -67,6 +68,7 @@ All design documents are stored in `designDocs/` directory:
 ## Integration with Project
 - Reviews `docs/ACTIVE_WORK.md` for current priorities
 - Considers existing quality standards and architecture patterns
+- **Analyzes feature dependencies** and indicates required prerequisite features
 - Mandates content safety and moderation requirements
 - Estimates costs including security implementation overhead
 - Updates todo list with design completion

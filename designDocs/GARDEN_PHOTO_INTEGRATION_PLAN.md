@@ -7,6 +7,12 @@
 - Phase 3: AI Analysis & Tagging ($3-4)
 - Phase 4: Progress Tracking ($2-3)
 
+## 🔗 Dependencies
+**RECOMMENDED DEPENDENCY**: Authentication System ($10-14) for user-specific photo storage and sharing.
+- Without auth: Photos stored anonymously per garden UUID (limited functionality)
+- With auth: User-owned photo galleries, sharing controls, cross-device sync
+- Content moderation and abuse prevention require user identity management
+
 ## Overview
 Add photo upload and tracking capabilities to allow gardeners to document their garden progress over time, providing visual context for planting decisions and tracking growth outcomes.
 
