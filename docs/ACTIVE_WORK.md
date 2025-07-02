@@ -1,7 +1,5 @@
 # Active Work - Current Session Focus
 
-*Updated: 2025-06-30*
-
 ## 🎯 NEXT SESSION PRIORITIES
 
 ### **Learning Experiment Status** 
@@ -42,7 +40,21 @@
 - File size optimization for large components (deferred - not blocking)
 - Test coverage improvements (deferred - core functionality tested)
 
+## 📋 PLANNED FEATURES
+*Features with completed design documents ready for implementation*
+
+### **User Experience**
+- **Garden Photo Integration** - Upload and track garden progress with photos
+  - 📋 **Design:** [Garden Photo Integration Plan](../designDocs/GARDEN_PHOTO_INTEGRATION_PLAN.md)
+  - **Cost:** $11-15 across 4 phases
+
+### **Advanced Features**
+- **Historical Weather Analysis** - Use past weather data to refine growing season predictions
+  - 📋 **Design:** [Historical Weather Analysis Plan](../designDocs/HISTORICAL_WEATHER_ANALYSIS_PLAN.md)
+  - **Cost:** $10-14 across 4 phases
+
 ## 💡 FUTURE ENHANCEMENT IDEAS
+*Features identified but not yet designed*
 
 ### **Feature Expansions**
 - **Pest & Disease Alerts** - Regional pest pressure and disease timing alerts
@@ -51,11 +63,9 @@
 
 ### **User Experience**
 - **Mobile Responsiveness** - Optimize the location selection and garden planning for mobile gardeners
-- **Garden Photo Integration** - Upload and track garden progress with photos
 
 ### **Advanced Features**
 - **Multi-Location Support** - Compare recommendations across different properties/zones
-- **Historical Weather Analysis** - Use past weather data to refine growing season predictions
 - **Crop Rotation Planning** - Multi-year planning with location-specific rotation schedules
 - **Yield Tracking** - Track actual harvest yields vs. predictions to improve recommendations
 - **Community Features** - Share gardens and learn from other gardeners in similar zones
@@ -193,6 +203,7 @@
 ## Quick Capture
 *Use /todo or /idea commands to add items here*
 
+- **2025-07-02**: the linter MUST never run on a deleted file
 - **2025-07-01**: Show 8 days of weather, not five
 - **2025-06-30**: Garden Profile System - Replace hardcoded bed sizes with user-configurable garden profiles (custom bed dimensions, sun mapping, total space)
 - **2025-06-30**: ESLint should never run on deleted files (fix git hooks)
@@ -202,5 +213,3 @@
 - **2025-06-28**: Help develop blog post about project progression and lessons learned
 - **2025-06-28**: Consider free alternatives to sqlite
 
----
-*Auto-updated after each task completion*

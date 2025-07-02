@@ -69,5 +69,15 @@ All design documents are stored in `designDocs/` directory:
 - Mandates content safety and moderation requirements
 - Estimates costs including security implementation overhead
 - Updates todo list with design completion
+- **ALWAYS adds design document link to relevant feature in ACTIVE_WORK.md**
+
+## Design Document Linking
+Every `/design` command MUST:
+1. Create the design document in `designDocs/`
+2. Find the relevant feature in `docs/ACTIVE_WORK.md`
+3. Move the feature from "FUTURE ENHANCEMENT IDEAS" to "PLANNED FEATURES" section
+4. Add design link: `- 📋 **Design:** [Feature Name](../designDocs/FEATURE_NAME.md)`
+5. Include cost estimate from the design document
+6. This ensures all planned features have accessible design documentation and clear implementation readiness
 
 The design command ensures comprehensive planning before implementation, maintaining code quality, architectural consistency, and user safety.
