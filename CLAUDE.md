@@ -1,7 +1,7 @@
 # CLAUDE.md - AI Behavioral Guide
 
 ## Core Directive
-Learning experiment about Claude Code workflows ($400-600 budget). Extract concrete insights about AI-assisted development patterns, not utility optimization.
+Learning experiment about Claude Code workflows (flexible budget, cost-conscious). Extract concrete insights about AI-assisted development patterns while building a compelling garden planning platform.
 
 ## Communication Style
 - Concise, direct responses (4 lines max unless detail requested)
@@ -75,3 +75,6 @@ Commands stored in `.claude/commands/` directory:
 4. Push: `git push origin main && git push origin vX.Y.Z`
 
 **Versioning**: Major (breaking), Minor (features), Patch (fixes)
+
+## Memory
+- Don't try to update a file that you haven't read first.
